@@ -49,3 +49,20 @@ func TestTokenizerWithAllTokens2(t *testing.T) {
 		}
 	}
 }
+
+func TestTokenizerWithAllTokens3(t *testing.T) {
+	tokenizer := newTokenizer("select fName,   fSize from    /home/apps")
+	tokens := tokenizer.tokenize()
+
+	iterator := tokens.iterator()
+	expectedTokens := []string{"select", " ", "fName", ",", " ", " ", " ", "fSize", " ", "from", " ", " ", " ", " ", "/home/apps"}
+
+	for count := 1; count <= len(expectedTokens); count++ {
+		actualToken := iterator.next()
+		expectedToken := expectedTokens[count-1]
+
+		if expectedToken != actualToken {
+			t.Fatalf("Expected token to be: %v, received: %v", expectedToken, actualToken)
+		}
+	}
+}

@@ -15,7 +15,9 @@ func (tokenizer *Tokenizer) tokenize() *Tokens {
 	var token strings.Builder
 	for _, ch := range tokenizer.query {
 		if tokenizer.isTokenSeparator(ch) {
-			tokens.add(token.String())
+			if token := token.String(); len(token) != 0 {
+				tokens.add(token)
+			}
 			tokens.add(string(ch))
 			token.Reset()
 		} else {
