@@ -16,8 +16,8 @@ The idea is to provide support for `selecting` files based on various conditions
 - Support for custom map-reduce function
 - Support for searching text within a file
 - Support for some shortcuts for common files types like images, videos, text:
-  - select * from /home/apps where fileType = 'IMAGE' and fileSize > 10MB
-  - select * from /home/apps where fileType = 'text' and contains 'get('
+  - goselect * from /home/apps where fileType = 'IMAGE' and fileSize > 10MB
+  - goselect * from /home/apps where fileType = 'text' and contains 'get('
 - Design consideration for searching for files in a directory with a huge number of files
 - [Not sure] Support for caching the query results
 - [Not sure] Support for union and intersection
