@@ -18,7 +18,7 @@ The idea is to provide support for `selecting` files based on various conditions
 - Support for some shortcuts for common files types like images, videos, text:
   - goselect * from /home/apps where fileType = 'image' and fileSize > 10MB
   - goselect * from /home/apps where fileType = 'text' and textContains = 'get('
-- Design consideration for searching for files in a directory with a huge number of files
+- Design consideration for searching files in a directory with a huge number of files
 - [Not sure] Support for caching the query results
 - [Not sure] Support for union and intersection
 
