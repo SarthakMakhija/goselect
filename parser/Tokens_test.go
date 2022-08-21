@@ -39,7 +39,7 @@ func TestTokenIteratorWithMultipleTokens(t *testing.T) {
 	expectedTokenPresence := []bool{true, true, true, true, false}
 	expectedTokens := []string{"select", "name", "from", "/home"}
 
-	for count := 1; count <= 5; count++ {
+	for count := 1; count <= len(expectedTokenPresence); count++ {
 		hasNext := iterator.hasNext()
 		expectedHasNext := expectedTokenPresence[count-1]
 
