@@ -14,7 +14,7 @@ func (tokenizer *Tokenizer) tokenize() *Tokens {
 	tokens := newEmptyTokens()
 	var token strings.Builder
 	for _, ch := range tokenizer.query {
-		if tokenizer.isTokenSeparator(ch) {
+		if isATokenSeparator(ch) {
 			if token := token.String(); len(token) != 0 {
 				tokens.add(token)
 			}
@@ -26,11 +26,4 @@ func (tokenizer *Tokenizer) tokenize() *Tokens {
 	}
 	tokens.add(token.String())
 	return tokens
-}
-
-func (tokenizer *Tokenizer) isTokenSeparator(ch rune) bool {
-	if ch == ' ' || ch == ',' {
-		return true
-	}
-	return false
 }
