@@ -3,7 +3,7 @@ package parser
 import "testing"
 
 func TestTokenIteratorWithNoNextToken(t *testing.T) {
-	tokens := newTokens([]string{})
+	tokens := newEmptyTokens()
 	iterator := tokens.iterator()
 
 	if iterator.hasNext() == true {
@@ -12,7 +12,8 @@ func TestTokenIteratorWithNoNextToken(t *testing.T) {
 }
 
 func TestTokenIteratorWithANextToken(t *testing.T) {
-	tokens := newTokens([]string{"select"})
+	tokens := newEmptyTokens()
+	tokens.add(newToken(RawString, "select"))
 	iterator := tokens.iterator()
 
 	if iterator.hasNext() == false {
@@ -21,19 +22,28 @@ func TestTokenIteratorWithANextToken(t *testing.T) {
 }
 
 func TestTokenIteratorWithNextTokenValue(t *testing.T) {
-	tokens := newTokens([]string{"select"})
+	tokens := newEmptyTokens()
+	tokens.add(newToken(RawString, "select"))
 	iterator := tokens.iterator()
 
 	expectedToken := "select"
 	actualToken := iterator.next()
 
-	if expectedToken != actualToken {
+	if expectedToken != actualToken.tokenValue {
 		t.Fatalf("Expected token to be %v, received %v", expectedToken, actualToken)
+	}
+	if RawString != actualToken.tokenType {
+		t.Fatalf("Expected token type to be %v, received %v", RawString, actualToken)
 	}
 }
 
 func TestTokenIteratorWithMultipleTokens(t *testing.T) {
-	tokens := newTokens([]string{"select", "name", "from", "/home"})
+	tokens := newEmptyTokens()
+	tokens.add(newToken(RawString, "select"))
+	tokens.add(newToken(RawString, "name"))
+	tokens.add(newToken(RawString, "from"))
+	tokens.add(newToken(RawString, "/home"))
+
 	iterator := tokens.iterator()
 
 	expectedTokenPresence := []bool{true, true, true, true, false}
@@ -50,8 +60,8 @@ func TestTokenIteratorWithMultipleTokens(t *testing.T) {
 			actualToken := iterator.next()
 			expectedToken := expectedTokens[count-1]
 
-			if expectedToken != actualToken {
-				t.Fatalf("Expected token to be %v, received %v", expectedToken, actualToken)
+			if expectedToken != actualToken.tokenValue {
+				t.Fatalf("Expected token to be %v, received %v", expectedToken, actualToken.tokenValue)
 			}
 		}
 	}

@@ -14,16 +14,35 @@ func (tokenizer *Tokenizer) tokenize() *Tokens {
 	tokens := newEmptyTokens()
 	var token strings.Builder
 	for _, ch := range tokenizer.query {
-		if isATokenSeparator(ch) {
-			if token := token.String(); len(token) != 0 {
-				tokens.add(token)
-			}
-			tokens.add(string(ch))
+		switch {
+		case isCharATokenSeparator(ch):
+			tokens.add(tokenFrom(token.String()))
 			token.Reset()
-		} else {
+		case ch == '\'':
+			tokens.add(tokenFrom(token.String()))
+			token.Reset()
+		case isCharAComparisonOperator(ch):
+			if !isAComparisonOperator(token.String()) {
+				tokens.add(tokenFrom(token.String()))
+				token.Reset()
+			}
+			token.WriteRune(ch)
+		case ch == ',':
+			tokens.add(tokenFrom(token.String()))
+			tokens.add(newToken(Comma, string(ch)))
+			token.Reset()
+		case ch == '(':
+			tokens.add(tokenFrom(token.String()))
+			tokens.add(newToken(OpeningParentheses, string(ch)))
+			token.Reset()
+		case ch == ')':
+			tokens.add(tokenFrom(token.String()))
+			tokens.add(newToken(ClosingParentheses, string(ch)))
+			token.Reset()
+		default:
 			token.WriteRune(ch)
 		}
 	}
-	tokens.add(token.String())
+	tokens.add(tokenFrom(token.String()))
 	return tokens
 }

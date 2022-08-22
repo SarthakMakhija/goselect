@@ -1,19 +1,17 @@
 package parser
 
 type Tokens struct {
-	tokens []string
+	tokens []Token
 }
 
 func newEmptyTokens() *Tokens {
 	return &Tokens{}
 }
 
-func newTokens(tokens []string) *Tokens {
-	return &Tokens{tokens: tokens}
-}
-
-func (tokens *Tokens) add(token string) {
-	tokens.tokens = append(tokens.tokens, token)
+func (tokens *Tokens) add(token Token) {
+	if !token.isEmpty() {
+		tokens.tokens = append(tokens.tokens, token)
+	}
 }
 
 func (tokens *Tokens) count() int {
@@ -26,7 +24,7 @@ func (tokens *Tokens) iterator() *TokenIterator {
 
 type TokenIterator struct {
 	index  int
-	tokens []string
+	tokens []Token
 }
 
 func (tokenIterator *TokenIterator) hasNext() bool {
@@ -36,7 +34,7 @@ func (tokenIterator *TokenIterator) hasNext() bool {
 	return false
 }
 
-func (tokenIterator *TokenIterator) next() string {
+func (tokenIterator *TokenIterator) next() Token {
 	token := tokenIterator.tokens[tokenIterator.index]
 	tokenIterator.index = tokenIterator.index + 1
 	return token
