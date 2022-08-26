@@ -6,16 +6,20 @@ import (
 )
 
 func TestCreatesANewSourceFromCurrentDirectory(t *testing.T) {
-	path := "."
-	source := New(path)
-	if source.directory != path {
-		t.Fatalf("Expected directory path to be %v, received %v", path, source.directory)
+	tokens := newEmptyTokens()
+	tokens.add(newToken(RawString, "."))
+
+	source, _ := newSource(tokens.iterator())
+	if source.directory != "." {
+		t.Fatalf("Expected directory path to be %v, received %v", ".", source.directory)
 	}
 }
 
 func TestCreatesANewSourceWithHomeDirectorySymbol1(t *testing.T) {
-	path := "~"
-	source := New(path)
+	tokens := newEmptyTokens()
+	tokens.add(newToken(RawString, "~"))
+
+	source, _ := newSource(tokens.iterator())
 	expectedPath := homeDirectory()
 
 	if source.directory != expectedPath {
@@ -24,8 +28,10 @@ func TestCreatesANewSourceWithHomeDirectorySymbol1(t *testing.T) {
 }
 
 func TestCreatesANewSourceWithHomeDirectorySymbol2(t *testing.T) {
-	path := "~/apps"
-	source := New(path)
+	tokens := newEmptyTokens()
+	tokens.add(newToken(RawString, "~/apps"))
+
+	source, _ := newSource(tokens.iterator())
 	expectedPath := homeDirectory() + "/apps"
 
 	if source.directory != expectedPath {
