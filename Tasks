@@ -9,3 +9,5 @@
 9. What if normal function is wrapped inside an aggregate function
 10. What if an aggregate function is wrapped inside a normal function
 11. Returning the results
+12. Support for date/time in where condition
+13. Support for date/time in projections
