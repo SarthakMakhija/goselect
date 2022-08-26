@@ -96,6 +96,26 @@ func TestAllColumnsWithAFunction(t *testing.T) {
 	}
 }
 
+func TestAllColumnsWithAFunctionWithSpaceAsATokenAfterFunction(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "lower"))
+	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "upper"))
+	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "fName"))
+	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
+	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, " "))
+
+	projections := newProjections(tokens.Iterator())
+	expressions, _ := projections.all()
+
+	oneFunctionAsString := "lower(upper(fName))"
+	if expressions.functions()[0] != oneFunctionAsString {
+		t.Fatalf("Expected function representation as %v, received %v", oneFunctionAsString, expressions.functions()[0])
+	}
+}
+
 func TestAllColumnsWith2Functions(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "lower"))

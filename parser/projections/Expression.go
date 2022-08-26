@@ -1,7 +1,7 @@
 package projections
 
 type Expressions struct {
-	expressions []Expression
+	expressions []*Expression
 }
 
 type Expression struct {
@@ -10,7 +10,7 @@ type Expression struct {
 }
 
 type Function struct {
-	id   string
+	name string
 	left *Expression
 }
 
@@ -23,38 +23,37 @@ func (expressions Expressions) allColumns() []string {
 }
 
 func (expressions Expressions) functions() []string {
-	var functions []string
-
 	var functionAsString func(expression *Expression) string
 	functionAsString = func(expression *Expression) string {
 		if expression.function == nil {
 			return expression.column
 		}
-		return expression.function.id + "(" + functionAsString(expression.function.left) + ")"
+		return expression.function.name + "(" + functionAsString(expression.function.left) + ")"
 	}
 
+	var functions []string
 	for _, expression := range expressions.expressions {
-		functions = append(functions, functionAsString(&expression))
+		functions = append(functions, functionAsString(expression))
 	}
 	return functions
 }
 
-func expressionWithColumn(column string) Expression {
-	return Expression{
+func expressionWithColumn(column string) *Expression {
+	return &Expression{
 		column: column,
 	}
 }
 
-func expressionsWithColumns(columns []string) []Expression {
-	var expressions = make([]Expression, len(columns))
+func expressionsWithColumns(columns []string) []*Expression {
+	var expressions = make([]*Expression, len(columns))
 	for index, column := range columns {
 		expressions[index] = expressionWithColumn(column)
 	}
 	return expressions
 }
 
-func expressionWithFunction(fn *Function) Expression {
-	return Expression{
+func expressionWithFunction(fn *Function) *Expression {
+	return &Expression{
 		function: fn,
 	}
 }
