@@ -1,0 +1,11 @@
+1. Parse where condition
+2. Support for expressions of the form 2+3 in projection
+3. Handle error conditions in each type of parsing - projection, where, order by etc
+4. Create an AST
+5. Execute the AST
+6. Building a finite list of supported columns
+7. Building a finite list of supported functions
+8. Decide on executing aggregation function Vs normal function
+9. What if normal function is wrapped inside an aggregate function
+10. What if an aggregate function is wrapped inside a normal function
+11. Returning the results
