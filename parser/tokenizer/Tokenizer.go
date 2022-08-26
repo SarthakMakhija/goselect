@@ -1,4 +1,4 @@
-package parser
+package tokenizer
 
 import "strings"
 
@@ -11,38 +11,38 @@ func newTokenizer(query string) *Tokenizer {
 }
 
 func (tokenizer *Tokenizer) tokenize() *Tokens {
-	tokens := newEmptyTokens()
+	tokens := NewEmptyTokens()
 	var token strings.Builder
 	for _, ch := range tokenizer.query {
 		switch {
 		case isCharATokenSeparator(ch):
-			tokens.add(tokenFrom(token.String()))
+			tokens.Add(tokenFrom(token.String()))
 			token.Reset()
 		case ch == '\'':
-			tokens.add(tokenFrom(token.String()))
+			tokens.Add(tokenFrom(token.String()))
 			token.Reset()
 		case isCharAComparisonOperator(ch):
 			if !isAComparisonOperator(token.String()) {
-				tokens.add(tokenFrom(token.String()))
+				tokens.Add(tokenFrom(token.String()))
 				token.Reset()
 			}
 			token.WriteRune(ch)
 		case ch == ',':
-			tokens.add(tokenFrom(token.String()))
-			tokens.add(newToken(Comma, string(ch)))
+			tokens.Add(tokenFrom(token.String()))
+			tokens.Add(NewToken(Comma, string(ch)))
 			token.Reset()
 		case ch == '(':
-			tokens.add(tokenFrom(token.String()))
-			tokens.add(newToken(OpeningParentheses, string(ch)))
+			tokens.Add(tokenFrom(token.String()))
+			tokens.Add(NewToken(OpeningParentheses, string(ch)))
 			token.Reset()
 		case ch == ')':
-			tokens.add(tokenFrom(token.String()))
-			tokens.add(newToken(ClosingParentheses, string(ch)))
+			tokens.Add(tokenFrom(token.String()))
+			tokens.Add(NewToken(ClosingParentheses, string(ch)))
 			token.Reset()
 		default:
 			token.WriteRune(ch)
 		}
 	}
-	tokens.add(tokenFrom(token.String()))
+	tokens.Add(tokenFrom(token.String()))
 	return tokens
 }

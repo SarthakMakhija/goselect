@@ -1,36 +1,37 @@
-package parser
+package source
 
 import (
+	"goselect/parser/tokenizer"
 	"os/user"
 	"testing"
 )
 
 func TestCreatesANewSourceFromCurrentDirectory1(t *testing.T) {
-	tokens := newEmptyTokens()
-	tokens.add(newToken(RawString, "."))
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "."))
 
-	source, _ := newSource(tokens.iterator())
+	source, _ := newSource(tokens.Iterator())
 	if source.directory != "." {
 		t.Fatalf("Expected directory path to be %v, received %v", ".", source.directory)
 	}
 }
 
 func TestCreatesANewSourceFromCurrentDirectory2(t *testing.T) {
-	tokens := newEmptyTokens()
-	tokens.add(newToken(RawString, "."))
-	tokens.add(newToken(RawString, "where"))
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "."))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "where"))
 
-	source, _ := newSource(tokens.iterator())
+	source, _ := newSource(tokens.Iterator())
 	if source.directory != "." {
 		t.Fatalf("Expected directory path to be %v, received %v", ".", source.directory)
 	}
 }
 
 func TestCreatesANewSourceWithHomeDirectorySymbol1(t *testing.T) {
-	tokens := newEmptyTokens()
-	tokens.add(newToken(RawString, "~"))
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "~"))
 
-	source, _ := newSource(tokens.iterator())
+	source, _ := newSource(tokens.Iterator())
 	expectedPath := homeDirectory()
 
 	if source.directory != expectedPath {
@@ -39,10 +40,10 @@ func TestCreatesANewSourceWithHomeDirectorySymbol1(t *testing.T) {
 }
 
 func TestCreatesANewSourceWithHomeDirectorySymbol2(t *testing.T) {
-	tokens := newEmptyTokens()
-	tokens.add(newToken(RawString, "~/apps"))
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "~/apps"))
 
-	source, _ := newSource(tokens.iterator())
+	source, _ := newSource(tokens.Iterator())
 	expectedPath := homeDirectory() + "/apps"
 
 	if source.directory != expectedPath {

@@ -1,4 +1,4 @@
-package parser
+package projections
 
 type Expressions struct {
 	expressions []Expression

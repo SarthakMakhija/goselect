@@ -1,4 +1,4 @@
-package parser
+package tokenizer
 
 const (
 	RawString          int = iota
@@ -20,49 +20,49 @@ const (
 )
 
 type Token struct {
-	tokenType  int
-	tokenValue string
+	TokenType  int
+	TokenValue string
 }
 
 func (token Token) isEmpty() bool {
-	return len(token.tokenValue) == 0
+	return len(token.TokenValue) == 0
 }
 
-func newToken(tokenType int, tokenValue string) Token {
-	return Token{tokenType: tokenType, tokenValue: tokenValue}
+func NewToken(tokenType int, tokenValue string) Token {
+	return Token{TokenType: tokenType, TokenValue: tokenValue}
 }
 
 func tokenFrom(token string) Token {
 	switch {
 	case token == "from":
-		return newToken(From, token)
+		return NewToken(From, token)
 	case token == "where":
-		return newToken(Where, token)
+		return NewToken(Where, token)
 	case token == "or":
-		return newToken(Or, token)
+		return NewToken(Or, token)
 	case token == "and":
-		return newToken(And, token)
+		return NewToken(And, token)
 	case token == "not":
-		return newToken(Not, token)
+		return NewToken(Not, token)
 	case token == "order":
-		return newToken(Order, token)
+		return NewToken(Order, token)
 	case token == "by":
-		return newToken(By, token)
+		return NewToken(By, token)
 	case token == "asc":
-		return newToken(AscendingOrder, token)
+		return NewToken(AscendingOrder, token)
 	case token == "desc":
-		return newToken(DescendingOrder, token)
+		return NewToken(DescendingOrder, token)
 	case token == "limit":
-		return newToken(Limit, token)
+		return NewToken(Limit, token)
 	case isArithmeticOperator(token):
-		return newToken(ArithmeticOperator, token)
+		return NewToken(ArithmeticOperator, token)
 	case isAComparisonOperator(token):
-		return newToken(Operator, token)
+		return NewToken(Operator, token)
 	default:
-		return newToken(RawString, token)
+		return NewToken(RawString, token)
 	}
 }
 
-func (token Token) equals(value string) bool {
-	return token.tokenValue == value
+func (token Token) Equals(value string) bool {
+	return token.TokenValue == value
 }

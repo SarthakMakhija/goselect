@@ -1,4 +1,4 @@
-package parser
+package projections
 
 var supportedColumns = map[string]bool{
 	"name":  true,

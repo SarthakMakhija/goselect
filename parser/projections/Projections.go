@@ -1,15 +1,16 @@
-package parser
+package projections
 
 import (
 	"errors"
 	"github.com/emirpasic/gods/stacks/linkedliststack"
+	"goselect/parser/tokenizer"
 )
 
 type Projections struct {
-	tokenIterator *TokenIterator
+	tokenIterator *tokenizer.TokenIterator
 }
 
-func newProjections(tokenIterator *TokenIterator) *Projections {
+func newProjections(tokenIterator *tokenizer.TokenIterator) *Projections {
 	return &Projections{tokenIterator: tokenIterator}
 }
 
@@ -23,22 +24,22 @@ func (projections *Projections) all() (Expressions, error) {
 	var columns []Expression
 	var expectComma bool
 
-	for projections.tokenIterator.hasNext() && !projections.tokenIterator.peek().equals("from") {
-		token := projections.tokenIterator.next()
+	for projections.tokenIterator.HasNext() && !projections.tokenIterator.Peek().Equals("from") {
+		token := projections.tokenIterator.Next()
 		switch {
 		case expectComma:
-			if !token.equals(",") {
+			if !token.Equals(",") {
 				return Expressions{}, errors.New("expected a comma in projection list")
 			}
 			expectComma = false
-		case isAWildcard(token.tokenValue):
+		case isAWildcard(token.TokenValue):
 			columns = append(columns, expressionsWithColumns(columnsOnWildcard())...)
 			expectComma = true
-		case isASupportedColumn(token.tokenValue):
-			columns = append(columns, expressionWithColumn(token.tokenValue))
+		case isASupportedColumn(token.TokenValue):
+			columns = append(columns, expressionWithColumn(token.TokenValue))
 			expectComma = true
-		case isASupportedFunction(token.tokenValue):
-			projections.tokenIterator.drop()
+		case isASupportedFunction(token.TokenValue):
+			projections.tokenIterator.Drop()
 			fn, err := projections.function()
 			if err != nil {
 				return Expressions{}, err
@@ -54,27 +55,27 @@ func (projections *Projections) function() (*Function, error) {
 	var expectClosingParentheses bool
 
 	functionStack := linkedliststack.New()
-	var column Token
+	var column tokenizer.Token
 
-	for projections.tokenIterator.hasNext() && !projections.tokenIterator.peek().equals(",") {
-		token := projections.tokenIterator.next()
+	for projections.tokenIterator.HasNext() && !projections.tokenIterator.Peek().Equals(",") {
+		token := projections.tokenIterator.Next()
 		switch {
 		case expectOpeningParentheses:
-			if !token.equals("(") {
+			if !token.Equals("(") {
 				functionStack.Clear()
 				return nil, errors.New("expected an opening parentheses in projection")
 			}
 			expectOpeningParentheses = false
 		case expectClosingParentheses:
-			if !token.equals(")") {
+			if !token.Equals(")") {
 				functionStack.Clear()
 				return nil, errors.New("expected a closing parentheses in projection")
 			}
 			expectClosingParentheses = true
-		case isASupportedFunction(token.tokenValue):
+		case isASupportedFunction(token.TokenValue):
 			functionStack.Push(token)
 			expectOpeningParentheses = true
-		case isASupportedColumn(token.tokenValue):
+		case isASupportedColumn(token.TokenValue):
 			expectOpeningParentheses = false
 			expectClosingParentheses = true
 			column = token
@@ -82,13 +83,13 @@ func (projections *Projections) function() (*Function, error) {
 	}
 	functionToken, _ := functionStack.Pop()
 	var rootFunction = &Function{
-		id:   (functionToken.(Token)).tokenValue,
-		left: &Expression{column: column.tokenValue},
+		id:   (functionToken.(tokenizer.Token)).TokenValue,
+		left: &Expression{column: column.TokenValue},
 	}
 	for !functionStack.Empty() {
 		functionToken, _ := functionStack.Pop()
 		rootFunction = &Function{
-			id:   (functionToken.(Token)).tokenValue,
+			id:   (functionToken.(tokenizer.Token)).TokenValue,
 			left: &Expression{function: rootFunction},
 		}
 	}

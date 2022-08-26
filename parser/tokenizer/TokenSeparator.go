@@ -1,4 +1,4 @@
-package parser
+package tokenizer
 
 func isCharATokenSeparator(ch rune) bool {
 	if ch == ' ' {

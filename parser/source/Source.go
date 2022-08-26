@@ -1,17 +1,18 @@
-package parser
+package source
 
 import (
 	"errors"
+	"goselect/parser/tokenizer"
 	"os/user"
 	"strings"
 )
 
 type Source struct {
-	tokenIterator *TokenIterator
+	tokenIterator *tokenizer.TokenIterator
 	directory     string
 }
 
-func newSource(tokenIterator *TokenIterator) (*Source, error) {
+func newSource(tokenIterator *tokenizer.TokenIterator) (*Source, error) {
 	source := &Source{tokenIterator: tokenIterator}
 	if err := source.setDirectory(); err != nil {
 		return nil, err
@@ -20,9 +21,9 @@ func newSource(tokenIterator *TokenIterator) (*Source, error) {
 }
 
 func (source *Source) setDirectory() error {
-	if source.tokenIterator.hasNext() && !source.tokenIterator.peek().equals("where") {
-		token := source.tokenIterator.next()
-		path := token.tokenValue
+	if source.tokenIterator.HasNext() && !source.tokenIterator.Peek().Equals("where") {
+		token := source.tokenIterator.Next()
+		path := token.TokenValue
 		if strings.HasPrefix(path, "~") {
 			if currentUser, err := user.Current(); err != nil {
 				return err
