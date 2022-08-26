@@ -51,6 +51,15 @@ func TestCreatesANewSourceWithHomeDirectorySymbol2(t *testing.T) {
 	}
 }
 
+func TestThrowsAnErrorWithoutAnyTokens(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	_, err := newSource(tokens.Iterator())
+
+	if err == nil {
+		t.Fatalf("Expected error to be non-nil when creating a source without any tokens")
+	}
+}
+
 func homeDirectory() string {
 	currentUser, err := user.Current()
 	if err == nil {
