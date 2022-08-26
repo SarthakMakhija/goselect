@@ -5,9 +5,20 @@ import (
 	"testing"
 )
 
-func TestCreatesANewSourceFromCurrentDirectory(t *testing.T) {
+func TestCreatesANewSourceFromCurrentDirectory1(t *testing.T) {
 	tokens := newEmptyTokens()
 	tokens.add(newToken(RawString, "."))
+
+	source, _ := newSource(tokens.iterator())
+	if source.directory != "." {
+		t.Fatalf("Expected directory path to be %v, received %v", ".", source.directory)
+	}
+}
+
+func TestCreatesANewSourceFromCurrentDirectory2(t *testing.T) {
+	tokens := newEmptyTokens()
+	tokens.add(newToken(RawString, "."))
+	tokens.add(newToken(RawString, "where"))
 
 	source, _ := newSource(tokens.iterator())
 	if source.directory != "." {
