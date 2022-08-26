@@ -35,7 +35,7 @@ func (projections *Projections) all() (Expressions, error) {
 		case isAWildcard(token.TokenValue):
 			expressions = append(expressions, expressionsWithColumns(columnsOnWildcard())...)
 			expectComma = true
-		case isASupportedColumn(token.TokenValue):
+		case IsASupportedColumn(token.TokenValue):
 			expressions = append(expressions, expressionWithColumn(token.TokenValue))
 			expectComma = true
 		case isASupportedFunction(token.TokenValue):
@@ -94,7 +94,7 @@ func (projections *Projections) function() (*Function, error) {
 			case isASupportedFunction(token.TokenValue):
 				functionStack.Push(token)
 				expectOpeningParentheses = true
-			case isASupportedColumn(token.TokenValue):
+			case IsASupportedColumn(token.TokenValue):
 				operatingColumn = token
 				expectOpeningParentheses, expectClosingParentheses = false, true
 			}
