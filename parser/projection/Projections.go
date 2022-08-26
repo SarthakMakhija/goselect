@@ -1,4 +1,4 @@
-package projections
+package projection
 
 import (
 	"errors"
@@ -15,7 +15,7 @@ func newProjections(tokenIterator *tokenizer.TokenIterator) *Projections {
 }
 
 /*
-projections: columns Or functions Or expressions
+projection: columns Or functions Or expressions
 columns: 	 name, size etc
 functions: 	 min(size), lower(name), min(count(size)) etc
 expressions: 2 + 3, 2 > 3 etc

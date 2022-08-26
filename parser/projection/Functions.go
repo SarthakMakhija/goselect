@@ -1,4 +1,4 @@
-package projections
+package projection
 
 var supportedFunctions = map[string]bool{
 	"lower": true,

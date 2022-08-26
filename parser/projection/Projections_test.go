@@ -1,4 +1,4 @@
-package projections
+package projection
 
 import (
 	"goselect/parser/tokenizer"
@@ -73,7 +73,7 @@ func TestAllColumnsWithAnErrorMissingComma(t *testing.T) {
 	_, err := projections.all()
 
 	if err == nil {
-		t.Fatalf("Expected an error on missing comma in projections but did not receive one")
+		t.Fatalf("Expected an error on missing comma in projection but did not receive one")
 	}
 }
 
