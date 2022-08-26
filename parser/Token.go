@@ -62,3 +62,7 @@ func tokenFrom(token string) Token {
 		return newToken(RawString, token)
 	}
 }
+
+func (token Token) equals(value string) bool {
+	return token.tokenValue == value
+}

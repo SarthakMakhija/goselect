@@ -35,7 +35,12 @@ func (tokenIterator *TokenIterator) hasNext() bool {
 }
 
 func (tokenIterator *TokenIterator) next() Token {
-	token := tokenIterator.tokens[tokenIterator.index]
+	token := tokenIterator.peek()
 	tokenIterator.index = tokenIterator.index + 1
+	return token
+}
+
+func (tokenIterator *TokenIterator) peek() Token {
+	token := tokenIterator.tokens[tokenIterator.index]
 	return token
 }
