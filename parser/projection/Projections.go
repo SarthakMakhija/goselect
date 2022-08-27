@@ -3,7 +3,7 @@ package projection
 import (
 	"errors"
 	"github.com/emirpasic/gods/stacks/linkedliststack"
-	"goselect"
+	"goselect/parser"
 	"goselect/parser/tokenizer"
 )
 
@@ -30,7 +30,7 @@ func (projections *Projections) all() (Expressions, error) {
 		switch {
 		case expectComma:
 			if !token.Equals(",") {
-				return Expressions{}, errors.New(goselect.ErrorMessageMissingCommaProjection)
+				return Expressions{}, errors.New(parser.ErrorMessageMissingCommaProjection)
 			}
 			expectComma = false
 		case isAWildcard(token.TokenValue):
@@ -80,7 +80,7 @@ func (projections *Projections) function() (*Function, error) {
 			case expectClosingParentheses:
 				if !token.Equals(")") {
 					functionStack.Clear()
-					return nil, tokenizer.Token{}, errors.New(goselect.ErrorMessageClosingParenthesesProjection)
+					return nil, tokenizer.Token{}, errors.New(parser.ErrorMessageClosingParenthesesProjection)
 				}
 				closingParenthesesCount = closingParenthesesCount + 1
 				if closingParenthesesCount == functionStack.Size() {
@@ -89,7 +89,7 @@ func (projections *Projections) function() (*Function, error) {
 			case expectOpeningParentheses:
 				if !token.Equals("(") {
 					functionStack.Clear()
-					return nil, tokenizer.Token{}, errors.New(goselect.ErrorMessageOpeningParenthesesProjection)
+					return nil, tokenizer.Token{}, errors.New(parser.ErrorMessageOpeningParenthesesProjection)
 				}
 				expectOpeningParentheses = false
 			case isASupportedFunction(token.TokenValue):

@@ -1,4 +1,4 @@
-package goselect
+package parser
 
 const (
 	ErrorMessageLimitValue                   = "expected a limit value"
