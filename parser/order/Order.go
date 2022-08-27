@@ -44,5 +44,8 @@ func NewOrder(iterator *tokenizer.TokenIterator) (Order, error) {
 			}
 		}
 	}
+	if len(ascendingColumns) == 0 && len(descendingColumns) == 0 {
+		return Order{}, errors.New("expected a column after 'order by'")
+	}
 	return Order{ascendingColumns: ascendingColumns, descendingColumns: descendingColumns}, nil
 }

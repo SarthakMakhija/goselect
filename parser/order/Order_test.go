@@ -116,3 +116,15 @@ func TestOrderBy2ColumnsOneInAscendingOtherInDescending(t *testing.T) {
 		t.Fatalf("Expected Order to be %v, received %v", expectedOrder, order)
 	}
 }
+
+func TestThrowsAErrorGivenNoColumnAfterOrderBy(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.Order, "order"))
+	tokens.Add(tokenizer.NewToken(tokenizer.By, "by"))
+
+	_, err := NewOrder(tokens.Iterator())
+
+	if err == nil {
+		t.Fatalf("Expected an error when no columns are given after order by but received none")
+	}
+}
