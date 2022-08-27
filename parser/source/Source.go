@@ -8,32 +8,30 @@ import (
 )
 
 type Source struct {
-	tokenIterator *tokenizer.TokenIterator
-	directory     string
+	directory string
 }
 
 func newSource(tokenIterator *tokenizer.TokenIterator) (*Source, error) {
-	source := &Source{tokenIterator: tokenIterator}
-	if err := source.setDirectory(); err != nil {
+	if directory, err := getDirectory(tokenIterator); err != nil {
 		return nil, err
+	} else {
+		return &Source{directory: directory}, nil
 	}
-	return source, nil
 }
 
-func (source *Source) setDirectory() error {
-	if source.tokenIterator.HasNext() && !source.tokenIterator.Peek().Equals("where") {
-		token := source.tokenIterator.Next()
+func getDirectory(tokenIterator *tokenizer.TokenIterator) (string, error) {
+	if tokenIterator.HasNext() && !tokenIterator.Peek().Equals("where") {
+		token := tokenIterator.Next()
 		path := token.TokenValue
 		if strings.HasPrefix(path, "~") {
 			if currentUser, err := user.Current(); err != nil {
-				return err
+				return "", err
 			} else {
-				source.directory = currentUser.HomeDir + path[1:]
-				return nil
+				directory := currentUser.HomeDir + path[1:]
+				return directory, nil
 			}
 		}
-		source.directory = path
-		return nil
+		return path, nil
 	}
-	return errors.New("incomplete query, need a source path")
+	return "", errors.New("incomplete query, need a source path")
 }
