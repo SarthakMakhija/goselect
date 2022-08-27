@@ -45,7 +45,7 @@ func TestParsesAQueryIntoAnASTWithMultipleProjections(t *testing.T) {
 }
 
 func TestParsesAQueryIntoAnASTWithAnOrderBy(t *testing.T) {
-	parser := NewParser("SELECT name, lower(name) from ~ order by name")
+	parser := NewParser("SELECT name, upper(lower(name)) from ~ order by name")
 	selectStatement, _ := parser.Parse()
 
 	totalProjections := selectStatement.projections.Count()
@@ -56,7 +56,7 @@ func TestParsesAQueryIntoAnASTWithAnOrderBy(t *testing.T) {
 
 	expressions := selectStatement.projections.AllExpressions()
 	columns := expressions.DisplayableColumns()
-	expectedColumns := []string{"name", "lower(name)"}
+	expectedColumns := []string{"name", "upper(lower(name))"}
 
 	if !reflect.DeepEqual(columns, expectedColumns) {
 		t.Fatalf("Expected columns to be %v, received %v", columns, expectedColumns)
