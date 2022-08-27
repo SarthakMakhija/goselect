@@ -23,6 +23,23 @@ func TestOrderByAColumnInAscending(t *testing.T) {
 	}
 }
 
+func TestOrderByAColumnInAscendingWithExplicitAsc(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.Order, "order"))
+	tokens.Add(tokenizer.NewToken(tokenizer.By, "by"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "name"))
+	tokens.Add(tokenizer.NewToken(tokenizer.AscendingOrder, "asc"))
+
+	order, _ := NewOrder(tokens.Iterator())
+	expectedOrder := Order{
+		ascendingColumns: []string{"name"},
+	}
+
+	if !reflect.DeepEqual(expectedOrder, order) {
+		t.Fatalf("Expected Order to be %v, received %v", expectedOrder, order)
+	}
+}
+
 func TestOrderBy2ColumnsInAscending(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.Order, "order"))

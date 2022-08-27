@@ -36,6 +36,9 @@ func NewOrder(iterator *tokenizer.TokenIterator) (Order, error) {
 					iterator.Next()
 				} else {
 					ascendingColumns = append(ascendingColumns, token.TokenValue)
+					if iterator.HasNext() && iterator.Peek().Equals("asc") {
+						iterator.Next()
+					}
 				}
 				expectComma = true
 			}
