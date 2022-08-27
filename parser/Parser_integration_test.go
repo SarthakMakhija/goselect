@@ -6,8 +6,24 @@ import (
 	"testing"
 )
 
+func TestParsesAnEmptyQueryWithAnError(t *testing.T) {
+	_, err := NewParser("")
+	if err == nil {
+		t.Fatalf("Expected an error while parsing an empty query")
+	}
+}
+
+func TestParsesANonSelectQueryWithAnError(t *testing.T) {
+	parser, _ := NewParser("delete from ~")
+	_, err := parser.Parse()
+
+	if err == nil {
+		t.Fatalf("Expected an error while parsing a non-select query")
+	}
+}
+
 func TestParsesAQueryIntoAnASTWithASingleProjection(t *testing.T) {
-	parser := NewParser("SELECT name from ~")
+	parser, _ := NewParser("SELECT name from ~")
 	selectStatement, _ := parser.Parse()
 
 	totalProjections := selectStatement.projections.Count()
@@ -26,7 +42,7 @@ func TestParsesAQueryIntoAnASTWithASingleProjection(t *testing.T) {
 }
 
 func TestParsesAQueryIntoAnASTWithMultipleProjections(t *testing.T) {
-	parser := NewParser("SELECT name, lower(name) from ~")
+	parser, _ := NewParser("SELECT name, lower(name) from ~")
 	selectStatement, _ := parser.Parse()
 
 	totalProjections := selectStatement.projections.Count()
@@ -45,7 +61,7 @@ func TestParsesAQueryIntoAnASTWithMultipleProjections(t *testing.T) {
 }
 
 func TestParsesAQueryIntoAnASTWithAnOrderBy(t *testing.T) {
-	parser := NewParser("SELECT name, upper(lower(name)) from ~ order by name")
+	parser, _ := NewParser("SELECT name, upper(lower(name)) from ~ order by name")
 	selectStatement, _ := parser.Parse()
 
 	totalProjections := selectStatement.projections.Count()
@@ -74,7 +90,7 @@ func TestParsesAQueryIntoAnASTWithAnOrderBy(t *testing.T) {
 }
 
 func TestParsesAQueryIntoAnASTWithLimit(t *testing.T) {
-	parser := NewParser("SELECT name, lower(name) from ~ order by name limit 10")
+	parser, _ := NewParser("SELECT name, lower(name) from ~ order by name limit 10")
 	selectStatement, _ := parser.Parse()
 
 	totalProjections := selectStatement.projections.Count()
@@ -110,7 +126,7 @@ func TestParsesAQueryIntoAnASTWithLimit(t *testing.T) {
 }
 
 func TestParsesAQueryIntoAnASTWithLimitWithoutAnyOrdering(t *testing.T) {
-	parser := NewParser("SELECT name, lower(name) from ~/home limit 10")
+	parser, _ := NewParser("SELECT name, lower(name) from ~/home limit 10")
 	selectStatement, _ := parser.Parse()
 
 	totalProjections := selectStatement.projections.Count()

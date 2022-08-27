@@ -1,6 +1,8 @@
 package parser
 
 import (
+	"errors"
+	"goselect/parser/error/messages"
 	"goselect/parser/limit"
 	"goselect/parser/order"
 	"goselect/parser/projection"
@@ -20,14 +22,20 @@ type Parser struct {
 	query string
 }
 
-func NewParser(query string) *Parser {
-	return &Parser{query: query}
+func NewParser(query string) (*Parser, error) {
+	if len(query) == 0 {
+		return nil, errors.New(messages.ErrorMessageEmptyQuery)
+	}
+	return &Parser{query: strings.TrimSpace(strings.ToLower(query))}, nil
 }
 
 func (parser *Parser) Parse() (*SelectQuery, error) {
-	tokens := tokenizer.NewTokenizer(strings.ToLower(parser.query)).Tokenize()
+	tokens := tokenizer.NewTokenizer(parser.query).Tokenize()
 	iterator := tokens.Iterator()
 
+	if iterator.HasNext() && !iterator.Peek().Equals("select") {
+		return nil, errors.New(messages.ErrorMessageNonSelectQuery)
+	}
 	projections, err := projection.NewProjections(iterator)
 	if err != nil {
 		return nil, err

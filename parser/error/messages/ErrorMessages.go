@@ -1,6 +1,8 @@
 package messages
 
 const (
+	ErrorMessageEmptyQuery                   = "expected query to be non-empty"
+	ErrorMessageNonSelectQuery               = "expected a select query statement"
 	ErrorMessageLimitValue                   = "expected a limit value"
 	ErrorMessageLimitValueInt                = "expected limit to be an integer"
 	ErrorMessageMissingBy                    = "expected 'by' after order"
