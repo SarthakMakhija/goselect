@@ -15,14 +15,6 @@ type Function struct {
 }
 
 func (expressions Expressions) allColumns() []string {
-	var columns []string
-	for _, expression := range expressions.expressions {
-		columns = append(columns, expression.column)
-	}
-	return columns
-}
-
-func (expressions Expressions) functions() []string {
 	var functionAsString func(expression *Expression) string
 	functionAsString = func(expression *Expression) string {
 		if expression.function == nil {
@@ -31,11 +23,15 @@ func (expressions Expressions) functions() []string {
 		return expression.function.name + "(" + functionAsString(expression.function.left) + ")"
 	}
 
-	var functions []string
+	var columns []string
 	for _, expression := range expressions.expressions {
-		functions = append(functions, functionAsString(expression))
+		if len(expression.column) != 0 {
+			columns = append(columns, expression.column)
+		} else {
+			columns = append(columns, functionAsString(expression))
+		}
 	}
-	return functions
+	return columns
 }
 
 func expressionWithColumn(column string) *Expression {

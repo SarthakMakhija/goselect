@@ -81,6 +81,12 @@ func function(tokenIterator *tokenizer.TokenIterator) (*Function, error) {
 		for tokenIterator.HasNext() && !tokenIterator.Peek().Equals(",") {
 			token := tokenIterator.Next()
 			switch {
+			case expectOpeningParentheses:
+				if !token.Equals("(") {
+					functionStack.Clear()
+					return nil, tokenizer.Token{}, errors.New(parser.ErrorMessageOpeningParenthesesProjection)
+				}
+				expectOpeningParentheses = false
 			case expectClosingParentheses:
 				if !token.Equals(")") {
 					functionStack.Clear()
@@ -90,12 +96,6 @@ func function(tokenIterator *tokenizer.TokenIterator) (*Function, error) {
 				if closingParenthesesCount == functionStack.Size() {
 					expectClosingParentheses = false
 				}
-			case expectOpeningParentheses:
-				if !token.Equals("(") {
-					functionStack.Clear()
-					return nil, tokenizer.Token{}, errors.New(parser.ErrorMessageOpeningParenthesesProjection)
-				}
-				expectOpeningParentheses = false
 			case isASupportedFunction(token.TokenValue):
 				functionStack.Push(token)
 				expectOpeningParentheses = true

@@ -90,8 +90,8 @@ func TestAllColumnsWithAFunction(t *testing.T) {
 	expressions := projections.expressions
 
 	functionAsString := "lower(upper(fName))"
-	if expressions.functions()[0] != functionAsString {
-		t.Fatalf("Expected function representation as %v, received %v", functionAsString, expressions.functions()[0])
+	if expressions.allColumns()[0] != functionAsString {
+		t.Fatalf("Expected function representation as %v, received %v", functionAsString, expressions.allColumns()[0])
 	}
 }
 
@@ -110,8 +110,8 @@ func TestAllColumnsWithAFunctionWithSpaceAsATokenAfterFunction(t *testing.T) {
 	expressions := projections.expressions
 
 	oneFunctionAsString := "lower(upper(fName))"
-	if expressions.functions()[0] != oneFunctionAsString {
-		t.Fatalf("Expected function representation as %v, received %v", oneFunctionAsString, expressions.functions()[0])
+	if expressions.allColumns()[0] != oneFunctionAsString {
+		t.Fatalf("Expected function representation as %v, received %v", oneFunctionAsString, expressions.allColumns()[0])
 	}
 }
 
@@ -134,12 +134,12 @@ func TestAllColumnsWith2Functions(t *testing.T) {
 	expressions := projections.expressions
 
 	oneFunctionAsString := "lower(upper(fName))"
-	if expressions.functions()[0] != oneFunctionAsString {
-		t.Fatalf("Expected function representation as %v, received %v", oneFunctionAsString, expressions.functions()[0])
+	if expressions.allColumns()[0] != oneFunctionAsString {
+		t.Fatalf("Expected function representation as %v, received %v", oneFunctionAsString, expressions.allColumns()[0])
 	}
 	otherFunctionAsString := "lower(fName)"
-	if expressions.functions()[1] != otherFunctionAsString {
-		t.Fatalf("Expected function representation as %v, received %v", otherFunctionAsString, expressions.functions()[0])
+	if expressions.allColumns()[1] != otherFunctionAsString {
+		t.Fatalf("Expected function representation as %v, received %v", otherFunctionAsString, expressions.allColumns()[0])
 	}
 }
 
@@ -159,8 +159,8 @@ func TestAllColumnsWithFunctionsAndColumns(t *testing.T) {
 	expressions := projections.expressions
 
 	oneFunctionAsString := "lower(upper(fName))"
-	if expressions.functions()[0] != oneFunctionAsString {
-		t.Fatalf("Expected function representation as %v, received %v", oneFunctionAsString, expressions.functions()[0])
+	if expressions.allColumns()[0] != oneFunctionAsString {
+		t.Fatalf("Expected function representation as %v, received %v", oneFunctionAsString, expressions.allColumns()[0])
 	}
 	column := "size"
 	if expressions.allColumns()[1] != column {
