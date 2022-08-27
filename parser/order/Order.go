@@ -2,6 +2,7 @@ package order
 
 import (
 	"errors"
+	"goselect"
 	"goselect/parser/projection"
 	"goselect/parser/tokenizer"
 )
@@ -16,7 +17,7 @@ func NewOrder(iterator *tokenizer.TokenIterator) (Order, error) {
 		return Order{}, nil
 	}
 	if iterator.HasNext() && !iterator.Next().Equals("by") {
-		return Order{}, errors.New("expected 'by' after order")
+		return Order{}, errors.New(goselect.ErrorMessageMissingBy)
 	}
 
 	var ascendingColumns, descendingColumns []string
@@ -26,7 +27,7 @@ func NewOrder(iterator *tokenizer.TokenIterator) (Order, error) {
 		switch {
 		case expectComma:
 			if !token.Equals(",") {
-				return Order{}, errors.New("expected a comma after 'order by' in column separator")
+				return Order{}, errors.New(goselect.ErrorMessageMissingCommaOrderBy)
 			}
 			expectComma = false
 		default:
@@ -45,7 +46,7 @@ func NewOrder(iterator *tokenizer.TokenIterator) (Order, error) {
 		}
 	}
 	if len(ascendingColumns) == 0 && len(descendingColumns) == 0 {
-		return Order{}, errors.New("expected a column after 'order by'")
+		return Order{}, errors.New(goselect.ErrorMessageMissingOrderByColumns)
 	}
 	return Order{ascendingColumns: ascendingColumns, descendingColumns: descendingColumns}, nil
 }

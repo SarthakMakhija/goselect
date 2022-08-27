@@ -2,6 +2,7 @@ package limit
 
 import (
 	"errors"
+	"goselect"
 	"goselect/parser/tokenizer"
 	"strconv"
 	"strings"
@@ -17,10 +18,10 @@ func NewLimit(iterator *tokenizer.TokenIterator) (Limit, error) {
 		return Limit{defined: false}, nil
 	}
 	if !iterator.HasNext() {
-		return Limit{}, errors.New("need to define limit value")
+		return Limit{}, errors.New(goselect.ErrorMessageLimitValue)
 	}
 	if strings.Contains(iterator.Peek().TokenValue, ".") {
-		return Limit{}, errors.New("limit must be an integer")
+		return Limit{}, errors.New(goselect.ErrorMessageLimitValueInt)
 	}
 	token := iterator.Next()
 	if value, err := strconv.ParseUint(token.TokenValue, 10, 32); err != nil {

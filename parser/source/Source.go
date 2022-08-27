@@ -2,6 +2,7 @@ package source
 
 import (
 	"errors"
+	"goselect"
 	"goselect/parser/tokenizer"
 	"os/user"
 	"strings"
@@ -33,5 +34,5 @@ func getDirectory(tokenIterator *tokenizer.TokenIterator) (string, error) {
 		}
 		return path, nil
 	}
-	return "", errors.New("expected a source path after 'from`")
+	return "", errors.New(goselect.ErrorMessageMissingSource)
 }
