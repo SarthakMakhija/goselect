@@ -11,12 +11,16 @@ type Projections struct {
 	expressions Expressions
 }
 
-func newProjections(tokenIterator *tokenizer.TokenIterator) (*Projections, error) {
+func NewProjections(tokenIterator *tokenizer.TokenIterator) (*Projections, error) {
 	if expressions, err := all(tokenIterator); err != nil {
 		return nil, err
 	} else {
 		return &Projections{expressions: expressions}, nil
 	}
+}
+
+func (projections Projections) count() int {
+	return projections.expressions.count()
 }
 
 /*

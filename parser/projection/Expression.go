@@ -14,6 +14,26 @@ type Function struct {
 	left *Expression
 }
 
+func expressionWithColumn(column string) *Expression {
+	return &Expression{
+		column: column,
+	}
+}
+
+func expressionsWithColumns(columns []string) []*Expression {
+	var expressions = make([]*Expression, len(columns))
+	for index, column := range columns {
+		expressions[index] = expressionWithColumn(column)
+	}
+	return expressions
+}
+
+func expressionWithFunction(fn *Function) *Expression {
+	return &Expression{
+		function: fn,
+	}
+}
+
 func (expressions Expressions) displayableColumns() []string {
 	var functionAsString func(expression *Expression) string
 	functionAsString = func(expression *Expression) string {
@@ -34,22 +54,6 @@ func (expressions Expressions) displayableColumns() []string {
 	return columns
 }
 
-func expressionWithColumn(column string) *Expression {
-	return &Expression{
-		column: column,
-	}
-}
-
-func expressionsWithColumns(columns []string) []*Expression {
-	var expressions = make([]*Expression, len(columns))
-	for index, column := range columns {
-		expressions[index] = expressionWithColumn(column)
-	}
-	return expressions
-}
-
-func expressionWithFunction(fn *Function) *Expression {
-	return &Expression{
-		function: fn,
-	}
+func (expressions Expressions) count() int {
+	return len(expressions.expressions)
 }
