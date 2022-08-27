@@ -33,5 +33,5 @@ func getDirectory(tokenIterator *tokenizer.TokenIterator) (string, error) {
 		}
 		return path, nil
 	}
-	return "", errors.New("incomplete query, need a source path")
+	return "", errors.New("expected a source path after 'from`")
 }
