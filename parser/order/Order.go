@@ -12,12 +12,12 @@ type Order struct {
 	descendingColumns []string
 }
 
-func NewOrder(iterator *tokenizer.TokenIterator) (Order, error) {
+func NewOrder(iterator *tokenizer.TokenIterator) (*Order, error) {
 	if iterator.HasNext() && !iterator.Next().Equals("order") {
-		return Order{}, nil
+		return nil, nil
 	}
 	if iterator.HasNext() && !iterator.Next().Equals("by") {
-		return Order{}, errors.New(parser.ErrorMessageMissingBy)
+		return nil, errors.New(parser.ErrorMessageMissingBy)
 	}
 
 	var ascendingColumns, descendingColumns []string
@@ -27,7 +27,7 @@ func NewOrder(iterator *tokenizer.TokenIterator) (Order, error) {
 		switch {
 		case expectComma:
 			if !token.Equals(",") {
-				return Order{}, errors.New(parser.ErrorMessageMissingCommaOrderBy)
+				return nil, errors.New(parser.ErrorMessageMissingCommaOrderBy)
 			}
 			expectComma = false
 		default:
@@ -46,7 +46,7 @@ func NewOrder(iterator *tokenizer.TokenIterator) (Order, error) {
 		}
 	}
 	if len(ascendingColumns) == 0 && len(descendingColumns) == 0 {
-		return Order{}, errors.New(parser.ErrorMessageMissingOrderByColumns)
+		return nil, errors.New(parser.ErrorMessageMissingOrderByColumns)
 	}
-	return Order{ascendingColumns: ascendingColumns, descendingColumns: descendingColumns}, nil
+	return &Order{ascendingColumns: ascendingColumns, descendingColumns: descendingColumns}, nil
 }

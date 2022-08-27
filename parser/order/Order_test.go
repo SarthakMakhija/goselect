@@ -17,7 +17,7 @@ func TestOrderByAColumnInAscending(t *testing.T) {
 		ascendingColumns: []string{"name"},
 	}
 
-	if !reflect.DeepEqual(expectedOrder, order) {
+	if !reflect.DeepEqual(expectedOrder, *order) {
 		t.Fatalf("Expected Order to be %v, received %v", expectedOrder, order)
 	}
 }
@@ -34,7 +34,7 @@ func TestOrderByAColumnInAscendingWithExplicitAsc(t *testing.T) {
 		ascendingColumns: []string{"name"},
 	}
 
-	if !reflect.DeepEqual(expectedOrder, order) {
+	if !reflect.DeepEqual(expectedOrder, *order) {
 		t.Fatalf("Expected Order to be %v, received %v", expectedOrder, order)
 	}
 }
@@ -52,7 +52,7 @@ func TestOrderBy2ColumnsInAscending(t *testing.T) {
 		ascendingColumns: []string{"name", "size"},
 	}
 
-	if !reflect.DeepEqual(expectedOrder, order) {
+	if !reflect.DeepEqual(expectedOrder, *order) {
 		t.Fatalf("Expected Order to be %v, received %v", expectedOrder, order)
 	}
 }
@@ -69,7 +69,7 @@ func TestOrderByAColumnInDescending(t *testing.T) {
 		descendingColumns: []string{"name"},
 	}
 
-	if !reflect.DeepEqual(expectedOrder, order) {
+	if !reflect.DeepEqual(expectedOrder, *order) {
 		t.Fatalf("Expected Order to be %v, received %v", expectedOrder, order)
 	}
 }
@@ -89,7 +89,7 @@ func TestOrderBy2ColumnsInDescending(t *testing.T) {
 		descendingColumns: []string{"name", "size"},
 	}
 
-	if !reflect.DeepEqual(expectedOrder, order) {
+	if !reflect.DeepEqual(expectedOrder, *order) {
 		t.Fatalf("Expected Order to be %v, received %v", expectedOrder, order)
 	}
 }
@@ -109,7 +109,7 @@ func TestOrderBy2ColumnsOneInAscendingOtherInDescending(t *testing.T) {
 		descendingColumns: []string{"size"},
 	}
 
-	if !reflect.DeepEqual(expectedOrder, order) {
+	if !reflect.DeepEqual(expectedOrder, *order) {
 		t.Fatalf("Expected Order to be %v, received %v", expectedOrder, order)
 	}
 }
