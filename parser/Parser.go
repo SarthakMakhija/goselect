@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-type SelectStatement struct {
+type SelectQuery struct {
 	projections *projection.Projections
 	source      *source.Source
 	order       *order.Order
@@ -24,7 +24,7 @@ func NewParser(query string) *Parser {
 	return &Parser{query: query}
 }
 
-func (parser *Parser) Parse() (*SelectStatement, error) {
+func (parser *Parser) Parse() (*SelectQuery, error) {
 	tokens := tokenizer.NewTokenizer(strings.ToLower(parser.query)).Tokenize()
 	iterator := tokens.Iterator()
 
@@ -44,7 +44,8 @@ func (parser *Parser) Parse() (*SelectStatement, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &SelectStatement{
+
+	return &SelectQuery{
 		projections: projections,
 		source:      fileSource,
 		order:       orderBy,
