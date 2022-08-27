@@ -12,8 +12,8 @@ func TestAllColumns1(t *testing.T) {
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, ","))
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "size"))
 
-	projections := newProjections(tokens.Iterator())
-	expressions, _ := projections.all()
+	projections, _ := newProjections(tokens.Iterator())
+	expressions := projections.expressions
 	expected := []string{"name", "size"}
 
 	if !reflect.DeepEqual(expected, expressions.allColumns()) {
@@ -27,8 +27,8 @@ func TestAllColumns2(t *testing.T) {
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, ","))
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "size"))
 
-	projections := newProjections(tokens.Iterator())
-	expressions, _ := projections.all()
+	projections, _ := newProjections(tokens.Iterator())
+	expressions := projections.expressions
 	expected := []string{"fName", "size"}
 
 	if !reflect.DeepEqual(expected, expressions.allColumns()) {
@@ -40,8 +40,8 @@ func TestAllColumns3(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "*"))
 
-	projections := newProjections(tokens.Iterator())
-	expressions, _ := projections.all()
+	projections, _ := newProjections(tokens.Iterator())
+	expressions := projections.expressions
 	expected := []string{"name", "size"}
 
 	if !reflect.DeepEqual(expected, expressions.allColumns()) {
@@ -55,8 +55,8 @@ func TestAllColumns4(t *testing.T) {
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, ","))
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "name"))
 
-	projections := newProjections(tokens.Iterator())
-	expressions, _ := projections.all()
+	projections, _ := newProjections(tokens.Iterator())
+	expressions := projections.expressions
 	expected := []string{"name", "size", "name"}
 
 	if !reflect.DeepEqual(expected, expressions.allColumns()) {
@@ -69,8 +69,7 @@ func TestAllColumnsWithAnErrorMissingComma(t *testing.T) {
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "name"))
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "size"))
 
-	projections := newProjections(tokens.Iterator())
-	_, err := projections.all()
+	_, err := newProjections(tokens.Iterator())
 
 	if err == nil {
 		t.Fatalf("Expected an error on missing comma in projection but did not receive one")
@@ -87,8 +86,8 @@ func TestAllColumnsWithAFunction(t *testing.T) {
 	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
 	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
 
-	projections := newProjections(tokens.Iterator())
-	expressions, _ := projections.all()
+	projections, _ := newProjections(tokens.Iterator())
+	expressions := projections.expressions
 
 	functionAsString := "lower(upper(fName))"
 	if expressions.functions()[0] != functionAsString {
@@ -107,8 +106,8 @@ func TestAllColumnsWithAFunctionWithSpaceAsATokenAfterFunction(t *testing.T) {
 	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, " "))
 
-	projections := newProjections(tokens.Iterator())
-	expressions, _ := projections.all()
+	projections, _ := newProjections(tokens.Iterator())
+	expressions := projections.expressions
 
 	oneFunctionAsString := "lower(upper(fName))"
 	if expressions.functions()[0] != oneFunctionAsString {
@@ -131,8 +130,8 @@ func TestAllColumnsWith2Functions(t *testing.T) {
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "fName"))
 	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
 
-	projections := newProjections(tokens.Iterator())
-	expressions, _ := projections.all()
+	projections, _ := newProjections(tokens.Iterator())
+	expressions := projections.expressions
 
 	oneFunctionAsString := "lower(upper(fName))"
 	if expressions.functions()[0] != oneFunctionAsString {
@@ -156,8 +155,8 @@ func TestAllColumnsWithFunctionsAndColumns(t *testing.T) {
 	tokens.Add(tokenizer.NewToken(tokenizer.Comma, ","))
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "size"))
 
-	projections := newProjections(tokens.Iterator())
-	expressions, _ := projections.all()
+	projections, _ := newProjections(tokens.Iterator())
+	expressions := projections.expressions
 
 	oneFunctionAsString := "lower(upper(fName))"
 	if expressions.functions()[0] != oneFunctionAsString {

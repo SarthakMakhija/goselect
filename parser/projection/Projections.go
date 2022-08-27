@@ -8,11 +8,15 @@ import (
 )
 
 type Projections struct {
-	tokenIterator *tokenizer.TokenIterator
+	expressions Expressions
 }
 
-func newProjections(tokenIterator *tokenizer.TokenIterator) *Projections {
-	return &Projections{tokenIterator: tokenIterator}
+func newProjections(tokenIterator *tokenizer.TokenIterator) (*Projections, error) {
+	if expressions, err := all(tokenIterator); err != nil {
+		return nil, err
+	} else {
+		return &Projections{expressions: expressions}, nil
+	}
 }
 
 /*
@@ -21,12 +25,12 @@ columns: 	 name, size etc
 functions: 	 min(size), lower(name), min(count(size)) etc
 expressions: 2 + 3, 2 > 3 etc
 */
-func (projections *Projections) all() (Expressions, error) {
+func all(tokenIterator *tokenizer.TokenIterator) (Expressions, error) {
 	var expressions []*Expression
 	var expectComma bool
 
-	for projections.tokenIterator.HasNext() && !projections.tokenIterator.Peek().Equals("from") {
-		token := projections.tokenIterator.Next()
+	for tokenIterator.HasNext() && !tokenIterator.Peek().Equals("from") {
+		token := tokenIterator.Next()
 		switch {
 		case expectComma:
 			if !token.Equals(",") {
@@ -40,8 +44,8 @@ func (projections *Projections) all() (Expressions, error) {
 			expressions = append(expressions, expressionWithColumn(token.TokenValue))
 			expectComma = true
 		case isASupportedFunction(token.TokenValue):
-			projections.tokenIterator.Drop()
-			if function, err := projections.function(); err != nil {
+			tokenIterator.Drop()
+			if function, err := function(tokenIterator); err != nil {
 				return Expressions{}, err
 			} else {
 				expressions = append(expressions, expressionWithFunction(function))
@@ -52,7 +56,7 @@ func (projections *Projections) all() (Expressions, error) {
 	return Expressions{expressions: expressions}, nil
 }
 
-func (projections *Projections) function() (*Function, error) {
+func function(tokenIterator *tokenizer.TokenIterator) (*Function, error) {
 	buildFunction := func(functionStack *linkedliststack.Stack, operatingColumn tokenizer.Token) *Function {
 		functionToken, _ := functionStack.Pop()
 		var rootFunction = &Function{
@@ -74,8 +78,8 @@ func (projections *Projections) function() (*Function, error) {
 		expectOpeningParentheses, expectClosingParentheses := false, false
 		closingParenthesesCount, functionStack := 0, linkedliststack.New()
 
-		for projections.tokenIterator.HasNext() && !projections.tokenIterator.Peek().Equals(",") {
-			token := projections.tokenIterator.Next()
+		for tokenIterator.HasNext() && !tokenIterator.Peek().Equals(",") {
+			token := tokenIterator.Next()
 			switch {
 			case expectClosingParentheses:
 				if !token.Equals(")") {
