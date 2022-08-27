@@ -16,7 +16,7 @@ func NewOrder(iterator *tokenizer.TokenIterator) (Order, error) {
 		return Order{}, nil
 	}
 	if iterator.HasNext() && !iterator.Next().Equals("by") {
-		return Order{}, nil
+		return Order{}, errors.New("expected 'by' after order")
 	}
 
 	var ascendingColumns, descendingColumns []string
