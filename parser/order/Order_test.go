@@ -12,9 +12,9 @@ func TestOrderByAColumnInAscending(t *testing.T) {
 	tokens.Add(tokenizer.NewToken(tokenizer.By, "by"))
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "name"))
 
-	order, _ := NewOrder(tokens.Iterator())
+	order, _ := NewOrder(tokens.Iterator(), 1)
 	expectedOrder := Order{
-		ascendingColumns: []string{"name"},
+		ascendingColumns: []ColumnRef{{name: "name", projectionPosition: -1}},
 	}
 
 	if !reflect.DeepEqual(expectedOrder, *order) {
@@ -29,9 +29,9 @@ func TestOrderByAColumnInAscendingWithExplicitAsc(t *testing.T) {
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "name"))
 	tokens.Add(tokenizer.NewToken(tokenizer.AscendingOrder, "asc"))
 
-	order, _ := NewOrder(tokens.Iterator())
+	order, _ := NewOrder(tokens.Iterator(), 1)
 	expectedOrder := Order{
-		ascendingColumns: []string{"name"},
+		ascendingColumns: []ColumnRef{{name: "name", projectionPosition: -1}},
 	}
 
 	if !reflect.DeepEqual(expectedOrder, *order) {
@@ -47,9 +47,9 @@ func TestOrderBy2ColumnsInAscending(t *testing.T) {
 	tokens.Add(tokenizer.NewToken(tokenizer.Comma, ","))
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "size"))
 
-	order, _ := NewOrder(tokens.Iterator())
+	order, _ := NewOrder(tokens.Iterator(), 1)
 	expectedOrder := Order{
-		ascendingColumns: []string{"name", "size"},
+		ascendingColumns: []ColumnRef{{name: "name", projectionPosition: -1}, {name: "size", projectionPosition: -1}},
 	}
 
 	if !reflect.DeepEqual(expectedOrder, *order) {
@@ -64,9 +64,9 @@ func TestOrderByAColumnInDescending(t *testing.T) {
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "name"))
 	tokens.Add(tokenizer.NewToken(tokenizer.DescendingOrder, "desc"))
 
-	order, _ := NewOrder(tokens.Iterator())
+	order, _ := NewOrder(tokens.Iterator(), 1)
 	expectedOrder := Order{
-		descendingColumns: []string{"name"},
+		descendingColumns: []ColumnRef{{name: "name", projectionPosition: -1}},
 	}
 
 	if !reflect.DeepEqual(expectedOrder, *order) {
@@ -84,9 +84,9 @@ func TestOrderBy2ColumnsInDescending(t *testing.T) {
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "size"))
 	tokens.Add(tokenizer.NewToken(tokenizer.DescendingOrder, "desc"))
 
-	order, _ := NewOrder(tokens.Iterator())
+	order, _ := NewOrder(tokens.Iterator(), 1)
 	expectedOrder := Order{
-		descendingColumns: []string{"name", "size"},
+		descendingColumns: []ColumnRef{{name: "name", projectionPosition: -1}, {name: "size", projectionPosition: -1}},
 	}
 
 	if !reflect.DeepEqual(expectedOrder, *order) {
@@ -103,10 +103,10 @@ func TestOrderBy2ColumnsOneInAscendingOtherInDescending(t *testing.T) {
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "size"))
 	tokens.Add(tokenizer.NewToken(tokenizer.DescendingOrder, "desc"))
 
-	order, _ := NewOrder(tokens.Iterator())
+	order, _ := NewOrder(tokens.Iterator(), 1)
 	expectedOrder := Order{
-		ascendingColumns:  []string{"name"},
-		descendingColumns: []string{"size"},
+		ascendingColumns:  []ColumnRef{{name: "name", projectionPosition: -1}},
+		descendingColumns: []ColumnRef{{name: "size", projectionPosition: -1}},
 	}
 
 	if !reflect.DeepEqual(expectedOrder, *order) {
@@ -119,9 +119,29 @@ func TestThrowsAErrorGivenNoColumnAfterOrderBy(t *testing.T) {
 	tokens.Add(tokenizer.NewToken(tokenizer.Order, "order"))
 	tokens.Add(tokenizer.NewToken(tokenizer.By, "by"))
 
-	_, err := NewOrder(tokens.Iterator())
+	_, err := NewOrder(tokens.Iterator(), 1)
 
 	if err == nil {
 		t.Fatalf("Expected an error when no columns are given after order by but received none")
+	}
+}
+
+func TestOrderBy2ColumnsWithOneAsTheProjectionPosition(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.Order, "order"))
+	tokens.Add(tokenizer.NewToken(tokenizer.By, "by"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "name"))
+	tokens.Add(tokenizer.NewToken(tokenizer.DescendingOrder, "desc"))
+	tokens.Add(tokenizer.NewToken(tokenizer.Comma, ","))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "1"))
+
+	order, _ := NewOrder(tokens.Iterator(), 1)
+	expectedOrder := Order{
+		ascendingColumns:  []ColumnRef{{name: "", projectionPosition: 1}},
+		descendingColumns: []ColumnRef{{name: "name", projectionPosition: -1}},
+	}
+
+	if !reflect.DeepEqual(expectedOrder, *order) {
+		t.Fatalf("Expected Order to be %v, received %v", expectedOrder, order)
 	}
 }
