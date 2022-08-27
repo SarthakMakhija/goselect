@@ -1,7 +1,6 @@
 package order
 
 import (
-	"fmt"
 	"goselect/parser/tokenizer"
 	"reflect"
 	"testing"
@@ -85,8 +84,7 @@ func TestOrderBy2ColumnsInDescending(t *testing.T) {
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "size"))
 	tokens.Add(tokenizer.NewToken(tokenizer.DescendingOrder, "desc"))
 
-	order, err := NewOrder(tokens.Iterator())
-	fmt.Println(err)
+	order, _ := NewOrder(tokens.Iterator())
 	expectedOrder := Order{
 		descendingColumns: []string{"name", "size"},
 	}
@@ -105,8 +103,7 @@ func TestOrderBy2ColumnsOneInAscendingOtherInDescending(t *testing.T) {
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "size"))
 	tokens.Add(tokenizer.NewToken(tokenizer.DescendingOrder, "desc"))
 
-	order, err := NewOrder(tokens.Iterator())
-	fmt.Println(err)
+	order, _ := NewOrder(tokens.Iterator())
 	expectedOrder := Order{
 		ascendingColumns:  []string{"name"},
 		descendingColumns: []string{"size"},
