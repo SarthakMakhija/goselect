@@ -26,7 +26,7 @@ func NewOrder(iterator *tokenizer.TokenIterator) (Order, error) {
 		switch {
 		case expectComma:
 			if !token.Equals(",") {
-				return Order{}, errors.New("expected a comma after 'order by'")
+				return Order{}, errors.New("expected a comma after 'order by' in column separator")
 			}
 			expectComma = false
 		default:
