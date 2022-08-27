@@ -21,7 +21,7 @@ func NewOrder(iterator *tokenizer.TokenIterator) (Order, error) {
 
 	var ascendingColumns, descendingColumns []string
 	var expectComma bool
-	for iterator.HasNext() {
+	for iterator.HasNext() && !iterator.Peek().Equals("limit") {
 		token := iterator.Next()
 		switch {
 		case expectComma:
