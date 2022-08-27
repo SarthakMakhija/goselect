@@ -2,7 +2,7 @@ package order
 
 import (
 	"errors"
-	"goselect/parser/errors/messages"
+	"goselect/parser/error/messages"
 	"goselect/parser/projection"
 	"goselect/parser/tokenizer"
 	"strconv"

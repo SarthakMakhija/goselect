@@ -2,7 +2,7 @@ package source
 
 import (
 	"errors"
-	"goselect/parser/errors/messages"
+	"goselect/parser/error/messages"
 	"goselect/parser/tokenizer"
 	"os/user"
 	"strings"

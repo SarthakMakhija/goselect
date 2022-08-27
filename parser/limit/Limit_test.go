@@ -11,7 +11,7 @@ func TestLimitWithoutAnyLimitDefined(t *testing.T) {
 
 	_, err := NewLimit(tokens.Iterator())
 	if err == nil {
-		t.Fatalf("Expected an errors with limit keyword without any limit")
+		t.Fatalf("Expected an error with limit keyword without any limit")
 	}
 }
 
@@ -22,7 +22,7 @@ func TestLimitWithAFloatingValue(t *testing.T) {
 
 	_, err := NewLimit(tokens.Iterator())
 	if err == nil {
-		t.Fatalf("Expected an errors with floating point limit")
+		t.Fatalf("Expected an error with floating point limit")
 	}
 }
 
@@ -33,7 +33,7 @@ func TestLimitWithIllegalLimit(t *testing.T) {
 
 	_, err := NewLimit(tokens.Iterator())
 	if err == nil {
-		t.Fatalf("Expected an errors with floating point limit")
+		t.Fatalf("Expected an error with floating point limit")
 	}
 }
 

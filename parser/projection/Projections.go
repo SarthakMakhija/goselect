@@ -3,7 +3,7 @@ package projection
 import (
 	"errors"
 	"github.com/emirpasic/gods/stacks/linkedliststack"
-	"goselect/parser/errors/messages"
+	"goselect/parser/error/messages"
 	"goselect/parser/tokenizer"
 )
 

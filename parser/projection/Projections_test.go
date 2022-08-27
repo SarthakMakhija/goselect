@@ -72,7 +72,7 @@ func TestAllColumnsWithAnErrorMissingComma(t *testing.T) {
 	_, err := NewProjections(tokens.Iterator())
 
 	if err == nil {
-		t.Fatalf("Expected an errors on missing comma in projection but did not receive one")
+		t.Fatalf("Expected an error on missing comma in projection but did not receive one")
 	}
 }
 

@@ -56,7 +56,7 @@ func TestThrowsAnErrorWithoutAnyTokens(t *testing.T) {
 	_, err := NewSource(tokens.Iterator())
 
 	if err == nil {
-		t.Fatalf("Expected errors to be non-nil when creating a source without any tokens")
+		t.Fatalf("Expected error to be non-nil when creating a source without any tokens")
 	}
 }
 

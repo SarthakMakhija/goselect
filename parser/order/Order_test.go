@@ -122,7 +122,7 @@ func TestThrowsAErrorGivenNoColumnAfterOrderBy(t *testing.T) {
 	_, err := NewOrder(tokens.Iterator(), 1)
 
 	if err == nil {
-		t.Fatalf("Expected an errors when no columns are given after order by but received none")
+		t.Fatalf("Expected an error when no columns are given after order by but received none")
 	}
 }
 
