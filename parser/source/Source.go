@@ -2,7 +2,7 @@ package source
 
 import (
 	"errors"
-	"goselect/parser"
+	"goselect/parser/errors/messages"
 	"goselect/parser/tokenizer"
 	"os/user"
 	"strings"
@@ -12,7 +12,7 @@ type Source struct {
 	directory string
 }
 
-func newSource(tokenIterator *tokenizer.TokenIterator) (*Source, error) {
+func NewSource(tokenIterator *tokenizer.TokenIterator) (*Source, error) {
 	if directory, err := getDirectory(tokenIterator); err != nil {
 		return nil, err
 	} else {
@@ -21,6 +21,9 @@ func newSource(tokenIterator *tokenizer.TokenIterator) (*Source, error) {
 }
 
 func getDirectory(tokenIterator *tokenizer.TokenIterator) (string, error) {
+	if tokenIterator.HasNext() && tokenIterator.Peek().Equals("from") {
+		tokenIterator.Next()
+	}
 	if tokenIterator.HasNext() && !tokenIterator.Peek().Equals("where") {
 		token := tokenIterator.Next()
 		path := token.TokenValue
@@ -34,5 +37,5 @@ func getDirectory(tokenIterator *tokenizer.TokenIterator) (string, error) {
 		}
 		return path, nil
 	}
-	return "", errors.New(parser.ErrorMessageMissingSource)
+	return "", errors.New(messages.ErrorMessageMissingSource)
 }

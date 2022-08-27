@@ -34,7 +34,7 @@ func expressionWithFunction(fn *Function) *Expression {
 	}
 }
 
-func (expressions Expressions) displayableColumns() []string {
+func (expressions Expressions) DisplayableColumns() []string {
 	var functionAsString func(expression *Expression) string
 	functionAsString = func(expression *Expression) string {
 		if expression.function == nil {

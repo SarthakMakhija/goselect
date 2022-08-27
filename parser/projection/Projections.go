@@ -3,7 +3,7 @@ package projection
 import (
 	"errors"
 	"github.com/emirpasic/gods/stacks/linkedliststack"
-	"goselect/parser"
+	"goselect/parser/errors/messages"
 	"goselect/parser/tokenizer"
 )
 
@@ -19,14 +19,18 @@ func NewProjections(tokenIterator *tokenizer.TokenIterator) (*Projections, error
 	}
 }
 
-func (projections Projections) count() int {
+func (projections Projections) Count() int {
 	return projections.expressions.count()
+}
+
+func (projections Projections) AllExpressions() Expressions {
+	return projections.expressions
 }
 
 /*
 projection: columns Or functions Or expressions
 columns: 	 name, size etc
-functions: 	 min(size), lower(name), min(count(size)) etc
+functions: 	 min(size), lower(name), min(Count(size)) etc
 expressions: 2 + 3, 2 > 3 etc
 */
 func all(tokenIterator *tokenizer.TokenIterator) (Expressions, error) {
@@ -38,7 +42,7 @@ func all(tokenIterator *tokenizer.TokenIterator) (Expressions, error) {
 		switch {
 		case expectComma:
 			if !token.Equals(",") {
-				return Expressions{}, errors.New(parser.ErrorMessageMissingCommaProjection)
+				return Expressions{}, errors.New(messages.ErrorMessageMissingCommaProjection)
 			}
 			expectComma = false
 		case isAWildcard(token.TokenValue):
@@ -82,23 +86,25 @@ func function(tokenIterator *tokenizer.TokenIterator) (*Function, error) {
 		expectOpeningParentheses, expectClosingParentheses := false, false
 		closingParenthesesCount, functionStack := 0, linkedliststack.New()
 
-		for tokenIterator.HasNext() && !tokenIterator.Peek().Equals(",") {
+	loop:
+		for tokenIterator.HasNext() {
 			token := tokenIterator.Next()
 			switch {
 			case expectOpeningParentheses:
 				if !token.Equals("(") {
 					functionStack.Clear()
-					return nil, tokenizer.Token{}, errors.New(parser.ErrorMessageOpeningParenthesesProjection)
+					return nil, tokenizer.Token{}, errors.New(messages.ErrorMessageOpeningParenthesesProjection)
 				}
 				expectOpeningParentheses = false
 			case expectClosingParentheses:
 				if !token.Equals(")") {
 					functionStack.Clear()
-					return nil, tokenizer.Token{}, errors.New(parser.ErrorMessageClosingParenthesesProjection)
+					return nil, tokenizer.Token{}, errors.New(messages.ErrorMessageClosingParenthesesProjection)
 				}
 				closingParenthesesCount = closingParenthesesCount + 1
 				if closingParenthesesCount == functionStack.Size() {
 					expectClosingParentheses = false
+					break loop
 				}
 			case isASupportedFunction(token.TokenValue):
 				functionStack.Push(token)

@@ -6,11 +6,11 @@ type Tokenizer struct {
 	query string
 }
 
-func newTokenizer(query string) *Tokenizer {
+func NewTokenizer(query string) *Tokenizer {
 	return &Tokenizer{query: query}
 }
 
-func (tokenizer *Tokenizer) tokenize() *Tokens {
+func (tokenizer *Tokenizer) Tokenize() *Tokens {
 	tokens := NewEmptyTokens()
 	var token strings.Builder
 	for _, ch := range tokenizer.query {

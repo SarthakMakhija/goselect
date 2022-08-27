@@ -5,8 +5,8 @@ import (
 )
 
 func TestTokenizerWithTokenCount(t *testing.T) {
-	tokenizer := newTokenizer("select fName from /home/apps")
-	tokens := tokenizer.tokenize()
+	tokenizer := NewTokenizer("select fName from /home/apps")
+	tokens := tokenizer.Tokenize()
 
 	expectedTokenCount := 4
 	actualTokenCount := tokens.count()
@@ -17,8 +17,8 @@ func TestTokenizerWithTokenCount(t *testing.T) {
 }
 
 func TestTokenizerWithAllTokens1(t *testing.T) {
-	tokenizer := newTokenizer("select fName from /home/apps")
-	tokens := tokenizer.tokenize()
+	tokenizer := NewTokenizer("select fName from /home/apps")
+	tokens := tokenizer.Tokenize()
 
 	iterator := tokens.Iterator()
 	expectedTokens := []string{"select", "fName", "from", "/home/apps"}
@@ -34,8 +34,8 @@ func TestTokenizerWithAllTokens1(t *testing.T) {
 }
 
 func TestTokenizerWithAllTokens2(t *testing.T) {
-	tokenizer := newTokenizer("select fName,fSize from /home/apps")
-	tokens := tokenizer.tokenize()
+	tokenizer := NewTokenizer("select fName,fSize from /home/apps")
+	tokens := tokenizer.Tokenize()
 
 	iterator := tokens.Iterator()
 	expectedTokens := []string{"select", "fName", ",", "fSize", "from", "/home/apps"}
@@ -51,8 +51,8 @@ func TestTokenizerWithAllTokens2(t *testing.T) {
 }
 
 func TestTokenizerWithAllTokens3(t *testing.T) {
-	tokenizer := newTokenizer("select fName,   fSize from    /home/apps")
-	tokens := tokenizer.tokenize()
+	tokenizer := NewTokenizer("select fName,   fSize from    /home/apps")
+	tokens := tokenizer.Tokenize()
 
 	iterator := tokens.Iterator()
 	expectedTokens := []string{"select", "fName", ",", "fSize", "from", "/home/apps"}
@@ -68,8 +68,8 @@ func TestTokenizerWithAllTokens3(t *testing.T) {
 }
 
 func TestTokenizerWithAllTokens4(t *testing.T) {
-	tokenizer := newTokenizer("select * from /home/apps")
-	tokens := tokenizer.tokenize()
+	tokenizer := NewTokenizer("select * from /home/apps")
+	tokens := tokenizer.Tokenize()
 
 	iterator := tokens.Iterator()
 	expectedTokens := []string{"select", "*", "from", "/home/apps"}
@@ -85,8 +85,8 @@ func TestTokenizerWithAllTokens4(t *testing.T) {
 }
 
 func TestTokenizerWithAllTokens5(t *testing.T) {
-	tokenizer := newTokenizer("select name, length(name),UPPER( name ) from /home/apps")
-	tokens := tokenizer.tokenize()
+	tokenizer := NewTokenizer("select name, length(name),UPPER( name ) from /home/apps")
+	tokens := tokenizer.Tokenize()
 
 	iterator := tokens.Iterator()
 	expectedTokens := []string{"select", "name", ",", "length", "(", "name", ")", ",", "UPPER", "(", "name", ")", "from", "/home/apps"}
@@ -102,8 +102,8 @@ func TestTokenizerWithAllTokens5(t *testing.T) {
 }
 
 func TestTokenizerWithAllTokens6(t *testing.T) {
-	tokenizer := newTokenizer("select name, rand() from /home/apps order by rand() limit 10")
-	tokens := tokenizer.tokenize()
+	tokenizer := NewTokenizer("select name, rand() from /home/apps order by rand() limit 10")
+	tokens := tokenizer.Tokenize()
 
 	iterator := tokens.Iterator()
 	expectedTokens := []string{"select", "name", ",", "rand", "(", ")", "from", "/home/apps", "order", "by", "rand", "(", ")", "limit", "10"}
@@ -119,8 +119,8 @@ func TestTokenizerWithAllTokens6(t *testing.T) {
 }
 
 func TestTokenizerWithAllTokens7(t *testing.T) {
-	tokenizer := newTokenizer("select COUNT(*), MIN(size) from /home/apps")
-	tokens := tokenizer.tokenize()
+	tokenizer := NewTokenizer("select COUNT(*), MIN(size) from /home/apps")
+	tokens := tokenizer.Tokenize()
 
 	iterator := tokens.Iterator()
 	expectedTokens := []string{"select", "COUNT", "(", "*", ")", ",", "MIN", "(", "size", ")", "from", "/home/apps"}
@@ -136,8 +136,8 @@ func TestTokenizerWithAllTokens7(t *testing.T) {
 }
 
 func TestTokenizerWithAllTokens8(t *testing.T) {
-	tokenizer := newTokenizer("select size from /home/apps where name='*.txt' order by modified")
-	tokens := tokenizer.tokenize()
+	tokenizer := NewTokenizer("select size from /home/apps where name='*.txt' order by modified")
+	tokens := tokenizer.Tokenize()
 
 	iterator := tokens.Iterator()
 	expectedTokens := []string{"select", "size", "from", "/home/apps", "where", "name", "=", "*.txt", "order", "by", "modified"}

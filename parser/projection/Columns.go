@@ -2,6 +2,7 @@ package projection
 
 var supportedColumns = map[string]bool{
 	"name":  true,
+	"Name":  true,
 	"fName": true,
 	"size":  true,
 	"fSize": true,
