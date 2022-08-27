@@ -15,6 +15,9 @@ func NewProjections(tokenIterator *tokenizer.TokenIterator) (*Projections, error
 	if expressions, err := all(tokenIterator); err != nil {
 		return nil, err
 	} else {
+		if expressions.count() == 0 {
+			return nil, errors.New("expected at least one column in projection list")
+		}
 		return &Projections{expressions: expressions}, nil
 	}
 }

@@ -6,6 +6,16 @@ import (
 	"testing"
 )
 
+func TestThrowsAnErrorWithoutAnyColumns(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, ","))
+
+	_, err := NewProjections(tokens.Iterator())
+	if err == nil {
+		t.Fatalf("Expected an error without any projection list but received none")
+	}
+}
+
 func TestAllColumns1(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "name"))
