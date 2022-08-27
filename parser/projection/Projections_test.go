@@ -16,8 +16,8 @@ func TestAllColumns1(t *testing.T) {
 	expressions := projections.expressions
 	expected := []string{"name", "size"}
 
-	if !reflect.DeepEqual(expected, expressions.allColumns()) {
-		t.Fatalf("Expected columns to be %v, received %v", expected, expressions.allColumns())
+	if !reflect.DeepEqual(expected, expressions.displayableColumns()) {
+		t.Fatalf("Expected columns to be %v, received %v", expected, expressions.displayableColumns())
 	}
 }
 
@@ -31,8 +31,8 @@ func TestAllColumns2(t *testing.T) {
 	expressions := projections.expressions
 	expected := []string{"fName", "size"}
 
-	if !reflect.DeepEqual(expected, expressions.allColumns()) {
-		t.Fatalf("Expected columns to be %v, received %v", expected, expressions.allColumns())
+	if !reflect.DeepEqual(expected, expressions.displayableColumns()) {
+		t.Fatalf("Expected columns to be %v, received %v", expected, expressions.displayableColumns())
 	}
 }
 
@@ -44,8 +44,8 @@ func TestAllColumns3(t *testing.T) {
 	expressions := projections.expressions
 	expected := []string{"name", "size"}
 
-	if !reflect.DeepEqual(expected, expressions.allColumns()) {
-		t.Fatalf("Expected fields to be %v, received %v", expected, expressions.allColumns())
+	if !reflect.DeepEqual(expected, expressions.displayableColumns()) {
+		t.Fatalf("Expected fields to be %v, received %v", expected, expressions.displayableColumns())
 	}
 }
 
@@ -59,8 +59,8 @@ func TestAllColumns4(t *testing.T) {
 	expressions := projections.expressions
 	expected := []string{"name", "size", "name"}
 
-	if !reflect.DeepEqual(expected, expressions.allColumns()) {
-		t.Fatalf("Expected fields to be %v, received %v", expected, expressions.allColumns())
+	if !reflect.DeepEqual(expected, expressions.displayableColumns()) {
+		t.Fatalf("Expected fields to be %v, received %v", expected, expressions.displayableColumns())
 	}
 }
 
@@ -90,8 +90,8 @@ func TestAllColumnsWithAFunction(t *testing.T) {
 	expressions := projections.expressions
 
 	functionAsString := "lower(upper(fName))"
-	if expressions.allColumns()[0] != functionAsString {
-		t.Fatalf("Expected function representation as %v, received %v", functionAsString, expressions.allColumns()[0])
+	if expressions.displayableColumns()[0] != functionAsString {
+		t.Fatalf("Expected function representation as %v, received %v", functionAsString, expressions.displayableColumns()[0])
 	}
 }
 
@@ -110,8 +110,8 @@ func TestAllColumnsWithAFunctionWithSpaceAsATokenAfterFunction(t *testing.T) {
 	expressions := projections.expressions
 
 	oneFunctionAsString := "lower(upper(fName))"
-	if expressions.allColumns()[0] != oneFunctionAsString {
-		t.Fatalf("Expected function representation as %v, received %v", oneFunctionAsString, expressions.allColumns()[0])
+	if expressions.displayableColumns()[0] != oneFunctionAsString {
+		t.Fatalf("Expected function representation as %v, received %v", oneFunctionAsString, expressions.displayableColumns()[0])
 	}
 }
 
@@ -134,12 +134,12 @@ func TestAllColumnsWith2Functions(t *testing.T) {
 	expressions := projections.expressions
 
 	oneFunctionAsString := "lower(upper(fName))"
-	if expressions.allColumns()[0] != oneFunctionAsString {
-		t.Fatalf("Expected function representation as %v, received %v", oneFunctionAsString, expressions.allColumns()[0])
+	if expressions.displayableColumns()[0] != oneFunctionAsString {
+		t.Fatalf("Expected function representation as %v, received %v", oneFunctionAsString, expressions.displayableColumns()[0])
 	}
 	otherFunctionAsString := "lower(fName)"
-	if expressions.allColumns()[1] != otherFunctionAsString {
-		t.Fatalf("Expected function representation as %v, received %v", otherFunctionAsString, expressions.allColumns()[0])
+	if expressions.displayableColumns()[1] != otherFunctionAsString {
+		t.Fatalf("Expected function representation as %v, received %v", otherFunctionAsString, expressions.displayableColumns()[0])
 	}
 }
 
@@ -159,11 +159,11 @@ func TestAllColumnsWithFunctionsAndColumns(t *testing.T) {
 	expressions := projections.expressions
 
 	oneFunctionAsString := "lower(upper(fName))"
-	if expressions.allColumns()[0] != oneFunctionAsString {
-		t.Fatalf("Expected function representation as %v, received %v", oneFunctionAsString, expressions.allColumns()[0])
+	if expressions.displayableColumns()[0] != oneFunctionAsString {
+		t.Fatalf("Expected function representation as %v, received %v", oneFunctionAsString, expressions.displayableColumns()[0])
 	}
 	column := "size"
-	if expressions.allColumns()[1] != column {
-		t.Fatalf("Expected column to be %v, received %v", column, expressions.allColumns()[1])
+	if expressions.displayableColumns()[1] != column {
+		t.Fatalf("Expected column to be %v, received %v", column, expressions.displayableColumns()[1])
 	}
 }

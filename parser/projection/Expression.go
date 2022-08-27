@@ -14,7 +14,7 @@ type Function struct {
 	left *Expression
 }
 
-func (expressions Expressions) allColumns() []string {
+func (expressions Expressions) displayableColumns() []string {
 	var functionAsString func(expression *Expression) string
 	functionAsString = func(expression *Expression) string {
 		if expression.function == nil {
