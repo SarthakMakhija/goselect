@@ -57,3 +57,7 @@ func (expressions Expressions) DisplayableColumns() []string {
 func (expressions Expressions) count() int {
 	return len(expressions.expressions)
 }
+
+func (expression Expression) isAFunction() bool {
+	return expression.function != nil
+}
