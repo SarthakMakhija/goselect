@@ -1,5 +1,7 @@
 package tokenizer
 
+import "strings"
+
 const (
 	RawString          int = iota
 	Comma                  = 1
@@ -64,5 +66,5 @@ func tokenFrom(token string) Token {
 }
 
 func (token Token) Equals(value string) bool {
-	return token.TokenValue == value
+	return strings.ToLower(token.TokenValue) == strings.ToLower(value)
 }

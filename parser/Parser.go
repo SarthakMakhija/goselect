@@ -26,7 +26,7 @@ func NewParser(query string) (*Parser, error) {
 	if len(query) == 0 {
 		return nil, errors.New(messages.ErrorMessageEmptyQuery)
 	}
-	return &Parser{query: strings.TrimSpace(strings.ToLower(query))}, nil
+	return &Parser{query: strings.TrimSpace(query)}, nil
 }
 
 func (parser *Parser) Parse() (*SelectQuery, error) {
