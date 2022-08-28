@@ -99,7 +99,7 @@ func function(tokenIterator *tokenizer.TokenIterator) (*Function, error) {
 					return nil, tokenizer.Token{}, errors.New(messages.ErrorMessageOpeningParenthesesProjection)
 				}
 				expectOpeningParentheses = false
-			case expectClosingParentheses:
+			case expectClosingParentheses || token.Equals(")"):
 				if !token.Equals(")") {
 					functionStack.Clear()
 					return nil, tokenizer.Token{}, errors.New(messages.ErrorMessageClosingParenthesesProjection)

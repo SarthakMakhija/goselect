@@ -3,6 +3,7 @@ package projection
 import (
 	b64 "encoding/base64"
 	"strings"
+	"time"
 )
 
 var supportedFunctions = map[string]bool{
@@ -10,6 +11,7 @@ var supportedFunctions = map[string]bool{
 	"upper":  true,
 	"title":  true,
 	"base64": true,
+	"now":    true,
 }
 
 func isASupportedFunction(function string) bool {
@@ -24,6 +26,8 @@ func ExecuteFn(fn string, args ...interface{}) interface{} {
 		return strings.ToUpper(args[0].(string))
 	case "title":
 		return strings.Title(args[0].(string))
+	case "now":
+		return time.Now().String()
 	case "base64":
 		d := []byte(args[0].(string))
 		return b64.StdEncoding.EncodeToString(d)
