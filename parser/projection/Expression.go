@@ -7,8 +7,8 @@ type Expressions struct {
 }
 
 type Expression struct {
-	column   string
-	function *Function
+	attribute string
+	function  *Function
 }
 
 type Function struct {
@@ -18,7 +18,7 @@ type Function struct {
 
 func expressionWithColumn(column string) *Expression {
 	return &Expression{
-		column: column,
+		attribute: column,
 	}
 }
 
@@ -40,19 +40,19 @@ func (expressions Expressions) count() int {
 	return len(expressions.expressions)
 }
 
-func (expressions Expressions) DisplayableColumns() []string {
+func (expressions Expressions) displayableAttributes() []string {
 	var functionAsString func(expression *Expression) string
 	functionAsString = func(expression *Expression) string {
 		if !expression.isAFunction() {
-			return expression.column
+			return expression.attribute
 		}
 		return expression.function.name + "(" + functionAsString(expression.function.left) + ")"
 	}
 
 	var columns []string
 	for _, expression := range expressions.expressions {
-		if len(expression.column) != 0 {
-			columns = append(columns, expression.column)
+		if len(expression.attribute) != 0 {
+			columns = append(columns, expression.attribute)
 		} else {
 			columns = append(columns, functionAsString(expression))
 		}
@@ -66,14 +66,14 @@ func (expressions Expressions) evaluateWith(fileAttributes *context.FileAttribut
 	var execute func(expression *Expression) interface{}
 	execute = func(expression *Expression) interface{} {
 		if !expression.isAFunction() {
-			return fileAttributes.Get(expression.column)
+			return fileAttributes.Get(expression.attribute)
 		}
 		v := execute(expression.function.left)
 		return functions.Execute(expression.function.name, v)
 	}
 	for _, expression := range expressions.expressions {
 		if !expression.isAFunction() {
-			values = append(values, fileAttributes.Get(expression.column))
+			values = append(values, fileAttributes.Get(expression.attribute))
 		} else {
 			values = append(values, execute(expression))
 		}

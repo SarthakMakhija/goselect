@@ -33,12 +33,11 @@ func TestParsesAQueryIntoAnASTWithASingleProjection(t *testing.T) {
 		t.Fatalf("Expected projection count %v, received %v", expected, totalProjections)
 	}
 
-	expressions := selectStatement.Projections.AllExpressions()
-	columns := expressions.DisplayableColumns()
-	expectedColumns := []string{"name"}
+	attributes := selectStatement.Projections.DisplayableAttributes()
+	expectedAttributes := []string{"name"}
 
-	if !reflect.DeepEqual(columns, expectedColumns) {
-		t.Fatalf("Expected columns to be %v, received %v", columns, expectedColumns)
+	if !reflect.DeepEqual(attributes, expectedAttributes) {
+		t.Fatalf("Expected attributes to be %v, received %v", attributes, expectedAttributes)
 	}
 }
 
@@ -52,12 +51,11 @@ func TestParsesAQueryIntoAnASTWithMultipleProjections(t *testing.T) {
 		t.Fatalf("Expected projection count %v, received %v", expected, totalProjections)
 	}
 
-	expressions := selectStatement.Projections.AllExpressions()
-	columns := expressions.DisplayableColumns()
-	expectedColumns := []string{"name", "lower(name)"}
+	attributes := selectStatement.Projections.DisplayableAttributes()
+	expectedAttributes := []string{"name", "lower(name)"}
 
-	if !reflect.DeepEqual(columns, expectedColumns) {
-		t.Fatalf("Expected columns to be %v, received %v", columns, expectedColumns)
+	if !reflect.DeepEqual(attributes, expectedAttributes) {
+		t.Fatalf("Expected attributes to be %v, received %v", attributes, expectedAttributes)
 	}
 }
 
@@ -71,22 +69,21 @@ func TestParsesAQueryIntoAnASTWithAnOrderBy(t *testing.T) {
 		t.Fatalf("Expected projection count %v, received %v", expected, totalProjections)
 	}
 
-	expressions := selectStatement.Projections.AllExpressions()
-	columns := expressions.DisplayableColumns()
-	expectedColumns := []string{"name", "upper(lower(name))"}
+	attributes := selectStatement.Projections.DisplayableAttributes()
+	expectedAttributes := []string{"name", "upper(lower(name))"}
 
-	if !reflect.DeepEqual(columns, expectedColumns) {
-		t.Fatalf("Expected columns to be %v, received %v", columns, expectedColumns)
+	if !reflect.DeepEqual(attributes, expectedAttributes) {
+		t.Fatalf("Expected attributes to be %v, received %v", attributes, expectedAttributes)
 	}
 
-	ascendingColumns := selectStatement.Order.AscendingColumns
+	ascendingAttributes := selectStatement.Order.AscendingColumns
 	expectedAscending := []order.ColumnRef{{
 		Name:               "name",
 		ProjectionPosition: -1,
 	}}
 
-	if !reflect.DeepEqual(ascendingColumns, expectedAscending) {
-		t.Fatalf("Expected ordering columns to be %v, received %v", expectedAscending, ascendingColumns)
+	if !reflect.DeepEqual(ascendingAttributes, expectedAscending) {
+		t.Fatalf("Expected ordering attributes to be %v, received %v", expectedAscending, ascendingAttributes)
 	}
 }
 
@@ -100,22 +97,21 @@ func TestParsesAQueryIntoAnASTWithLimit(t *testing.T) {
 		t.Fatalf("Expected projection count %v, received %v", expected, totalProjections)
 	}
 
-	expressions := selectStatement.Projections.AllExpressions()
-	columns := expressions.DisplayableColumns()
-	expectedColumns := []string{"name", "lower(name)"}
+	attributes := selectStatement.Projections.DisplayableAttributes()
+	expectedAttributes := []string{"name", "lower(name)"}
 
-	if !reflect.DeepEqual(columns, expectedColumns) {
-		t.Fatalf("Expected columns to be %v, received %v", columns, expectedColumns)
+	if !reflect.DeepEqual(attributes, expectedAttributes) {
+		t.Fatalf("Expected attributes to be %v, received %v", attributes, expectedAttributes)
 	}
 
-	ascendingColumns := selectStatement.Order.AscendingColumns
+	ascendingAttributes := selectStatement.Order.AscendingColumns
 	expectedAscending := []order.ColumnRef{{
 		Name:               "name",
 		ProjectionPosition: -1,
 	}}
 
-	if !reflect.DeepEqual(ascendingColumns, expectedAscending) {
-		t.Fatalf("Expected ordering columns to be %v, received %v", expectedAscending, ascendingColumns)
+	if !reflect.DeepEqual(ascendingAttributes, expectedAscending) {
+		t.Fatalf("Expected ordering attributes to be %v, received %v", expectedAscending, ascendingAttributes)
 	}
 
 	limit := selectStatement.Limit.Limit
@@ -136,12 +132,11 @@ func TestParsesAQueryIntoAnASTWithLimitWithoutAnyOrdering(t *testing.T) {
 		t.Fatalf("Expected projection count %v, received %v", expected, totalProjections)
 	}
 
-	expressions := selectStatement.Projections.AllExpressions()
-	columns := expressions.DisplayableColumns()
-	expectedColumns := []string{"name", "lower(name)"}
+	attributes := selectStatement.Projections.DisplayableAttributes()
+	expectedAttributes := []string{"name", "lower(name)"}
 
-	if !reflect.DeepEqual(columns, expectedColumns) {
-		t.Fatalf("Expected columns to be %v, received %v", columns, expectedColumns)
+	if !reflect.DeepEqual(attributes, expectedAttributes) {
+		t.Fatalf("Expected attributes to be %v, received %v", attributes, expectedAttributes)
 	}
 
 	limit := selectStatement.Limit.Limit

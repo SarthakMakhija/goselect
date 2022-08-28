@@ -7,7 +7,7 @@ import (
 
 func TestExpressionsDisplayableColumnsWithColumnName(t *testing.T) {
 	expressions := Expressions{expressions: []*Expression{expressionWithColumn("name")}}
-	columns := expressions.DisplayableColumns()
+	columns := expressions.displayableAttributes()
 	expected := []string{"name"}
 
 	if !reflect.DeepEqual(expected, columns) {
@@ -21,12 +21,12 @@ func TestExpressionsDisplayableColumnsWithFunction(t *testing.T) {
 		left: &Expression{
 			function: &Function{
 				name: "upper",
-				left: &Expression{column: "uid"},
+				left: &Expression{attribute: "uid"},
 			},
 		},
 	}
 	expressions := Expressions{expressions: []*Expression{expressionWithFunction(fun)}}
-	columns := expressions.DisplayableColumns()
+	columns := expressions.displayableAttributes()
 	expected := []string{"lower(upper(uid))"}
 
 	if !reflect.DeepEqual(expected, columns) {
@@ -38,7 +38,7 @@ func TestExpressionIsAFunction(t *testing.T) {
 	expression := Expression{
 		function: &Function{
 			name: "upper",
-			left: &Expression{column: "uid"},
+			left: &Expression{attribute: "uid"},
 		},
 	}
 	if expression.isAFunction() != true {
@@ -48,7 +48,7 @@ func TestExpressionIsAFunction(t *testing.T) {
 
 func TestExpressionIsNotFunction(t *testing.T) {
 	expression := Expression{
-		column: "uid",
+		attribute: "uid",
 	}
 	if expression.isAFunction() != false {
 		t.Fatalf("Expected the expression to not be a function")

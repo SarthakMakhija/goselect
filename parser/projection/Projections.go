@@ -17,7 +17,7 @@ func NewProjections(tokenIterator *tokenizer.TokenIterator, context *context.Con
 		return nil, err
 	} else {
 		if expressions.count() == 0 {
-			return nil, errors.New("expected at least one column in projection list")
+			return nil, errors.New("expected at least one attribute in projection list")
 		}
 		return &Projections{expressions: expressions}, nil
 	}
@@ -29,6 +29,10 @@ func (projections Projections) Count() int {
 
 func (projections Projections) AllExpressions() Expressions {
 	return projections.expressions
+}
+
+func (projections Projections) DisplayableAttributes() []string {
+	return projections.expressions.displayableAttributes()
 }
 
 func (projections Projections) EvaluateWith(fileAttributes *context.FileAttributes, functions *context.AllFunctions) []interface{} {
@@ -77,7 +81,7 @@ func function(tokenIterator *tokenizer.TokenIterator, ctx *context.Context) (*Fu
 		functionToken, _ := functionStack.Pop()
 		var rootFunction = &Function{
 			name: (functionToken.(tokenizer.Token)).TokenValue,
-			left: &Expression{column: operatingColumn.TokenValue},
+			left: &Expression{attribute: operatingColumn.TokenValue},
 		}
 		for !functionStack.Empty() {
 			functionToken, _ := functionStack.Pop()

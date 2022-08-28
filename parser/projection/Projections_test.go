@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestThrowsAnErrorWithoutAnyColumns(t *testing.T) {
+func TestThrowsAnErrorWithoutAnyAttributes(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, ","))
 
@@ -17,65 +17,61 @@ func TestThrowsAnErrorWithoutAnyColumns(t *testing.T) {
 	}
 }
 
-func TestAllColumns1(t *testing.T) {
+func TestAllAttributes1(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "name"))
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, ","))
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "size"))
 
 	projections, _ := NewProjections(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
-	expressions := projections.expressions
 	expected := []string{"name", "size"}
 
-	if !reflect.DeepEqual(expected, expressions.DisplayableColumns()) {
-		t.Fatalf("Expected columns to be %v, received %v", expected, expressions.DisplayableColumns())
+	if !reflect.DeepEqual(expected, projections.DisplayableAttributes()) {
+		t.Fatalf("Expected columns to be %v, received %v", expected, projections.DisplayableAttributes())
 	}
 }
 
-func TestAllColumns2(t *testing.T) {
+func TestAllAttributes2(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "fName"))
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, ","))
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "size"))
 
 	projections, _ := NewProjections(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
-	expressions := projections.expressions
 	expected := []string{"fName", "size"}
 
-	if !reflect.DeepEqual(expected, expressions.DisplayableColumns()) {
-		t.Fatalf("Expected columns to be %v, received %v", expected, expressions.DisplayableColumns())
+	if !reflect.DeepEqual(expected, projections.DisplayableAttributes()) {
+		t.Fatalf("Expected columns to be %v, received %v", expected, projections.DisplayableAttributes())
 	}
 }
 
-func TestAllColumns3(t *testing.T) {
+func TestAllAttributes3(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "*"))
 
 	projections, _ := NewProjections(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
-	expressions := projections.expressions
 	expected := []string{"name", "size"}
 
-	if !reflect.DeepEqual(expected, expressions.DisplayableColumns()) {
-		t.Fatalf("Expected fields to be %v, received %v", expected, expressions.DisplayableColumns())
+	if !reflect.DeepEqual(expected, projections.DisplayableAttributes()) {
+		t.Fatalf("Expected fields to be %v, received %v", expected, projections.DisplayableAttributes())
 	}
 }
 
-func TestAllColumns4(t *testing.T) {
+func TestAllAttributes4(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "*"))
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, ","))
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "name"))
 
 	projections, _ := NewProjections(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
-	expressions := projections.expressions
 	expected := []string{"name", "size", "name"}
 
-	if !reflect.DeepEqual(expected, expressions.DisplayableColumns()) {
-		t.Fatalf("Expected fields to be %v, received %v", expected, expressions.DisplayableColumns())
+	if !reflect.DeepEqual(expected, projections.DisplayableAttributes()) {
+		t.Fatalf("Expected fields to be %v, received %v", expected, projections.DisplayableAttributes())
 	}
 }
 
-func TestAllColumnsWithAnErrorMissingComma(t *testing.T) {
+func TestAllAttributesWithAnErrorMissingComma(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "name"))
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "size"))
@@ -87,7 +83,7 @@ func TestAllColumnsWithAnErrorMissingComma(t *testing.T) {
 	}
 }
 
-func TestAllColumnsWithAFunction(t *testing.T) {
+func TestAllAttributesWithAFunction(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "lower"))
 	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
@@ -98,30 +94,28 @@ func TestAllColumnsWithAFunction(t *testing.T) {
 	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
 
 	projections, _ := NewProjections(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
-	expressions := projections.expressions
 
 	functionAsString := "lower(upper(fName))"
-	if expressions.DisplayableColumns()[0] != functionAsString {
-		t.Fatalf("Expected function representation as %v, received %v", functionAsString, expressions.DisplayableColumns()[0])
+	if projections.DisplayableAttributes()[0] != functionAsString {
+		t.Fatalf("Expected function representation as %v, received %v", functionAsString, projections.DisplayableAttributes()[0])
 	}
 }
 
-func TestAllColumnsWithAFunctionWithoutAnyParameters(t *testing.T) {
+func TestAllAttributesWithAFunctionWithoutAnyParameters(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "now"))
 	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, ")"))
 
 	projections, _ := NewProjections(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
-	expressions := projections.expressions
 
 	functionAsString := "now()"
-	if expressions.DisplayableColumns()[0] != functionAsString {
-		t.Fatalf("Expected function representation as %v, received %v", functionAsString, expressions.DisplayableColumns()[0])
+	if projections.DisplayableAttributes()[0] != functionAsString {
+		t.Fatalf("Expected function representation as %v, received %v", functionAsString, projections.DisplayableAttributes()[0])
 	}
 }
 
-func TestAllColumnsWithAFunctionWithFromAsATokenAfterFunction(t *testing.T) {
+func TestAllAttributesWithAFunctionWithFromAsATokenAfterFunction(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "lower"))
 	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
@@ -133,15 +127,14 @@ func TestAllColumnsWithAFunctionWithFromAsATokenAfterFunction(t *testing.T) {
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "from"))
 
 	projections, _ := NewProjections(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
-	expressions := projections.expressions
 
 	oneFunctionAsString := "lower(upper(fName))"
-	if expressions.DisplayableColumns()[0] != oneFunctionAsString {
-		t.Fatalf("Expected function representation as %v, received %v", oneFunctionAsString, expressions.DisplayableColumns()[0])
+	if projections.DisplayableAttributes()[0] != oneFunctionAsString {
+		t.Fatalf("Expected function representation as %v, received %v", oneFunctionAsString, projections.DisplayableAttributes()[0])
 	}
 }
 
-func TestAllColumnsWith2Functions(t *testing.T) {
+func TestAllAttributesWith2Functions(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "lower"))
 	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
@@ -157,19 +150,18 @@ func TestAllColumnsWith2Functions(t *testing.T) {
 	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
 
 	projections, _ := NewProjections(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
-	expressions := projections.expressions
 
 	oneFunctionAsString := "lower(upper(fName))"
-	if expressions.DisplayableColumns()[0] != oneFunctionAsString {
-		t.Fatalf("Expected function representation as %v, received %v", oneFunctionAsString, expressions.DisplayableColumns()[0])
+	if projections.DisplayableAttributes()[0] != oneFunctionAsString {
+		t.Fatalf("Expected function representation as %v, received %v", oneFunctionAsString, projections.DisplayableAttributes()[0])
 	}
 	otherFunctionAsString := "lower(fName)"
-	if expressions.DisplayableColumns()[1] != otherFunctionAsString {
-		t.Fatalf("Expected function representation as %v, received %v", otherFunctionAsString, expressions.DisplayableColumns()[0])
+	if projections.DisplayableAttributes()[1] != otherFunctionAsString {
+		t.Fatalf("Expected function representation as %v, received %v", otherFunctionAsString, projections.DisplayableAttributes()[0])
 	}
 }
 
-func TestAllColumnsWithFunctionsAndColumns(t *testing.T) {
+func TestAllAttributesWithFunctionsAndAttributes(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "lower"))
 	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
@@ -182,15 +174,14 @@ func TestAllColumnsWithFunctionsAndColumns(t *testing.T) {
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "size"))
 
 	projections, _ := NewProjections(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
-	expressions := projections.expressions
 
 	oneFunctionAsString := "lower(upper(fName))"
-	if expressions.DisplayableColumns()[0] != oneFunctionAsString {
-		t.Fatalf("Expected function representation as %v, received %v", oneFunctionAsString, expressions.DisplayableColumns()[0])
+	if projections.DisplayableAttributes()[0] != oneFunctionAsString {
+		t.Fatalf("Expected function representation as %v, received %v", oneFunctionAsString, projections.DisplayableAttributes()[0])
 	}
 	column := "size"
-	if expressions.DisplayableColumns()[1] != column {
-		t.Fatalf("Expected column to be %v, received %v", column, expressions.DisplayableColumns()[1])
+	if projections.DisplayableAttributes()[1] != column {
+		t.Fatalf("Expected attribute to be %v, received %v", column, projections.DisplayableAttributes()[1])
 	}
 }
 
@@ -211,6 +202,6 @@ func TestProjectionCount(t *testing.T) {
 	expectedCount := 2
 
 	if expectedCount != columnCount {
-		t.Fatalf("Expected column Count %v, received %v", expectedCount, columnCount)
+		t.Fatalf("Expected attribute Count %v, received %v", expectedCount, columnCount)
 	}
 }

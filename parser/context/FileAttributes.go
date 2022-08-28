@@ -93,12 +93,16 @@ func (fileAttributes *FileAttributes) setGroupName(groupName string, attributes 
 	fileAttributes.setAllAliasesForAttribute(AttributeGroupName, groupName, attributes)
 }
 
-func (fileAttributes *FileAttributes) setAllAliasesForAttribute(attribute string, value interface{}, attributes *AllAttributes) {
+func (fileAttributes *FileAttributes) setAllAliasesForAttribute(
+	attribute string,
+	value interface{},
+	attributes *AllAttributes,
+) {
 	for _, alias := range attributes.aliasesFor(attribute) {
 		fileAttributes.attributes[alias] = value
 	}
 }
 
-func (fileAttributes FileAttributes) Get(attribute string) interface{} {
+func (fileAttributes *FileAttributes) Get(attribute string) interface{} {
 	return fileAttributes.attributes[attribute]
 }
