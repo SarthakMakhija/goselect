@@ -11,3 +11,4 @@
 11. Returning the results
 12. Support for date/time in where condition
 13. Support for date/time in projections
+14. Handler lower case at one place for the incoming query
