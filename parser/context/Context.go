@@ -17,10 +17,6 @@ func (context *Context) IsASupportedFunction(functionName string) bool {
 	return context.allFunctions.IsASupportedFunction(functionName)
 }
 
-func (context *Context) Execute(fn string, args ...interface{}) interface{} {
-	return context.allFunctions.Execute(fn, args)
-}
-
 func (context *Context) AllFunctions() *AllFunctions {
 	return context.allFunctions
 }
