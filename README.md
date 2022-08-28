@@ -1,5 +1,5 @@
 # [![Actions Status](https://github.com/SarthakMakhija/goselect/workflows/GoSelectCI/badge.svg)](https://github.com/SarthakMakhija/goselect/actions) goselect
-SQL like interface for files
+SQL like 'select' interface for files
 
 
 # Some examples
