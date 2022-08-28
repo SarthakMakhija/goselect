@@ -9,10 +9,12 @@ import (
 
 type Projections struct {
 	expressions Expressions
+	functions   *AllFunctions
 }
 
 func NewProjections(tokenIterator *tokenizer.TokenIterator) (*Projections, error) {
-	if expressions, err := all(tokenIterator); err != nil {
+	functions := NewFunctions()
+	if expressions, err := all(tokenIterator, functions); err != nil {
 		return nil, err
 	} else {
 		if expressions.count() == 0 {
@@ -30,13 +32,17 @@ func (projections Projections) AllExpressions() Expressions {
 	return projections.expressions
 }
 
+func (projections Projections) EvaluateWith(fileAttributes *FileAttributes) []interface{} {
+	return projections.expressions.evaluateWith(fileAttributes, projections.functions)
+}
+
 /*
 projection: columns Or functions Or expressions
 columns: 	 name, size etc
 functions: 	 min(size), lower(name), min(Count(size)) etc
 expressions: 2 + 3, 2 > 3 etc
 */
-func all(tokenIterator *tokenizer.TokenIterator) (Expressions, error) {
+func all(tokenIterator *tokenizer.TokenIterator, allFunctions *AllFunctions) (Expressions, error) {
 	var expressions []*Expression
 	var expectComma bool
 
@@ -54,9 +60,9 @@ func all(tokenIterator *tokenizer.TokenIterator) (Expressions, error) {
 		case IsASupportedColumn(token.TokenValue):
 			expressions = append(expressions, expressionWithColumn(token.TokenValue))
 			expectComma = true
-		case isASupportedFunction(token.TokenValue):
+		case allFunctions.isASupportedFunction(token.TokenValue):
 			tokenIterator.Drop()
-			if function, err := function(tokenIterator); err != nil {
+			if function, err := function(tokenIterator, allFunctions); err != nil {
 				return Expressions{}, err
 			} else {
 				expressions = append(expressions, expressionWithFunction(function))
@@ -67,7 +73,7 @@ func all(tokenIterator *tokenizer.TokenIterator) (Expressions, error) {
 	return Expressions{expressions: expressions}, nil
 }
 
-func function(tokenIterator *tokenizer.TokenIterator) (*Function, error) {
+func function(tokenIterator *tokenizer.TokenIterator, allFunctions *AllFunctions) (*Function, error) {
 	buildFunction := func(functionStack *linkedliststack.Stack, operatingColumn tokenizer.Token) *Function {
 		functionToken, _ := functionStack.Pop()
 		var rootFunction = &Function{
@@ -109,7 +115,7 @@ func function(tokenIterator *tokenizer.TokenIterator) (*Function, error) {
 					expectClosingParentheses = false
 					break loop
 				}
-			case isASupportedFunction(token.TokenValue):
+			case allFunctions.isASupportedFunction(token.TokenValue):
 				functionStack.Push(token)
 				expectOpeningParentheses = true
 			case IsASupportedColumn(token.TokenValue):

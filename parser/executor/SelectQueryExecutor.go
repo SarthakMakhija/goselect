@@ -6,8 +6,18 @@ import (
 	"io/ioutil"
 )
 
-func ExecuteSelect(query *parser.SelectQuery) ([][]interface{}, error) {
-	source := query.Source
+type SelectQueryExecutor struct {
+	query *parser.SelectQuery
+}
+
+func NewSelectQueryExecutor(query *parser.SelectQuery) *SelectQueryExecutor {
+	return &SelectQueryExecutor{
+		query: query,
+	}
+}
+
+func (selectQueryExecutor *SelectQueryExecutor) Execute() ([][]interface{}, error) {
+	source := selectQueryExecutor.query.Source
 	files, err := ioutil.ReadDir(source.Directory)
 	if err != nil {
 		return nil, err
@@ -15,7 +25,7 @@ func ExecuteSelect(query *parser.SelectQuery) ([][]interface{}, error) {
 	var rows [][]interface{}
 	for _, file := range files {
 		fileAttributes := projection.FromFile(file)
-		row := query.Projections.AllExpressions().ExecuteWith(fileAttributes)
+		row := selectQueryExecutor.query.Projections.EvaluateWith(fileAttributes)
 		rows = append(rows, row)
 		//handle recursion
 	}

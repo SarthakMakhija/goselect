@@ -6,7 +6,7 @@ import (
 )
 
 func TestLower1(t *testing.T) {
-	value := ExecuteFn("lower", "ABC")
+	value := NewFunctions().Execute("lower", "ABC")
 	expected := "abc"
 
 	if value != expected {
@@ -15,7 +15,7 @@ func TestLower1(t *testing.T) {
 }
 
 func TestLower2(t *testing.T) {
-	value := ExecuteFn("low", "ABC")
+	value := NewFunctions().Execute("low", "ABC")
 	expected := "abc"
 
 	if value != expected {
@@ -24,7 +24,7 @@ func TestLower2(t *testing.T) {
 }
 
 func TestUpper1(t *testing.T) {
-	value := ExecuteFn("upper", "abc")
+	value := NewFunctions().Execute("upper", "abc")
 	expected := "ABC"
 
 	if value != expected {
@@ -33,7 +33,7 @@ func TestUpper1(t *testing.T) {
 }
 
 func TestUpper2(t *testing.T) {
-	value := ExecuteFn("up", "abc")
+	value := NewFunctions().Execute("up", "abc")
 	expected := "ABC"
 
 	if value != expected {
@@ -42,7 +42,7 @@ func TestUpper2(t *testing.T) {
 }
 
 func TestTitle(t *testing.T) {
-	value := ExecuteFn("title", "Sample content")
+	value := NewFunctions().Execute("title", "Sample content")
 	expected := "Sample Content"
 
 	if value != expected {
@@ -51,7 +51,7 @@ func TestTitle(t *testing.T) {
 }
 
 func TestBase641(t *testing.T) {
-	value := ExecuteFn("base64", "a")
+	value := NewFunctions().Execute("base64", "a")
 	expected := "YQ=="
 
 	if value != expected {
@@ -60,7 +60,7 @@ func TestBase641(t *testing.T) {
 }
 
 func TestBase642(t *testing.T) {
-	value := ExecuteFn("b64", "a")
+	value := NewFunctions().Execute("b64", "a")
 	expected := "YQ=="
 
 	if value != expected {
@@ -69,7 +69,7 @@ func TestBase642(t *testing.T) {
 }
 
 func TestLength1(t *testing.T) {
-	value := ExecuteFn("length", "sample")
+	value := NewFunctions().Execute("length", "sample")
 	expected := 6
 
 	if value != expected {
@@ -78,7 +78,7 @@ func TestLength1(t *testing.T) {
 }
 
 func TestLength2(t *testing.T) {
-	value := ExecuteFn("len", "sample")
+	value := NewFunctions().Execute("len", "sample")
 	expected := 6
 
 	if value != expected {
@@ -87,7 +87,7 @@ func TestLength2(t *testing.T) {
 }
 
 func TestLeftTrim1(t *testing.T) {
-	value := ExecuteFn("ltrim", "  sample")
+	value := NewFunctions().Execute("ltrim", "  sample")
 	expected := "sample"
 
 	if value != expected {
@@ -96,7 +96,7 @@ func TestLeftTrim1(t *testing.T) {
 }
 
 func TestLeftTrim2(t *testing.T) {
-	value := ExecuteFn("lTrim", "  sample")
+	value := NewFunctions().Execute("lTrim", "  sample")
 	expected := "sample"
 
 	if value != expected {
@@ -105,7 +105,7 @@ func TestLeftTrim2(t *testing.T) {
 }
 
 func TestRightTrim1(t *testing.T) {
-	value := ExecuteFn("rtrim", "sample  ")
+	value := NewFunctions().Execute("rtrim", "sample  ")
 	expected := "sample"
 
 	if value != expected {
@@ -114,7 +114,7 @@ func TestRightTrim1(t *testing.T) {
 }
 
 func TestRightTrim2(t *testing.T) {
-	value := ExecuteFn("rTrim", "sample  ")
+	value := NewFunctions().Execute("rTrim", "sample  ")
 	expected := "sample"
 
 	if value != expected {
@@ -123,7 +123,7 @@ func TestRightTrim2(t *testing.T) {
 }
 
 func TestTrim1(t *testing.T) {
-	value := ExecuteFn("trim", "  sample  ")
+	value := NewFunctions().Execute("trim", "  sample  ")
 	expected := "sample"
 
 	if value != expected {
@@ -136,9 +136,9 @@ func TestDay(t *testing.T) {
 		return time.Date(2022, 8, 22, 15, 8, 00, 0, time.UTC)
 	}
 	// after finish with the test, reset the time implementation
-	defer ResetClock()
+	defer resetClock()
 
-	value := ExecuteFn("day")
+	value := NewFunctions().Execute("day")
 	expected := 22
 
 	if value != expected {
@@ -151,9 +151,9 @@ func TestMonth1(t *testing.T) {
 		return time.Date(2022, 8, 22, 15, 8, 00, 0, time.UTC)
 	}
 	// after finish with the test, reset the time implementation
-	defer ResetClock()
+	defer resetClock()
 
-	value := ExecuteFn("month")
+	value := NewFunctions().Execute("month")
 	expected := "August"
 
 	if value != expected {
@@ -166,9 +166,9 @@ func TestMonth2(t *testing.T) {
 		return time.Date(2022, 8, 22, 15, 8, 00, 0, time.UTC)
 	}
 	// after finish with the test, reset the time implementation
-	defer ResetClock()
+	defer resetClock()
 
-	value := ExecuteFn("mon")
+	value := NewFunctions().Execute("mon")
 	expected := "August"
 
 	if value != expected {
@@ -181,9 +181,9 @@ func TestYear1(t *testing.T) {
 		return time.Date(2022, 8, 22, 15, 8, 00, 0, time.UTC)
 	}
 	// after finish with the test, reset the time implementation
-	defer ResetClock()
+	defer resetClock()
 
-	value := ExecuteFn("year")
+	value := NewFunctions().Execute("year")
 	expected := 2022
 
 	if value != expected {
@@ -196,9 +196,9 @@ func TestYear2(t *testing.T) {
 		return time.Date(2022, 8, 22, 15, 8, 00, 0, time.UTC)
 	}
 	// after finish with the test, reset the time implementation
-	defer ResetClock()
+	defer resetClock()
 
-	value := ExecuteFn("yr")
+	value := NewFunctions().Execute("yr")
 	expected := 2022
 
 	if value != expected {
@@ -211,9 +211,9 @@ func TestDayOfWeek1(t *testing.T) {
 		return time.Date(2022, 8, 28, 15, 8, 00, 0, time.UTC)
 	}
 	// after finish with the test, reset the time implementation
-	defer ResetClock()
+	defer resetClock()
 
-	value := ExecuteFn("dayOfWeek")
+	value := NewFunctions().Execute("dayOfWeek")
 	expected := "Sunday"
 
 	if value != expected {
@@ -226,9 +226,9 @@ func TestDayOfWeek2(t *testing.T) {
 		return time.Date(2022, 8, 28, 15, 8, 00, 0, time.UTC)
 	}
 	// after finish with the test, reset the time implementation
-	defer ResetClock()
+	defer resetClock()
 
-	value := ExecuteFn("dayofweek")
+	value := NewFunctions().Execute("dayofweek")
 	expected := "Sunday"
 
 	if value != expected {

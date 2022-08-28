@@ -34,6 +34,10 @@ func expressionWithFunction(fn *Function) *Expression {
 	}
 }
 
+func (expressions Expressions) count() int {
+	return len(expressions.expressions)
+}
+
 func (expressions Expressions) DisplayableColumns() []string {
 	var functionAsString func(expression *Expression) string
 	functionAsString = func(expression *Expression) string {
@@ -54,11 +58,7 @@ func (expressions Expressions) DisplayableColumns() []string {
 	return columns
 }
 
-func (expressions Expressions) count() int {
-	return len(expressions.expressions)
-}
-
-func (expressions Expressions) ExecuteWith(fileAttributes *FileAttributes) []interface{} {
+func (expressions Expressions) evaluateWith(fileAttributes *FileAttributes, functions *AllFunctions) []interface{} {
 	var values []interface{}
 
 	var execute func(expression *Expression) interface{}
@@ -67,7 +67,7 @@ func (expressions Expressions) ExecuteWith(fileAttributes *FileAttributes) []int
 			return fileAttributes.Get(expression.column)
 		}
 		v := execute(expression.function.left)
-		return ExecuteFn(expression.function.name, v)
+		return functions.Execute(expression.function.name, v)
 	}
 	for _, expression := range expressions.expressions {
 		if !expression.isAFunction() {

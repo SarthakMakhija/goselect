@@ -6,51 +6,45 @@ import (
 	"time"
 )
 
-var supportedFunctions = map[string]bool{
-	"lower":     true,
-	"low":       true,
-	"upper":     true,
-	"up":        true,
-	"title":     true,
-	"base64":    true,
-	"b64":       true,
-	"length":    true,
-	"len":       true,
-	"trim":      true,
-	"ltrim":     true,
-	"lTrim":     true,
-	"rtrim":     true,
-	"rTrim":     true,
-	"now":       true,
-	"date":      true,
-	"day":       true,
-	"month":     true,
-	"mon":       true,
-	"year":      true,
-	"yr":        true,
-	"dayOfWeek": true,
-	"dayofweek": true,
+type AllFunctions struct {
+	supportedFunctions map[string]bool
 }
 
-func isASupportedFunction(function string) bool {
-	return supportedFunctions[function]
-}
-
-var nowFunc = func() time.Time {
-	return time.Now()
-}
-
-func ResetClock() {
-	nowFunc = func() time.Time {
-		return time.Now()
+func NewFunctions() *AllFunctions {
+	return &AllFunctions{
+		supportedFunctions: map[string]bool{
+			"lower":     true,
+			"low":       true,
+			"upper":     true,
+			"up":        true,
+			"title":     true,
+			"base64":    true,
+			"b64":       true,
+			"length":    true,
+			"len":       true,
+			"trim":      true,
+			"ltrim":     true,
+			"lTrim":     true,
+			"rtrim":     true,
+			"rTrim":     true,
+			"now":       true,
+			"date":      true,
+			"day":       true,
+			"month":     true,
+			"mon":       true,
+			"year":      true,
+			"yr":        true,
+			"dayOfWeek": true,
+			"dayofweek": true,
+		},
 	}
 }
 
-func now() time.Time {
-	return nowFunc().UTC()
+func (functions *AllFunctions) isASupportedFunction(function string) bool {
+	return functions.supportedFunctions[function]
 }
 
-func ExecuteFn(fn string, args ...interface{}) interface{} {
+func (functions *AllFunctions) Execute(fn string, args ...interface{}) interface{} {
 	switch fn {
 	case "lower", "low":
 		return strings.ToLower(args[0].(string))
@@ -81,4 +75,18 @@ func ExecuteFn(fn string, args ...interface{}) interface{} {
 		return now().Weekday().String()
 	}
 	return ""
+}
+
+var nowFunc = func() time.Time {
+	return time.Now()
+}
+
+func now() time.Time {
+	return nowFunc().UTC()
+}
+
+func resetClock() {
+	nowFunc = func() time.Time {
+		return time.Now()
+	}
 }

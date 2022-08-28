@@ -14,7 +14,7 @@ func TestResultsWithProjections1(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := ExecuteSelect(selectQuery)
+	queryResults, _ := NewSelectQueryExecutor(selectQuery).Execute()
 	expected := [][]string{
 		{"TestResultsWithProjections_A.txt", ""},
 	}
@@ -30,7 +30,7 @@ func TestResultsWithProjections2(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := ExecuteSelect(selectQuery)
+	queryResults, _ := NewSelectQueryExecutor(selectQuery).Execute()
 	expected := [][]string{
 		{"testresultswithprojections_a.txt", "VGVzdFJlc3VsdHNXaXRoUHJvamVjdGlvbnNfQS50eHQ="},
 	}
@@ -46,7 +46,7 @@ func TestResultsWithProjections3(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := ExecuteSelect(selectQuery)
+	queryResults, _ := NewSelectQueryExecutor(selectQuery).Execute()
 	expected := [][]string{
 		{"testresultswithprojections_a.txt", ".txt"},
 	}
