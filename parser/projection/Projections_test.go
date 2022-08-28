@@ -105,6 +105,21 @@ func TestAllColumnsWithAFunction(t *testing.T) {
 	}
 }
 
+func TestAllColumnsWithAFunctionWithoutAnyParameters(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "now"))
+	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, ")"))
+
+	projections, _ := NewProjections(tokens.Iterator())
+	expressions := projections.expressions
+
+	functionAsString := "now()"
+	if expressions.DisplayableColumns()[0] != functionAsString {
+		t.Fatalf("Expected function representation as %v, received %v", functionAsString, expressions.DisplayableColumns()[0])
+	}
+}
+
 func TestAllColumnsWithAFunctionWithFromAsATokenAfterFunction(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "lower"))
