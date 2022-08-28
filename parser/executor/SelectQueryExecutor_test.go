@@ -57,7 +57,7 @@ func TestResultsWithProjections3(t *testing.T) {
 	assertMatch(t, expected, queryResults)
 }
 
-func assertMatch(t *testing.T, expected [][]string, queryResults [][]interface{}, skipColumnIndices ...int) {
+func assertMatch(t *testing.T, expected [][]string, queryResults [][]interface{}, skipAttributeIndices ...int) {
 	contains := func(slice []int, value int) bool {
 		for _, v := range slice {
 			if value == v {
@@ -71,15 +71,15 @@ func assertMatch(t *testing.T, expected [][]string, queryResults [][]interface{}
 	}
 	for rowIndex, row := range expected {
 		if len(row) != len(queryResults[rowIndex]) {
-			t.Fatalf("Expected length of the columns in row index %v to be %v, received %v", rowIndex, len(row), len(queryResults[rowIndex]))
+			t.Fatalf("Expected length of the attributes in row index %v to be %v, received %v", rowIndex, len(row), len(queryResults[rowIndex]))
 		}
-		for colIndex, col := range row {
-			if !contains(skipColumnIndices, colIndex) && queryResults[rowIndex][colIndex] != col {
-				t.Fatalf("Expected %v to match %v at row index %v, col index %v",
+		for attributeIndex, col := range row {
+			if !contains(skipAttributeIndices, attributeIndex) && queryResults[rowIndex][attributeIndex] != col {
+				t.Fatalf("Expected %v to match %v at row index %v, attribute index %v",
 					col,
-					queryResults[rowIndex][colIndex],
+					queryResults[rowIndex][attributeIndex],
 					rowIndex,
-					colIndex,
+					attributeIndex,
 				)
 			}
 		}

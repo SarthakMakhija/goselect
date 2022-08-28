@@ -16,16 +16,16 @@ type Function struct {
 	left *Expression
 }
 
-func expressionWithColumn(column string) *Expression {
+func expressionWithAttribute(attribute string) *Expression {
 	return &Expression{
-		attribute: column,
+		attribute: attribute,
 	}
 }
 
-func expressionsWithColumns(columns []string) []*Expression {
-	var expressions = make([]*Expression, len(columns))
-	for index, column := range columns {
-		expressions[index] = expressionWithColumn(column)
+func expressionsWithAttributes(attributes []string) []*Expression {
+	var expressions = make([]*Expression, len(attributes))
+	for index, attribute := range attributes {
+		expressions[index] = expressionWithAttribute(attribute)
 	}
 	return expressions
 }
@@ -49,15 +49,15 @@ func (expressions Expressions) displayableAttributes() []string {
 		return expression.function.name + "(" + functionAsString(expression.function.left) + ")"
 	}
 
-	var columns []string
+	var attributes []string
 	for _, expression := range expressions.expressions {
 		if len(expression.attribute) != 0 {
-			columns = append(columns, expression.attribute)
+			attributes = append(attributes, expression.attribute)
 		} else {
-			columns = append(columns, functionAsString(expression))
+			attributes = append(attributes, functionAsString(expression))
 		}
 	}
-	return columns
+	return attributes
 }
 
 func (expressions Expressions) evaluateWith(fileAttributes *context.FileAttributes, functions *context.AllFunctions) []interface{} {

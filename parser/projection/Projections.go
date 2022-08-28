@@ -40,8 +40,8 @@ func (projections Projections) EvaluateWith(fileAttributes *context.FileAttribut
 }
 
 /*
-projection: columns Or functions Or expressions
-columns: 	 name, size etc
+projection:  attributes Or functions Or expressions
+attributes:  name, size etc
 functions: 	 min(size), lower(name), min(Count(size)) etc
 expressions: 2 + 3, 2 > 3 etc
 */
@@ -58,10 +58,10 @@ func all(tokenIterator *tokenizer.TokenIterator, ctx *context.Context) (Expressi
 			}
 			expectComma = false
 		case context.IsAWildcardAttribute(token.TokenValue):
-			expressions = append(expressions, expressionsWithColumns(context.AttributesOnWildcard())...)
+			expressions = append(expressions, expressionsWithAttributes(context.AttributesOnWildcard())...)
 			expectComma = true
 		case ctx.IsASupportedAttribute(token.TokenValue):
-			expressions = append(expressions, expressionWithColumn(token.TokenValue))
+			expressions = append(expressions, expressionWithAttribute(token.TokenValue))
 			expectComma = true
 		case ctx.IsASupportedFunction(token.TokenValue):
 			tokenIterator.Drop()
@@ -77,11 +77,11 @@ func all(tokenIterator *tokenizer.TokenIterator, ctx *context.Context) (Expressi
 }
 
 func function(tokenIterator *tokenizer.TokenIterator, ctx *context.Context) (*Function, error) {
-	buildFunction := func(functionStack *linkedliststack.Stack, operatingColumn tokenizer.Token) *Function {
+	buildFunction := func(functionStack *linkedliststack.Stack, operatingAttribute tokenizer.Token) *Function {
 		functionToken, _ := functionStack.Pop()
 		var rootFunction = &Function{
 			name: (functionToken.(tokenizer.Token)).TokenValue,
-			left: &Expression{attribute: operatingColumn.TokenValue},
+			left: &Expression{attribute: operatingAttribute.TokenValue},
 		}
 		for !functionStack.Empty() {
 			functionToken, _ := functionStack.Pop()
@@ -94,7 +94,7 @@ func function(tokenIterator *tokenizer.TokenIterator, ctx *context.Context) (*Fu
 	}
 
 	parseToken := func() (*linkedliststack.Stack, tokenizer.Token, error) {
-		var operatingColumn tokenizer.Token
+		var operatingAttribute tokenizer.Token
 		expectOpeningParentheses, expectClosingParentheses := false, false
 		closingParenthesesCount, functionStack := 0, linkedliststack.New()
 
@@ -122,16 +122,16 @@ func function(tokenIterator *tokenizer.TokenIterator, ctx *context.Context) (*Fu
 				functionStack.Push(token)
 				expectOpeningParentheses = true
 			case ctx.IsASupportedAttribute(token.TokenValue):
-				operatingColumn = token
+				operatingAttribute = token
 				expectOpeningParentheses, expectClosingParentheses = false, true
 			}
 		}
-		return functionStack, operatingColumn, nil
+		return functionStack, operatingAttribute, nil
 	}
 
-	if stack, operatingColumn, err := parseToken(); err != nil {
+	if stack, operatingAttribute, err := parseToken(); err != nil {
 		return nil, err
 	} else {
-		return buildFunction(stack, operatingColumn), nil
+		return buildFunction(stack, operatingAttribute), nil
 	}
 }

@@ -5,17 +5,17 @@ import (
 	"testing"
 )
 
-func TestExpressionsDisplayableColumnsWithColumnName(t *testing.T) {
-	expressions := Expressions{expressions: []*Expression{expressionWithColumn("name")}}
-	columns := expressions.displayableAttributes()
+func TestExpressionsDisplayableAttributesWithAttributeName(t *testing.T) {
+	expressions := Expressions{expressions: []*Expression{expressionWithAttribute("name")}}
+	attributes := expressions.displayableAttributes()
 	expected := []string{"name"}
 
-	if !reflect.DeepEqual(expected, columns) {
-		t.Fatalf("Expected columns to be %v, received %v", expected, columns)
+	if !reflect.DeepEqual(expected, attributes) {
+		t.Fatalf("Expected attributes to be %v, received %v", expected, attributes)
 	}
 }
 
-func TestExpressionsDisplayableColumnsWithFunction(t *testing.T) {
+func TestExpressionsDisplayableAttributesWithFunction(t *testing.T) {
 	fun := &Function{
 		name: "lower",
 		left: &Expression{
@@ -26,11 +26,11 @@ func TestExpressionsDisplayableColumnsWithFunction(t *testing.T) {
 		},
 	}
 	expressions := Expressions{expressions: []*Expression{expressionWithFunction(fun)}}
-	columns := expressions.displayableAttributes()
+	attributes := expressions.displayableAttributes()
 	expected := []string{"lower(upper(uid))"}
 
-	if !reflect.DeepEqual(expected, columns) {
-		t.Fatalf("Expected columns to be %v, received %v", expected, columns)
+	if !reflect.DeepEqual(expected, attributes) {
+		t.Fatalf("Expected attributes to be %v, received %v", expected, attributes)
 	}
 }
 

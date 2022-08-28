@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestOrderByAColumnInAscending(t *testing.T) {
+func TestOrderByAAttributeInAscending(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.Order, "order"))
 	tokens.Add(tokenizer.NewToken(tokenizer.By, "by"))
@@ -15,7 +15,7 @@ func TestOrderByAColumnInAscending(t *testing.T) {
 
 	order, _ := NewOrder(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()), 1)
 	expectedOrder := Order{
-		AscendingColumns: []ColumnRef{{Name: "Name", ProjectionPosition: -1}},
+		AscendingAttributes: []AttributeRef{{Name: "Name", ProjectionPosition: -1}},
 	}
 
 	if !reflect.DeepEqual(expectedOrder, *order) {
@@ -23,7 +23,7 @@ func TestOrderByAColumnInAscending(t *testing.T) {
 	}
 }
 
-func TestOrderByAColumnInAscendingWithExplicitAsc(t *testing.T) {
+func TestOrderByAAttributeInAscendingWithExplicitAsc(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.Order, "order"))
 	tokens.Add(tokenizer.NewToken(tokenizer.By, "by"))
@@ -32,7 +32,7 @@ func TestOrderByAColumnInAscendingWithExplicitAsc(t *testing.T) {
 
 	order, _ := NewOrder(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()), 1)
 	expectedOrder := Order{
-		AscendingColumns: []ColumnRef{{Name: "Name", ProjectionPosition: -1}},
+		AscendingAttributes: []AttributeRef{{Name: "Name", ProjectionPosition: -1}},
 	}
 
 	if !reflect.DeepEqual(expectedOrder, *order) {
@@ -40,7 +40,7 @@ func TestOrderByAColumnInAscendingWithExplicitAsc(t *testing.T) {
 	}
 }
 
-func TestOrderBy2ColumnsInAscending(t *testing.T) {
+func TestOrderBy2AttributesInAscending(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.Order, "order"))
 	tokens.Add(tokenizer.NewToken(tokenizer.By, "by"))
@@ -50,7 +50,7 @@ func TestOrderBy2ColumnsInAscending(t *testing.T) {
 
 	order, _ := NewOrder(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()), 1)
 	expectedOrder := Order{
-		AscendingColumns: []ColumnRef{{Name: "Name", ProjectionPosition: -1}, {Name: "size", ProjectionPosition: -1}},
+		AscendingAttributes: []AttributeRef{{Name: "Name", ProjectionPosition: -1}, {Name: "size", ProjectionPosition: -1}},
 	}
 
 	if !reflect.DeepEqual(expectedOrder, *order) {
@@ -58,7 +58,7 @@ func TestOrderBy2ColumnsInAscending(t *testing.T) {
 	}
 }
 
-func TestOrderByAColumnInDescending(t *testing.T) {
+func TestOrderByAAttributeInDescending(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.Order, "order"))
 	tokens.Add(tokenizer.NewToken(tokenizer.By, "by"))
@@ -67,7 +67,7 @@ func TestOrderByAColumnInDescending(t *testing.T) {
 
 	order, _ := NewOrder(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()), 1)
 	expectedOrder := Order{
-		DescendingColumns: []ColumnRef{{Name: "Name", ProjectionPosition: -1}},
+		DescendingAttributes: []AttributeRef{{Name: "Name", ProjectionPosition: -1}},
 	}
 
 	if !reflect.DeepEqual(expectedOrder, *order) {
@@ -75,7 +75,7 @@ func TestOrderByAColumnInDescending(t *testing.T) {
 	}
 }
 
-func TestOrderBy2ColumnsInDescending(t *testing.T) {
+func TestOrderBy2AttributesInDescending(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.Order, "order"))
 	tokens.Add(tokenizer.NewToken(tokenizer.By, "by"))
@@ -87,7 +87,7 @@ func TestOrderBy2ColumnsInDescending(t *testing.T) {
 
 	order, _ := NewOrder(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()), 1)
 	expectedOrder := Order{
-		DescendingColumns: []ColumnRef{{Name: "Name", ProjectionPosition: -1}, {Name: "size", ProjectionPosition: -1}},
+		DescendingAttributes: []AttributeRef{{Name: "Name", ProjectionPosition: -1}, {Name: "size", ProjectionPosition: -1}},
 	}
 
 	if !reflect.DeepEqual(expectedOrder, *order) {
@@ -95,7 +95,7 @@ func TestOrderBy2ColumnsInDescending(t *testing.T) {
 	}
 }
 
-func TestOrderBy2ColumnsOneInAscendingOtherInDescending(t *testing.T) {
+func TestOrderBy2AttributesOneInAscendingOtherInDescending(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.Order, "order"))
 	tokens.Add(tokenizer.NewToken(tokenizer.By, "by"))
@@ -106,8 +106,8 @@ func TestOrderBy2ColumnsOneInAscendingOtherInDescending(t *testing.T) {
 
 	order, _ := NewOrder(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()), 1)
 	expectedOrder := Order{
-		AscendingColumns:  []ColumnRef{{Name: "Name", ProjectionPosition: -1}},
-		DescendingColumns: []ColumnRef{{Name: "size", ProjectionPosition: -1}},
+		AscendingAttributes:  []AttributeRef{{Name: "Name", ProjectionPosition: -1}},
+		DescendingAttributes: []AttributeRef{{Name: "size", ProjectionPosition: -1}},
 	}
 
 	if !reflect.DeepEqual(expectedOrder, *order) {
@@ -115,7 +115,7 @@ func TestOrderBy2ColumnsOneInAscendingOtherInDescending(t *testing.T) {
 	}
 }
 
-func TestThrowsAErrorGivenNoColumnAfterOrderBy(t *testing.T) {
+func TestThrowsAErrorGivenNoAttributeAfterOrderBy(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.Order, "order"))
 	tokens.Add(tokenizer.NewToken(tokenizer.By, "by"))
@@ -123,11 +123,11 @@ func TestThrowsAErrorGivenNoColumnAfterOrderBy(t *testing.T) {
 	_, err := NewOrder(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()), 1)
 
 	if err == nil {
-		t.Fatalf("Expected an error when no columns are given after order by but received none")
+		t.Fatalf("Expected an error when no attributes are given after order by but received none")
 	}
 }
 
-func TestOrderBy2ColumnsWithOneAsTheProjectionPosition(t *testing.T) {
+func TestOrderBy2AttributesWithOneAsTheProjectionPosition(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.Order, "order"))
 	tokens.Add(tokenizer.NewToken(tokenizer.By, "by"))
@@ -138,8 +138,8 @@ func TestOrderBy2ColumnsWithOneAsTheProjectionPosition(t *testing.T) {
 
 	order, _ := NewOrder(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()), 1)
 	expectedOrder := Order{
-		AscendingColumns:  []ColumnRef{{Name: "", ProjectionPosition: 1}},
-		DescendingColumns: []ColumnRef{{Name: "Name", ProjectionPosition: -1}},
+		AscendingAttributes:  []AttributeRef{{Name: "", ProjectionPosition: 1}},
+		DescendingAttributes: []AttributeRef{{Name: "Name", ProjectionPosition: -1}},
 	}
 
 	if !reflect.DeepEqual(expectedOrder, *order) {

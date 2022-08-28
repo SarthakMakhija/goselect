@@ -76,8 +76,8 @@ func TestParsesAQueryIntoAnASTWithAnOrderBy(t *testing.T) {
 		t.Fatalf("Expected attributes to be %v, received %v", attributes, expectedAttributes)
 	}
 
-	ascendingAttributes := selectStatement.Order.AscendingColumns
-	expectedAscending := []order.ColumnRef{{
+	ascendingAttributes := selectStatement.Order.AscendingAttributes
+	expectedAscending := []order.AttributeRef{{
 		Name:               "name",
 		ProjectionPosition: -1,
 	}}
@@ -104,8 +104,8 @@ func TestParsesAQueryIntoAnASTWithLimit(t *testing.T) {
 		t.Fatalf("Expected attributes to be %v, received %v", attributes, expectedAttributes)
 	}
 
-	ascendingAttributes := selectStatement.Order.AscendingColumns
-	expectedAscending := []order.ColumnRef{{
+	ascendingAttributes := selectStatement.Order.AscendingAttributes
+	expectedAscending := []order.AttributeRef{{
 		Name:               "name",
 		ProjectionPosition: -1,
 	}}

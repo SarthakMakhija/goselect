@@ -27,7 +27,7 @@ func TestAllAttributes1(t *testing.T) {
 	expected := []string{"name", "size"}
 
 	if !reflect.DeepEqual(expected, projections.DisplayableAttributes()) {
-		t.Fatalf("Expected columns to be %v, received %v", expected, projections.DisplayableAttributes())
+		t.Fatalf("Expected attributes to be %v, received %v", expected, projections.DisplayableAttributes())
 	}
 }
 
@@ -41,7 +41,7 @@ func TestAllAttributes2(t *testing.T) {
 	expected := []string{"fName", "size"}
 
 	if !reflect.DeepEqual(expected, projections.DisplayableAttributes()) {
-		t.Fatalf("Expected columns to be %v, received %v", expected, projections.DisplayableAttributes())
+		t.Fatalf("Expected attributes to be %v, received %v", expected, projections.DisplayableAttributes())
 	}
 }
 
@@ -53,7 +53,7 @@ func TestAllAttributes3(t *testing.T) {
 	expected := []string{"name", "size"}
 
 	if !reflect.DeepEqual(expected, projections.DisplayableAttributes()) {
-		t.Fatalf("Expected fields to be %v, received %v", expected, projections.DisplayableAttributes())
+		t.Fatalf("Expected attributes to be %v, received %v", expected, projections.DisplayableAttributes())
 	}
 }
 
@@ -67,7 +67,7 @@ func TestAllAttributes4(t *testing.T) {
 	expected := []string{"name", "size", "name"}
 
 	if !reflect.DeepEqual(expected, projections.DisplayableAttributes()) {
-		t.Fatalf("Expected fields to be %v, received %v", expected, projections.DisplayableAttributes())
+		t.Fatalf("Expected attributes to be %v, received %v", expected, projections.DisplayableAttributes())
 	}
 }
 
@@ -179,9 +179,9 @@ func TestAllAttributesWithFunctionsAndAttributes(t *testing.T) {
 	if projections.DisplayableAttributes()[0] != oneFunctionAsString {
 		t.Fatalf("Expected function representation as %v, received %v", oneFunctionAsString, projections.DisplayableAttributes()[0])
 	}
-	column := "size"
-	if projections.DisplayableAttributes()[1] != column {
-		t.Fatalf("Expected attribute to be %v, received %v", column, projections.DisplayableAttributes()[1])
+	attribute := "size"
+	if projections.DisplayableAttributes()[1] != attribute {
+		t.Fatalf("Expected attribute to be %v, received %v", attribute, projections.DisplayableAttributes()[1])
 	}
 }
 
@@ -198,10 +198,10 @@ func TestProjectionCount(t *testing.T) {
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "size"))
 
 	projections, _ := NewProjections(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
-	columnCount := projections.Count()
+	attributeCount := projections.Count()
 	expectedCount := 2
 
-	if expectedCount != columnCount {
-		t.Fatalf("Expected attribute Count %v, received %v", expectedCount, columnCount)
+	if expectedCount != attributeCount {
+		t.Fatalf("Expected attribute count %v, received %v", expectedCount, attributeCount)
 	}
 }
