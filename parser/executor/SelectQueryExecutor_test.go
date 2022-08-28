@@ -1,7 +1,6 @@
 package executor
 
 import (
-	"fmt"
 	"goselect/parser"
 	"testing"
 )
@@ -9,11 +8,11 @@ import (
 func TestResultsWithProjections1(t *testing.T) {
 	aParser, err := parser.NewParser("select name, now() from ../resources/TestResultsWithProjections")
 	if err != nil {
-		fmt.Println(fmt.Errorf("error is %v", err))
+		t.Fatalf("error is %v", err)
 	}
 	selectQuery, err := aParser.Parse()
 	if err != nil {
-		fmt.Println(fmt.Errorf("error is %v", err))
+		t.Fatalf("error is %v", err)
 	}
 	queryResults := ExecuteSelect(selectQuery)
 	expected := [][]string{
@@ -25,11 +24,11 @@ func TestResultsWithProjections1(t *testing.T) {
 func TestResultsWithProjections2(t *testing.T) {
 	aParser, err := parser.NewParser("select lower(name), base64(name) from ../resources/TestResultsWithProjections")
 	if err != nil {
-		fmt.Println(fmt.Errorf("error is %v", err))
+		t.Fatalf("error is %v", err)
 	}
 	selectQuery, err := aParser.Parse()
 	if err != nil {
-		fmt.Println(fmt.Errorf("error is %v", err))
+		t.Fatalf("error is %v", err)
 	}
 	queryResults := ExecuteSelect(selectQuery)
 	expected := [][]string{
@@ -41,11 +40,11 @@ func TestResultsWithProjections2(t *testing.T) {
 func TestResultsWithProjections3(t *testing.T) {
 	aParser, err := parser.NewParser("select lower(name), ext from ../resources/TestResultsWithProjections")
 	if err != nil {
-		fmt.Println(fmt.Errorf("error is %v", err))
+		t.Fatalf("error is %v", err)
 	}
 	selectQuery, err := aParser.Parse()
 	if err != nil {
-		fmt.Println(fmt.Errorf("error is %v", err))
+		t.Fatalf("error is %v", err)
 	}
 	queryResults := ExecuteSelect(selectQuery)
 	expected := [][]string{
