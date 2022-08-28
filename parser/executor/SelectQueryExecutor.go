@@ -2,17 +2,19 @@ package executor
 
 import (
 	"goselect/parser"
-	"goselect/parser/projection"
+	"goselect/parser/context"
 	"io/ioutil"
 )
 
 type SelectQueryExecutor struct {
-	query *parser.SelectQuery
+	query   *parser.SelectQuery
+	context *context.Context
 }
 
-func NewSelectQueryExecutor(query *parser.SelectQuery) *SelectQueryExecutor {
+func NewSelectQueryExecutor(query *parser.SelectQuery, context *context.Context) *SelectQueryExecutor {
 	return &SelectQueryExecutor{
-		query: query,
+		query:   query,
+		context: context,
 	}
 }
 
@@ -22,10 +24,11 @@ func (selectQueryExecutor *SelectQueryExecutor) Execute() ([][]interface{}, erro
 	if err != nil {
 		return nil, err
 	}
+
 	var rows [][]interface{}
 	for _, file := range files {
-		fileAttributes := projection.FromFile(file)
-		row := selectQueryExecutor.query.Projections.EvaluateWith(fileAttributes)
+		fileAttributes := context.ToFileAttributes(file, selectQueryExecutor.context)
+		row := selectQueryExecutor.query.Projections.EvaluateWith(fileAttributes, selectQueryExecutor.context.AllFunctions())
 		rows = append(rows, row)
 		//handle recursion
 	}

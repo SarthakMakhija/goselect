@@ -3,18 +3,17 @@ package projection
 import (
 	"errors"
 	"github.com/emirpasic/gods/stacks/linkedliststack"
+	"goselect/parser/context"
 	"goselect/parser/error/messages"
 	"goselect/parser/tokenizer"
 )
 
 type Projections struct {
 	expressions Expressions
-	functions   *AllFunctions
 }
 
-func NewProjections(tokenIterator *tokenizer.TokenIterator) (*Projections, error) {
-	functions := NewFunctions()
-	if expressions, err := all(tokenIterator, functions); err != nil {
+func NewProjections(tokenIterator *tokenizer.TokenIterator, context *context.Context) (*Projections, error) {
+	if expressions, err := all(tokenIterator, context); err != nil {
 		return nil, err
 	} else {
 		if expressions.count() == 0 {
@@ -32,8 +31,8 @@ func (projections Projections) AllExpressions() Expressions {
 	return projections.expressions
 }
 
-func (projections Projections) EvaluateWith(fileAttributes *FileAttributes) []interface{} {
-	return projections.expressions.evaluateWith(fileAttributes, projections.functions)
+func (projections Projections) EvaluateWith(fileAttributes *context.FileAttributes, functions *context.AllFunctions) []interface{} {
+	return projections.expressions.evaluateWith(fileAttributes, functions)
 }
 
 /*
@@ -42,7 +41,7 @@ columns: 	 name, size etc
 functions: 	 min(size), lower(name), min(Count(size)) etc
 expressions: 2 + 3, 2 > 3 etc
 */
-func all(tokenIterator *tokenizer.TokenIterator, allFunctions *AllFunctions) (Expressions, error) {
+func all(tokenIterator *tokenizer.TokenIterator, ctx *context.Context) (Expressions, error) {
 	var expressions []*Expression
 	var expectComma bool
 
@@ -54,15 +53,15 @@ func all(tokenIterator *tokenizer.TokenIterator, allFunctions *AllFunctions) (Ex
 				return Expressions{}, errors.New(messages.ErrorMessageMissingCommaProjection)
 			}
 			expectComma = false
-		case isAWildcard(token.TokenValue):
-			expressions = append(expressions, expressionsWithColumns(columnsOnWildcard())...)
+		case context.IsAWildcardAttribute(token.TokenValue):
+			expressions = append(expressions, expressionsWithColumns(context.AttributesOnWildcard())...)
 			expectComma = true
-		case IsASupportedColumn(token.TokenValue):
+		case ctx.IsASupportedAttribute(token.TokenValue):
 			expressions = append(expressions, expressionWithColumn(token.TokenValue))
 			expectComma = true
-		case allFunctions.isASupportedFunction(token.TokenValue):
+		case ctx.IsASupportedFunction(token.TokenValue):
 			tokenIterator.Drop()
-			if function, err := function(tokenIterator, allFunctions); err != nil {
+			if function, err := function(tokenIterator, ctx); err != nil {
 				return Expressions{}, err
 			} else {
 				expressions = append(expressions, expressionWithFunction(function))
@@ -73,7 +72,7 @@ func all(tokenIterator *tokenizer.TokenIterator, allFunctions *AllFunctions) (Ex
 	return Expressions{expressions: expressions}, nil
 }
 
-func function(tokenIterator *tokenizer.TokenIterator, allFunctions *AllFunctions) (*Function, error) {
+func function(tokenIterator *tokenizer.TokenIterator, ctx *context.Context) (*Function, error) {
 	buildFunction := func(functionStack *linkedliststack.Stack, operatingColumn tokenizer.Token) *Function {
 		functionToken, _ := functionStack.Pop()
 		var rootFunction = &Function{
@@ -115,10 +114,10 @@ func function(tokenIterator *tokenizer.TokenIterator, allFunctions *AllFunctions
 					expectClosingParentheses = false
 					break loop
 				}
-			case allFunctions.isASupportedFunction(token.TokenValue):
+			case ctx.IsASupportedFunction(token.TokenValue):
 				functionStack.Push(token)
 				expectOpeningParentheses = true
-			case IsASupportedColumn(token.TokenValue):
+			case ctx.IsASupportedAttribute(token.TokenValue):
 				operatingColumn = token
 				expectOpeningParentheses, expectClosingParentheses = false, true
 			}

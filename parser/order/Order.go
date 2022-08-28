@@ -2,8 +2,8 @@ package order
 
 import (
 	"errors"
+	"goselect/parser/context"
 	"goselect/parser/error/messages"
-	"goselect/parser/projection"
 	"goselect/parser/tokenizer"
 	"strconv"
 )
@@ -23,7 +23,7 @@ const (
 	sortingDirectionDescending     = 1
 )
 
-func NewOrder(iterator *tokenizer.TokenIterator, projectionCount int) (*Order, error) {
+func NewOrder(iterator *tokenizer.TokenIterator, context *context.Context, projectionCount int) (*Order, error) {
 	if !iterator.HasNext() {
 		return nil, nil
 	}
@@ -49,7 +49,7 @@ func NewOrder(iterator *tokenizer.TokenIterator, projectionCount int) (*Order, e
 				return nil, errors.New(messages.ErrorMessageMissingCommaOrderBy)
 			}
 			expectComma = false
-		case projection.IsASupportedColumn(token.TokenValue):
+		case context.IsASupportedAttribute(token.TokenValue):
 			if sortingDirection(iterator) == sortingDirectionDescending {
 				descendingColumns = append(descendingColumns, ColumnRef{Name: token.TokenValue, ProjectionPosition: -1})
 			} else {

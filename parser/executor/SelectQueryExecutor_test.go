@@ -2,11 +2,13 @@ package executor
 
 import (
 	"goselect/parser"
+	"goselect/parser/context"
 	"testing"
 )
 
 func TestResultsWithProjections1(t *testing.T) {
-	aParser, err := parser.NewParser("select name, now() from ../resources/TestResultsWithProjections")
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select name, now() from ../resources/TestResultsWithProjections", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -14,7 +16,7 @@ func TestResultsWithProjections1(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery).Execute()
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
 	expected := [][]string{
 		{"TestResultsWithProjections_A.txt", ""},
 	}
@@ -22,7 +24,8 @@ func TestResultsWithProjections1(t *testing.T) {
 }
 
 func TestResultsWithProjections2(t *testing.T) {
-	aParser, err := parser.NewParser("select lower(name), base64(name) from ../resources/TestResultsWithProjections")
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select lower(name), base64(name) from ../resources/TestResultsWithProjections", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -30,7 +33,7 @@ func TestResultsWithProjections2(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery).Execute()
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
 	expected := [][]string{
 		{"testresultswithprojections_a.txt", "VGVzdFJlc3VsdHNXaXRoUHJvamVjdGlvbnNfQS50eHQ="},
 	}
@@ -38,7 +41,8 @@ func TestResultsWithProjections2(t *testing.T) {
 }
 
 func TestResultsWithProjections3(t *testing.T) {
-	aParser, err := parser.NewParser("select lower(name), ext from ../resources/TestResultsWithProjections")
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select lower(name), ext from ../resources/TestResultsWithProjections", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -46,7 +50,7 @@ func TestResultsWithProjections3(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery).Execute()
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
 	expected := [][]string{
 		{"testresultswithprojections_a.txt", ".txt"},
 	}

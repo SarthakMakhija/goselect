@@ -1,4 +1,4 @@
-package projection
+package context
 
 import (
 	b64 "encoding/base64"
@@ -40,7 +40,7 @@ func NewFunctions() *AllFunctions {
 	}
 }
 
-func (functions *AllFunctions) isASupportedFunction(function string) bool {
+func (functions *AllFunctions) IsASupportedFunction(function string) bool {
 	return functions.supportedFunctions[function]
 }
 

@@ -1,5 +1,7 @@
 package projection
 
+import "goselect/parser/context"
+
 type Expressions struct {
 	expressions []*Expression
 }
@@ -58,7 +60,7 @@ func (expressions Expressions) DisplayableColumns() []string {
 	return columns
 }
 
-func (expressions Expressions) evaluateWith(fileAttributes *FileAttributes, functions *AllFunctions) []interface{} {
+func (expressions Expressions) evaluateWith(fileAttributes *context.FileAttributes, functions *context.AllFunctions) []interface{} {
 	var values []interface{}
 
 	var execute func(expression *Expression) interface{}

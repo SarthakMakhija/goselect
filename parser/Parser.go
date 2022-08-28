@@ -2,6 +2,7 @@ package parser
 
 import (
 	"errors"
+	"goselect/parser/context"
 	"goselect/parser/error/messages"
 	"goselect/parser/limit"
 	"goselect/parser/order"
@@ -19,14 +20,15 @@ type SelectQuery struct {
 }
 
 type Parser struct {
-	query string
+	query   string
+	context *context.Context
 }
 
-func NewParser(query string) (*Parser, error) {
+func NewParser(query string, context *context.Context) (*Parser, error) {
 	if len(query) == 0 {
 		return nil, errors.New(messages.ErrorMessageEmptyQuery)
 	}
-	return &Parser{query: strings.TrimSpace(query)}, nil
+	return &Parser{query: strings.TrimSpace(query), context: context}, nil
 }
 
 func (parser *Parser) Parse() (*SelectQuery, error) {
@@ -36,7 +38,7 @@ func (parser *Parser) Parse() (*SelectQuery, error) {
 	if iterator.HasNext() && !iterator.Peek().Equals("select") {
 		return nil, errors.New(messages.ErrorMessageNonSelectQuery)
 	}
-	projections, err := projection.NewProjections(iterator)
+	projections, err := projection.NewProjections(iterator, parser.context)
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +46,7 @@ func (parser *Parser) Parse() (*SelectQuery, error) {
 	if err != nil {
 		return nil, err
 	}
-	orderBy, err := order.NewOrder(iterator, projections.Count())
+	orderBy, err := order.NewOrder(iterator, parser.context, projections.Count())
 	if err != nil {
 		return nil, err
 	}
