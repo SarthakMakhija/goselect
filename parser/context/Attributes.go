@@ -1,5 +1,7 @@
 package context
 
+import "strings"
+
 const (
 	AttributeName         = "name"
 	AttributeSize         = "size"
@@ -39,7 +41,7 @@ func NewAttributes() *AllAttributes {
 }
 
 func (attributes *AllAttributes) IsASupportedAttribute(attribute string) bool {
-	return attributes.supportedAttributes[attribute]
+	return attributes.supportedAttributes[strings.ToLower(attribute)]
 }
 
 func (attributes *AllAttributes) aliasesFor(attribute string) []string {

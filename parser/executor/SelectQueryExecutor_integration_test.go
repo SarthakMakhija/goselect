@@ -40,6 +40,23 @@ func TestResultsWithProjections2(t *testing.T) {
 	assertMatch(t, expected, queryResults)
 }
 
+func TestResultsWithProjectionsInCaseInsensitiveManner(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("SELECT LOWER(NAME), BASE64(NAME) FROM ../resources/TestResultsWithProjections", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	expected := [][]string{
+		{"testresultswithprojections_a.txt", "VGVzdFJlc3VsdHNXaXRoUHJvamVjdGlvbnNfQS50eHQ="},
+	}
+	assertMatch(t, expected, queryResults)
+}
+
 func TestResultsWithProjections3(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
 	aParser, err := parser.NewParser("select lower(name), ext from ../resources/TestResultsWithProjections", newContext)

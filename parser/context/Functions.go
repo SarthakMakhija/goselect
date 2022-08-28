@@ -41,11 +41,11 @@ func NewFunctions() *AllFunctions {
 }
 
 func (functions *AllFunctions) IsASupportedFunction(function string) bool {
-	return functions.supportedFunctions[function]
+	return functions.supportedFunctions[strings.ToLower(function)]
 }
 
 func (functions *AllFunctions) Execute(fn string, args ...interface{}) interface{} {
-	switch fn {
+	switch strings.ToLower(fn) {
 	case "lower", "low":
 		return strings.ToLower(args[0].(string))
 	case "upper", "up":

@@ -5,6 +5,7 @@ import (
 	"os/user"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"syscall"
 	"time"
 )
@@ -104,5 +105,5 @@ func (fileAttributes *FileAttributes) setAllAliasesForAttribute(
 }
 
 func (fileAttributes *FileAttributes) Get(attribute string) interface{} {
-	return fileAttributes.attributes[attribute]
+	return fileAttributes.attributes[strings.ToLower(attribute)]
 }

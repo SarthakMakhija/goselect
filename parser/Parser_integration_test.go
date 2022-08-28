@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"fmt"
 	"goselect/parser/context"
 	"goselect/parser/order"
 	"reflect"
@@ -144,5 +145,24 @@ func TestParsesAQueryIntoAnASTWithLimitWithoutAnyOrdering(t *testing.T) {
 
 	if expectedLimit != limit {
 		t.Fatalf("Expected Limit to be %v, received %v", expectedLimit, limit)
+	}
+}
+
+func TestParsesAQueryIntoAnASTWithMultipleProjectionsInCaseInsensitiveManner(t *testing.T) {
+	parser, _ := NewParser("SELECT NAME, LOWER(NAME) FROM ../resources", context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	selectStatement, err := parser.Parse()
+	fmt.Println(err)
+
+	totalProjections := selectStatement.Projections.Count()
+	expected := 2
+	if totalProjections != expected {
+		t.Fatalf("Expected projection count %v, received %v", expected, totalProjections)
+	}
+
+	attributes := selectStatement.Projections.DisplayableAttributes()
+	expectedAttributes := []string{"NAME", "LOWER(NAME)"}
+
+	if !reflect.DeepEqual(attributes, expectedAttributes) {
+		t.Fatalf("Expected attributes to be %v, received %v", attributes, expectedAttributes)
 	}
 }
