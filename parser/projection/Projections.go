@@ -90,7 +90,7 @@ func function(tokenIterator *tokenizer.TokenIterator) (*Function, error) {
 		closingParenthesesCount, functionStack := 0, linkedliststack.New()
 
 	loop:
-		for tokenIterator.HasNext() {
+		for tokenIterator.HasNext() && !tokenIterator.Peek().Equals("from") {
 			token := tokenIterator.Next()
 			switch {
 			case expectOpeningParentheses:

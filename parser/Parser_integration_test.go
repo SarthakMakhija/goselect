@@ -26,13 +26,13 @@ func TestParsesAQueryIntoAnASTWithASingleProjection(t *testing.T) {
 	parser, _ := NewParser("SELECT name from ~")
 	selectStatement, _ := parser.Parse()
 
-	totalProjections := selectStatement.projections.Count()
+	totalProjections := selectStatement.Projections.Count()
 	expected := 1
 	if totalProjections != expected {
 		t.Fatalf("Expected projection count %v, received %v", expected, totalProjections)
 	}
 
-	expressions := selectStatement.projections.AllExpressions()
+	expressions := selectStatement.Projections.AllExpressions()
 	columns := expressions.DisplayableColumns()
 	expectedColumns := []string{"name"}
 
@@ -45,13 +45,13 @@ func TestParsesAQueryIntoAnASTWithMultipleProjections(t *testing.T) {
 	parser, _ := NewParser("SELECT name, lower(name) from ~")
 	selectStatement, _ := parser.Parse()
 
-	totalProjections := selectStatement.projections.Count()
+	totalProjections := selectStatement.Projections.Count()
 	expected := 2
 	if totalProjections != expected {
 		t.Fatalf("Expected projection count %v, received %v", expected, totalProjections)
 	}
 
-	expressions := selectStatement.projections.AllExpressions()
+	expressions := selectStatement.Projections.AllExpressions()
 	columns := expressions.DisplayableColumns()
 	expectedColumns := []string{"name", "lower(name)"}
 
@@ -61,16 +61,16 @@ func TestParsesAQueryIntoAnASTWithMultipleProjections(t *testing.T) {
 }
 
 func TestParsesAQueryIntoAnASTWithAnOrderBy(t *testing.T) {
-	parser, _ := NewParser("SELECT name, upper(lower(name)) from ~ order by name")
+	parser, _ := NewParser("SELECT name, upper(lower(name)) from ~ Order by name")
 	selectStatement, _ := parser.Parse()
 
-	totalProjections := selectStatement.projections.Count()
+	totalProjections := selectStatement.Projections.Count()
 	expected := 2
 	if totalProjections != expected {
 		t.Fatalf("Expected projection count %v, received %v", expected, totalProjections)
 	}
 
-	expressions := selectStatement.projections.AllExpressions()
+	expressions := selectStatement.Projections.AllExpressions()
 	columns := expressions.DisplayableColumns()
 	expectedColumns := []string{"name", "upper(lower(name))"}
 
@@ -78,7 +78,7 @@ func TestParsesAQueryIntoAnASTWithAnOrderBy(t *testing.T) {
 		t.Fatalf("Expected columns to be %v, received %v", columns, expectedColumns)
 	}
 
-	ascendingColumns := selectStatement.order.AscendingColumns
+	ascendingColumns := selectStatement.Order.AscendingColumns
 	expectedAscending := []order.ColumnRef{{
 		Name:               "name",
 		ProjectionPosition: -1,
@@ -90,16 +90,16 @@ func TestParsesAQueryIntoAnASTWithAnOrderBy(t *testing.T) {
 }
 
 func TestParsesAQueryIntoAnASTWithLimit(t *testing.T) {
-	parser, _ := NewParser("SELECT name, lower(name) from ~ order by name limit 10")
+	parser, _ := NewParser("SELECT name, lower(name) from ~ Order by name Limit 10")
 	selectStatement, _ := parser.Parse()
 
-	totalProjections := selectStatement.projections.Count()
+	totalProjections := selectStatement.Projections.Count()
 	expected := 2
 	if totalProjections != expected {
 		t.Fatalf("Expected projection count %v, received %v", expected, totalProjections)
 	}
 
-	expressions := selectStatement.projections.AllExpressions()
+	expressions := selectStatement.Projections.AllExpressions()
 	columns := expressions.DisplayableColumns()
 	expectedColumns := []string{"name", "lower(name)"}
 
@@ -107,7 +107,7 @@ func TestParsesAQueryIntoAnASTWithLimit(t *testing.T) {
 		t.Fatalf("Expected columns to be %v, received %v", columns, expectedColumns)
 	}
 
-	ascendingColumns := selectStatement.order.AscendingColumns
+	ascendingColumns := selectStatement.Order.AscendingColumns
 	expectedAscending := []order.ColumnRef{{
 		Name:               "name",
 		ProjectionPosition: -1,
@@ -117,25 +117,25 @@ func TestParsesAQueryIntoAnASTWithLimit(t *testing.T) {
 		t.Fatalf("Expected ordering columns to be %v, received %v", expectedAscending, ascendingColumns)
 	}
 
-	limit := selectStatement.limit.Limit
+	limit := selectStatement.Limit.Limit
 	var expectedLimit uint32 = 10
 
 	if expectedLimit != limit {
-		t.Fatalf("Expected limit to be %v, received %v", expectedLimit, limit)
+		t.Fatalf("Expected Limit to be %v, received %v", expectedLimit, limit)
 	}
 }
 
 func TestParsesAQueryIntoAnASTWithLimitWithoutAnyOrdering(t *testing.T) {
-	parser, _ := NewParser("SELECT name, lower(name) from ~/home limit 10")
+	parser, _ := NewParser("SELECT name, lower(name) from ~/home Limit 10")
 	selectStatement, _ := parser.Parse()
 
-	totalProjections := selectStatement.projections.Count()
+	totalProjections := selectStatement.Projections.Count()
 	expected := 2
 	if totalProjections != expected {
 		t.Fatalf("Expected projection count %v, received %v", expected, totalProjections)
 	}
 
-	expressions := selectStatement.projections.AllExpressions()
+	expressions := selectStatement.Projections.AllExpressions()
 	columns := expressions.DisplayableColumns()
 	expectedColumns := []string{"name", "lower(name)"}
 
@@ -143,10 +143,10 @@ func TestParsesAQueryIntoAnASTWithLimitWithoutAnyOrdering(t *testing.T) {
 		t.Fatalf("Expected columns to be %v, received %v", columns, expectedColumns)
 	}
 
-	limit := selectStatement.limit.Limit
+	limit := selectStatement.Limit.Limit
 	var expectedLimit uint32 = 10
 
 	if expectedLimit != limit {
-		t.Fatalf("Expected limit to be %v, received %v", expectedLimit, limit)
+		t.Fatalf("Expected Limit to be %v, received %v", expectedLimit, limit)
 	}
 }

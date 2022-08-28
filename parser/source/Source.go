@@ -9,14 +9,14 @@ import (
 )
 
 type Source struct {
-	directory string
+	Directory string
 }
 
 func NewSource(tokenIterator *tokenizer.TokenIterator) (*Source, error) {
 	if directory, err := getDirectory(tokenIterator); err != nil {
 		return nil, err
 	} else {
-		return &Source{directory: directory}, nil
+		return &Source{Directory: directory}, nil
 	}
 }
 

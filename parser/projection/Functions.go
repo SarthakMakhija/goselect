@@ -1,14 +1,32 @@
 package projection
 
+import (
+	b64 "encoding/base64"
+	"strings"
+)
+
 var supportedFunctions = map[string]bool{
-	"lower": true,
-	"upper": true,
-	"min":   true,
-	"max":   true,
-	"avg":   true,
-	"sum":   true,
+	"lower":  true,
+	"upper":  true,
+	"title":  true,
+	"base64": true,
 }
 
 func isASupportedFunction(function string) bool {
 	return supportedFunctions[function]
+}
+
+func ExecuteFn(fn string, args ...interface{}) interface{} {
+	switch fn {
+	case "lower":
+		return strings.ToLower(args[0].(string))
+	case "upper":
+		return strings.ToUpper(args[0].(string))
+	case "title":
+		return strings.Title(args[0].(string))
+	case "base64":
+		d := []byte(args[0].(string))
+		return b64.StdEncoding.EncodeToString(d)
+	}
+	return ""
 }

@@ -11,8 +11,8 @@ func TestCreatesANewSourceFromCurrentDirectory1(t *testing.T) {
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "."))
 
 	source, _ := NewSource(tokens.Iterator())
-	if source.directory != "." {
-		t.Fatalf("Expected directory path to be %v, received %v", ".", source.directory)
+	if source.Directory != "." {
+		t.Fatalf("Expected Directory path to be %v, received %v", ".", source.Directory)
 	}
 }
 
@@ -22,8 +22,8 @@ func TestCreatesANewSourceFromCurrentDirectory2(t *testing.T) {
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "where"))
 
 	source, _ := NewSource(tokens.Iterator())
-	if source.directory != "." {
-		t.Fatalf("Expected directory path to be %v, received %v", ".", source.directory)
+	if source.Directory != "." {
+		t.Fatalf("Expected Directory path to be %v, received %v", ".", source.Directory)
 	}
 }
 
@@ -34,8 +34,8 @@ func TestCreatesANewSourceWithHomeDirectorySymbol1(t *testing.T) {
 	source, _ := NewSource(tokens.Iterator())
 	expectedPath := homeDirectory()
 
-	if source.directory != expectedPath {
-		t.Fatalf("Expected directory path to be %v, received %v", expectedPath, source.directory)
+	if source.Directory != expectedPath {
+		t.Fatalf("Expected Directory path to be %v, received %v", expectedPath, source.Directory)
 	}
 }
 
@@ -46,8 +46,8 @@ func TestCreatesANewSourceWithHomeDirectorySymbol2(t *testing.T) {
 	source, _ := NewSource(tokens.Iterator())
 	expectedPath := homeDirectory() + "/apps"
 
-	if source.directory != expectedPath {
-		t.Fatalf("Expected directory path to be %v, received %v", expectedPath, source.directory)
+	if source.Directory != expectedPath {
+		t.Fatalf("Expected Directory path to be %v, received %v", expectedPath, source.Directory)
 	}
 }
 

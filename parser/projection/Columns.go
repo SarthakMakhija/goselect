@@ -6,8 +6,12 @@ var supportedColumns = map[string]bool{
 	"fName": true,
 	"size":  true,
 	"fSize": true,
+	"Size":  true,
 	"uid":   true,
 	"gid":   true,
+	"uname": true,
+	"gname": true,
+	"ext":   true,
 }
 
 func IsASupportedColumn(column string) bool {

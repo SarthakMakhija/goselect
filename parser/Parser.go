@@ -12,10 +12,10 @@ import (
 )
 
 type SelectQuery struct {
-	projections *projection.Projections
-	source      *source.Source
-	order       *order.Order
-	limit       *limit.Limit
+	Projections *projection.Projections
+	Source      *source.Source
+	Order       *order.Order
+	Limit       *limit.Limit
 }
 
 type Parser struct {
@@ -54,9 +54,9 @@ func (parser *Parser) Parse() (*SelectQuery, error) {
 	}
 
 	return &SelectQuery{
-		projections: projections,
-		source:      fileSource,
-		order:       orderBy,
-		limit:       limitResults,
+		Projections: projections,
+		Source:      fileSource,
+		Order:       orderBy,
+		Limit:       limitResults,
 	}, nil
 }
