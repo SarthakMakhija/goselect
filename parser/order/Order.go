@@ -23,7 +23,7 @@ const (
 	sortingDirectionDescending     = 1
 )
 
-func NewOrder(iterator *tokenizer.TokenIterator, context *context.Context, projectionCount int) (*Order, error) {
+func NewOrder(iterator *tokenizer.TokenIterator, context *context.ParsingApplicationContext, projectionCount int) (*Order, error) {
 	if !iterator.HasNext() {
 		return nil, nil
 	}

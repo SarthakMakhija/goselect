@@ -13,7 +13,7 @@ type FileAttributes struct {
 	attributes map[string]interface{}
 }
 
-func ToFileAttributes(file fs.FileInfo, ctx *Context) *FileAttributes {
+func ToFileAttributes(file fs.FileInfo, ctx *ParsingApplicationContext) *FileAttributes {
 	fileAttributes := newFileAttributes()
 
 	fileAttributes.setName(file.Name(), ctx.allAttributes)

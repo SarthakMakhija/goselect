@@ -21,10 +21,10 @@ type SelectQuery struct {
 
 type Parser struct {
 	query   string
-	context *context.Context
+	context *context.ParsingApplicationContext
 }
 
-func NewParser(query string, context *context.Context) (*Parser, error) {
+func NewParser(query string, context *context.ParsingApplicationContext) (*Parser, error) {
 	if len(query) == 0 {
 		return nil, errors.New(messages.ErrorMessageEmptyQuery)
 	}

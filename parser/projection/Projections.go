@@ -12,7 +12,7 @@ type Projections struct {
 	expressions Expressions
 }
 
-func NewProjections(tokenIterator *tokenizer.TokenIterator, context *context.Context) (*Projections, error) {
+func NewProjections(tokenIterator *tokenizer.TokenIterator, context *context.ParsingApplicationContext) (*Projections, error) {
 	if expressions, err := all(tokenIterator, context); err != nil {
 		return nil, err
 	} else {
@@ -45,7 +45,7 @@ attributes:  name, size etc
 functions: 	 min(size), lower(name), min(Count(size)) etc
 expressions: 2 + 3, 2 > 3 etc
 */
-func all(tokenIterator *tokenizer.TokenIterator, ctx *context.Context) (Expressions, error) {
+func all(tokenIterator *tokenizer.TokenIterator, ctx *context.ParsingApplicationContext) (Expressions, error) {
 	var expressions []*Expression
 	var expectComma bool
 
@@ -76,7 +76,7 @@ func all(tokenIterator *tokenizer.TokenIterator, ctx *context.Context) (Expressi
 	return Expressions{expressions: expressions}, nil
 }
 
-func function(tokenIterator *tokenizer.TokenIterator, ctx *context.Context) (*Function, error) {
+func function(tokenIterator *tokenizer.TokenIterator, ctx *context.ParsingApplicationContext) (*Function, error) {
 	buildFunction := func(functionStack *linkedliststack.Stack, operatingAttribute tokenizer.Token) *Function {
 		functionToken, _ := functionStack.Pop()
 		var rootFunction = &Function{
