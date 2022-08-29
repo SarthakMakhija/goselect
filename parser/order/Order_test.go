@@ -23,7 +23,7 @@ func TestOrderByAAttributeInAscending(t *testing.T) {
 	}
 }
 
-func TestOrderByAAttributeInAscendingWithExplicitAsc(t *testing.T) {
+func TestOrderByAnAttributeInAscendingWithExplicitAsc(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.Order, "order"))
 	tokens.Add(tokenizer.NewToken(tokenizer.By, "by"))
@@ -128,6 +128,19 @@ func TestThrowsAErrorGivenNoAttributeAfterOrderBy(t *testing.T) {
 
 	if err == nil {
 		t.Fatalf("Expected an error when no attributes are given after order by but received none")
+	}
+}
+
+func TestThrowsAErrorOrderByAttributePositionZero(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.Order, "order"))
+	tokens.Add(tokenizer.NewToken(tokenizer.By, "by"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "0"))
+
+	_, err := NewOrder(tokens.Iterator(), 1)
+
+	if err == nil {
+		t.Fatalf("Expected an error when 0 is given as the order by position")
 	}
 }
 

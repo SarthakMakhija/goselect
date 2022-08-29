@@ -8,6 +8,7 @@ const (
 	ErrorMessageMissingBy                         = "expected 'by' after order"
 	ErrorMessageMissingCommaOrderBy               = "expected a comma after 'order by' in attribute separator"
 	ErrorMessageMissingOrderByAttributes          = "expected a attribute after 'order by'"
+	ErrorMessageNonZeroPositivePositions          = "expected non-zero & positive order by positions"
 	ErrorMessageMissingSource                     = "expected a source path after 'from`"
 	ErrorMessageMissingCommaProjection            = "expected a comma in projection list or from keyword"
 	ErrorMessageOpeningParenthesesProjection      = "expected an opening parentheses in projection"
