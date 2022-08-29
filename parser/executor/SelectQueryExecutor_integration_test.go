@@ -17,8 +17,8 @@ func TestResultsWithProjections1(t *testing.T) {
 		t.Fatalf("error is %v", err)
 	}
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
-	expected := [][]string{
-		{"TestResultsWithProjections_A.txt", ""},
+	expected := [][]context.Value{
+		{context.StringValue("TestResultsWithProjections_A.txt"), context.EmptyValue()},
 	}
 	assertMatch(t, expected, queryResults, 1)
 }
@@ -34,8 +34,8 @@ func TestResultsWithProjections2(t *testing.T) {
 		t.Fatalf("error is %v", err)
 	}
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
-	expected := [][]string{
-		{"testresultswithprojections_a.txt", "VGVzdFJlc3VsdHNXaXRoUHJvamVjdGlvbnNfQS50eHQ="},
+	expected := [][]context.Value{
+		{context.StringValue("testresultswithprojections_a.txt"), context.StringValue("VGVzdFJlc3VsdHNXaXRoUHJvamVjdGlvbnNfQS50eHQ=")},
 	}
 	assertMatch(t, expected, queryResults)
 }
@@ -51,8 +51,8 @@ func TestResultsWithProjectionsInCaseInsensitiveManner(t *testing.T) {
 		t.Fatalf("error is %v", err)
 	}
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
-	expected := [][]string{
-		{"testresultswithprojections_a.txt", "VGVzdFJlc3VsdHNXaXRoUHJvamVjdGlvbnNfQS50eHQ="},
+	expected := [][]context.Value{
+		{context.StringValue("testresultswithprojections_a.txt"), context.StringValue("VGVzdFJlc3VsdHNXaXRoUHJvamVjdGlvbnNfQS50eHQ=")},
 	}
 	assertMatch(t, expected, queryResults)
 }
@@ -68,8 +68,8 @@ func TestResultsWithProjections3(t *testing.T) {
 		t.Fatalf("error is %v", err)
 	}
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
-	expected := [][]string{
-		{"testresultswithprojections_a.txt", ".txt"},
+	expected := [][]context.Value{
+		{context.StringValue("testresultswithprojections_a.txt"), context.StringValue(".txt")},
 	}
 	assertMatch(t, expected, queryResults)
 }
@@ -122,7 +122,7 @@ func TestResultsWithProjectionsWithoutProperParametersToAFunction(t *testing.T) 
 	}
 }
 
-func assertMatch(t *testing.T, expected [][]string, queryResults [][]context.Value, skipAttributeIndices ...int) {
+func assertMatch(t *testing.T, expected [][]context.Value, queryResults [][]context.Value, skipAttributeIndices ...int) {
 	contains := func(slice []int, value int) bool {
 		for _, v := range slice {
 			if value == v {
@@ -139,7 +139,7 @@ func assertMatch(t *testing.T, expected [][]string, queryResults [][]context.Val
 			t.Fatalf("Expected length of the attributes in row index %v to be %v, received %v", rowIndex, len(row), len(queryResults[rowIndex]))
 		}
 		for attributeIndex, col := range row {
-			if !contains(skipAttributeIndices, attributeIndex) && queryResults[rowIndex][attributeIndex].Get() != col {
+			if !contains(skipAttributeIndices, attributeIndex) && queryResults[rowIndex][attributeIndex].CompareTo(col) != 0 {
 				t.Fatalf("Expected %v to match %v at row index %v, attribute index %v",
 					col,
 					queryResults[rowIndex][attributeIndex],

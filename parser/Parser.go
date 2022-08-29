@@ -23,6 +23,10 @@ func (selectQuery *SelectQuery) IsLimitDefined() bool {
 	return selectQuery.Limit != nil
 }
 
+func (selectQuery *SelectQuery) IsOrderDefined() bool {
+	return selectQuery.Order != nil
+}
+
 type Parser struct {
 	query   string
 	context *context.ParsingApplicationContext

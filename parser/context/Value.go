@@ -86,3 +86,45 @@ func (value Value) Get() interface{} {
 	}
 	return ""
 }
+
+func (value Value) CompareTo(other Value) int {
+	switch value.valueType {
+	case ValueTypeString:
+		first, second := value.stringValue, other.stringValue
+		if first == second {
+			return 0
+		}
+		if first < second {
+			return -1
+		}
+		return 1
+	case ValueTypeInt:
+		first, second := value.intValue, other.intValue
+		if first == second {
+			return 0
+		}
+		if first < second {
+			return -1
+		}
+		return 1
+	case ValueTypeInt64:
+		first, second := value.int64Value, other.int64Value
+		if first == second {
+			return 0
+		}
+		if first < second {
+			return -1
+		}
+		return 1
+	case ValueTypeDateTime:
+		first, second := value.timeValue, other.timeValue
+		if first.Equal(second) {
+			return 0
+		}
+		if first.Before(second) {
+			return -1
+		}
+		return 1
+	}
+	return -1
+}

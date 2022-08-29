@@ -15,7 +15,7 @@ func TestOrderByAAttributeInAscending(t *testing.T) {
 	order, _ := NewOrder(tokens.Iterator(), 1)
 	expectedOrder := Order{
 		Attributes: []AttributeRef{{ProjectionPosition: 1}},
-		Directions: []bool{true},
+		directions: []bool{true},
 	}
 
 	if !reflect.DeepEqual(expectedOrder, *order) {
@@ -33,7 +33,7 @@ func TestOrderByAAttributeInAscendingWithExplicitAsc(t *testing.T) {
 	order, _ := NewOrder(tokens.Iterator(), 1)
 	expectedOrder := Order{
 		Attributes: []AttributeRef{{ProjectionPosition: 1}},
-		Directions: []bool{true},
+		directions: []bool{true},
 	}
 
 	if !reflect.DeepEqual(expectedOrder, *order) {
@@ -52,7 +52,7 @@ func TestOrderBy2AttributesInAscending(t *testing.T) {
 	order, _ := NewOrder(tokens.Iterator(), 2)
 	expectedOrder := Order{
 		Attributes: []AttributeRef{{ProjectionPosition: 1}, {ProjectionPosition: 2}},
-		Directions: []bool{true, true},
+		directions: []bool{true, true},
 	}
 
 	if !reflect.DeepEqual(expectedOrder, *order) {
@@ -70,7 +70,7 @@ func TestOrderByAAttributeInDescending(t *testing.T) {
 	order, _ := NewOrder(tokens.Iterator(), 1)
 	expectedOrder := Order{
 		Attributes: []AttributeRef{{ProjectionPosition: 1}},
-		Directions: []bool{false},
+		directions: []bool{false},
 	}
 
 	if !reflect.DeepEqual(expectedOrder, *order) {
@@ -91,7 +91,7 @@ func TestOrderBy2AttributesInDescending(t *testing.T) {
 	order, _ := NewOrder(tokens.Iterator(), 2)
 	expectedOrder := Order{
 		Attributes: []AttributeRef{{ProjectionPosition: 1}, {ProjectionPosition: 2}},
-		Directions: []bool{false, false},
+		directions: []bool{false, false},
 	}
 
 	if !reflect.DeepEqual(expectedOrder, *order) {
@@ -111,7 +111,7 @@ func TestOrderBy2AttributesOneInAscendingOtherInDescending(t *testing.T) {
 	order, _ := NewOrder(tokens.Iterator(), 2)
 	expectedOrder := Order{
 		Attributes: []AttributeRef{{ProjectionPosition: 1}, {ProjectionPosition: 2}},
-		Directions: []bool{true, false},
+		directions: []bool{true, false},
 	}
 
 	if !reflect.DeepEqual(expectedOrder, *order) {
@@ -143,7 +143,7 @@ func TestOrderBy2AttributesWithOneAsTheProjectionPosition(t *testing.T) {
 	order, _ := NewOrder(tokens.Iterator(), 2)
 	expectedOrder := Order{
 		Attributes: []AttributeRef{{ProjectionPosition: 1}, {ProjectionPosition: 2}},
-		Directions: []bool{false, true},
+		directions: []bool{false, true},
 	}
 
 	if !reflect.DeepEqual(expectedOrder, *order) {

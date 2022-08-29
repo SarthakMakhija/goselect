@@ -9,7 +9,7 @@ import (
 
 type Order struct {
 	Attributes []AttributeRef
-	Directions []bool //true signifies ascending, false signified descending
+	directions []bool //true signifies ascending, false signified descending
 }
 
 type AttributeRef struct {
@@ -68,7 +68,7 @@ func NewOrder(iterator *tokenizer.TokenIterator, projectionCount int) (*Order, e
 	if len(attributes) == 0 {
 		return nil, errors.New(messages.ErrorMessageMissingOrderByAttributes)
 	}
-	return &Order{Attributes: attributes, Directions: directions}, nil
+	return &Order{Attributes: attributes, directions: directions}, nil
 }
 
 func sortingDirection(iterator *tokenizer.TokenIterator) int {
@@ -81,4 +81,11 @@ func sortingDirection(iterator *tokenizer.TokenIterator) int {
 		}
 		return sortingDirectionAscending
 	}
+}
+
+func (order Order) IsAscendingAt(index int) bool {
+	if index < len(order.directions) {
+		return order.directions[index]
+	}
+	return false
 }

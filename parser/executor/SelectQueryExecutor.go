@@ -34,8 +34,7 @@ func (selectQueryExecutor *SelectQueryExecutor) Execute() ([][]context.Value, er
 	var rowCount uint32 = 0
 	var rows [][]context.Value
 	for _, file := range files {
-		//assume no order by
-		if rowCount >= limit {
+		if rowCount >= limit && !selectQueryExecutor.query.IsOrderDefined() {
 			break
 		}
 		fileAttributes := context.ToFileAttributes(file, selectQueryExecutor.context)
@@ -46,5 +45,6 @@ func (selectQueryExecutor *SelectQueryExecutor) Execute() ([][]context.Value, er
 		rows, rowCount = append(rows, row), rowCount+1
 		//handle recursion
 	}
+	newOrdering(selectQueryExecutor.query.Order).doOrder(rows)
 	return rows, nil
 }
