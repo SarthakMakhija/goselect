@@ -27,10 +27,6 @@ func (projections Projections) Count() int {
 	return projections.expressions.count()
 }
 
-func (projections Projections) AllExpressions() Expressions {
-	return projections.expressions
-}
-
 func (projections Projections) DisplayableAttributes() []string {
 	return projections.expressions.displayableAttributes()
 }
