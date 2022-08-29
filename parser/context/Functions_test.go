@@ -352,6 +352,16 @@ func TestConcat(t *testing.T) {
 	}
 }
 
+func TestConcatWithSeparator(t *testing.T) {
+	value, _ := NewFunctions().Execute("concatws", StringValue("a"), StringValue("b"), StringValue("@"))
+	expected := "a@b"
+
+	actualValue, _ := value.GetString()
+	if actualValue != expected {
+		t.Fatalf("Expected concat  to be %v, received %v", expected, actualValue)
+	}
+}
+
 func TestContains(t *testing.T) {
 	value, _ := NewFunctions().Execute("contains", StringValue("String"), StringValue("ing"))
 

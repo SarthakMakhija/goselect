@@ -43,6 +43,8 @@ func NewFunctions() *AllFunctions {
 			"cwd":       true,
 			"wd":        true,
 			"concat":    true,
+			"concatws":  true,
+			"concatWs":  true,
 			"contains":  true,
 		},
 	}
@@ -117,6 +119,12 @@ func (functions *AllFunctions) Execute(fn string, args ...Value) (Value, error) 
 			values = append(values, value.stringValue)
 		}
 		return StringValue(strings.Join(values, "")), nil
+	case "concatws", "concatWs":
+		var values []string
+		for index := 0; index < len(args)-1; index++ {
+			values = append(values, args[index].stringValue)
+		}
+		return StringValue(strings.Join(values, args[len(args)-1].stringValue)), nil
 	case "contains":
 		if err := functions.ensureNParametersOrError(args, fn, 2); err != nil {
 			return EmptyValue(), err
