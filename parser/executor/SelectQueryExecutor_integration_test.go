@@ -74,6 +74,22 @@ func TestResultsWithProjections3(t *testing.T) {
 	assertMatch(t, expected, queryResults)
 }
 
+func TestResultsWithProjectionsWithoutProperParametersToAFunction(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select name, lower() from ../resources/TestResultsWithProjections", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	_, err = NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	if err == nil {
+		t.Fatalf("Expected an error on running a query with lower() without any parameter")
+	}
+}
+
 func assertMatch(t *testing.T, expected [][]string, queryResults [][]interface{}, skipAttributeIndices ...int) {
 	contains := func(slice []int, value int) bool {
 		for _, v := range slice {

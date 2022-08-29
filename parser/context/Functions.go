@@ -2,6 +2,9 @@ package context
 
 import (
 	b64 "encoding/base64"
+	"errors"
+	"fmt"
+	"goselect/parser/error/messages"
 	"strings"
 	"time"
 )
@@ -44,37 +47,77 @@ func (functions *AllFunctions) IsASupportedFunction(function string) bool {
 	return functions.supportedFunctions[strings.ToLower(function)]
 }
 
-func (functions *AllFunctions) Execute(fn string, args ...interface{}) interface{} {
+func (functions *AllFunctions) Execute(fn string, args ...interface{}) (interface{}, error) {
 	switch strings.ToLower(fn) {
 	case "lower", "low":
-		return strings.ToLower(args[0].(string))
+		if err := functions.ensureOneParameterOrError(args, fn); err != nil {
+			return nil, err
+		}
+		return strings.ToLower(args[0].(string)), nil
 	case "upper", "up":
-		return strings.ToUpper(args[0].(string))
+		if err := functions.ensureOneParameterOrError(args, fn); err != nil {
+			return nil, err
+		}
+		return strings.ToUpper(args[0].(string)), nil
 	case "length", "len":
-		return len(args[0].(string))
+		if err := functions.ensureOneParameterOrError(args, fn); err != nil {
+			return nil, err
+		}
+		return len(args[0].(string)), nil
 	case "title":
-		return strings.Title(args[0].(string))
+		if err := functions.ensureOneParameterOrError(args, fn); err != nil {
+			return nil, err
+		}
+		return strings.Title(args[0].(string)), nil
 	case "trim":
-		return strings.TrimSpace(args[0].(string))
+		if err := functions.ensureOneParameterOrError(args, fn); err != nil {
+			return nil, err
+		}
+		return strings.TrimSpace(args[0].(string)), nil
 	case "ltrim", "lTrim":
-		return strings.TrimLeft(args[0].(string), " ")
+		if err := functions.ensureOneParameterOrError(args, fn); err != nil {
+			return nil, err
+		}
+		return strings.TrimLeft(args[0].(string), " "), nil
 	case "rtrim", "rTrim":
-		return strings.TrimRight(args[0].(string), " ")
+		if err := functions.ensureOneParameterOrError(args, fn); err != nil {
+			return nil, err
+		}
+		return strings.TrimRight(args[0].(string), " "), nil
 	case "base64", "b64":
+		if err := functions.ensureOneParameterOrError(args, fn); err != nil {
+			return nil, err
+		}
 		d := []byte(args[0].(string))
-		return b64.StdEncoding.EncodeToString(d)
+		return b64.StdEncoding.EncodeToString(d), nil
 	case "now":
-		return now().String()
+		return now().String(), nil
 	case "day":
-		return now().Day()
+		return now().Day(), nil
 	case "month", "mon":
-		return now().Month().String()
+		return now().Month().String(), nil
 	case "year", "yr":
-		return now().Year()
+		return now().Year(), nil
 	case "dayOfWeek", "dayofweek":
-		return now().Weekday().String()
+		return now().Weekday().String(), nil
 	}
-	return ""
+	return "", nil
+}
+
+func (functions *AllFunctions) ensureOneParameterOrError(parameters []interface{}, fn string) error {
+	nonNilParameterCount := func() int {
+		count := 0
+		for _, parameter := range parameters {
+			if parameter != nil {
+				count = count + 1
+			}
+		}
+		return count
+	}
+	if len(parameters) < 1 || nonNilParameterCount() < 1 {
+		return errors.New(fmt.Sprintf(messages.ErrorMessageMissingParameterInScalarFunctions, fn))
+	}
+	return nil
 }
 
 var nowFunc = func() time.Time {

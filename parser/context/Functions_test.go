@@ -6,7 +6,7 @@ import (
 )
 
 func TestLower1(t *testing.T) {
-	value := NewFunctions().Execute("lower", "ABC")
+	value, _ := NewFunctions().Execute("lower", "ABC")
 	expected := "abc"
 
 	if value != expected {
@@ -15,7 +15,7 @@ func TestLower1(t *testing.T) {
 }
 
 func TestLower2(t *testing.T) {
-	value := NewFunctions().Execute("low", "ABC")
+	value, _ := NewFunctions().Execute("low", "ABC")
 	expected := "abc"
 
 	if value != expected {
@@ -23,8 +23,16 @@ func TestLower2(t *testing.T) {
 	}
 }
 
+func TestLowerWithoutAnyParameter(t *testing.T) {
+	_, err := NewFunctions().Execute("low")
+
+	if err == nil {
+		t.Fatalf("Expected an error on executing low without any parameter")
+	}
+}
+
 func TestUpper1(t *testing.T) {
-	value := NewFunctions().Execute("upper", "abc")
+	value, _ := NewFunctions().Execute("upper", "abc")
 	expected := "ABC"
 
 	if value != expected {
@@ -33,7 +41,7 @@ func TestUpper1(t *testing.T) {
 }
 
 func TestUpper2(t *testing.T) {
-	value := NewFunctions().Execute("up", "abc")
+	value, _ := NewFunctions().Execute("up", "abc")
 	expected := "ABC"
 
 	if value != expected {
@@ -41,8 +49,16 @@ func TestUpper2(t *testing.T) {
 	}
 }
 
+func TestUpperWithoutAnyParameter(t *testing.T) {
+	_, err := NewFunctions().Execute("up")
+
+	if err == nil {
+		t.Fatalf("Expected an error on executing low without any parameter")
+	}
+}
+
 func TestTitle(t *testing.T) {
-	value := NewFunctions().Execute("title", "Sample content")
+	value, _ := NewFunctions().Execute("title", "Sample content")
 	expected := "Sample Content"
 
 	if value != expected {
@@ -50,8 +66,16 @@ func TestTitle(t *testing.T) {
 	}
 }
 
+func TestTitleWithoutAnyParameter(t *testing.T) {
+	_, err := NewFunctions().Execute("title")
+
+	if err == nil {
+		t.Fatalf("Expected an error on executing low without any parameter")
+	}
+}
+
 func TestBase641(t *testing.T) {
-	value := NewFunctions().Execute("base64", "a")
+	value, _ := NewFunctions().Execute("base64", "a")
 	expected := "YQ=="
 
 	if value != expected {
@@ -60,7 +84,7 @@ func TestBase641(t *testing.T) {
 }
 
 func TestBase642(t *testing.T) {
-	value := NewFunctions().Execute("b64", "a")
+	value, _ := NewFunctions().Execute("b64", "a")
 	expected := "YQ=="
 
 	if value != expected {
@@ -68,8 +92,16 @@ func TestBase642(t *testing.T) {
 	}
 }
 
+func TestBase64WithoutAnyParameter(t *testing.T) {
+	_, err := NewFunctions().Execute("b64")
+
+	if err == nil {
+		t.Fatalf("Expected an error on executing low without any parameter")
+	}
+}
+
 func TestLength1(t *testing.T) {
-	value := NewFunctions().Execute("length", "sample")
+	value, _ := NewFunctions().Execute("length", "sample")
 	expected := 6
 
 	if value != expected {
@@ -78,7 +110,7 @@ func TestLength1(t *testing.T) {
 }
 
 func TestLength2(t *testing.T) {
-	value := NewFunctions().Execute("len", "sample")
+	value, _ := NewFunctions().Execute("len", "sample")
 	expected := 6
 
 	if value != expected {
@@ -86,8 +118,16 @@ func TestLength2(t *testing.T) {
 	}
 }
 
+func TestLengthWithoutAnyParameter(t *testing.T) {
+	_, err := NewFunctions().Execute("len")
+
+	if err == nil {
+		t.Fatalf("Expected an error on executing low without any parameter")
+	}
+}
+
 func TestLeftTrim1(t *testing.T) {
-	value := NewFunctions().Execute("ltrim", "  sample")
+	value, _ := NewFunctions().Execute("ltrim", "  sample")
 	expected := "sample"
 
 	if value != expected {
@@ -96,7 +136,7 @@ func TestLeftTrim1(t *testing.T) {
 }
 
 func TestLeftTrim2(t *testing.T) {
-	value := NewFunctions().Execute("lTrim", "  sample")
+	value, _ := NewFunctions().Execute("lTrim", "  sample")
 	expected := "sample"
 
 	if value != expected {
@@ -104,8 +144,16 @@ func TestLeftTrim2(t *testing.T) {
 	}
 }
 
+func TestLeftTrimWithoutAnyParameter(t *testing.T) {
+	_, err := NewFunctions().Execute("ltrim")
+
+	if err == nil {
+		t.Fatalf("Expected an error on executing low without any parameter")
+	}
+}
+
 func TestRightTrim1(t *testing.T) {
-	value := NewFunctions().Execute("rtrim", "sample  ")
+	value, _ := NewFunctions().Execute("rtrim", "sample  ")
 	expected := "sample"
 
 	if value != expected {
@@ -114,7 +162,7 @@ func TestRightTrim1(t *testing.T) {
 }
 
 func TestRightTrim2(t *testing.T) {
-	value := NewFunctions().Execute("rTrim", "sample  ")
+	value, _ := NewFunctions().Execute("rTrim", "sample  ")
 	expected := "sample"
 
 	if value != expected {
@@ -122,12 +170,28 @@ func TestRightTrim2(t *testing.T) {
 	}
 }
 
+func TestRightTrimWithoutAnyParameter(t *testing.T) {
+	_, err := NewFunctions().Execute("rtrim")
+
+	if err == nil {
+		t.Fatalf("Expected an error on executing low without any parameter")
+	}
+}
+
 func TestTrim1(t *testing.T) {
-	value := NewFunctions().Execute("trim", "  sample  ")
+	value, _ := NewFunctions().Execute("trim", "  sample  ")
 	expected := "sample"
 
 	if value != expected {
 		t.Fatalf("Expected lower to be %v, received %v", expected, value)
+	}
+}
+
+func TestTrimWithoutAnyParameter(t *testing.T) {
+	_, err := NewFunctions().Execute("trim")
+
+	if err == nil {
+		t.Fatalf("Expected an error on executing low without any parameter")
 	}
 }
 
@@ -138,7 +202,7 @@ func TestDay(t *testing.T) {
 	// after finish with the test, reset the time implementation
 	defer resetClock()
 
-	value := NewFunctions().Execute("day")
+	value, _ := NewFunctions().Execute("day")
 	expected := 22
 
 	if value != expected {
@@ -153,7 +217,7 @@ func TestMonth1(t *testing.T) {
 	// after finish with the test, reset the time implementation
 	defer resetClock()
 
-	value := NewFunctions().Execute("month")
+	value, _ := NewFunctions().Execute("month")
 	expected := "August"
 
 	if value != expected {
@@ -168,7 +232,7 @@ func TestMonth2(t *testing.T) {
 	// after finish with the test, reset the time implementation
 	defer resetClock()
 
-	value := NewFunctions().Execute("mon")
+	value, _ := NewFunctions().Execute("mon")
 	expected := "August"
 
 	if value != expected {
@@ -183,7 +247,7 @@ func TestYear1(t *testing.T) {
 	// after finish with the test, reset the time implementation
 	defer resetClock()
 
-	value := NewFunctions().Execute("year")
+	value, _ := NewFunctions().Execute("year")
 	expected := 2022
 
 	if value != expected {
@@ -198,7 +262,7 @@ func TestYear2(t *testing.T) {
 	// after finish with the test, reset the time implementation
 	defer resetClock()
 
-	value := NewFunctions().Execute("yr")
+	value, _ := NewFunctions().Execute("yr")
 	expected := 2022
 
 	if value != expected {
@@ -213,7 +277,7 @@ func TestDayOfWeek1(t *testing.T) {
 	// after finish with the test, reset the time implementation
 	defer resetClock()
 
-	value := NewFunctions().Execute("dayOfWeek")
+	value, _ := NewFunctions().Execute("dayOfWeek")
 	expected := "Sunday"
 
 	if value != expected {
@@ -228,7 +292,7 @@ func TestDayOfWeek2(t *testing.T) {
 	// after finish with the test, reset the time implementation
 	defer resetClock()
 
-	value := NewFunctions().Execute("dayofweek")
+	value, _ := NewFunctions().Execute("dayofweek")
 	expected := "Sunday"
 
 	if value != expected {

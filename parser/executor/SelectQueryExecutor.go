@@ -28,7 +28,10 @@ func (selectQueryExecutor *SelectQueryExecutor) Execute() ([][]interface{}, erro
 	var rows [][]interface{}
 	for _, file := range files {
 		fileAttributes := context.ToFileAttributes(file, selectQueryExecutor.context)
-		row := selectQueryExecutor.query.Projections.EvaluateWith(fileAttributes, selectQueryExecutor.context.AllFunctions())
+		row, err := selectQueryExecutor.query.Projections.EvaluateWith(fileAttributes, selectQueryExecutor.context.AllFunctions())
+		if err != nil {
+			return nil, err
+		}
 		rows = append(rows, row)
 		//handle recursion
 	}

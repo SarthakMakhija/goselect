@@ -60,25 +60,32 @@ func (expressions Expressions) displayableAttributes() []string {
 	return attributes
 }
 
-func (expressions Expressions) evaluateWith(fileAttributes *context.FileAttributes, functions *context.AllFunctions) []interface{} {
+func (expressions Expressions) evaluateWith(fileAttributes *context.FileAttributes, functions *context.AllFunctions) ([]interface{}, error) {
 	var values []interface{}
 
-	var execute func(expression *Expression) interface{}
-	execute = func(expression *Expression) interface{} {
+	var execute func(expression *Expression) (interface{}, error)
+	execute = func(expression *Expression) (interface{}, error) {
 		if !expression.isAFunction() {
-			return fileAttributes.Get(expression.attribute)
+			return fileAttributes.Get(expression.attribute), nil
 		}
-		v := execute(expression.function.left)
+		v, err := execute(expression.function.left)
+		if err != nil {
+			return nil, err
+		}
 		return functions.Execute(expression.function.name, v)
 	}
 	for _, expression := range expressions.expressions {
 		if !expression.isAFunction() {
 			values = append(values, fileAttributes.Get(expression.attribute))
 		} else {
-			values = append(values, execute(expression))
+			value, err := execute(expression)
+			if err != nil {
+				return nil, err
+			}
+			values = append(values, value)
 		}
 	}
-	return values
+	return values, nil
 }
 
 func (expression Expression) isAFunction() bool {
