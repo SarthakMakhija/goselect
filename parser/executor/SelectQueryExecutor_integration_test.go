@@ -166,6 +166,26 @@ func TestResultsWithProjectionsIncludingConcatFunction(t *testing.T) {
 	assertMatch(t, expected, queryResults)
 }
 
+func TestResultsWithProjectionsIncludingContainsFunction(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select lower(name), contains(lower(name), 'log') from ../resources/TestResultsWithProjections/multi order by 1", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	expected := [][]context.Value{
+		{context.StringValue("testresultswithprojections_a.log"), context.BooleanValue(true)},
+		{context.StringValue("testresultswithprojections_b.log"), context.BooleanValue(true)},
+		{context.StringValue("testresultswithprojections_c.txt"), context.BooleanValue(false)},
+		{context.StringValue("testresultswithprojections_d.txt"), context.BooleanValue(false)},
+	}
+	assertMatch(t, expected, queryResults)
+}
+
 func TestResultsWithProjectionsWithoutProperParametersToAFunction(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
 	aParser, err := parser.NewParser("select name, lower() from ../resources/TestResultsWithProjections/single", newContext)

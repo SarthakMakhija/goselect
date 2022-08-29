@@ -12,6 +12,6 @@ const (
 	ErrorMessageMissingCommaProjection            = "expected a comma in projection list or from keyword"
 	ErrorMessageOpeningParenthesesProjection      = "expected an opening parentheses in projection"
 	ErrorMessageInvalidProjection                 = "invalid projection"
-	ErrorMessageMissingParameterInScalarFunctions = "expected a parameter in the function %v"
+	ErrorMessageMissingParameterInScalarFunctions = "expected %v parameters in the function %v"
 	ErrorMessageIncorrectValueType                = "expected a %v value type but was not"
 )

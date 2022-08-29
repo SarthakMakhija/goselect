@@ -14,15 +14,17 @@ const (
 	ValueTypeInt       = 2
 	ValueTypeInt64     = 3
 	ValueTypeDateTime  = 4
-	ValueTypeUndefined = 5
+	ValueTypeBoolean   = 5
+	ValueTypeUndefined = 6
 )
 
 type Value struct {
-	valueType   valueType
-	stringValue string
-	intValue    int
-	int64Value  int64
-	timeValue   time.Time
+	valueType    valueType
+	stringValue  string
+	intValue     int
+	int64Value   int64
+	booleanValue bool
+	timeValue    time.Time
 }
 
 func StringValue(value string) Value {
@@ -43,6 +45,13 @@ func Int64Value(value int64) Value {
 	return Value{
 		int64Value: value,
 		valueType:  ValueTypeInt64,
+	}
+}
+
+func BooleanValue(value bool) Value {
+	return Value{
+		booleanValue: value,
+		valueType:    ValueTypeBoolean,
 	}
 }
 
@@ -71,6 +80,13 @@ func (value Value) GetInt() (int, error) {
 	return value.intValue, nil
 }
 
+func (value Value) GetBoolean() (bool, error) {
+	if value.valueType != ValueTypeBoolean {
+		return false, errors.New(fmt.Sprintf(messages.ErrorMessageIncorrectValueType, "boolean"))
+	}
+	return value.booleanValue, nil
+}
+
 func (value Value) Get() interface{} {
 	switch value.valueType {
 	case ValueTypeString:
@@ -81,6 +97,8 @@ func (value Value) Get() interface{} {
 		return value.int64Value
 	case ValueTypeDateTime:
 		return value.timeValue
+	case ValueTypeBoolean:
+		return value.booleanValue
 	case ValueTypeUndefined:
 		return ""
 	}
@@ -114,6 +132,12 @@ func (value Value) CompareTo(other Value) int {
 		}
 		if first < second {
 			return -1
+		}
+		return 1
+	case ValueTypeBoolean:
+		first, second := value.booleanValue, other.booleanValue
+		if first == second {
+			return 0
 		}
 		return 1
 	case ValueTypeDateTime:

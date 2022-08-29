@@ -43,6 +43,7 @@ func NewFunctions() *AllFunctions {
 			"cwd":       true,
 			"wd":        true,
 			"concat":    true,
+			"contains":  true,
 		},
 	}
 }
@@ -54,42 +55,42 @@ func (functions *AllFunctions) IsASupportedFunction(function string) bool {
 func (functions *AllFunctions) Execute(fn string, args ...Value) (Value, error) {
 	switch strings.ToLower(fn) {
 	case "lower", "low":
-		if err := functions.ensureOneParameterOrError(args, fn); err != nil {
+		if err := functions.ensureNParametersOrError(args, fn, 1); err != nil {
 			return EmptyValue(), err
 		}
 		return StringValue(strings.ToLower(args[0].Get().(string))), nil
 	case "upper", "up":
-		if err := functions.ensureOneParameterOrError(args, fn); err != nil {
+		if err := functions.ensureNParametersOrError(args, fn, 1); err != nil {
 			return EmptyValue(), err
 		}
 		return StringValue(strings.ToUpper(args[0].Get().(string))), nil
 	case "length", "len":
-		if err := functions.ensureOneParameterOrError(args, fn); err != nil {
+		if err := functions.ensureNParametersOrError(args, fn, 1); err != nil {
 			return EmptyValue(), err
 		}
 		return IntValue(len(args[0].Get().(string))), nil
 	case "title":
-		if err := functions.ensureOneParameterOrError(args, fn); err != nil {
+		if err := functions.ensureNParametersOrError(args, fn, 1); err != nil {
 			return EmptyValue(), err
 		}
 		return StringValue(strings.Title(args[0].Get().(string))), nil
 	case "trim":
-		if err := functions.ensureOneParameterOrError(args, fn); err != nil {
+		if err := functions.ensureNParametersOrError(args, fn, 1); err != nil {
 			return EmptyValue(), err
 		}
 		return StringValue(strings.TrimSpace(args[0].Get().(string))), nil
 	case "ltrim", "lTrim":
-		if err := functions.ensureOneParameterOrError(args, fn); err != nil {
+		if err := functions.ensureNParametersOrError(args, fn, 1); err != nil {
 			return EmptyValue(), err
 		}
 		return StringValue(strings.TrimLeft(args[0].Get().(string), " ")), nil
 	case "rtrim", "rTrim":
-		if err := functions.ensureOneParameterOrError(args, fn); err != nil {
+		if err := functions.ensureNParametersOrError(args, fn, 1); err != nil {
 			return EmptyValue(), err
 		}
 		return StringValue(strings.TrimRight(args[0].Get().(string), " ")), nil
 	case "base64", "b64":
-		if err := functions.ensureOneParameterOrError(args, fn); err != nil {
+		if err := functions.ensureNParametersOrError(args, fn, 1); err != nil {
 			return EmptyValue(), err
 		}
 		d := []byte(args[0].Get().(string))
@@ -116,11 +117,16 @@ func (functions *AllFunctions) Execute(fn string, args ...Value) (Value, error) 
 			values = append(values, value.stringValue)
 		}
 		return StringValue(strings.Join(values, "")), nil
+	case "contains":
+		if err := functions.ensureNParametersOrError(args, fn, 2); err != nil {
+			return EmptyValue(), err
+		}
+		return BooleanValue(strings.Contains(args[0].stringValue, args[1].stringValue)), nil
 	}
 	return EmptyValue(), nil
 }
 
-func (functions *AllFunctions) ensureOneParameterOrError(parameters []Value, fn string) error {
+func (functions *AllFunctions) ensureNParametersOrError(parameters []Value, fn string, n int) error {
 	nonNilParameterCount := func() int {
 		count := 0
 		for _, parameter := range parameters {
@@ -130,8 +136,8 @@ func (functions *AllFunctions) ensureOneParameterOrError(parameters []Value, fn 
 		}
 		return count
 	}
-	if len(parameters) < 1 || nonNilParameterCount() < 1 {
-		return errors.New(fmt.Sprintf(messages.ErrorMessageMissingParameterInScalarFunctions, fn))
+	if len(parameters) < n || nonNilParameterCount() < n {
+		return errors.New(fmt.Sprintf(messages.ErrorMessageMissingParameterInScalarFunctions, n, fn))
 	}
 	return nil
 }
