@@ -77,14 +77,14 @@ func TestParsesAQueryIntoAnASTWithAnOrderBy(t *testing.T) {
 		t.Fatalf("Expected attributes to be %v, received %v", attributes, expectedAttributes)
 	}
 
-	ascendingAttributes := selectStatement.Order.AscendingAttributes
+	attributeRefs := selectStatement.Order.Attributes
 	expectedAscending := []order.AttributeRef{{
 		Name:               "name",
 		ProjectionPosition: -1,
 	}}
 
-	if !reflect.DeepEqual(ascendingAttributes, expectedAscending) {
-		t.Fatalf("Expected ordering attributes to be %v, received %v", expectedAscending, ascendingAttributes)
+	if !reflect.DeepEqual(attributeRefs, expectedAscending) {
+		t.Fatalf("Expected ordering attributes to be %v, received %v", expectedAscending, attributeRefs)
 	}
 }
 
@@ -105,14 +105,14 @@ func TestParsesAQueryIntoAnASTWithLimit(t *testing.T) {
 		t.Fatalf("Expected attributes to be %v, received %v", attributes, expectedAttributes)
 	}
 
-	ascendingAttributes := selectStatement.Order.AscendingAttributes
+	attributeRefs := selectStatement.Order.Attributes
 	expectedAscending := []order.AttributeRef{{
 		Name:               "name",
 		ProjectionPosition: -1,
 	}}
 
-	if !reflect.DeepEqual(ascendingAttributes, expectedAscending) {
-		t.Fatalf("Expected ordering attributes to be %v, received %v", expectedAscending, ascendingAttributes)
+	if !reflect.DeepEqual(attributeRefs, expectedAscending) {
+		t.Fatalf("Expected ordering attributes to be %v, received %v", expectedAscending, attributeRefs)
 	}
 
 	limit := selectStatement.Limit.Limit

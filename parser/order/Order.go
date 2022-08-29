@@ -9,8 +9,8 @@ import (
 )
 
 type Order struct {
-	AscendingAttributes  []AttributeRef
-	DescendingAttributes []AttributeRef
+	Attributes []AttributeRef
+	Directions []bool //true signifies ascending, false signified descending
 }
 
 type AttributeRef struct {
@@ -36,8 +36,10 @@ func NewOrder(iterator *tokenizer.TokenIterator, context *context.ParsingApplica
 		return nil, errors.New(messages.ErrorMessageMissingBy)
 	}
 
-	var ascendingAttributes, descendingAttributes []AttributeRef
+	var attributes []AttributeRef
+	var directions []bool
 	var expectComma bool
+
 	for iterator.HasNext() && !iterator.Peek().Equals("limit") {
 		token := iterator.Next()
 		if token.Equals("by") {
@@ -50,10 +52,11 @@ func NewOrder(iterator *tokenizer.TokenIterator, context *context.ParsingApplica
 			}
 			expectComma = false
 		case context.IsASupportedAttribute(token.TokenValue):
+			attributes = append(attributes, AttributeRef{Name: token.TokenValue, ProjectionPosition: -1})
 			if sortingDirection(iterator) == sortingDirectionDescending {
-				descendingAttributes = append(descendingAttributes, AttributeRef{Name: token.TokenValue, ProjectionPosition: -1})
+				directions = append(directions, false)
 			} else {
-				ascendingAttributes = append(ascendingAttributes, AttributeRef{Name: token.TokenValue, ProjectionPosition: -1})
+				directions = append(directions, true)
 			}
 			expectComma = true
 		default:
@@ -61,20 +64,21 @@ func NewOrder(iterator *tokenizer.TokenIterator, context *context.ParsingApplica
 				return nil, err
 			} else {
 				if projectionPosition <= projectionCount {
+					attributes = append(attributes, AttributeRef{ProjectionPosition: projectionPosition})
 					if sortingDirection(iterator) == sortingDirectionDescending {
-						descendingAttributes = append(descendingAttributes, AttributeRef{ProjectionPosition: projectionPosition})
+						directions = append(directions, false)
 					} else {
-						ascendingAttributes = append(ascendingAttributes, AttributeRef{ProjectionPosition: projectionPosition})
+						directions = append(directions, true)
 					}
 					expectComma = true
 				}
 			}
 		}
 	}
-	if len(ascendingAttributes) == 0 && len(descendingAttributes) == 0 {
+	if len(attributes) == 0 {
 		return nil, errors.New(messages.ErrorMessageMissingOrderByAttributes)
 	}
-	return &Order{AscendingAttributes: ascendingAttributes, DescendingAttributes: descendingAttributes}, nil
+	return &Order{Attributes: attributes, Directions: directions}, nil
 }
 
 func sortingDirection(iterator *tokenizer.TokenIterator) int {
