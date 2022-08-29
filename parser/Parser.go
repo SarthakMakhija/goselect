@@ -50,7 +50,7 @@ func (parser *Parser) Parse() (*SelectQuery, error) {
 	if err != nil {
 		return nil, err
 	}
-	orderBy, err := order.NewOrder(iterator, parser.context, projections.Count())
+	orderBy, err := order.NewOrder(iterator, projections.Count())
 	if err != nil {
 		return nil, err
 	}

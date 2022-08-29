@@ -2,7 +2,6 @@ package order
 
 import (
 	"errors"
-	"goselect/parser/context"
 	"goselect/parser/error/messages"
 	"goselect/parser/tokenizer"
 	"strconv"
@@ -14,7 +13,6 @@ type Order struct {
 }
 
 type AttributeRef struct {
-	Name               string
 	ProjectionPosition int
 }
 
@@ -23,7 +21,7 @@ const (
 	sortingDirectionDescending     = 1
 )
 
-func NewOrder(iterator *tokenizer.TokenIterator, context *context.ParsingApplicationContext, projectionCount int) (*Order, error) {
+func NewOrder(iterator *tokenizer.TokenIterator, projectionCount int) (*Order, error) {
 	if !iterator.HasNext() {
 		return nil, nil
 	}
@@ -51,14 +49,6 @@ func NewOrder(iterator *tokenizer.TokenIterator, context *context.ParsingApplica
 				return nil, errors.New(messages.ErrorMessageMissingCommaOrderBy)
 			}
 			expectComma = false
-		case context.IsASupportedAttribute(token.TokenValue):
-			attributes = append(attributes, AttributeRef{Name: token.TokenValue, ProjectionPosition: -1})
-			if sortingDirection(iterator) == sortingDirectionDescending {
-				directions = append(directions, false)
-			} else {
-				directions = append(directions, true)
-			}
-			expectComma = true
 		default:
 			if projectionPosition, err := strconv.Atoi(token.TokenValue); err != nil {
 				return nil, err

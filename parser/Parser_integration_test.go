@@ -61,7 +61,7 @@ func TestParsesAQueryIntoAnASTWithMultipleProjections(t *testing.T) {
 }
 
 func TestParsesAQueryIntoAnASTWithAnOrderBy(t *testing.T) {
-	parser, _ := NewParser("SELECT name, upper(lower(name)) from ~ Order by name", context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	parser, _ := NewParser("SELECT name, upper(lower(name)) from ~ Order by 1", context.NewContext(context.NewFunctions(), context.NewAttributes()))
 	selectStatement, _ := parser.Parse()
 
 	totalProjections := selectStatement.Projections.Count()
@@ -79,8 +79,7 @@ func TestParsesAQueryIntoAnASTWithAnOrderBy(t *testing.T) {
 
 	attributeRefs := selectStatement.Order.Attributes
 	expectedAscending := []order.AttributeRef{{
-		Name:               "name",
-		ProjectionPosition: -1,
+		ProjectionPosition: 1,
 	}}
 
 	if !reflect.DeepEqual(attributeRefs, expectedAscending) {
@@ -89,7 +88,7 @@ func TestParsesAQueryIntoAnASTWithAnOrderBy(t *testing.T) {
 }
 
 func TestParsesAQueryIntoAnASTWithLimit(t *testing.T) {
-	parser, _ := NewParser("SELECT name, lower(name) from ~ Order by name Limit 10", context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	parser, _ := NewParser("SELECT name, lower(name) from ~ Order by 2 Limit 10", context.NewContext(context.NewFunctions(), context.NewAttributes()))
 	selectStatement, _ := parser.Parse()
 
 	totalProjections := selectStatement.Projections.Count()
@@ -107,8 +106,7 @@ func TestParsesAQueryIntoAnASTWithLimit(t *testing.T) {
 
 	attributeRefs := selectStatement.Order.Attributes
 	expectedAscending := []order.AttributeRef{{
-		Name:               "name",
-		ProjectionPosition: -1,
+		ProjectionPosition: 2,
 	}}
 
 	if !reflect.DeepEqual(attributeRefs, expectedAscending) {

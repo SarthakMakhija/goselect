@@ -1,7 +1,6 @@
 package order
 
 import (
-	"goselect/parser/context"
 	"goselect/parser/tokenizer"
 	"reflect"
 	"testing"
@@ -11,11 +10,11 @@ func TestOrderByAAttributeInAscending(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.Order, "order"))
 	tokens.Add(tokenizer.NewToken(tokenizer.By, "by"))
-	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "Name"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "1"))
 
-	order, _ := NewOrder(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()), 1)
+	order, _ := NewOrder(tokens.Iterator(), 1)
 	expectedOrder := Order{
-		Attributes: []AttributeRef{{Name: "Name", ProjectionPosition: -1}},
+		Attributes: []AttributeRef{{ProjectionPosition: 1}},
 		Directions: []bool{true},
 	}
 
@@ -28,12 +27,12 @@ func TestOrderByAAttributeInAscendingWithExplicitAsc(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.Order, "order"))
 	tokens.Add(tokenizer.NewToken(tokenizer.By, "by"))
-	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "Name"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "1"))
 	tokens.Add(tokenizer.NewToken(tokenizer.AscendingOrder, "asc"))
 
-	order, _ := NewOrder(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()), 1)
+	order, _ := NewOrder(tokens.Iterator(), 1)
 	expectedOrder := Order{
-		Attributes: []AttributeRef{{Name: "Name", ProjectionPosition: -1}},
+		Attributes: []AttributeRef{{ProjectionPosition: 1}},
 		Directions: []bool{true},
 	}
 
@@ -46,13 +45,13 @@ func TestOrderBy2AttributesInAscending(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.Order, "order"))
 	tokens.Add(tokenizer.NewToken(tokenizer.By, "by"))
-	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "Name"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "1"))
 	tokens.Add(tokenizer.NewToken(tokenizer.Comma, ","))
-	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "size"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "2"))
 
-	order, _ := NewOrder(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()), 1)
+	order, _ := NewOrder(tokens.Iterator(), 2)
 	expectedOrder := Order{
-		Attributes: []AttributeRef{{Name: "Name", ProjectionPosition: -1}, {Name: "size", ProjectionPosition: -1}},
+		Attributes: []AttributeRef{{ProjectionPosition: 1}, {ProjectionPosition: 2}},
 		Directions: []bool{true, true},
 	}
 
@@ -65,12 +64,12 @@ func TestOrderByAAttributeInDescending(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.Order, "order"))
 	tokens.Add(tokenizer.NewToken(tokenizer.By, "by"))
-	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "Name"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "1"))
 	tokens.Add(tokenizer.NewToken(tokenizer.DescendingOrder, "desc"))
 
-	order, _ := NewOrder(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()), 1)
+	order, _ := NewOrder(tokens.Iterator(), 1)
 	expectedOrder := Order{
-		Attributes: []AttributeRef{{Name: "Name", ProjectionPosition: -1}},
+		Attributes: []AttributeRef{{ProjectionPosition: 1}},
 		Directions: []bool{false},
 	}
 
@@ -83,15 +82,15 @@ func TestOrderBy2AttributesInDescending(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.Order, "order"))
 	tokens.Add(tokenizer.NewToken(tokenizer.By, "by"))
-	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "Name"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "1"))
 	tokens.Add(tokenizer.NewToken(tokenizer.DescendingOrder, "desc"))
 	tokens.Add(tokenizer.NewToken(tokenizer.Comma, ","))
-	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "size"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "2"))
 	tokens.Add(tokenizer.NewToken(tokenizer.DescendingOrder, "desc"))
 
-	order, _ := NewOrder(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()), 1)
+	order, _ := NewOrder(tokens.Iterator(), 2)
 	expectedOrder := Order{
-		Attributes: []AttributeRef{{Name: "Name", ProjectionPosition: -1}, {Name: "size", ProjectionPosition: -1}},
+		Attributes: []AttributeRef{{ProjectionPosition: 1}, {ProjectionPosition: 2}},
 		Directions: []bool{false, false},
 	}
 
@@ -104,14 +103,14 @@ func TestOrderBy2AttributesOneInAscendingOtherInDescending(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.Order, "order"))
 	tokens.Add(tokenizer.NewToken(tokenizer.By, "by"))
-	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "Name"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "1"))
 	tokens.Add(tokenizer.NewToken(tokenizer.Comma, ","))
-	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "size"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "2"))
 	tokens.Add(tokenizer.NewToken(tokenizer.DescendingOrder, "desc"))
 
-	order, _ := NewOrder(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()), 1)
+	order, _ := NewOrder(tokens.Iterator(), 2)
 	expectedOrder := Order{
-		Attributes: []AttributeRef{{Name: "Name", ProjectionPosition: -1}, {Name: "size", ProjectionPosition: -1}},
+		Attributes: []AttributeRef{{ProjectionPosition: 1}, {ProjectionPosition: 2}},
 		Directions: []bool{true, false},
 	}
 
@@ -125,7 +124,7 @@ func TestThrowsAErrorGivenNoAttributeAfterOrderBy(t *testing.T) {
 	tokens.Add(tokenizer.NewToken(tokenizer.Order, "order"))
 	tokens.Add(tokenizer.NewToken(tokenizer.By, "by"))
 
-	_, err := NewOrder(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()), 1)
+	_, err := NewOrder(tokens.Iterator(), 1)
 
 	if err == nil {
 		t.Fatalf("Expected an error when no attributes are given after order by but received none")
@@ -136,14 +135,14 @@ func TestOrderBy2AttributesWithOneAsTheProjectionPosition(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.Order, "order"))
 	tokens.Add(tokenizer.NewToken(tokenizer.By, "by"))
-	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "Name"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "1"))
 	tokens.Add(tokenizer.NewToken(tokenizer.DescendingOrder, "desc"))
 	tokens.Add(tokenizer.NewToken(tokenizer.Comma, ","))
-	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "1"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "2"))
 
-	order, _ := NewOrder(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()), 1)
+	order, _ := NewOrder(tokens.Iterator(), 2)
 	expectedOrder := Order{
-		Attributes: []AttributeRef{{Name: "Name", ProjectionPosition: -1}, {Name: "", ProjectionPosition: 1}},
+		Attributes: []AttributeRef{{ProjectionPosition: 1}, {ProjectionPosition: 2}},
 		Directions: []bool{false, true},
 	}
 
