@@ -4,6 +4,7 @@ import (
 	"goselect/parser"
 	"goselect/parser/context"
 	"io/ioutil"
+	"math"
 )
 
 type SelectQueryExecutor struct {
@@ -25,14 +26,24 @@ func (selectQueryExecutor *SelectQueryExecutor) Execute() ([][]interface{}, erro
 		return nil, err
 	}
 
+	var limit uint32 = math.MaxInt32
+	if selectQueryExecutor.query.IsLimitDefined() {
+		limit = selectQueryExecutor.query.Limit.Limit
+	}
+
+	var rowCount uint32 = 0
 	var rows [][]interface{}
 	for _, file := range files {
+		//assume no order by
+		if rowCount >= limit {
+			break
+		}
 		fileAttributes := context.ToFileAttributes(file, selectQueryExecutor.context)
 		row, err := selectQueryExecutor.query.Projections.EvaluateWith(fileAttributes, selectQueryExecutor.context.AllFunctions())
 		if err != nil {
 			return nil, err
 		}
-		rows = append(rows, row)
+		rows, rowCount = append(rows, row), rowCount+1
 		//handle recursion
 	}
 	return rows, nil

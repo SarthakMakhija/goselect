@@ -19,6 +19,10 @@ type SelectQuery struct {
 	Limit       *limit.Limit
 }
 
+func (selectQuery *SelectQuery) IsLimitDefined() bool {
+	return selectQuery.Limit != nil
+}
+
 type Parser struct {
 	query   string
 	context *context.ParsingApplicationContext

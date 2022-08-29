@@ -8,7 +8,7 @@ import (
 
 func TestResultsWithProjections1(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select name, now() from ../resources/TestResultsWithProjections", newContext)
+	aParser, err := parser.NewParser("select name, now() from ../resources/TestResultsWithProjections/single", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -25,7 +25,7 @@ func TestResultsWithProjections1(t *testing.T) {
 
 func TestResultsWithProjections2(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name), base64(name) from ../resources/TestResultsWithProjections", newContext)
+	aParser, err := parser.NewParser("select lower(name), base64(name) from ../resources/TestResultsWithProjections/single", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -42,7 +42,7 @@ func TestResultsWithProjections2(t *testing.T) {
 
 func TestResultsWithProjectionsInCaseInsensitiveManner(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("SELECT LOWER(NAME), BASE64(NAME) FROM ../resources/TestResultsWithProjections", newContext)
+	aParser, err := parser.NewParser("SELECT LOWER(NAME), BASE64(NAME) FROM ../resources/TestResultsWithProjections/single", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -59,7 +59,7 @@ func TestResultsWithProjectionsInCaseInsensitiveManner(t *testing.T) {
 
 func TestResultsWithProjections3(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name), ext from ../resources/TestResultsWithProjections", newContext)
+	aParser, err := parser.NewParser("select lower(name), ext from ../resources/TestResultsWithProjections/single", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -74,9 +74,41 @@ func TestResultsWithProjections3(t *testing.T) {
 	assertMatch(t, expected, queryResults)
 }
 
+func TestResultsWithProjectionsAndLimit1(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select lower(name), ext from ../resources/TestResultsWithProjections/multi limit 3", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	if len(queryResults) != 3 {
+		t.Fatalf("Expected result count to be %v, received %v", 3, len(queryResults))
+	}
+}
+
+func TestResultsWithProjectionsAndLimit2(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select lower(name), ext from ../resources/TestResultsWithProjections/multi limit 0", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	if len(queryResults) != 0 {
+		t.Fatalf("Expected result count to be %v, received %v", 3, len(queryResults))
+	}
+}
+
 func TestResultsWithProjectionsWithoutProperParametersToAFunction(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select name, lower() from ../resources/TestResultsWithProjections", newContext)
+	aParser, err := parser.NewParser("select name, lower() from ../resources/TestResultsWithProjections/single", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}

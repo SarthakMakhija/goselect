@@ -1,0 +1,1 @@
+Sample content for a test named TestResultsWithProjections

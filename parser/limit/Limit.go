@@ -9,8 +9,7 @@ import (
 )
 
 type Limit struct {
-	Limit   uint32
-	defined bool
+	Limit uint32
 }
 
 func NewLimit(iterator *tokenizer.TokenIterator) (*Limit, error) {
@@ -30,6 +29,6 @@ func NewLimit(iterator *tokenizer.TokenIterator) (*Limit, error) {
 	if value, err := strconv.ParseUint(token.TokenValue, 10, 32); err != nil {
 		return nil, err
 	} else {
-		return &Limit{Limit: uint32(value), defined: true}, nil
+		return &Limit{Limit: uint32(value)}, nil
 	}
 }
