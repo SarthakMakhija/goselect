@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"goselect/parser/error/messages"
+	"os"
 	"strings"
 	"time"
 )
@@ -39,6 +40,8 @@ func NewFunctions() *AllFunctions {
 			"yr":        true,
 			"dayOfWeek": true,
 			"dayofweek": true,
+			"cwd":       true,
+			"wd":        true,
 		},
 	}
 }
@@ -100,6 +103,12 @@ func (functions *AllFunctions) Execute(fn string, args ...Value) (Value, error) 
 		return IntValue(now().Year()), nil
 	case "dayOfWeek", "dayofweek":
 		return StringValue(now().Weekday().String()), nil
+	case "wd", "cwd":
+		if dir, err := os.Getwd(); err != nil {
+			return EmptyValue(), err
+		} else {
+			return StringValue(dir), nil
+		}
 	}
 	return EmptyValue(), nil
 }
