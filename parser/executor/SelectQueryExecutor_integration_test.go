@@ -1,8 +1,10 @@
 package executor
 
 import (
+	"fmt"
 	"goselect/parser"
 	"goselect/parser/context"
+	"os"
 	"testing"
 )
 
@@ -70,6 +72,25 @@ func TestResultsWithProjections3(t *testing.T) {
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("testresultswithprojections_a.txt"), context.StringValue(".txt")},
+	}
+	assertMatch(t, expected, queryResults)
+}
+
+func TestResultsWithProjectionsWithConcatWsFunction(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select lower(name), concatWs(lower(name), uid, gid, '#') from ../resources/TestResultsWithProjections/single", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	uid, gid := os.Getuid(), os.Getgid()
+
+	expected := [][]context.Value{
+		{context.StringValue("testresultswithprojections_a.txt"), context.StringValue(fmt.Sprintf("testresultswithprojections_a.txt#%v#%v", uid, gid))},
 	}
 	assertMatch(t, expected, queryResults)
 }
