@@ -87,24 +87,6 @@ func (value Value) GetBoolean() (bool, error) {
 	return value.booleanValue, nil
 }
 
-func (value Value) Get() interface{} {
-	switch value.valueType {
-	case ValueTypeString:
-		return value.stringValue
-	case ValueTypeInt:
-		return value.intValue
-	case ValueTypeInt64:
-		return value.int64Value
-	case ValueTypeDateTime:
-		return value.timeValue
-	case ValueTypeBoolean:
-		return value.booleanValue
-	case ValueTypeUndefined:
-		return ""
-	}
-	return ""
-}
-
 func (value Value) CompareTo(other Value) int {
 	switch value.valueType {
 	case ValueTypeString:
