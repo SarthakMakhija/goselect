@@ -58,42 +58,42 @@ func (functions *AllFunctions) Execute(fn string, args ...Value) (Value, error) 
 		if err := functions.ensureNParametersOrError(args, fn, 1); err != nil {
 			return EmptyValue(), err
 		}
-		return StringValue(strings.ToLower(args[0].Get().(string))), nil
+		return StringValue(strings.ToLower(args[0].stringValue)), nil
 	case "upper", "up":
 		if err := functions.ensureNParametersOrError(args, fn, 1); err != nil {
 			return EmptyValue(), err
 		}
-		return StringValue(strings.ToUpper(args[0].Get().(string))), nil
+		return StringValue(strings.ToUpper(args[0].stringValue)), nil
 	case "length", "len":
 		if err := functions.ensureNParametersOrError(args, fn, 1); err != nil {
 			return EmptyValue(), err
 		}
-		return IntValue(len(args[0].Get().(string))), nil
+		return IntValue(len(args[0].stringValue)), nil
 	case "title":
 		if err := functions.ensureNParametersOrError(args, fn, 1); err != nil {
 			return EmptyValue(), err
 		}
-		return StringValue(strings.Title(args[0].Get().(string))), nil
+		return StringValue(strings.Title(args[0].stringValue)), nil
 	case "trim":
 		if err := functions.ensureNParametersOrError(args, fn, 1); err != nil {
 			return EmptyValue(), err
 		}
-		return StringValue(strings.TrimSpace(args[0].Get().(string))), nil
+		return StringValue(strings.TrimSpace(args[0].stringValue)), nil
 	case "ltrim", "lTrim":
 		if err := functions.ensureNParametersOrError(args, fn, 1); err != nil {
 			return EmptyValue(), err
 		}
-		return StringValue(strings.TrimLeft(args[0].Get().(string), " ")), nil
+		return StringValue(strings.TrimLeft(args[0].stringValue, " ")), nil
 	case "rtrim", "rTrim":
 		if err := functions.ensureNParametersOrError(args, fn, 1); err != nil {
 			return EmptyValue(), err
 		}
-		return StringValue(strings.TrimRight(args[0].Get().(string), " ")), nil
+		return StringValue(strings.TrimRight(args[0].stringValue, " ")), nil
 	case "base64", "b64":
 		if err := functions.ensureNParametersOrError(args, fn, 1); err != nil {
 			return EmptyValue(), err
 		}
-		d := []byte(args[0].Get().(string))
+		d := []byte(args[0].stringValue)
 		return StringValue(b64.StdEncoding.EncodeToString(d)), nil
 	case "now":
 		return DateTimeValue(now()), nil
