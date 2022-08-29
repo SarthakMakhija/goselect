@@ -122,7 +122,7 @@ func TestResultsWithProjectionsWithoutProperParametersToAFunction(t *testing.T) 
 	}
 }
 
-func assertMatch(t *testing.T, expected [][]string, queryResults [][]interface{}, skipAttributeIndices ...int) {
+func assertMatch(t *testing.T, expected [][]string, queryResults [][]context.Value, skipAttributeIndices ...int) {
 	contains := func(slice []int, value int) bool {
 		for _, v := range slice {
 			if value == v {
@@ -139,7 +139,7 @@ func assertMatch(t *testing.T, expected [][]string, queryResults [][]interface{}
 			t.Fatalf("Expected length of the attributes in row index %v to be %v, received %v", rowIndex, len(row), len(queryResults[rowIndex]))
 		}
 		for attributeIndex, col := range row {
-			if !contains(skipAttributeIndices, attributeIndex) && queryResults[rowIndex][attributeIndex] != col {
+			if !contains(skipAttributeIndices, attributeIndex) && queryResults[rowIndex][attributeIndex].Get() != col {
 				t.Fatalf("Expected %v to match %v at row index %v, attribute index %v",
 					col,
 					queryResults[rowIndex][attributeIndex],

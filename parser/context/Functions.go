@@ -47,68 +47,68 @@ func (functions *AllFunctions) IsASupportedFunction(function string) bool {
 	return functions.supportedFunctions[strings.ToLower(function)]
 }
 
-func (functions *AllFunctions) Execute(fn string, args ...interface{}) (interface{}, error) {
+func (functions *AllFunctions) Execute(fn string, args ...Value) (Value, error) {
 	switch strings.ToLower(fn) {
 	case "lower", "low":
 		if err := functions.ensureOneParameterOrError(args, fn); err != nil {
-			return nil, err
+			return EmptyValue(), err
 		}
-		return strings.ToLower(args[0].(string)), nil
+		return StringValue(strings.ToLower(args[0].Get().(string))), nil
 	case "upper", "up":
 		if err := functions.ensureOneParameterOrError(args, fn); err != nil {
-			return nil, err
+			return EmptyValue(), err
 		}
-		return strings.ToUpper(args[0].(string)), nil
+		return StringValue(strings.ToUpper(args[0].Get().(string))), nil
 	case "length", "len":
 		if err := functions.ensureOneParameterOrError(args, fn); err != nil {
-			return nil, err
+			return EmptyValue(), err
 		}
-		return len(args[0].(string)), nil
+		return IntValue(len(args[0].Get().(string))), nil
 	case "title":
 		if err := functions.ensureOneParameterOrError(args, fn); err != nil {
-			return nil, err
+			return EmptyValue(), err
 		}
-		return strings.Title(args[0].(string)), nil
+		return StringValue(strings.Title(args[0].Get().(string))), nil
 	case "trim":
 		if err := functions.ensureOneParameterOrError(args, fn); err != nil {
-			return nil, err
+			return EmptyValue(), err
 		}
-		return strings.TrimSpace(args[0].(string)), nil
+		return StringValue(strings.TrimSpace(args[0].Get().(string))), nil
 	case "ltrim", "lTrim":
 		if err := functions.ensureOneParameterOrError(args, fn); err != nil {
-			return nil, err
+			return EmptyValue(), err
 		}
-		return strings.TrimLeft(args[0].(string), " "), nil
+		return StringValue(strings.TrimLeft(args[0].Get().(string), " ")), nil
 	case "rtrim", "rTrim":
 		if err := functions.ensureOneParameterOrError(args, fn); err != nil {
-			return nil, err
+			return EmptyValue(), err
 		}
-		return strings.TrimRight(args[0].(string), " "), nil
+		return StringValue(strings.TrimRight(args[0].Get().(string), " ")), nil
 	case "base64", "b64":
 		if err := functions.ensureOneParameterOrError(args, fn); err != nil {
-			return nil, err
+			return EmptyValue(), err
 		}
-		d := []byte(args[0].(string))
-		return b64.StdEncoding.EncodeToString(d), nil
+		d := []byte(args[0].Get().(string))
+		return StringValue(b64.StdEncoding.EncodeToString(d)), nil
 	case "now":
-		return now().String(), nil
+		return DateTimeValue(now()), nil
 	case "day":
-		return now().Day(), nil
+		return IntValue(now().Day()), nil
 	case "month", "mon":
-		return now().Month().String(), nil
+		return StringValue(now().Month().String()), nil
 	case "year", "yr":
-		return now().Year(), nil
+		return IntValue(now().Year()), nil
 	case "dayOfWeek", "dayofweek":
-		return now().Weekday().String(), nil
+		return StringValue(now().Weekday().String()), nil
 	}
-	return "", nil
+	return EmptyValue(), nil
 }
 
-func (functions *AllFunctions) ensureOneParameterOrError(parameters []interface{}, fn string) error {
+func (functions *AllFunctions) ensureOneParameterOrError(parameters []Value, fn string) error {
 	nonNilParameterCount := func() int {
 		count := 0
 		for _, parameter := range parameters {
-			if parameter != nil {
+			if parameter.valueType != ValueTypeUndefined {
 				count = count + 1
 			}
 		}

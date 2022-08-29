@@ -13,4 +13,5 @@ const (
 	ErrorMessageOpeningParenthesesProjection      = "expected an opening parentheses in projection"
 	ErrorMessageClosingParenthesesProjection      = "expected a closing parentheses in projection"
 	ErrorMessageMissingParameterInScalarFunctions = "expected a parameter in the function %v"
+	ErrorMessageIncorrectValueType                = "expected a %v value type but was not"
 )

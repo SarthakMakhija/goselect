@@ -19,7 +19,7 @@ func NewSelectQueryExecutor(query *parser.SelectQuery, context *context.ParsingA
 	}
 }
 
-func (selectQueryExecutor *SelectQueryExecutor) Execute() ([][]interface{}, error) {
+func (selectQueryExecutor *SelectQueryExecutor) Execute() ([][]context.Value, error) {
 	source := selectQueryExecutor.query.Source
 	files, err := ioutil.ReadDir(source.Directory)
 	if err != nil {
@@ -32,7 +32,7 @@ func (selectQueryExecutor *SelectQueryExecutor) Execute() ([][]interface{}, erro
 	}
 
 	var rowCount uint32 = 0
-	var rows [][]interface{}
+	var rows [][]context.Value
 	for _, file := range files {
 		//assume no order by
 		if rowCount >= limit {

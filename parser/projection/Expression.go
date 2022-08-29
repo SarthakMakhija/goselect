@@ -1,6 +1,8 @@
 package projection
 
-import "goselect/parser/context"
+import (
+	"goselect/parser/context"
+)
 
 type Expressions struct {
 	expressions []*Expression
@@ -60,17 +62,17 @@ func (expressions Expressions) displayableAttributes() []string {
 	return attributes
 }
 
-func (expressions Expressions) evaluateWith(fileAttributes *context.FileAttributes, functions *context.AllFunctions) ([]interface{}, error) {
-	var values []interface{}
+func (expressions Expressions) evaluateWith(fileAttributes *context.FileAttributes, functions *context.AllFunctions) ([]context.Value, error) {
+	var values []context.Value
 
-	var execute func(expression *Expression) (interface{}, error)
-	execute = func(expression *Expression) (interface{}, error) {
+	var execute func(expression *Expression) (context.Value, error)
+	execute = func(expression *Expression) (context.Value, error) {
 		if !expression.isAFunction() {
 			return fileAttributes.Get(expression.attribute), nil
 		}
 		v, err := execute(expression.function.left)
 		if err != nil {
-			return nil, err
+			return context.EmptyValue(), err
 		}
 		return functions.Execute(expression.function.name, v)
 	}

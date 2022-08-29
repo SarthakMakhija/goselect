@@ -35,7 +35,7 @@ func (projections Projections) DisplayableAttributes() []string {
 	return projections.expressions.displayableAttributes()
 }
 
-func (projections Projections) EvaluateWith(fileAttributes *context.FileAttributes, functions *context.AllFunctions) ([]interface{}, error) {
+func (projections Projections) EvaluateWith(fileAttributes *context.FileAttributes, functions *context.AllFunctions) ([]context.Value, error) {
 	return projections.expressions.evaluateWith(fileAttributes, functions)
 }
 

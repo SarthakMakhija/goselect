@@ -6,19 +6,21 @@ import (
 )
 
 func TestLower1(t *testing.T) {
-	value, _ := NewFunctions().Execute("lower", "ABC")
+	value, _ := NewFunctions().Execute("lower", StringValue("ABC"))
 	expected := "abc"
 
-	if value != expected {
+	actualValue, _ := value.GetString()
+	if actualValue != expected {
 		t.Fatalf("Expected lower to be %v, received %v", expected, value)
 	}
 }
 
 func TestLower2(t *testing.T) {
-	value, _ := NewFunctions().Execute("low", "ABC")
+	value, _ := NewFunctions().Execute("low", StringValue("ABC"))
 	expected := "abc"
 
-	if value != expected {
+	actualValue, _ := value.GetString()
+	if actualValue != expected {
 		t.Fatalf("Expected lower to be %v, received %v", expected, value)
 	}
 }
@@ -32,19 +34,21 @@ func TestLowerWithoutAnyParameter(t *testing.T) {
 }
 
 func TestUpper1(t *testing.T) {
-	value, _ := NewFunctions().Execute("upper", "abc")
+	value, _ := NewFunctions().Execute("upper", StringValue("abc"))
 	expected := "ABC"
 
-	if value != expected {
+	actualValue, _ := value.GetString()
+	if actualValue != expected {
 		t.Fatalf("Expected lower to be %v, received %v", expected, value)
 	}
 }
 
 func TestUpper2(t *testing.T) {
-	value, _ := NewFunctions().Execute("up", "abc")
+	value, _ := NewFunctions().Execute("up", StringValue("abc"))
 	expected := "ABC"
 
-	if value != expected {
+	actualValue, _ := value.GetString()
+	if actualValue != expected {
 		t.Fatalf("Expected lower to be %v, received %v", expected, value)
 	}
 }
@@ -58,10 +62,11 @@ func TestUpperWithoutAnyParameter(t *testing.T) {
 }
 
 func TestTitle(t *testing.T) {
-	value, _ := NewFunctions().Execute("title", "Sample content")
+	value, _ := NewFunctions().Execute("title", StringValue("Sample content"))
 	expected := "Sample Content"
 
-	if value != expected {
+	actualValue, _ := value.GetString()
+	if actualValue != expected {
 		t.Fatalf("Expected lower to be %v, received %v", expected, value)
 	}
 }
@@ -75,19 +80,21 @@ func TestTitleWithoutAnyParameter(t *testing.T) {
 }
 
 func TestBase641(t *testing.T) {
-	value, _ := NewFunctions().Execute("base64", "a")
+	value, _ := NewFunctions().Execute("base64", StringValue("a"))
 	expected := "YQ=="
 
-	if value != expected {
+	actualValue, _ := value.GetString()
+	if actualValue != expected {
 		t.Fatalf("Expected lower to be %v, received %v", expected, value)
 	}
 }
 
 func TestBase642(t *testing.T) {
-	value, _ := NewFunctions().Execute("b64", "a")
+	value, _ := NewFunctions().Execute("b64", StringValue("a"))
 	expected := "YQ=="
 
-	if value != expected {
+	actualValue, _ := value.GetString()
+	if actualValue != expected {
 		t.Fatalf("Expected lower to be %v, received %v", expected, value)
 	}
 }
@@ -101,19 +108,21 @@ func TestBase64WithoutAnyParameter(t *testing.T) {
 }
 
 func TestLength1(t *testing.T) {
-	value, _ := NewFunctions().Execute("length", "sample")
+	value, _ := NewFunctions().Execute("length", StringValue("sample"))
 	expected := 6
 
-	if value != expected {
+	actualValue, _ := value.GetInt()
+	if actualValue != expected {
 		t.Fatalf("Expected lower to be %v, received %v", expected, value)
 	}
 }
 
 func TestLength2(t *testing.T) {
-	value, _ := NewFunctions().Execute("len", "sample")
+	value, _ := NewFunctions().Execute("len", StringValue("sample"))
 	expected := 6
 
-	if value != expected {
+	actualValue, _ := value.GetInt()
+	if actualValue != expected {
 		t.Fatalf("Expected lower to be %v, received %v", expected, value)
 	}
 }
@@ -127,19 +136,21 @@ func TestLengthWithoutAnyParameter(t *testing.T) {
 }
 
 func TestLeftTrim1(t *testing.T) {
-	value, _ := NewFunctions().Execute("ltrim", "  sample")
+	value, _ := NewFunctions().Execute("ltrim", StringValue("  sample"))
 	expected := "sample"
 
-	if value != expected {
+	actualValue, _ := value.GetString()
+	if actualValue != expected {
 		t.Fatalf("Expected lower to be %v, received %v", expected, value)
 	}
 }
 
 func TestLeftTrim2(t *testing.T) {
-	value, _ := NewFunctions().Execute("lTrim", "  sample")
+	value, _ := NewFunctions().Execute("lTrim", StringValue("  sample"))
 	expected := "sample"
 
-	if value != expected {
+	actualValue, _ := value.GetString()
+	if actualValue != expected {
 		t.Fatalf("Expected lower to be %v, received %v", expected, value)
 	}
 }
@@ -153,19 +164,21 @@ func TestLeftTrimWithoutAnyParameter(t *testing.T) {
 }
 
 func TestRightTrim1(t *testing.T) {
-	value, _ := NewFunctions().Execute("rtrim", "sample  ")
+	value, _ := NewFunctions().Execute("rtrim", StringValue("sample  "))
 	expected := "sample"
 
-	if value != expected {
+	actualValue, _ := value.GetString()
+	if actualValue != expected {
 		t.Fatalf("Expected lower to be %v, received %v", expected, value)
 	}
 }
 
 func TestRightTrim2(t *testing.T) {
-	value, _ := NewFunctions().Execute("rTrim", "sample  ")
+	value, _ := NewFunctions().Execute("rTrim", StringValue("sample  "))
 	expected := "sample"
 
-	if value != expected {
+	actualValue, _ := value.GetString()
+	if actualValue != expected {
 		t.Fatalf("Expected lower to be %v, received %v", expected, value)
 	}
 }
@@ -179,10 +192,11 @@ func TestRightTrimWithoutAnyParameter(t *testing.T) {
 }
 
 func TestTrim1(t *testing.T) {
-	value, _ := NewFunctions().Execute("trim", "  sample  ")
+	value, _ := NewFunctions().Execute("trim", StringValue("  sample  "))
 	expected := "sample"
 
-	if value != expected {
+	actualValue, _ := value.GetString()
+	if actualValue != expected {
 		t.Fatalf("Expected lower to be %v, received %v", expected, value)
 	}
 }
@@ -205,7 +219,8 @@ func TestDay(t *testing.T) {
 	value, _ := NewFunctions().Execute("day")
 	expected := 22
 
-	if value != expected {
+	actualValue, _ := value.GetInt()
+	if actualValue != expected {
 		t.Fatalf("Expected lower to be %v, received %v", expected, value)
 	}
 }
@@ -220,7 +235,8 @@ func TestMonth1(t *testing.T) {
 	value, _ := NewFunctions().Execute("month")
 	expected := "August"
 
-	if value != expected {
+	actualValue, _ := value.GetString()
+	if actualValue != expected {
 		t.Fatalf("Expected lower to be %v, received %v", expected, value)
 	}
 }
@@ -235,7 +251,8 @@ func TestMonth2(t *testing.T) {
 	value, _ := NewFunctions().Execute("mon")
 	expected := "August"
 
-	if value != expected {
+	actualValue, _ := value.GetString()
+	if actualValue != expected {
 		t.Fatalf("Expected lower to be %v, received %v", expected, value)
 	}
 }
@@ -250,7 +267,8 @@ func TestYear1(t *testing.T) {
 	value, _ := NewFunctions().Execute("year")
 	expected := 2022
 
-	if value != expected {
+	actualValue, _ := value.GetInt()
+	if actualValue != expected {
 		t.Fatalf("Expected lower to be %v, received %v", expected, value)
 	}
 }
@@ -265,7 +283,8 @@ func TestYear2(t *testing.T) {
 	value, _ := NewFunctions().Execute("yr")
 	expected := 2022
 
-	if value != expected {
+	actualValue, _ := value.GetInt()
+	if actualValue != expected {
 		t.Fatalf("Expected lower to be %v, received %v", expected, value)
 	}
 }
@@ -280,7 +299,8 @@ func TestDayOfWeek1(t *testing.T) {
 	value, _ := NewFunctions().Execute("dayOfWeek")
 	expected := "Sunday"
 
-	if value != expected {
+	actualValue, _ := value.GetString()
+	if actualValue != expected {
 		t.Fatalf("Expected lower to be %v, received %v", expected, value)
 	}
 }
@@ -295,7 +315,8 @@ func TestDayOfWeek2(t *testing.T) {
 	value, _ := NewFunctions().Execute("dayofweek")
 	expected := "Sunday"
 
-	if value != expected {
+	actualValue, _ := value.GetString()
+	if actualValue != expected {
 		t.Fatalf("Expected lower to be %v, received %v", expected, value)
 	}
 }

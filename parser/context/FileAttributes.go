@@ -11,7 +11,7 @@ import (
 )
 
 type FileAttributes struct {
-	attributes map[string]interface{}
+	attributes map[string]Value
 }
 
 func ToFileAttributes(file fs.FileInfo, ctx *ParsingApplicationContext) *FileAttributes {
@@ -27,27 +27,27 @@ func ToFileAttributes(file fs.FileInfo, ctx *ParsingApplicationContext) *FileAtt
 }
 
 func newFileAttributes() *FileAttributes {
-	return &FileAttributes{attributes: make(map[string]interface{})}
+	return &FileAttributes{attributes: make(map[string]Value)}
 }
 
 func (fileAttributes *FileAttributes) setName(name string, attributes *AllAttributes) {
-	fileAttributes.setAllAliasesForAttribute(AttributeName, name, attributes)
+	fileAttributes.setAllAliasesForAttribute(AttributeName, StringValue(name), attributes)
 }
 
 func (fileAttributes *FileAttributes) setSize(size int64, attributes *AllAttributes) {
-	fileAttributes.setAllAliasesForAttribute(AttributeSize, size, attributes)
+	fileAttributes.setAllAliasesForAttribute(AttributeSize, Int64Value(size), attributes)
 }
 
 func (fileAttributes *FileAttributes) setModifiedTime(time time.Time, attributes *AllAttributes) {
-	fileAttributes.setAllAliasesForAttribute(AttributeModifiedTime, time, attributes)
+	fileAttributes.setAllAliasesForAttribute(AttributeModifiedTime, DateTimeValue(time), attributes)
 }
 
 func (fileAttributes *FileAttributes) setExtension(extension string, attributes *AllAttributes) {
-	fileAttributes.setAllAliasesForAttribute(AttributeExtension, extension, attributes)
+	fileAttributes.setAllAliasesForAttribute(AttributeExtension, StringValue(extension), attributes)
 }
 
 func (fileAttributes *FileAttributes) setPermission(permission string, attributes *AllAttributes) {
-	fileAttributes.setAllAliasesForAttribute(AttributePermission, permission, attributes)
+	fileAttributes.setAllAliasesForAttribute(AttributePermission, StringValue(permission), attributes)
 }
 
 func (fileAttributes *FileAttributes) setUserGroup(file fs.FileInfo, attributes *AllAttributes) {
@@ -79,24 +79,24 @@ func (fileAttributes *FileAttributes) setBlankUserGroup(attributes *AllAttribute
 }
 
 func (fileAttributes *FileAttributes) setUserId(userId string, attributes *AllAttributes) {
-	fileAttributes.setAllAliasesForAttribute(AttributeUserId, userId, attributes)
+	fileAttributes.setAllAliasesForAttribute(AttributeUserId, StringValue(userId), attributes)
 }
 
 func (fileAttributes *FileAttributes) setUserName(userName string, attributes *AllAttributes) {
-	fileAttributes.setAllAliasesForAttribute(AttributeUserName, userName, attributes)
+	fileAttributes.setAllAliasesForAttribute(AttributeUserName, StringValue(userName), attributes)
 }
 
 func (fileAttributes *FileAttributes) setGroupId(groupId string, attributes *AllAttributes) {
-	fileAttributes.setAllAliasesForAttribute(AttributeGroupId, groupId, attributes)
+	fileAttributes.setAllAliasesForAttribute(AttributeGroupId, StringValue(groupId), attributes)
 }
 
 func (fileAttributes *FileAttributes) setGroupName(groupName string, attributes *AllAttributes) {
-	fileAttributes.setAllAliasesForAttribute(AttributeGroupName, groupName, attributes)
+	fileAttributes.setAllAliasesForAttribute(AttributeGroupName, StringValue(groupName), attributes)
 }
 
 func (fileAttributes *FileAttributes) setAllAliasesForAttribute(
 	attribute string,
-	value interface{},
+	value Value,
 	attributes *AllAttributes,
 ) {
 	for _, alias := range attributes.aliasesFor(attribute) {
@@ -104,6 +104,10 @@ func (fileAttributes *FileAttributes) setAllAliasesForAttribute(
 	}
 }
 
-func (fileAttributes *FileAttributes) Get(attribute string) interface{} {
-	return fileAttributes.attributes[strings.ToLower(attribute)]
+func (fileAttributes *FileAttributes) Get(attribute string) Value {
+	v, ok := fileAttributes.attributes[strings.ToLower(attribute)]
+	if ok {
+		return v
+	}
+	return EmptyValue()
 }
