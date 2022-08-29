@@ -42,6 +42,7 @@ func NewFunctions() *AllFunctions {
 			"dayofweek": true,
 			"cwd":       true,
 			"wd":        true,
+			"concat":    true,
 		},
 	}
 }
@@ -109,6 +110,12 @@ func (functions *AllFunctions) Execute(fn string, args ...Value) (Value, error) 
 		} else {
 			return StringValue(dir), nil
 		}
+	case "concat":
+		var values []string
+		for _, value := range args {
+			values = append(values, value.stringValue)
+		}
+		return StringValue(strings.Join(values, "")), nil
 	}
 	return EmptyValue(), nil
 }

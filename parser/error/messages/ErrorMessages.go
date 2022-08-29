@@ -11,7 +11,7 @@ const (
 	ErrorMessageMissingSource                     = "expected a source path after 'from`"
 	ErrorMessageMissingCommaProjection            = "expected a comma in projection list or from keyword"
 	ErrorMessageOpeningParenthesesProjection      = "expected an opening parentheses in projection"
-	ErrorMessageClosingParenthesesProjection      = "expected a closing parentheses in projection"
+	ErrorMessageInvalidProjection                 = "invalid projection"
 	ErrorMessageMissingParameterInScalarFunctions = "expected a parameter in the function %v"
 	ErrorMessageIncorrectValueType                = "expected a %v value type but was not"
 )

@@ -205,3 +205,25 @@ func TestProjectionCount(t *testing.T) {
 		t.Fatalf("Expected attribute count %v, received %v", expectedCount, attributeCount)
 	}
 }
+
+func TestAllAttributesWithFunctionWithArgs(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "concat"))
+	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "upper"))
+	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "fName"))
+	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
+	tokens.Add(tokenizer.NewToken(tokenizer.Comma, ","))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "\"name\""))
+	tokens.Add(tokenizer.NewToken(tokenizer.Comma, ","))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "A"))
+	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
+
+	projections, _ := NewProjections(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
+
+	oneFunctionAsString := "concat(upper(fName),\"name\",A)"
+	if projections.DisplayableAttributes()[0] != oneFunctionAsString {
+		t.Fatalf("Expected function representation as %v, received %v", oneFunctionAsString, projections.DisplayableAttributes()[0])
+	}
+}

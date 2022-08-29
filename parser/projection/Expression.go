@@ -8,7 +8,17 @@ type Expressions struct {
 	expressions []*Expression
 }
 
+type expressionType int
+
+const (
+	ExpressionTypeValue     = 0
+	ExpressionTypeAttribute = 1
+	ExpressionTypeFunction  = 2
+)
+
 type Expression struct {
+	eType     expressionType
+	value     string
 	attribute string
 	function  *Function
 }
@@ -16,10 +26,12 @@ type Expression struct {
 type Function struct {
 	name string
 	left *Expression
+	args []*Expression
 }
 
 func expressionWithAttribute(attribute string) *Expression {
 	return &Expression{
+		eType:     ExpressionTypeAttribute,
 		attribute: attribute,
 	}
 }
@@ -34,7 +46,15 @@ func expressionsWithAttributes(attributes []string) []*Expression {
 
 func expressionWithFunction(fn *Function) *Expression {
 	return &Expression{
+		eType:    ExpressionTypeFunction,
 		function: fn,
+	}
+}
+
+func expressionWithValue(value string) *Expression {
+	return &Expression{
+		eType: ExpressionTypeValue,
+		value: value,
 	}
 }
 
@@ -46,15 +66,29 @@ func (expressions Expressions) displayableAttributes() []string {
 	var functionAsString func(expression *Expression) string
 	functionAsString = func(expression *Expression) string {
 		if !expression.isAFunction() {
-			return expression.attribute
+			if expression.eType == ExpressionTypeAttribute {
+				return expression.attribute
+			}
+			return expression.value
 		}
-		return expression.function.name + "(" + functionAsString(expression.function.left) + ")"
+		var result = expression.function.name + "("
+		for _, arg := range expression.function.args {
+			result = result + functionAsString(arg) + ","
+		}
+		if len(expression.function.args) > 0 {
+			result = result[0:len(result)-1] + ")"
+		} else {
+			result = result + ")"
+		}
+		return result
 	}
 
 	var attributes []string
 	for _, expression := range expressions.expressions {
 		if len(expression.attribute) != 0 {
 			attributes = append(attributes, expression.attribute)
+		} else if len(expression.value) != 0 {
+			attributes = append(attributes, expression.value)
 		} else {
 			attributes = append(attributes, functionAsString(expression))
 		}
@@ -68,17 +102,21 @@ func (expressions Expressions) evaluateWith(fileAttributes *context.FileAttribut
 	var execute func(expression *Expression) (context.Value, error)
 	execute = func(expression *Expression) (context.Value, error) {
 		if !expression.isAFunction() {
-			return fileAttributes.Get(expression.attribute), nil
+			return expression.getNonFunctionValue(fileAttributes), nil
 		}
-		v, err := execute(expression.function.left)
-		if err != nil {
-			return context.EmptyValue(), err
+		var values []context.Value
+		for _, arg := range expression.function.args {
+			v, err := execute(arg)
+			if err != nil {
+				return context.EmptyValue(), nil
+			}
+			values = append(values, v)
 		}
-		return functions.Execute(expression.function.name, v)
+		return functions.Execute(expression.function.name, values...)
 	}
 	for _, expression := range expressions.expressions {
 		if !expression.isAFunction() {
-			values = append(values, fileAttributes.Get(expression.attribute))
+			values = append(values, expression.getNonFunctionValue(fileAttributes))
 		} else {
 			value, err := execute(expression)
 			if err != nil {
@@ -92,4 +130,11 @@ func (expressions Expressions) evaluateWith(fileAttributes *context.FileAttribut
 
 func (expression Expression) isAFunction() bool {
 	return expression.function != nil
+}
+
+func (expression Expression) getNonFunctionValue(fileAttributes *context.FileAttributes) context.Value {
+	if expression.eType == ExpressionTypeAttribute {
+		return fileAttributes.Get(expression.attribute)
+	}
+	return context.StringValue(expression.value)
 }

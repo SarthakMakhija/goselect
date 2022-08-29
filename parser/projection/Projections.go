@@ -2,7 +2,6 @@ package projection
 
 import (
 	"errors"
-	"github.com/emirpasic/gods/stacks/linkedliststack"
 	"goselect/parser/context"
 	"goselect/parser/error/messages"
 	"goselect/parser/tokenizer"
@@ -60,8 +59,7 @@ func all(tokenIterator *tokenizer.TokenIterator, ctx *context.ParsingApplication
 			expressions = append(expressions, expressionWithAttribute(token.TokenValue))
 			expectComma = true
 		case ctx.IsASupportedFunction(token.TokenValue):
-			tokenIterator.Drop()
-			if function, err := function(tokenIterator, ctx); err != nil {
+			if function, err := function(token, tokenIterator, ctx); err != nil {
 				return Expressions{}, err
 			} else {
 				expressions = append(expressions, expressionWithFunction(function))
@@ -72,62 +70,49 @@ func all(tokenIterator *tokenizer.TokenIterator, ctx *context.ParsingApplication
 	return Expressions{expressions: expressions}, nil
 }
 
-func function(tokenIterator *tokenizer.TokenIterator, ctx *context.ParsingApplicationContext) (*Function, error) {
-	buildFunction := func(functionStack *linkedliststack.Stack, operatingAttribute tokenizer.Token) *Function {
-		functionToken, _ := functionStack.Pop()
-		var rootFunction = &Function{
-			name: (functionToken.(tokenizer.Token)).TokenValue,
-			left: &Expression{attribute: operatingAttribute.TokenValue},
-		}
-		for !functionStack.Empty() {
-			functionToken, _ := functionStack.Pop()
-			rootFunction = &Function{
-				name: (functionToken.(tokenizer.Token)).TokenValue,
-				left: &Expression{function: rootFunction},
-			}
-		}
-		return rootFunction
-	}
+func function(functionNameToken tokenizer.Token, tokenIterator *tokenizer.TokenIterator, ctx *context.ParsingApplicationContext) (*Function, error) {
+	var parseFunction func(functionNameToken tokenizer.Token) (*Function, error)
 
-	parseToken := func() (*linkedliststack.Stack, tokenizer.Token, error) {
-		var operatingAttribute tokenizer.Token
-		expectOpeningParentheses, expectClosingParentheses := false, false
-		closingParenthesesCount, functionStack := 0, linkedliststack.New()
+	parseFunction = func(functionNameToken tokenizer.Token) (*Function, error) {
+		var functionArgs []*Expression
+		expectOpeningParentheses := true
 
-	loop:
 		for tokenIterator.HasNext() && !tokenIterator.Peek().Equals("from") {
 			token := tokenIterator.Next()
 			switch {
 			case expectOpeningParentheses:
 				if !token.Equals("(") {
-					functionStack.Clear()
-					return nil, tokenizer.Token{}, errors.New(messages.ErrorMessageOpeningParenthesesProjection)
+					return nil, errors.New(messages.ErrorMessageOpeningParenthesesProjection)
 				}
 				expectOpeningParentheses = false
-			case expectClosingParentheses || token.Equals(")"):
-				if !token.Equals(")") {
-					functionStack.Clear()
-					return nil, tokenizer.Token{}, errors.New(messages.ErrorMessageClosingParenthesesProjection)
-				}
-				closingParenthesesCount = closingParenthesesCount + 1
-				if closingParenthesesCount == functionStack.Size() {
-					expectClosingParentheses = false
-					break loop
-				}
+			case token.Equals(")"):
+				return &Function{
+					name: functionNameToken.TokenValue,
+					args: functionArgs,
+				}, nil
 			case ctx.IsASupportedFunction(token.TokenValue):
-				functionStack.Push(token)
-				expectOpeningParentheses = true
+				fn, err := parseFunction(token)
+				if err != nil {
+					return nil, err
+				}
+				functionArgs = append(functionArgs, expressionWithFunction(fn))
 			case ctx.IsASupportedAttribute(token.TokenValue):
-				operatingAttribute = token
-				expectOpeningParentheses, expectClosingParentheses = false, true
+				functionArgs = append(functionArgs, expressionWithAttribute(token.TokenValue))
+				expectOpeningParentheses = false
+			default:
+				if !token.Equals(",") {
+					functionArgs = append(functionArgs, expressionWithValue(token.TokenValue))
+				}
 			}
 		}
-		return functionStack, operatingAttribute, nil
+		return nil, nil
 	}
 
-	if stack, operatingAttribute, err := parseToken(); err != nil {
+	if fn, err := parseFunction(functionNameToken); err != nil {
 		return nil, err
+	} else if fn == nil {
+		return nil, errors.New(messages.ErrorMessageInvalidProjection)
 	} else {
-		return buildFunction(stack, operatingAttribute), nil
+		return fn, nil
 	}
 }

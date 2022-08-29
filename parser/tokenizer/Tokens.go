@@ -44,7 +44,3 @@ func (tokenIterator *TokenIterator) Peek() Token {
 	token := tokenIterator.tokens[tokenIterator.index]
 	return token
 }
-
-func (tokenIterator *TokenIterator) Drop() {
-	tokenIterator.index = tokenIterator.index - 1
-}
