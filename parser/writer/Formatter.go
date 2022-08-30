@@ -1,35 +1,22 @@
 package writer
 
 import (
-	"fmt"
 	"goselect/parser/context"
 	"goselect/parser/projection"
-	"io"
-	"os"
 	"strings"
 )
 
-type Writer interface {
-	Write(projections *projection.Projections, rows [][]context.Value) error
+type Formatter interface {
+	Format(projections *projection.Projections, rows [][]context.Value) string
 }
 
-type JsonWriter struct {
-	backingWriter io.Writer
+type JsonFormatter struct{}
+
+func NewJsonFormatter() *JsonFormatter {
+	return &JsonFormatter{}
 }
 
-func NewJsonWriter(backingWriter io.Writer) *JsonWriter {
-	return &JsonWriter{
-		backingWriter: backingWriter,
-	}
-}
-
-func NewJsonConsoleWriter() *JsonWriter {
-	return &JsonWriter{
-		backingWriter: os.Stdout,
-	}
-}
-
-func (writer JsonWriter) Write(projections *projection.Projections, rows [][]context.Value) error {
+func (jsonFormatter JsonFormatter) Format(projections *projection.Projections, rows [][]context.Value) string {
 	attributes := projections.DisplayableAttributes()
 
 	attributeNameAsString := func(attributeIndex int) string {
@@ -70,9 +57,5 @@ func (writer JsonWriter) Write(projections *projection.Projections, rows [][]con
 		json.WriteString("]")
 		return json.String()
 	}
-
-	if _, err := fmt.Fprint(writer.backingWriter, buildJson()); err != nil {
-		return err
-	}
-	return nil
+	return buildJson()
 }
