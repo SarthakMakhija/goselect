@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-type Function struct {
+type FunctionDefinition struct {
 	aliases     []string
 	block       FunctionBlock
 	isAggregate bool
@@ -22,7 +22,7 @@ type AggregationFunctionBlock interface {
 }
 
 type AllFunctions struct {
-	supportedFunctions map[string]*Function
+	supportedFunctions map[string]*FunctionDefinition
 }
 
 const (
@@ -49,7 +49,7 @@ const (
 	FunctionNameCountDistinct       = "countdistinct"
 )
 
-var functionDefinitions = map[string]*Function{
+var functionDefinitions = map[string]*FunctionDefinition{
 	FunctionNameLower: {
 		aliases: []string{"lower", "low"},
 		block:   LowerFunctionBlock{},
@@ -139,7 +139,7 @@ var functionDefinitions = map[string]*Function{
 }
 
 func NewFunctions() *AllFunctions {
-	supportedFunctions := make(map[string]*Function)
+	supportedFunctions := make(map[string]*FunctionDefinition)
 	for _, functionDefinition := range functionDefinitions {
 		for _, alias := range functionDefinition.aliases {
 			supportedFunctions[alias] = functionDefinition

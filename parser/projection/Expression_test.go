@@ -16,18 +16,18 @@ func TestExpressionsDisplayableAttributesWithAttributeName(t *testing.T) {
 }
 
 func TestExpressionsDisplayableAttributesWithFunction(t *testing.T) {
-	fun := &Function{
+	fun := &FunctionInstance{
 		name: "lower",
 		args: []*Expression{
 			{
-				function: &Function{
+				function: &FunctionInstance{
 					name: "upper",
 					args: []*Expression{expressionWithAttribute("uid")},
 				},
 			},
 		},
 	}
-	expressions := Expressions{expressions: []*Expression{expressionWithFunction(fun)}}
+	expressions := Expressions{expressions: []*Expression{expressionWithFunctionInstance(fun)}}
 	attributes := expressions.displayableAttributes()
 	expected := []string{"lower(upper(uid))"}
 
@@ -38,7 +38,7 @@ func TestExpressionsDisplayableAttributesWithFunction(t *testing.T) {
 
 func TestExpressionIsAFunction(t *testing.T) {
 	expression := Expression{
-		function: &Function{
+		function: &FunctionInstance{
 			name: "upper",
 			args: []*Expression{
 				{attribute: "uid"},

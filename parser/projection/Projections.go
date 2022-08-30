@@ -62,7 +62,7 @@ func all(tokenIterator *tokenizer.TokenIterator, ctx *context.ParsingApplication
 			if function, err := function(token, tokenIterator, ctx); err != nil {
 				return Expressions{}, err
 			} else {
-				expressions = append(expressions, expressionWithFunction(function))
+				expressions = append(expressions, expressionWithFunctionInstance(function))
 			}
 			expectComma = true
 		}
@@ -70,10 +70,10 @@ func all(tokenIterator *tokenizer.TokenIterator, ctx *context.ParsingApplication
 	return Expressions{expressions: expressions}, nil
 }
 
-func function(functionNameToken tokenizer.Token, tokenIterator *tokenizer.TokenIterator, ctx *context.ParsingApplicationContext) (*Function, error) {
-	var parseFunction func(functionNameToken tokenizer.Token) (*Function, error)
+func function(functionNameToken tokenizer.Token, tokenIterator *tokenizer.TokenIterator, ctx *context.ParsingApplicationContext) (*FunctionInstance, error) {
+	var parseFunction func(functionNameToken tokenizer.Token) (*FunctionInstance, error)
 
-	parseFunction = func(functionNameToken tokenizer.Token) (*Function, error) {
+	parseFunction = func(functionNameToken tokenizer.Token) (*FunctionInstance, error) {
 		var functionArgs []*Expression
 		expectOpeningParentheses := true
 
@@ -86,7 +86,7 @@ func function(functionNameToken tokenizer.Token, tokenIterator *tokenizer.TokenI
 				}
 				expectOpeningParentheses = false
 			case token.Equals(")"):
-				return &Function{
+				return &FunctionInstance{
 					name: functionNameToken.TokenValue,
 					args: functionArgs,
 				}, nil
@@ -95,7 +95,7 @@ func function(functionNameToken tokenizer.Token, tokenIterator *tokenizer.TokenI
 				if err != nil {
 					return nil, err
 				}
-				functionArgs = append(functionArgs, expressionWithFunction(fn))
+				functionArgs = append(functionArgs, expressionWithFunctionInstance(fn))
 			case ctx.IsASupportedAttribute(token.TokenValue):
 				functionArgs = append(functionArgs, expressionWithAttribute(token.TokenValue))
 				expectOpeningParentheses = false

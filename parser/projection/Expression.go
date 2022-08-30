@@ -20,10 +20,10 @@ type Expression struct {
 	eType     expressionType
 	value     string
 	attribute string
-	function  *Function
+	function  *FunctionInstance
 }
 
-type Function struct {
+type FunctionInstance struct {
 	name string
 	args []*Expression
 }
@@ -43,7 +43,7 @@ func expressionsWithAttributes(attributes []string) []*Expression {
 	return expressions
 }
 
-func expressionWithFunction(fn *Function) *Expression {
+func expressionWithFunctionInstance(fn *FunctionInstance) *Expression {
 	return &Expression{
 		eType:    ExpressionTypeFunction,
 		function: fn,
