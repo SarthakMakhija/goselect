@@ -1,25 +1,56 @@
 # [![Actions Status](https://github.com/SarthakMakhija/goselect/workflows/GoSelectCI/badge.svg)](https://github.com/SarthakMakhija/goselect/actions) goselect
 SQL like 'select' interface for files
 
-
 # Some examples
-- goselect fName from /home/apps
-- goselect fSize, fName from /home/apps where fSize > 10MB
+- select fName from /home/apps
+- select fSize, fName from /home/apps where fSize > 10MB
 
 # Initial thoughts
 
 The idea is to provide support for `selecting` files based on various conditions. At this stage some of the features that are planned include:
 - Support for `where` clause
-- Support for projections
-- Support for `order by`
-- Support for `aggregations`
-- Support for custom filter
-- Support for custom map-reduce function
 - Support for searching text within a file
 - Support for some shortcuts for common files types like images, videos, text:
-  - goselect * from /home/apps where fileType = 'image' and fileSize > 10MB
-  - goselect * from /home/apps where fileType = 'text' and textContains = 'get('
+  - select * from /home/apps where fileType = 'image' and fileSize > 10MB
+  - select * from /home/apps where fileType = 'text' and textContains = 'get('
+- Support for projections
+  - [X] projections with attribute name: name, size
+  - [X] projections with scalar functions: contains, lower
+  - [ ] projections with aggregate functions: min, max
+  - [ ] projections with expression: 1 + 2
+- Support for `order by`
+  - [X] order by with positions: order by 1
+  - [X] order by with descending order: order by 1 desc
+  - [X] order by with optional ascending order: order by 1 asc
+- Support for `limit`
+  - [X] limit clause with a value: limit 10
+- Support for `aggregation functions`
+- Support for various scalar functions
+  - [X] lower
+  - [X] upper
+  - [X] title
+  - [X] base64
+  - [X] length
+  - [X] lTrim
+  - [X] rTrim
+  - [X] trim
+  - [X] now
+  - [X] date
+  - [X] day
+  - [X] month
+  - [X] year
+  - [X] dayOfWeek
+  - [X] working directory (wd)
+  - [X] concat
+  - [X] concat with separator (concatWs)
+  - [X] contains
+  - [ ] substr
+  - [ ] replace
+  - [ ] replaceAll
+- Support for formatting the results
+  - [X] Json formatter
+  - [X] Html formatter
+- Support for exporting the formatted result
+  - [X] Console
+  - [X] File
 - Design consideration for searching files in a directory with a huge number of files
-- [Not sure] Support for caching the query results
-- [Not sure] Support for union and intersection
-
