@@ -394,3 +394,87 @@ func TestContainsWithInsufficientParameters(t *testing.T) {
 		t.Fatalf("Expected an error on executing contains with insufficient parameters")
 	}
 }
+
+func TestSubstringWithBeginIndexOnly(t *testing.T) {
+	value, _ := NewFunctions().Execute("substr", StringValue("abcdef"), StringValue("2"))
+
+	actualValue, _ := value.GetString()
+	if actualValue != "cdef" {
+		t.Fatalf("Expected substring to be %v, received %v", "cdef", actualValue)
+	}
+}
+
+func TestSubstringWithBeginAndEndIndex(t *testing.T) {
+	value, _ := NewFunctions().Execute("substr", StringValue("abcdef"), StringValue("2"), StringValue("4"))
+
+	actualValue, _ := value.GetString()
+	if actualValue != "cde" {
+		t.Fatalf("Expected substring to be %v, received %v", "cde", actualValue)
+	}
+}
+
+func TestSubstringWithEndIndexGreaterThanLength(t *testing.T) {
+	value, _ := NewFunctions().Execute("substr", StringValue("abcdef"), StringValue("2"), StringValue("100"))
+
+	actualValue, _ := value.GetString()
+	if actualValue != "cdef" {
+		t.Fatalf("Expected substring to be %v, received %v", "cdef", actualValue)
+	}
+}
+
+func TestSubstringWithBeginIndexGreaterThanLength(t *testing.T) {
+	value, _ := NewFunctions().Execute("substr", StringValue("abcdef"), StringValue("100"), StringValue("6"))
+
+	actualValue, _ := value.GetString()
+	if actualValue != "abcdef" {
+		t.Fatalf("Expected substring to be %v, received %v", "abcdef", actualValue)
+	}
+}
+
+func TestSubstringWithInsufficientParameters(t *testing.T) {
+	_, err := NewFunctions().Execute("substr", StringValue("abcdef"))
+
+	if err == nil {
+		t.Fatalf("Expected an error on executing substring with insufficient parameters")
+	}
+}
+
+func TestSubstringWithToLessThanFrom(t *testing.T) {
+	_, err := NewFunctions().Execute("substr", StringValue("abcdef"), StringValue("3"), StringValue("0"))
+
+	if err == nil {
+		t.Fatalf("Expected an error on executing substring with to less than from")
+	}
+}
+
+func TestSubstringWithNegativeFrom(t *testing.T) {
+	_, err := NewFunctions().Execute("substr", StringValue("abcdef"), StringValue("-3"))
+
+	if err == nil {
+		t.Fatalf("Expected an error on executing substring with negative from")
+	}
+}
+
+func TestSubstringWithNegativeTo(t *testing.T) {
+	_, err := NewFunctions().Execute("substr", StringValue("abcdef"), StringValue("0"), StringValue("-5"))
+
+	if err == nil {
+		t.Fatalf("Expected an error on executing substring with negative to")
+	}
+}
+
+func TestSubstringWithIllegalFrom(t *testing.T) {
+	_, err := NewFunctions().Execute("substr", StringValue("abcdef"), StringValue("illegal"))
+
+	if err == nil {
+		t.Fatalf("Expected an error on executing substring with illegal from")
+	}
+}
+
+func TestSubstringWithIllegalTo(t *testing.T) {
+	_, err := NewFunctions().Execute("substr", StringValue("abcdef"), StringValue("0"), StringValue("illegal"))
+
+	if err == nil {
+		t.Fatalf("Expected an error on executing substring with illegal to")
+	}
+}

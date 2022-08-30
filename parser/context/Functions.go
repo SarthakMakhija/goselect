@@ -39,6 +39,7 @@ const (
 	FunctionNameConcat              = "concat"
 	FunctionNameConcatWithSeparator = "concatws"
 	FunctionNameContains            = "contains"
+	FunctionNameSubstring           = "substr"
 )
 
 var functionDefinitions = map[string]*Function{
@@ -136,6 +137,40 @@ var functionDefinitions = map[string]*Function{
 			return EmptyValue(), err
 		}
 		return BooleanValue(strings.Contains(args[0].stringValue, args[1].stringValue)), nil
+	}},
+	FunctionNameSubstring: {aliases: []string{"substr", "str"}, block: func(args ...Value) (Value, error) {
+		if err := ensureNParametersOrError(args, FunctionNameSubstring, 2); err != nil {
+			return EmptyValue(), err
+		}
+		str := args[0].stringValue
+		length := len(str)
+		from, err := strconv.Atoi(args[1].stringValue)
+		if err != nil {
+			return EmptyValue(), errors.New(messages.ErrorMessageIllegalFromToIndexInSubstring)
+		}
+		if from < 0 {
+			return EmptyValue(), errors.New(messages.ErrorMessageIllegalFromToIndexInSubstring)
+		}
+		if from >= length {
+			from = 0
+		}
+		to := length - 1
+		if len(args) >= 3 {
+			to, err = strconv.Atoi(args[2].stringValue)
+			if err != nil {
+				return EmptyValue(), errors.New(messages.ErrorMessageIllegalFromToIndexInSubstring)
+			}
+			if to < 0 {
+				return EmptyValue(), errors.New(messages.ErrorMessageIllegalFromToIndexInSubstring)
+			}
+			if to < from {
+				return EmptyValue(), errors.New(messages.ErrorMessageIncorrectEndIndexInSubstring)
+			}
+			if to >= length {
+				to = length - 1
+			}
+		}
+		return StringValue(str[from : to+1]), nil
 	}},
 }
 
