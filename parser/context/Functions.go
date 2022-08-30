@@ -14,39 +14,61 @@ type AllFunctions struct {
 	supportedFunctions map[string]bool
 }
 
+type FunctionDefinition struct {
+	aliases []string
+}
+
+const (
+	FunctionNameLower               = "lower"
+	FunctionNameUpper               = "upper"
+	FunctionNameTitle               = "title"
+	FunctionNameBase64              = "base64"
+	FunctionNameLength              = "length"
+	FunctionNameTrim                = "trim"
+	FunctionNameLeftTrim            = "ltrim"
+	FunctionNameRightTrim           = "rtrim"
+	FunctionNameNow                 = "now"
+	FunctionNameCurrentDate         = "date"
+	FunctionNameCurrentDay          = "day"
+	FunctionNameCurrentMonth        = "month"
+	FunctionNameCurrentYear         = "year"
+	FunctionNameDayOfWeek           = "dayofweek"
+	FunctionNameWorkingDirectory    = "cwd"
+	FunctionNameConcat              = "concat"
+	FunctionNameConcatWithSeparator = "concatws"
+	FunctionNameContains            = "contains"
+)
+
+var functionDefinitions = map[string]*FunctionDefinition{
+	FunctionNameLower:               {aliases: []string{"lower", "low"}},
+	FunctionNameUpper:               {aliases: []string{"upper", "up"}},
+	FunctionNameTitle:               {aliases: []string{"title"}},
+	FunctionNameBase64:              {aliases: []string{"base64", "b64"}},
+	FunctionNameLength:              {aliases: []string{"length", "len"}},
+	FunctionNameTrim:                {aliases: []string{"trim"}},
+	FunctionNameLeftTrim:            {aliases: []string{"ltrim", "lefttrim"}},
+	FunctionNameRightTrim:           {aliases: []string{"rtrim", "righttrim"}},
+	FunctionNameNow:                 {aliases: []string{"now"}},
+	FunctionNameCurrentDate:         {aliases: []string{"date"}},
+	FunctionNameCurrentDay:          {aliases: []string{"day"}},
+	FunctionNameCurrentMonth:        {aliases: []string{"month", "mon"}},
+	FunctionNameCurrentYear:         {aliases: []string{"year", "yr"}},
+	FunctionNameDayOfWeek:           {aliases: []string{"dayofweek", "dow"}},
+	FunctionNameWorkingDirectory:    {aliases: []string{"cwd", "wd"}},
+	FunctionNameConcat:              {aliases: []string{"concat"}},
+	FunctionNameConcatWithSeparator: {aliases: []string{"concatws", "concatwithseparator"}},
+	FunctionNameContains:            {aliases: []string{"contains"}},
+}
+
 func NewFunctions() *AllFunctions {
+	supportedFunctions := make(map[string]bool)
+	for _, functionDefinition := range functionDefinitions {
+		for _, alias := range functionDefinition.aliases {
+			supportedFunctions[alias] = true
+		}
+	}
 	return &AllFunctions{
-		supportedFunctions: map[string]bool{
-			"lower":     true,
-			"low":       true,
-			"upper":     true,
-			"up":        true,
-			"title":     true,
-			"base64":    true,
-			"b64":       true,
-			"length":    true,
-			"len":       true,
-			"trim":      true,
-			"ltrim":     true,
-			"lTrim":     true,
-			"rtrim":     true,
-			"rTrim":     true,
-			"now":       true,
-			"date":      true,
-			"day":       true,
-			"month":     true,
-			"mon":       true,
-			"year":      true,
-			"yr":        true,
-			"dayOfWeek": true,
-			"dayofweek": true,
-			"cwd":       true,
-			"wd":        true,
-			"concat":    true,
-			"concatws":  true,
-			"concatWs":  true,
-			"contains":  true,
-		},
+		supportedFunctions: supportedFunctions,
 	}
 }
 

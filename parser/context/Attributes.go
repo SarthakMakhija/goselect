@@ -15,15 +15,15 @@ const (
 )
 
 var attributeAliases = map[string][]string{
-	AttributeName:         {"name", "Name", "fName", "fname"},
-	AttributeSize:         {"size", "Size", "fSize", "fsize"},
-	AttributeModifiedTime: {"modifiedTime", "mtime", "mTime"},
+	AttributeName:         {"name", "fname"},
+	AttributeSize:         {"size", "fsize"},
+	AttributeModifiedTime: {"modifiedTime", "mtime"},
 	AttributeExtension:    {"extension", "ext"},
 	AttributePermission:   {"permission", "perm"},
-	AttributeUserId:       {"userid", "userId", "uid", "uId"},
-	AttributeUserName:     {"userName", "username", "uname", "uName"},
-	AttributeGroupId:      {"groupid", "groupId", "gid", "gId"},
-	AttributeGroupName:    {"groupName", "groupname", "gname", "gName"},
+	AttributeUserId:       {"userid", "uid"},
+	AttributeUserName:     {"username", "uname"},
+	AttributeGroupId:      {"groupid", "gid"},
+	AttributeGroupName:    {"groupname", "gname"},
 }
 
 type AllAttributes struct {
