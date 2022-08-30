@@ -143,7 +143,7 @@ func (c ContainsFunctionBlock) run(args ...Value) (Value, error) {
 	return BooleanValue(strings.Contains(args[0].stringValue, args[1].stringValue)), nil
 }
 
-func (c SubstringFunctionBlock) run(args ...Value) (Value, error) {
+func (s SubstringFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameSubstring, 2); err != nil {
 		return EmptyValue(), err
 	}

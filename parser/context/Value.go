@@ -16,7 +16,8 @@ const (
 	ValueTypeInt64     = 3
 	ValueTypeDateTime  = 4
 	ValueTypeBoolean   = 5
-	ValueTypeUndefined = 6
+	ValueTypeUint32    = 6
+	ValueTypeUndefined = 7
 )
 
 type Value struct {
@@ -25,6 +26,7 @@ type Value struct {
 	intValue     int
 	int64Value   int64
 	booleanValue bool
+	uint32Value  uint32
 	timeValue    time.Time
 }
 
@@ -46,6 +48,13 @@ func Int64Value(value int64) Value {
 	return Value{
 		int64Value: value,
 		valueType:  ValueTypeInt64,
+	}
+}
+
+func Uint32Value(value uint32) Value {
+	return Value{
+		uint32Value: value,
+		valueType:   ValueTypeUint32,
 	}
 }
 
@@ -117,6 +126,15 @@ func (value Value) CompareTo(other Value) int {
 			return -1
 		}
 		return 1
+	case ValueTypeUint32:
+		first, second := value.uint32Value, other.uint32Value
+		if first == second {
+			return 0
+		}
+		if first < second {
+			return -1
+		}
+		return 1
 	case ValueTypeBoolean:
 		first, second := value.booleanValue, other.booleanValue
 		if first == second {
@@ -144,6 +162,8 @@ func (value Value) GetAsString() string {
 		return strconv.Itoa(value.intValue)
 	case ValueTypeInt64:
 		return strconv.FormatInt(value.int64Value, 10)
+	case ValueTypeUint32:
+		return strconv.Itoa(int(value.uint32Value))
 	case ValueTypeBoolean:
 		if value.booleanValue {
 			return "Y"

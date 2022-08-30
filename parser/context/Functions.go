@@ -1,17 +1,24 @@
 package context
 
 import (
+	"errors"
+	"goselect/parser/error/messages"
 	"strings"
 	"time"
 )
 
 type Function struct {
-	aliases []string
-	block   FunctionBlock
+	aliases     []string
+	block       FunctionBlock
+	isAggregate bool
 }
 
 type FunctionBlock interface {
 	run(args ...Value) (Value, error)
+}
+
+type AggregationFunctionBlock interface {
+	finalState() Value
 }
 
 type AllFunctions struct {
@@ -38,6 +45,8 @@ const (
 	FunctionNameConcatWithSeparator = "concatws"
 	FunctionNameContains            = "contains"
 	FunctionNameSubstring           = "substr"
+	FunctionNameCount               = "count"
+	FunctionNameCountDistinct       = "countdistinct"
 )
 
 var functionDefinitions = map[string]*Function{
@@ -117,6 +126,16 @@ var functionDefinitions = map[string]*Function{
 		aliases: []string{"substr", "str"},
 		block:   SubstringFunctionBlock{},
 	},
+	FunctionNameCount: {
+		aliases:     []string{"count"},
+		isAggregate: true,
+		block:       &CountFunctionBlock{},
+	},
+	FunctionNameCountDistinct: {
+		aliases:     []string{"countdistinct"},
+		isAggregate: true,
+		block:       &CountDistinctFunctionBlock{values: make(map[Value]bool)},
+	},
 }
 
 func NewFunctions() *AllFunctions {
@@ -138,6 +157,14 @@ func (functions *AllFunctions) IsASupportedFunction(function string) bool {
 
 func (functions *AllFunctions) Execute(fn string, args ...Value) (Value, error) {
 	return functions.supportedFunctions[strings.ToLower(fn)].block.run(args...)
+}
+
+func (functions *AllFunctions) FinalState(fn string) (Value, error) {
+	function := functions.supportedFunctions[strings.ToLower(fn)]
+	if function.isAggregate {
+		return function.block.(AggregationFunctionBlock).finalState(), nil
+	}
+	return EmptyValue(), errors.New(messages.ErrorMessageFinalStateCalledOnScalarFunction)
 }
 
 var nowFunc = func() time.Time {
