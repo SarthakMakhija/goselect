@@ -14,16 +14,18 @@ The idea is to provide support for `selecting` files based on various conditions
   - select * from /home/apps where fileType = 'image' and fileSize > 10MB
   - select * from /home/apps where fileType = 'text' and textContains = 'get('
 - Support for projections
-  - [X] projections with attribute name: name, size
-  - [X] projections with scalar functions: contains, lower
-  - [ ] projections with aggregate functions: min, max
-  - [ ] projections with expression: 1 + 2
+  - [X] projections with attribute name: `name`, `size`
+  - [X] projections with alias in attribute name: `fName` instead of `name`
+  - [X] projections with scalar functions: `contains`, `lower`
+  - [X] projections with alias in scalar functions: `low` instead of `lower`
+  - [ ] projections with aggregate functions: `min`, `max`
+  - [ ] projections with expression: `1 + 2`
 - Support for `order by` clause
-  - [X] order by with positions: order by 1
-  - [X] order by with descending order: order by 1 desc
-  - [X] order by with optional ascending order: order by 1 asc
+  - [X] order by with positions: `order by 1`
+  - [X] order by with descending order: `order by 1 desc`
+  - [X] order by with optional ascending order: `order by 1 asc`
 - Support for `limit` clause
-  - [X] limit clause with a value: limit 10
+  - [X] limit clause with a value: `limit 10`
 - Support for `aggregation functions`
   - [ ] min
   - [ ] max
