@@ -6,16 +6,18 @@ import (
 	"fmt"
 	"goselect/parser/error/messages"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
 
-type AllFunctions struct {
-	supportedFunctions map[string]bool
+type Function struct {
+	aliases []string
+	block   func(args ...Value) (Value, error)
 }
 
-type FunctionDefinition struct {
-	aliases []string
+type AllFunctions struct {
+	supportedFunctions map[string]*Function
 }
 
 const (
@@ -28,8 +30,8 @@ const (
 	FunctionNameLeftTrim            = "ltrim"
 	FunctionNameRightTrim           = "rtrim"
 	FunctionNameNow                 = "now"
-	FunctionNameCurrentDate         = "date"
 	FunctionNameCurrentDay          = "day"
+	FunctionNameCurrentDate         = "date"
 	FunctionNameCurrentMonth        = "month"
 	FunctionNameCurrentYear         = "year"
 	FunctionNameDayOfWeek           = "dayofweek"
@@ -39,32 +41,109 @@ const (
 	FunctionNameContains            = "contains"
 )
 
-var functionDefinitions = map[string]*FunctionDefinition{
-	FunctionNameLower:               {aliases: []string{"lower", "low"}},
-	FunctionNameUpper:               {aliases: []string{"upper", "up"}},
-	FunctionNameTitle:               {aliases: []string{"title"}},
-	FunctionNameBase64:              {aliases: []string{"base64", "b64"}},
-	FunctionNameLength:              {aliases: []string{"length", "len"}},
-	FunctionNameTrim:                {aliases: []string{"trim"}},
-	FunctionNameLeftTrim:            {aliases: []string{"ltrim", "lefttrim"}},
-	FunctionNameRightTrim:           {aliases: []string{"rtrim", "righttrim"}},
-	FunctionNameNow:                 {aliases: []string{"now"}},
-	FunctionNameCurrentDate:         {aliases: []string{"date"}},
-	FunctionNameCurrentDay:          {aliases: []string{"day"}},
-	FunctionNameCurrentMonth:        {aliases: []string{"month", "mon"}},
-	FunctionNameCurrentYear:         {aliases: []string{"year", "yr"}},
-	FunctionNameDayOfWeek:           {aliases: []string{"dayofweek", "dow"}},
-	FunctionNameWorkingDirectory:    {aliases: []string{"cwd", "wd"}},
-	FunctionNameConcat:              {aliases: []string{"concat"}},
-	FunctionNameConcatWithSeparator: {aliases: []string{"concatws", "concatwithseparator"}},
-	FunctionNameContains:            {aliases: []string{"contains"}},
+var functionDefinitions = map[string]*Function{
+	FunctionNameLower: {aliases: []string{"lower", "low"}, block: func(args ...Value) (Value, error) {
+		if err := ensureNParametersOrError(args, FunctionNameLower, 1); err != nil {
+			return EmptyValue(), err
+		}
+		return StringValue(strings.ToLower(args[0].stringValue)), nil
+	}},
+	FunctionNameUpper: {aliases: []string{"upper", "up"}, block: func(args ...Value) (Value, error) {
+		if err := ensureNParametersOrError(args, FunctionNameUpper, 1); err != nil {
+			return EmptyValue(), err
+		}
+		return StringValue(strings.ToUpper(args[0].stringValue)), nil
+	}},
+	FunctionNameTitle: {aliases: []string{"title"}, block: func(args ...Value) (Value, error) {
+		if err := ensureNParametersOrError(args, FunctionNameTitle, 1); err != nil {
+			return EmptyValue(), err
+		}
+		return StringValue(strings.Title(args[0].stringValue)), nil
+	}},
+	FunctionNameBase64: {aliases: []string{"base64", "b64"}, block: func(args ...Value) (Value, error) {
+		if err := ensureNParametersOrError(args, FunctionNameBase64, 1); err != nil {
+			return EmptyValue(), err
+		}
+		d := []byte(args[0].stringValue)
+		return StringValue(b64.StdEncoding.EncodeToString(d)), nil
+	}},
+	FunctionNameLength: {aliases: []string{"length", "len"}, block: func(args ...Value) (Value, error) {
+		if err := ensureNParametersOrError(args, FunctionNameLength, 1); err != nil {
+			return EmptyValue(), err
+		}
+		return IntValue(len(args[0].stringValue)), nil
+	}},
+	FunctionNameTrim: {aliases: []string{"trim"}, block: func(args ...Value) (Value, error) {
+		if err := ensureNParametersOrError(args, FunctionNameTrim, 1); err != nil {
+			return EmptyValue(), err
+		}
+		return StringValue(strings.TrimSpace(args[0].stringValue)), nil
+	}},
+	FunctionNameLeftTrim: {aliases: []string{"ltrim", "lefttrim"}, block: func(args ...Value) (Value, error) {
+		if err := ensureNParametersOrError(args, FunctionNameLeftTrim, 1); err != nil {
+			return EmptyValue(), err
+		}
+		return StringValue(strings.TrimLeft(args[0].stringValue, " ")), nil
+	}},
+	FunctionNameRightTrim: {aliases: []string{"rtrim", "righttrim"}, block: func(args ...Value) (Value, error) {
+		if err := ensureNParametersOrError(args, FunctionNameRightTrim, 1); err != nil {
+			return EmptyValue(), err
+		}
+		return StringValue(strings.TrimRight(args[0].stringValue, " ")), nil
+	}},
+	FunctionNameNow: {aliases: []string{"now"}, block: func(args ...Value) (Value, error) {
+		return DateTimeValue(now()), nil
+	}},
+	FunctionNameCurrentDay: {aliases: []string{"day"}, block: func(args ...Value) (Value, error) {
+		return IntValue(now().Day()), nil
+	}},
+	FunctionNameCurrentDate: {aliases: []string{"date"}, block: func(args ...Value) (Value, error) {
+		year, month, day := now().Date()
+		return StringValue(strconv.Itoa(year) + "-" + month.String() + "-" + strconv.Itoa(day)), nil
+	}},
+	FunctionNameCurrentMonth: {aliases: []string{"month", "mon"}, block: func(args ...Value) (Value, error) {
+		return StringValue(now().Month().String()), nil
+	}},
+	FunctionNameCurrentYear: {aliases: []string{"year", "yr"}, block: func(args ...Value) (Value, error) {
+		return IntValue(now().Year()), nil
+	}},
+	FunctionNameDayOfWeek: {aliases: []string{"dayofweek", "dow"}, block: func(args ...Value) (Value, error) {
+		return StringValue(now().Weekday().String()), nil
+	}},
+	FunctionNameWorkingDirectory: {aliases: []string{"cwd", "wd"}, block: func(args ...Value) (Value, error) {
+		if dir, err := os.Getwd(); err != nil {
+			return EmptyValue(), err
+		} else {
+			return StringValue(dir), nil
+		}
+	}},
+	FunctionNameConcat: {aliases: []string{"concat"}, block: func(args ...Value) (Value, error) {
+		var values []string
+		for _, value := range args {
+			values = append(values, value.stringValue)
+		}
+		return StringValue(strings.Join(values, "")), nil
+	}},
+	FunctionNameConcatWithSeparator: {aliases: []string{"concatws", "concatwithseparator"}, block: func(args ...Value) (Value, error) {
+		var values []string
+		for index := 0; index < len(args)-1; index++ {
+			values = append(values, args[index].stringValue)
+		}
+		return StringValue(strings.Join(values, args[len(args)-1].stringValue)), nil
+	}},
+	FunctionNameContains: {aliases: []string{"contains"}, block: func(args ...Value) (Value, error) {
+		if err := ensureNParametersOrError(args, FunctionNameContains, 2); err != nil {
+			return EmptyValue(), err
+		}
+		return BooleanValue(strings.Contains(args[0].stringValue, args[1].stringValue)), nil
+	}},
 }
 
 func NewFunctions() *AllFunctions {
-	supportedFunctions := make(map[string]bool)
+	supportedFunctions := make(map[string]*Function)
 	for _, functionDefinition := range functionDefinitions {
 		for _, alias := range functionDefinition.aliases {
-			supportedFunctions[alias] = true
+			supportedFunctions[alias] = functionDefinition
 		}
 	}
 	return &AllFunctions{
@@ -73,90 +152,15 @@ func NewFunctions() *AllFunctions {
 }
 
 func (functions *AllFunctions) IsASupportedFunction(function string) bool {
-	return functions.supportedFunctions[strings.ToLower(function)]
+	_, ok := functions.supportedFunctions[strings.ToLower(function)]
+	return ok
 }
 
 func (functions *AllFunctions) Execute(fn string, args ...Value) (Value, error) {
-	switch strings.ToLower(fn) {
-	case "lower", "low":
-		if err := functions.ensureNParametersOrError(args, fn, 1); err != nil {
-			return EmptyValue(), err
-		}
-		return StringValue(strings.ToLower(args[0].stringValue)), nil
-	case "upper", "up":
-		if err := functions.ensureNParametersOrError(args, fn, 1); err != nil {
-			return EmptyValue(), err
-		}
-		return StringValue(strings.ToUpper(args[0].stringValue)), nil
-	case "length", "len":
-		if err := functions.ensureNParametersOrError(args, fn, 1); err != nil {
-			return EmptyValue(), err
-		}
-		return IntValue(len(args[0].stringValue)), nil
-	case "title":
-		if err := functions.ensureNParametersOrError(args, fn, 1); err != nil {
-			return EmptyValue(), err
-		}
-		return StringValue(strings.Title(args[0].stringValue)), nil
-	case "trim":
-		if err := functions.ensureNParametersOrError(args, fn, 1); err != nil {
-			return EmptyValue(), err
-		}
-		return StringValue(strings.TrimSpace(args[0].stringValue)), nil
-	case "ltrim", "lTrim":
-		if err := functions.ensureNParametersOrError(args, fn, 1); err != nil {
-			return EmptyValue(), err
-		}
-		return StringValue(strings.TrimLeft(args[0].stringValue, " ")), nil
-	case "rtrim", "rTrim":
-		if err := functions.ensureNParametersOrError(args, fn, 1); err != nil {
-			return EmptyValue(), err
-		}
-		return StringValue(strings.TrimRight(args[0].stringValue, " ")), nil
-	case "base64", "b64":
-		if err := functions.ensureNParametersOrError(args, fn, 1); err != nil {
-			return EmptyValue(), err
-		}
-		d := []byte(args[0].stringValue)
-		return StringValue(b64.StdEncoding.EncodeToString(d)), nil
-	case "now":
-		return DateTimeValue(now()), nil
-	case "day":
-		return IntValue(now().Day()), nil
-	case "month", "mon":
-		return StringValue(now().Month().String()), nil
-	case "year", "yr":
-		return IntValue(now().Year()), nil
-	case "dayOfWeek", "dayofweek":
-		return StringValue(now().Weekday().String()), nil
-	case "wd", "cwd":
-		if dir, err := os.Getwd(); err != nil {
-			return EmptyValue(), err
-		} else {
-			return StringValue(dir), nil
-		}
-	case "concat":
-		var values []string
-		for _, value := range args {
-			values = append(values, value.stringValue)
-		}
-		return StringValue(strings.Join(values, "")), nil
-	case "concatws", "concatWs":
-		var values []string
-		for index := 0; index < len(args)-1; index++ {
-			values = append(values, args[index].stringValue)
-		}
-		return StringValue(strings.Join(values, args[len(args)-1].stringValue)), nil
-	case "contains":
-		if err := functions.ensureNParametersOrError(args, fn, 2); err != nil {
-			return EmptyValue(), err
-		}
-		return BooleanValue(strings.Contains(args[0].stringValue, args[1].stringValue)), nil
-	}
-	return EmptyValue(), nil
+	return functions.supportedFunctions[strings.ToLower(fn)].block(args...)
 }
 
-func (functions *AllFunctions) ensureNParametersOrError(parameters []Value, fn string, n int) error {
+func ensureNParametersOrError(parameters []Value, fn string, n int) error {
 	nonNilParameterCount := func() int {
 		count := 0
 		for _, parameter := range parameters {

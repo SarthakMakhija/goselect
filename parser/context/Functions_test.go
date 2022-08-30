@@ -226,6 +226,22 @@ func TestDay(t *testing.T) {
 	}
 }
 
+func TestDate(t *testing.T) {
+	nowFunc = func() time.Time {
+		return time.Date(2022, 8, 22, 15, 8, 00, 0, time.UTC)
+	}
+	// after finish with the test, reset the time implementation
+	defer resetClock()
+
+	value, _ := NewFunctions().Execute("date")
+	expected := "2022-August-22"
+
+	actualValue, _ := value.GetString()
+	if actualValue != expected {
+		t.Fatalf("Expected date to be %v, received %v", expected, actualValue)
+	}
+}
+
 func TestMonth1(t *testing.T) {
 	nowFunc = func() time.Time {
 		return time.Date(2022, 8, 22, 15, 8, 00, 0, time.UTC)
