@@ -25,7 +25,6 @@ type Expression struct {
 
 type Function struct {
 	name string
-	left *Expression
 	args []*Expression
 }
 
@@ -97,9 +96,8 @@ func (expressions Expressions) displayableAttributes() []string {
 }
 
 func (expressions Expressions) evaluateWith(fileAttributes *context.FileAttributes, functions *context.AllFunctions) ([]context.Value, error) {
-	var values []context.Value
-
 	var execute func(expression *Expression) (context.Value, error)
+
 	execute = func(expression *Expression) (context.Value, error) {
 		if !expression.isAFunction() {
 			return expression.getNonFunctionValue(fileAttributes), nil
@@ -114,6 +112,8 @@ func (expressions Expressions) evaluateWith(fileAttributes *context.FileAttribut
 		}
 		return functions.Execute(expression.function.name, values...)
 	}
+
+	var values []context.Value
 	for _, expression := range expressions.expressions {
 		if !expression.isAFunction() {
 			values = append(values, expression.getNonFunctionValue(fileAttributes))
