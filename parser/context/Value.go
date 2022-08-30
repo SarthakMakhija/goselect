@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"goselect/parser/error/messages"
+	"strconv"
 	"time"
 )
 
@@ -133,4 +134,23 @@ func (value Value) CompareTo(other Value) int {
 		return 1
 	}
 	return -1
+}
+
+func (value Value) GetAsString() string {
+	switch value.valueType {
+	case ValueTypeString:
+		return value.stringValue
+	case ValueTypeInt:
+		return strconv.Itoa(value.intValue)
+	case ValueTypeInt64:
+		return strconv.FormatInt(value.int64Value, 10)
+	case ValueTypeBoolean:
+		if value.booleanValue {
+			return "Y"
+		}
+		return "N"
+	case ValueTypeDateTime:
+		return value.timeValue.String()
+	}
+	return ""
 }
