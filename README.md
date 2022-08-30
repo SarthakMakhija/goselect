@@ -52,7 +52,7 @@ The idea is to provide support for `selecting` files based on various conditions
   - [X] concat
   - [X] concat with separator (concatWs)
   - [X] contains
-  - [ ] substr
+  - [X] substr
   - [ ] replace
   - [ ] replaceAll
   - [ ] formatSize
