@@ -17,16 +17,16 @@ type FunctionBlock interface {
 }
 
 type AggregationFunctionBlock interface {
-	initialState() *AggregateFunctionState
-	run(initialState *AggregateFunctionState, args ...Value) (*AggregateFunctionState, error)
-	finalState(*AggregateFunctionState) Value
+	initialState() *FunctionState
+	run(initialState *FunctionState, args ...Value) (*FunctionState, error)
+	finalState(*FunctionState) Value
 }
 
 type AllFunctions struct {
 	supportedFunctions map[string]*FunctionDefinition
 }
 
-type AggregateFunctionState struct {
+type FunctionState struct {
 	Initial Value
 	extras  map[interface{}]Value
 }
@@ -173,11 +173,11 @@ func (functions *AllFunctions) Execute(fn string, args ...Value) (Value, error) 
 	return functions.supportedFunctions[strings.ToLower(fn)].block.run(args...)
 }
 
-func (functions *AllFunctions) ExecuteAggregate(fn string, initialState *AggregateFunctionState, args ...Value) (*AggregateFunctionState, error) {
+func (functions *AllFunctions) ExecuteAggregate(fn string, initialState *FunctionState, args ...Value) (*FunctionState, error) {
 	return functions.supportedFunctions[strings.ToLower(fn)].aggregateBlock.run(initialState, args...)
 }
 
-func (functions *AllFunctions) InitialState(fn string) *AggregateFunctionState {
+func (functions *AllFunctions) InitialState(fn string) *FunctionState {
 	function := functions.supportedFunctions[strings.ToLower(fn)]
 	if function.isAggregate {
 		return function.aggregateBlock.initialState()
@@ -185,7 +185,7 @@ func (functions *AllFunctions) InitialState(fn string) *AggregateFunctionState {
 	return nil
 }
 
-func (functions *AllFunctions) FinalState(fn string, state *AggregateFunctionState) Value {
+func (functions *AllFunctions) FinalState(fn string, state *FunctionState) Value {
 	function := functions.supportedFunctions[strings.ToLower(fn)]
 	if function.isAggregate {
 		return function.aggregateBlock.finalState(state)

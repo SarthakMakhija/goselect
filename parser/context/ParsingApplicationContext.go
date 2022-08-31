@@ -21,7 +21,7 @@ func (context *ParsingApplicationContext) IsAnAggregateFunction(functionName str
 	return context.allFunctions.IsAnAggregateFunction(functionName)
 }
 
-func (context *ParsingApplicationContext) InitialState(functionName string) *AggregateFunctionState {
+func (context *ParsingApplicationContext) InitialState(functionName string) *FunctionState {
 	return context.allFunctions.InitialState(functionName)
 }
 

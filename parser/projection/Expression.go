@@ -26,7 +26,7 @@ type Expression struct {
 type FunctionInstance struct {
 	name  string
 	args  []*Expression
-	state *context.AggregateFunctionState
+	state *context.FunctionState
 }
 
 func expressionWithAttribute(attribute string) *Expression {

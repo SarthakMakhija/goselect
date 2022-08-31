@@ -73,7 +73,7 @@ func all(tokenIterator *tokenizer.TokenIterator, ctx *context.ParsingApplication
 func function(functionNameToken tokenizer.Token, tokenIterator *tokenizer.TokenIterator, ctx *context.ParsingApplicationContext) (*FunctionInstance, error) {
 	var parseFunction func(functionNameToken tokenizer.Token) (*FunctionInstance, error)
 
-	aggregateFunctionStateOrNil := func(fn string) *context.AggregateFunctionState {
+	aggregateFunctionStateOrNil := func(fn string) *context.FunctionState {
 		if ctx.IsAnAggregateFunction(fn) {
 			return ctx.InitialState(fn)
 		}
