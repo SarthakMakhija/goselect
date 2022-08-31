@@ -97,29 +97,34 @@ func (expressions Expressions) displayableAttributes() []string {
 }
 
 func (expressions Expressions) evaluateWith(fileAttributes *context.FileAttributes, functions *context.AllFunctions) ([]context.Value, []bool, []*Expression, error) {
-	var execute func(expression *Expression) (context.Value, error)
+	var execute func(expression *Expression) (context.Value, error, bool)
 
-	execute = func(expression *Expression) (context.Value, error) {
+	execute = func(expression *Expression) (context.Value, error, bool) {
 		if !expression.isAFunction() {
-			return expression.getNonFunctionValue(fileAttributes), nil
+			return expression.getNonFunctionValue(fileAttributes), nil, false
 		}
 		var values []context.Value
+		isAtleastOneExpressionAnAggregateFunction := false
 		for _, arg := range expression.function.args {
-			v, err := execute(arg)
+			v, err, isAggregate := execute(arg)
 			if err != nil {
-				return context.EmptyValue(), nil
+				return context.EmptyValue(), err, isAggregate
+			}
+			if isAggregate {
+				isAtleastOneExpressionAnAggregateFunction = true
 			}
 			values = append(values, v)
 		}
 		if functions.IsAnAggregateFunction(expression.function.name) {
 			state, err := functions.ExecuteAggregate(expression.function.name, expression.function.state, values...)
 			if err != nil {
-				return context.EmptyValue(), err
+				return context.EmptyValue(), err, true
 			}
 			expression.function.state = state
-			return state.Initial, err
+			return state.Initial, err, true
 		}
-		return functions.Execute(expression.function.name, values...)
+		v, err := functions.Execute(expression.function.name, values...)
+		return v, err, isAtleastOneExpressionAnAggregateFunction
 	}
 
 	var values []context.Value
@@ -132,13 +137,12 @@ func (expressions Expressions) evaluateWith(fileAttributes *context.FileAttribut
 			values = append(values, expression.getNonFunctionValue(fileAttributes))
 			fullyEvaluated = append(fullyEvaluated, true)
 		} else {
-			value, err := execute(expression)
+			value, err, isAggregate := execute(expression)
 			if err != nil {
 				return nil, nil, nil, err
 			}
 			values = append(values, value)
-			//TODO: Handle the case like lower(min()) .. even this should be partially evaluated
-			if functions.IsAnAggregateFunction(expression.function.name) {
+			if isAggregate {
 				fullyEvaluated = append(fullyEvaluated, false)
 			} else {
 				fullyEvaluated = append(fullyEvaluated, true)

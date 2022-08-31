@@ -121,6 +121,9 @@ func (value Value) GetNumericAsFloat64() (float64, error) {
 }
 
 func (value Value) CompareTo(other Value) int {
+	if value.valueType != other.valueType {
+		return -1
+	}
 	switch value.valueType {
 	case ValueTypeString:
 		first, second := value.stringValue, other.stringValue
@@ -197,7 +200,7 @@ func (value Value) GetAsString() string {
 	case ValueTypeUint32:
 		return strconv.Itoa(int(value.uint32Value))
 	case ValueTypeFloat64:
-		return strconv.FormatFloat(float64(value.float64Value), 'f', 2, 64)
+		return strconv.FormatFloat(value.float64Value, 'f', 2, 64)
 	case ValueTypeBoolean:
 		if value.booleanValue {
 			return "Y"

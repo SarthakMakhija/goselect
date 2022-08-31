@@ -34,28 +34,28 @@ func (l LowerFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameLower, 1); err != nil {
 		return EmptyValue(), err
 	}
-	return StringValue(strings.ToLower(args[0].stringValue)), nil
+	return StringValue(strings.ToLower(args[0].GetAsString())), nil
 }
 
 func (u UpperFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameUpper, 1); err != nil {
 		return EmptyValue(), err
 	}
-	return StringValue(strings.ToUpper(args[0].stringValue)), nil
+	return StringValue(strings.ToUpper(args[0].GetAsString())), nil
 }
 
 func (t TitleFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameTitle, 1); err != nil {
 		return EmptyValue(), err
 	}
-	return StringValue(strings.Title(args[0].stringValue)), nil
+	return StringValue(strings.Title(args[0].GetAsString())), nil
 }
 
 func (b Base64FunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameBase64, 1); err != nil {
 		return EmptyValue(), err
 	}
-	d := []byte(args[0].stringValue)
+	d := []byte(args[0].GetAsString())
 	return StringValue(b64.StdEncoding.EncodeToString(d)), nil
 }
 
@@ -63,28 +63,28 @@ func (l LengthFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameLength, 1); err != nil {
 		return EmptyValue(), err
 	}
-	return IntValue(len(args[0].stringValue)), nil
+	return IntValue(len(args[0].GetAsString())), nil
 }
 
 func (t TrimFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameTrim, 1); err != nil {
 		return EmptyValue(), err
 	}
-	return StringValue(strings.TrimSpace(args[0].stringValue)), nil
+	return StringValue(strings.TrimSpace(args[0].GetAsString())), nil
 }
 
 func (l LeftTrimFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameLeftTrim, 1); err != nil {
 		return EmptyValue(), err
 	}
-	return StringValue(strings.TrimLeft(args[0].stringValue, " ")), nil
+	return StringValue(strings.TrimLeft(args[0].GetAsString(), " ")), nil
 }
 
 func (r RightTrimFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameRightTrim, 1); err != nil {
 		return EmptyValue(), err
 	}
-	return StringValue(strings.TrimRight(args[0].stringValue, " ")), nil
+	return StringValue(strings.TrimRight(args[0].GetAsString(), " ")), nil
 }
 
 func (n NowFunctionBlock) run(_ ...Value) (Value, error) {
@@ -112,7 +112,7 @@ func (d DayOfWeekFunctionBlock) run(_ ...Value) (Value, error) {
 	return StringValue(now().Weekday().String()), nil
 }
 
-func (w WorkingDirectoryFunctionBlock) run(args ...Value) (Value, error) {
+func (w WorkingDirectoryFunctionBlock) run(_ ...Value) (Value, error) {
 	if dir, err := os.Getwd(); err != nil {
 		return EmptyValue(), err
 	} else {
@@ -123,7 +123,7 @@ func (w WorkingDirectoryFunctionBlock) run(args ...Value) (Value, error) {
 func (c ConcatFunctionBlock) run(args ...Value) (Value, error) {
 	var values []string
 	for _, value := range args {
-		values = append(values, value.stringValue)
+		values = append(values, value.GetAsString())
 	}
 	return StringValue(strings.Join(values, "")), nil
 }
@@ -131,25 +131,25 @@ func (c ConcatFunctionBlock) run(args ...Value) (Value, error) {
 func (c ConcatWithSeparatorFunctionBlock) run(args ...Value) (Value, error) {
 	var values []string
 	for index := 0; index < len(args)-1; index++ {
-		values = append(values, args[index].stringValue)
+		values = append(values, args[index].GetAsString())
 	}
-	return StringValue(strings.Join(values, args[len(args)-1].stringValue)), nil
+	return StringValue(strings.Join(values, args[len(args)-1].GetAsString())), nil
 }
 
 func (c ContainsFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameContains, 2); err != nil {
 		return EmptyValue(), err
 	}
-	return BooleanValue(strings.Contains(args[0].stringValue, args[1].stringValue)), nil
+	return BooleanValue(strings.Contains(args[0].stringValue, args[1].GetAsString())), nil
 }
 
 func (s SubstringFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameSubstring, 2); err != nil {
 		return EmptyValue(), err
 	}
-	str := args[0].stringValue
+	str := args[0].GetAsString()
 	length := len(str)
-	from, err := strconv.Atoi(args[1].stringValue)
+	from, err := strconv.Atoi(args[1].GetAsString())
 	if err != nil {
 		return EmptyValue(), errors.New(messages.ErrorMessageIllegalFromToIndexInSubstring)
 	}
@@ -161,7 +161,7 @@ func (s SubstringFunctionBlock) run(args ...Value) (Value, error) {
 	}
 	to := length - 1
 	if len(args) >= 3 {
-		to, err = strconv.Atoi(args[2].stringValue)
+		to, err = strconv.Atoi(args[2].GetAsString())
 		if err != nil {
 			return EmptyValue(), errors.New(messages.ErrorMessageIllegalFromToIndexInSubstring)
 		}

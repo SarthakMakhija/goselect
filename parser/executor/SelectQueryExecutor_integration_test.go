@@ -284,9 +284,9 @@ func TestResultsWithProjectionsIncludingAverageFunctionWithLimitReturningTheAver
 	assertMatch(t, expected, queryResults)
 }
 
-func TestResultsWithProjectionsIncludingAverageFunction(t *testing.T) {
+func TestResultsWithProjectionsIncludingAggregateFunctionInsideAScalar(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select count(avg(len(name))), len(name), avg(len(name)) from ../resources/TestResultsWithProjections/multi order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(count()) from ../resources/TestResultsWithProjections/multi order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -296,10 +296,10 @@ func TestResultsWithProjectionsIncludingAverageFunction(t *testing.T) {
 	}
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
 	expected := [][]context.Value{
-		{context.Uint32Value(4), context.IntValue(32), context.Float64Value(32)},
-		{context.Uint32Value(4), context.IntValue(32), context.Float64Value(32)},
-		{context.Uint32Value(4), context.IntValue(32), context.Float64Value(32)},
-		{context.Uint32Value(4), context.IntValue(32), context.Float64Value(32)},
+		{context.StringValue("4")},
+		{context.StringValue("4")},
+		{context.StringValue("4")},
+		{context.StringValue("4")},
 	}
 	assertMatch(t, expected, queryResults)
 }
@@ -337,10 +337,10 @@ func assertMatch(t *testing.T, expected [][]context.Value, queryResults *Evaluat
 			t.Fatalf("Expected length of the rowAttributes in row index %v to be %v, received %v", rowIndex, len(row), queryResults.atIndex(rowIndex).TotalAttributes())
 		}
 		rowAttributes := queryResults.atIndex(rowIndex).AllAttributes()
-		for attributeIndex, col := range row {
-			if !contains(skipAttributeIndices, attributeIndex) && rowAttributes[attributeIndex].CompareTo(col) != 0 {
+		for attributeIndex, attributeValue := range row {
+			if !contains(skipAttributeIndices, attributeIndex) && rowAttributes[attributeIndex].CompareTo(attributeValue) != 0 {
 				t.Fatalf("Expected %v to match %v at row index %v, attribute index %v",
-					col,
+					attributeValue,
 					rowAttributes[attributeIndex],
 					rowIndex,
 					attributeIndex,
