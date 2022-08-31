@@ -19,6 +19,7 @@ type FunctionBlock interface {
 type AggregationFunctionBlock interface {
 	initialState() *AggregateFunctionState
 	run(initialState *AggregateFunctionState, args ...Value) (*AggregateFunctionState, error)
+	finalState(*AggregateFunctionState) Value
 }
 
 type AllFunctions struct {
@@ -27,6 +28,7 @@ type AllFunctions struct {
 
 type AggregateFunctionState struct {
 	Initial Value
+	extras  map[interface{}]Value
 }
 
 const (
@@ -50,6 +52,7 @@ const (
 	FunctionNameContains            = "contains"
 	FunctionNameSubstring           = "substr"
 	FunctionNameCount               = "count"
+	FunctionNameAverage             = "average"
 )
 
 var functionDefinitions = map[string]*FunctionDefinition{
@@ -134,6 +137,11 @@ var functionDefinitions = map[string]*FunctionDefinition{
 		isAggregate:    true,
 		aggregateBlock: &CountFunctionBlock{},
 	},
+	FunctionNameAverage: {
+		aliases:        []string{"average", "avg"},
+		isAggregate:    true,
+		aggregateBlock: &AverageFunctionBlock{},
+	},
 }
 
 func NewFunctions() *AllFunctions {
@@ -175,6 +183,14 @@ func (functions *AllFunctions) InitialState(fn string) *AggregateFunctionState {
 		return function.aggregateBlock.initialState()
 	}
 	return nil
+}
+
+func (functions *AllFunctions) FinalState(fn string, state *AggregateFunctionState) Value {
+	function := functions.supportedFunctions[strings.ToLower(fn)]
+	if function.isAggregate {
+		return function.aggregateBlock.finalState(state)
+	}
+	return EmptyValue()
 }
 
 var nowFunc = func() time.Time {

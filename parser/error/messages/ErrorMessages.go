@@ -17,6 +17,6 @@ const (
 	ErrorMessageIncorrectValueType                 = "expected a %v value type but was not"
 	ErrorMessageIncorrectEndIndexInSubstring       = "expected the end index to be greater than the from index in substr"
 	ErrorMessageIllegalFromToIndexInSubstring      = "expected the from and to index to be positive integers"
-	ErrorMessageFinalStateCalledOnScalarFunction   = "expected final state to be called on aggregate function"
 	ErrorMessageInitialStateCalledOnScalarFunction = "expected initial state to be called on aggregate function"
+	ErrorMessageExpectedNumericArgument            = "expected numeric type argument value"
 )

@@ -17,7 +17,8 @@ const (
 	ValueTypeDateTime  = 4
 	ValueTypeBoolean   = 5
 	ValueTypeUint32    = 6
-	ValueTypeUndefined = 7
+	ValueTypeFloat64   = 7
+	ValueTypeUndefined = 8
 )
 
 type Value struct {
@@ -27,6 +28,7 @@ type Value struct {
 	int64Value   int64
 	booleanValue bool
 	uint32Value  uint32
+	float64Value float64
 	timeValue    time.Time
 }
 
@@ -55,6 +57,13 @@ func Uint32Value(value uint32) Value {
 	return Value{
 		uint32Value: value,
 		valueType:   ValueTypeUint32,
+	}
+}
+
+func Float64Value(value float64) Value {
+	return Value{
+		float64Value: value,
+		valueType:    ValueTypeFloat64,
 	}
 }
 
@@ -97,6 +106,20 @@ func (value Value) GetBoolean() (bool, error) {
 	return value.booleanValue, nil
 }
 
+func (value Value) GetNumericAsFloat64() (float64, error) {
+	switch value.valueType {
+	case ValueTypeInt:
+		return float64(value.intValue), nil
+	case ValueTypeInt64:
+		return float64(value.int64Value), nil
+	case ValueTypeUint32:
+		return float64(value.uint32Value), nil
+	case ValueTypeFloat64:
+		return value.float64Value, nil
+	}
+	return -1, errors.New(messages.ErrorMessageExpectedNumericArgument)
+}
+
 func (value Value) CompareTo(other Value) int {
 	switch value.valueType {
 	case ValueTypeString:
@@ -135,6 +158,15 @@ func (value Value) CompareTo(other Value) int {
 			return -1
 		}
 		return 1
+	case ValueTypeFloat64:
+		first, second := value.float64Value, other.float64Value
+		if first == second {
+			return 0
+		}
+		if first < second {
+			return -1
+		}
+		return 1
 	case ValueTypeBoolean:
 		first, second := value.booleanValue, other.booleanValue
 		if first == second {
@@ -164,6 +196,8 @@ func (value Value) GetAsString() string {
 		return strconv.FormatInt(value.int64Value, 10)
 	case ValueTypeUint32:
 		return strconv.Itoa(int(value.uint32Value))
+	case ValueTypeFloat64:
+		return strconv.FormatFloat(float64(value.float64Value), 'f', 2, 64)
 	case ValueTypeBoolean:
 		if value.booleanValue {
 			return "Y"
