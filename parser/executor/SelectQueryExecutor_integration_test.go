@@ -124,8 +124,8 @@ func TestResultsWithProjectionsAndLimit1(t *testing.T) {
 		t.Fatalf("error is %v", err)
 	}
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
-	if len(queryResults) != 3 {
-		t.Fatalf("Expected result count to be %v, received %v", 3, len(queryResults))
+	if queryResults.Count() != 3 {
+		t.Fatalf("Expected result Count to be %v, received %v", 3, queryResults.Count())
 	}
 }
 
@@ -140,8 +140,8 @@ func TestResultsWithProjectionsAndLimit2(t *testing.T) {
 		t.Fatalf("error is %v", err)
 	}
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
-	if len(queryResults) != 0 {
-		t.Fatalf("Expected result count to be %v, received %v", 3, len(queryResults))
+	if queryResults.Count() != 0 {
+		t.Fatalf("Expected result Count to be %v, received %v", 3, queryResults.Count())
 	}
 }
 
@@ -245,6 +245,26 @@ func TestResultsWithProjectionsIncludingContainsFunction(t *testing.T) {
 	assertMatch(t, expected, queryResults)
 }
 
+func TestResultsWithProjectionsIncludingCountFunction(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select lower(name), count() from ../resources/TestResultsWithProjections/multi order by 1", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	expected := [][]context.Value{
+		{context.StringValue("testresultswithprojections_a.log"), context.Uint32Value(4)},
+		{context.StringValue("testresultswithprojections_b.log"), context.Uint32Value(4)},
+		{context.StringValue("testresultswithprojections_c.txt"), context.Uint32Value(4)},
+		{context.StringValue("testresultswithprojections_d.txt"), context.Uint32Value(4)},
+	}
+	assertMatch(t, expected, queryResults)
+}
+
 func TestResultsWithProjectionsWithoutProperParametersToAFunction(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
 	aParser, err := parser.NewParser("select name, lower() from ../resources/TestResultsWithProjections/single", newContext)
@@ -261,7 +281,7 @@ func TestResultsWithProjectionsWithoutProperParametersToAFunction(t *testing.T) 
 	}
 }
 
-func assertMatch(t *testing.T, expected [][]context.Value, queryResults [][]context.Value, skipAttributeIndices ...int) {
+func assertMatch(t *testing.T, expected [][]context.Value, queryResults *EvaluatingRows, skipAttributeIndices ...int) {
 	contains := func(slice []int, value int) bool {
 		for _, v := range slice {
 			if value == v {
@@ -270,18 +290,19 @@ func assertMatch(t *testing.T, expected [][]context.Value, queryResults [][]cont
 		}
 		return false
 	}
-	if len(expected) != len(queryResults) {
-		t.Fatalf("Expected length of the query results to be %v, received %v", len(expected), len(queryResults))
+	if len(expected) != queryResults.Count() {
+		t.Fatalf("Expected length of the query results to be %v, received %v", len(expected), queryResults.Count())
 	}
 	for rowIndex, row := range expected {
-		if len(row) != len(queryResults[rowIndex]) {
-			t.Fatalf("Expected length of the attributes in row index %v to be %v, received %v", rowIndex, len(row), len(queryResults[rowIndex]))
+		if len(row) != queryResults.atIndex(rowIndex).TotalAttributes() {
+			t.Fatalf("Expected length of the rowAttributes in row index %v to be %v, received %v", rowIndex, len(row), queryResults.atIndex(rowIndex).TotalAttributes())
 		}
+		rowAttributes := queryResults.atIndex(rowIndex).AllAttributes()
 		for attributeIndex, col := range row {
-			if !contains(skipAttributeIndices, attributeIndex) && queryResults[rowIndex][attributeIndex].CompareTo(col) != 0 {
+			if !contains(skipAttributeIndices, attributeIndex) && rowAttributes[attributeIndex].CompareTo(col) != 0 {
 				t.Fatalf("Expected %v to match %v at row index %v, attribute index %v",
 					col,
-					queryResults[rowIndex][attributeIndex],
+					rowAttributes[attributeIndex],
 					rowIndex,
 					attributeIndex,
 				)

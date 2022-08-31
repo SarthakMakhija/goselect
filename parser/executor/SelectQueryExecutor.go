@@ -19,7 +19,7 @@ func NewSelectQueryExecutor(query *parser.SelectQuery, context *context.ParsingA
 	}
 }
 
-func (selectQueryExecutor *SelectQueryExecutor) Execute() ([][]context.Value, error) {
+func (selectQueryExecutor *SelectQueryExecutor) Execute() (*EvaluatingRows, error) {
 	source := selectQueryExecutor.query.Source
 	files, err := ioutil.ReadDir(source.Directory)
 	if err != nil {
@@ -32,17 +32,18 @@ func (selectQueryExecutor *SelectQueryExecutor) Execute() ([][]context.Value, er
 	}
 
 	var rowCount uint32 = 0
-	var rows [][]context.Value
+	rows := emptyRows(selectQueryExecutor.context.AllFunctions())
 	for _, file := range files {
 		if rowCount >= limit && !selectQueryExecutor.query.IsOrderDefined() {
 			break
 		}
 		fileAttributes := context.ToFileAttributes(file, selectQueryExecutor.context)
-		row, err := selectQueryExecutor.query.Projections.EvaluateWith(fileAttributes, selectQueryExecutor.context.AllFunctions())
+		values, fullyEvaluated, expressions, err := selectQueryExecutor.query.Projections.EvaluateWith(fileAttributes, selectQueryExecutor.context.AllFunctions())
 		if err != nil {
 			return nil, err
 		}
-		rows, rowCount = append(rows, row), rowCount+1
+		rows.addRow(values, fullyEvaluated, expressions)
+		rowCount = rowCount + 1
 		//handle recursion
 	}
 	newOrdering(selectQueryExecutor.query.Order).doOrder(rows)

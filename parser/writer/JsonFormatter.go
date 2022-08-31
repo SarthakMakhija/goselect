@@ -2,6 +2,7 @@ package writer
 
 import (
 	"goselect/parser/context"
+	"goselect/parser/executor"
 	"goselect/parser/projection"
 	"strings"
 )
@@ -12,7 +13,7 @@ func NewJsonFormatter() *JsonFormatter {
 	return &JsonFormatter{}
 }
 
-func (jsonFormatter JsonFormatter) Format(projections *projection.Projections, rows [][]context.Value) string {
+func (jsonFormatter JsonFormatter) Format(projections *projection.Projections, rows *executor.EvaluatingRows) string {
 
 	attributeNameAsString := func(attribute string) string {
 		var value strings.Builder
@@ -35,16 +36,19 @@ func (jsonFormatter JsonFormatter) Format(projections *projection.Projections, r
 		var json = new(strings.Builder)
 		jsonFormatter.begin(json)
 
-		for rowIndex, row := range rows {
+		iterator := rows.RowIterator()
+
+		for rowIndex := 0; iterator.HasNext(); rowIndex++ {
+			row := iterator.Next()
 			jsonFormatter.beginRow(json)
-			for attributeIndex, attributeValue := range row {
+			for attributeIndex, attributeValue := range row.AllAttributes() {
 				jsonFormatter.writeAttribute(json, attributeNameAsString(attributes[attributeIndex]), attributeValueAsString(attributeValue))
-				if attributeIndex != len(row)-1 {
+				if attributeIndex != row.TotalAttributes()-1 {
 					jsonFormatter.writeSeparator(json)
 				}
 			}
 			jsonFormatter.closeRow(json)
-			if rowIndex != len(rows)-1 {
+			if rowIndex != rows.Count()-1 {
 				jsonFormatter.writeSeparator(json)
 			}
 		}

@@ -14,10 +14,10 @@ func newOrdering(order *order.Order) *Ordering {
 	return &Ordering{order: order}
 }
 
-func (ordering *Ordering) doOrder(rows [][]context.Value) {
+func (ordering *Ordering) doOrder(rows *EvaluatingRows) {
 	if ordering.order != nil {
-		sort.SliceStable(rows, func(i, j int) bool {
-			return ordering.isOrdered(rows[i], rows[j])
+		sort.SliceStable(rows.rows, func(i, j int) bool {
+			return ordering.isOrdered(rows.atIndex(i).AllAttributes(), rows.atIndex(j).AllAttributes())
 		})
 	}
 }

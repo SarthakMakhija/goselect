@@ -1,10 +1,10 @@
 package writer
 
 import (
-	"goselect/parser/context"
+	"goselect/parser/executor"
 	"goselect/parser/projection"
 )
 
 type Formatter interface {
-	Format(projections *projection.Projections, rows [][]context.Value) string
+	Format(projections *projection.Projections, rows *executor.EvaluatingRows) string
 }

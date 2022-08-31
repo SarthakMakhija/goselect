@@ -3,6 +3,7 @@ package executor
 import (
 	"goselect/parser/context"
 	"goselect/parser/order"
+	"goselect/parser/projection"
 	"goselect/parser/tokenizer"
 	"testing"
 )
@@ -14,10 +15,12 @@ func TestAscendingOrderWithASingleColumn(t *testing.T) {
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "1"))
 
 	anOrder, _ := order.NewOrder(tokens.Iterator(), 1)
-	rows := [][]context.Value{
-		{context.StringValue("fileB")},
-		{context.StringValue("fileA")},
-	}
+
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	rows := emptyRows(newContext.AllFunctions())
+	rows.addRow([]context.Value{context.StringValue("fileA")}, []bool{true}, []*projection.Expression{})
+	rows.addRow([]context.Value{context.StringValue("fileB")}, []bool{true}, []*projection.Expression{})
+
 	expected := [][]context.Value{
 		{context.StringValue("fileA")},
 		{context.StringValue("fileB")},
@@ -38,11 +41,13 @@ func TestAscendingOrderWith2Columns(t *testing.T) {
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "2"))
 
 	anOrder, _ := order.NewOrder(tokens.Iterator(), 2)
-	rows := [][]context.Value{
-		{context.StringValue("fileB"), context.IntValue(10)},
-		{context.StringValue("fileA"), context.IntValue(20)},
-		{context.StringValue("fileA"), context.IntValue(30)},
-	}
+
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	rows := emptyRows(newContext.AllFunctions())
+	rows.addRow([]context.Value{context.StringValue("fileB"), context.IntValue(10)}, []bool{true, true}, []*projection.Expression{})
+	rows.addRow([]context.Value{context.StringValue("fileA"), context.IntValue(20)}, []bool{true, true}, []*projection.Expression{})
+	rows.addRow([]context.Value{context.StringValue("fileA"), context.IntValue(30)}, []bool{true, true}, []*projection.Expression{})
+
 	expected := [][]context.Value{
 		{context.StringValue("fileA"), context.IntValue(20)},
 		{context.StringValue("fileA"), context.IntValue(30)},
@@ -63,10 +68,12 @@ func TestDescendingOrderWithASingleColumn(t *testing.T) {
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "desc"))
 
 	anOrder, _ := order.NewOrder(tokens.Iterator(), 1)
-	rows := [][]context.Value{
-		{context.StringValue("fileA")},
-		{context.StringValue("fileB")},
-	}
+
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	rows := emptyRows(newContext.AllFunctions())
+	rows.addRow([]context.Value{context.StringValue("fileA")}, []bool{true}, []*projection.Expression{})
+	rows.addRow([]context.Value{context.StringValue("fileB")}, []bool{true}, []*projection.Expression{})
+
 	expected := [][]context.Value{
 		{context.StringValue("fileB")},
 		{context.StringValue("fileA")},
@@ -89,11 +96,13 @@ func TestDescendingOrderWith2Columns(t *testing.T) {
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "desc"))
 
 	anOrder, _ := order.NewOrder(tokens.Iterator(), 2)
-	rows := [][]context.Value{
-		{context.StringValue("fileB"), context.IntValue(10)},
-		{context.StringValue("fileA"), context.IntValue(20)},
-		{context.StringValue("fileA"), context.IntValue(30)},
-	}
+
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	rows := emptyRows(newContext.AllFunctions())
+	rows.addRow([]context.Value{context.StringValue("fileB"), context.IntValue(10)}, []bool{true, true}, []*projection.Expression{})
+	rows.addRow([]context.Value{context.StringValue("fileA"), context.IntValue(20)}, []bool{true, true}, []*projection.Expression{})
+	rows.addRow([]context.Value{context.StringValue("fileA"), context.IntValue(30)}, []bool{true, true}, []*projection.Expression{})
+
 	expected := [][]context.Value{
 		{context.StringValue("fileB"), context.IntValue(10)},
 		{context.StringValue("fileA"), context.IntValue(30)},
@@ -117,11 +126,13 @@ func TestMixOrderWith2Columns(t *testing.T) {
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "desc"))
 
 	anOrder, _ := order.NewOrder(tokens.Iterator(), 2)
-	rows := [][]context.Value{
-		{context.StringValue("fileB"), context.IntValue(10)},
-		{context.StringValue("fileA"), context.IntValue(20)},
-		{context.StringValue("fileA"), context.IntValue(30)},
-	}
+
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	rows := emptyRows(newContext.AllFunctions())
+	rows.addRow([]context.Value{context.StringValue("fileB"), context.IntValue(10)}, []bool{true, true}, []*projection.Expression{})
+	rows.addRow([]context.Value{context.StringValue("fileA"), context.IntValue(20)}, []bool{true, true}, []*projection.Expression{})
+	rows.addRow([]context.Value{context.StringValue("fileA"), context.IntValue(30)}, []bool{true, true}, []*projection.Expression{})
+
 	expected := [][]context.Value{
 		{context.StringValue("fileA"), context.IntValue(30)},
 		{context.StringValue("fileA"), context.IntValue(20)},

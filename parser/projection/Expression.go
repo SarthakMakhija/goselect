@@ -96,7 +96,7 @@ func (expressions Expressions) displayableAttributes() []string {
 	return attributes
 }
 
-func (expressions Expressions) evaluateWith(fileAttributes *context.FileAttributes, functions *context.AllFunctions) ([]context.Value, error) {
+func (expressions Expressions) evaluateWith(fileAttributes *context.FileAttributes, functions *context.AllFunctions) ([]context.Value, []bool, []*Expression, error) {
 	var execute func(expression *Expression) (context.Value, error)
 
 	execute = func(expression *Expression) (context.Value, error) {
@@ -123,18 +123,29 @@ func (expressions Expressions) evaluateWith(fileAttributes *context.FileAttribut
 	}
 
 	var values []context.Value
+	var fullyEvaluated []bool
+	var resultingExpressions []*Expression
+
 	for _, expression := range expressions.expressions {
+		resultingExpressions = append(resultingExpressions, expression)
 		if !expression.isAFunction() {
 			values = append(values, expression.getNonFunctionValue(fileAttributes))
+			fullyEvaluated = append(fullyEvaluated, true)
 		} else {
 			value, err := execute(expression)
 			if err != nil {
-				return nil, err
+				return nil, nil, nil, err
 			}
 			values = append(values, value)
+			//TODO: Handle the case like lower(min()) .. even this should be partially evaluated
+			if functions.IsAnAggregateFunction(expression.function.name) {
+				fullyEvaluated = append(fullyEvaluated, false)
+			} else {
+				fullyEvaluated = append(fullyEvaluated, true)
+			}
 		}
 	}
-	return values, nil
+	return values, fullyEvaluated, resultingExpressions, nil
 }
 
 func (expression Expression) isAFunction() bool {
@@ -146,4 +157,24 @@ func (expression Expression) getNonFunctionValue(fileAttributes *context.FileAtt
 		return fileAttributes.Get(expression.attribute)
 	}
 	return context.StringValue(expression.value)
+}
+
+func (expression *Expression) FullyEvaluate(functions *context.AllFunctions) context.Value {
+	var execute func(expression *Expression) context.Value
+	execute = func(expression *Expression) context.Value {
+		if !expression.isAFunction() {
+			return context.EmptyValue()
+		}
+		var values []context.Value
+		for _, arg := range expression.function.args {
+			v := execute(arg)
+			values = append(values, v)
+		}
+		if functions.IsAnAggregateFunction(expression.function.name) {
+			return expression.function.state.Initial
+		}
+		v, _ := functions.Execute(expression.function.name, values...)
+		return v
+	}
+	return execute(expression)
 }

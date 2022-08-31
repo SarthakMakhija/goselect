@@ -1,7 +1,7 @@
 package writer
 
 import (
-	"goselect/parser/context"
+	"goselect/parser/executor"
 	"goselect/parser/projection"
 	"strings"
 )
@@ -12,7 +12,7 @@ func NewHtmlFormatter() *HtmlFormatter {
 	return &HtmlFormatter{}
 }
 
-func (htmlFormatter HtmlFormatter) Format(projections *projection.Projections, rows [][]context.Value) string {
+func (htmlFormatter HtmlFormatter) Format(projections *projection.Projections, rows *executor.EvaluatingRows) string {
 	var result = new(strings.Builder)
 	htmlFormatter.beginHtml(result)
 	htmlFormatter.beginBody(result)
@@ -46,10 +46,12 @@ func (htmlFormatter HtmlFormatter) beginTableHeader(html *strings.Builder, proje
 	htmlFormatter.closeRow(html)
 }
 
-func (htmlFormatter HtmlFormatter) beginTableContent(html *strings.Builder, queryResults [][]context.Value) {
-	for _, row := range queryResults {
+func (htmlFormatter HtmlFormatter) beginTableContent(html *strings.Builder, rows *executor.EvaluatingRows) {
+	iterator := rows.RowIterator()
+	for iterator.HasNext() {
+		row := iterator.Next()
 		htmlFormatter.beginRow(html)
-		for _, attribute := range row {
+		for _, attribute := range row.AllAttributes() {
 			htmlFormatter.writeColumnContent(html, attribute.GetAsString())
 		}
 		htmlFormatter.closeRow(html)
