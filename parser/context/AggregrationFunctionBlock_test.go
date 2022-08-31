@@ -12,7 +12,7 @@ func TestCount(t *testing.T) {
 	state, _ = allFunctions.ExecuteAggregate("count", state, StringValue("arg1"))
 	state, _ = allFunctions.ExecuteAggregate("count", state, StringValue("arg1"))
 
-	actualValue := allFunctions.FinalState("count", state).GetAsString()
+	actualValue := allFunctions.FinalValue("count", state).GetAsString()
 	if actualValue != "3" {
 		t.Fatalf("Expected count to be %v, received %v", "3", actualValue)
 	}
@@ -26,7 +26,7 @@ func TestAverage(t *testing.T) {
 	state, _ = allFunctions.ExecuteAggregate("average", state, IntValue(11))
 	state, _ = allFunctions.ExecuteAggregate("average", state, IntValue(11))
 
-	actualValue := allFunctions.FinalState("average", state).GetAsString()
+	actualValue := allFunctions.FinalValue("average", state).GetAsString()
 	if actualValue != "10.67" {
 		t.Fatalf("Expected count to be %v, received %v", "10.67", actualValue)
 	}

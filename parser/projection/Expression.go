@@ -171,7 +171,7 @@ func (expression *Expression) FullyEvaluate(functions *context.AllFunctions) con
 			values = append(values, v)
 		}
 		if functions.IsAnAggregateFunction(expression.function.name) {
-			return functions.FinalState(expression.function.name, expression.function.state)
+			return functions.FinalValue(expression.function.name, expression.function.state)
 		}
 		v, _ := functions.Execute(expression.function.name, values...)
 		return v

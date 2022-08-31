@@ -19,7 +19,7 @@ type FunctionBlock interface {
 type AggregationFunctionBlock interface {
 	initialState() *FunctionState
 	run(initialState *FunctionState, args ...Value) (*FunctionState, error)
-	finalState(*FunctionState) Value
+	finalValue(*FunctionState) Value
 }
 
 type AllFunctions struct {
@@ -185,10 +185,10 @@ func (functions *AllFunctions) InitialState(fn string) *FunctionState {
 	return nil
 }
 
-func (functions *AllFunctions) FinalState(fn string, state *FunctionState) Value {
+func (functions *AllFunctions) FinalValue(fn string, state *FunctionState) Value {
 	function := functions.supportedFunctions[strings.ToLower(fn)]
 	if function.isAggregate {
-		return function.aggregateBlock.finalState(state)
+		return function.aggregateBlock.finalValue(state)
 	}
 	return EmptyValue()
 }

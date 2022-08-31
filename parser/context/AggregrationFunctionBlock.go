@@ -11,7 +11,7 @@ func (c *CountFunctionBlock) run(initialState *FunctionState, _ ...Value) (*Func
 	return &FunctionState{Initial: Uint32Value(initialState.Initial.uint32Value + 1)}, nil
 }
 
-func (c *CountFunctionBlock) finalState(currentState *FunctionState) Value {
+func (c *CountFunctionBlock) finalValue(currentState *FunctionState) Value {
 	return currentState.Initial
 }
 
@@ -34,6 +34,6 @@ func (a *AverageFunctionBlock) run(initialState *FunctionState, args ...Value) (
 	}
 }
 
-func (a *AverageFunctionBlock) finalState(currentState *FunctionState) Value {
+func (a *AverageFunctionBlock) finalValue(currentState *FunctionState) Value {
 	return Float64Value(currentState.Initial.float64Value / ((float64)(currentState.extras["count"].uint32Value)))
 }
