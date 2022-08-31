@@ -245,7 +245,7 @@ func TestResultsWithProjectionsIncludingContainsFunction(t *testing.T) {
 	assertMatch(t, expected, queryResults)
 }
 
-func TestResultsWithProjectionsIncludingCountFunction(t *testing.T) {
+func TestResultsWithProjectionsIncludingCountFunction1(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
 	aParser, err := parser.NewParser("select lower(name), count(lower(name)), count() from ../resources/TestResultsWithProjections/multi order by 1", newContext)
 	if err != nil {
@@ -265,9 +265,9 @@ func TestResultsWithProjectionsIncludingCountFunction(t *testing.T) {
 	assertMatch(t, expected, queryResults)
 }
 
-func TestResultsWithProjectionsIncludingAverageFunction(t *testing.T) {
+func TestResultsWithProjectionsIncludingAverageFunctionWithLimitReturningTheAverageForAllTheValues(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name), len(name), avg(len(name)) from ../resources/TestResultsWithProjections/multi order by 1 limit 3", newContext)
+	aParser, err := parser.NewParser("select avg(len(name)) from ../resources/TestResultsWithProjections/multi limit 3", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -277,10 +277,29 @@ func TestResultsWithProjectionsIncludingAverageFunction(t *testing.T) {
 	}
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
 	expected := [][]context.Value{
-		{context.StringValue("testresultswithprojections_a.log"), context.IntValue(32), context.Float64Value(32)},
-		{context.StringValue("testresultswithprojections_b.log"), context.IntValue(32), context.Float64Value(32)},
-		{context.StringValue("testresultswithprojections_c.txt"), context.IntValue(32), context.Float64Value(32)},
-		{context.StringValue("testresultswithprojections_d.txt"), context.IntValue(32), context.Float64Value(32)},
+		{context.Float64Value(32)},
+		{context.Float64Value(32)},
+		{context.Float64Value(32)},
+	}
+	assertMatch(t, expected, queryResults)
+}
+
+func TestResultsWithProjectionsIncludingAverageFunction(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select count(avg(len(name))), len(name), avg(len(name)) from ../resources/TestResultsWithProjections/multi order by 1", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	expected := [][]context.Value{
+		{context.Uint32Value(4), context.IntValue(32), context.Float64Value(32)},
+		{context.Uint32Value(4), context.IntValue(32), context.Float64Value(32)},
+		{context.Uint32Value(4), context.IntValue(32), context.Float64Value(32)},
+		{context.Uint32Value(4), context.IntValue(32), context.Float64Value(32)},
 	}
 	assertMatch(t, expected, queryResults)
 }
