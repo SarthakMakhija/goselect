@@ -247,7 +247,7 @@ func TestResultsWithProjectionsIncludingContainsFunction(t *testing.T) {
 
 func TestResultsWithProjectionsIncludingCountFunction(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name), count() from ../resources/TestResultsWithProjections/multi order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(name), count(lower(name)), count() from ../resources/TestResultsWithProjections/multi order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -257,10 +257,10 @@ func TestResultsWithProjectionsIncludingCountFunction(t *testing.T) {
 	}
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
 	expected := [][]context.Value{
-		{context.StringValue("testresultswithprojections_a.log"), context.Uint32Value(4)},
-		{context.StringValue("testresultswithprojections_b.log"), context.Uint32Value(4)},
-		{context.StringValue("testresultswithprojections_c.txt"), context.Uint32Value(4)},
-		{context.StringValue("testresultswithprojections_d.txt"), context.Uint32Value(4)},
+		{context.StringValue("testresultswithprojections_a.log"), context.Uint32Value(4), context.Uint32Value(4)},
+		{context.StringValue("testresultswithprojections_b.log"), context.Uint32Value(4), context.Uint32Value(4)},
+		{context.StringValue("testresultswithprojections_c.txt"), context.Uint32Value(4), context.Uint32Value(4)},
+		{context.StringValue("testresultswithprojections_d.txt"), context.Uint32Value(4), context.Uint32Value(4)},
 	}
 	assertMatch(t, expected, queryResults)
 }
