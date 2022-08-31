@@ -15,26 +15,26 @@ type FileAttributes struct {
 }
 
 func ToFileAttributes(file fs.FileInfo, ctx *ParsingApplicationContext) *FileAttributes {
-	fileAttributes := newFileAttributes()
+	fileAttributes := NewFileAttributes()
 
-	fileAttributes.setName(file.Name(), ctx.allAttributes)
+	fileAttributes.SetName(file.Name(), ctx.allAttributes)
 	fileAttributes.setExtension(filepath.Ext(file.Name()), ctx.allAttributes)
-	fileAttributes.setSize(file.Size(), ctx.allAttributes)
+	fileAttributes.SetSize(file.Size(), ctx.allAttributes)
 	fileAttributes.setPermission(file.Mode().Perm().String(), ctx.allAttributes)
 	fileAttributes.setUserGroup(file, ctx.allAttributes)
 
 	return fileAttributes
 }
 
-func newFileAttributes() *FileAttributes {
+func NewFileAttributes() *FileAttributes {
 	return &FileAttributes{attributes: make(map[string]Value)}
 }
 
-func (fileAttributes *FileAttributes) setName(name string, attributes *AllAttributes) {
+func (fileAttributes *FileAttributes) SetName(name string, attributes *AllAttributes) {
 	fileAttributes.setAllAliasesForAttribute(AttributeName, StringValue(name), attributes)
 }
 
-func (fileAttributes *FileAttributes) setSize(size int64, attributes *AllAttributes) {
+func (fileAttributes *FileAttributes) SetSize(size int64, attributes *AllAttributes) {
 	fileAttributes.setAllAliasesForAttribute(AttributeSize, Int64Value(size), attributes)
 }
 
