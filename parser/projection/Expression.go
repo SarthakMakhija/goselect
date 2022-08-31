@@ -24,8 +24,9 @@ type Expression struct {
 }
 
 type FunctionInstance struct {
-	name string
-	args []*Expression
+	name  string
+	args  []*Expression
+	state *context.AggregateFunctionState
 }
 
 func expressionWithAttribute(attribute string) *Expression {
@@ -109,6 +110,14 @@ func (expressions Expressions) evaluateWith(fileAttributes *context.FileAttribut
 				return context.EmptyValue(), nil
 			}
 			values = append(values, v)
+		}
+		if functions.IsAnAggregateFunction(expression.function.name) {
+			state, err := functions.ExecuteAggregate(expression.function.name, expression.function.state, values...)
+			if err != nil {
+				return context.EmptyValue(), err
+			}
+			expression.function.state = state
+			return state.Initial, err
 		}
 		return functions.Execute(expression.function.name, values...)
 	}

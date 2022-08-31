@@ -73,6 +73,12 @@ func all(tokenIterator *tokenizer.TokenIterator, ctx *context.ParsingApplication
 func function(functionNameToken tokenizer.Token, tokenIterator *tokenizer.TokenIterator, ctx *context.ParsingApplicationContext) (*FunctionInstance, error) {
 	var parseFunction func(functionNameToken tokenizer.Token) (*FunctionInstance, error)
 
+	aggregateFunctionStateOrNil := func(fn string) *context.AggregateFunctionState {
+		if ctx.IsAnAggregateFunction(fn) {
+			return ctx.InitialState(fn)
+		}
+		return nil
+	}
 	parseFunction = func(functionNameToken tokenizer.Token) (*FunctionInstance, error) {
 		var functionArgs []*Expression
 		expectOpeningParentheses := true
@@ -87,8 +93,9 @@ func function(functionNameToken tokenizer.Token, tokenIterator *tokenizer.TokenI
 				expectOpeningParentheses = false
 			case token.Equals(")"):
 				return &FunctionInstance{
-					name: functionNameToken.TokenValue,
-					args: functionArgs,
+					name:  functionNameToken.TokenValue,
+					args:  functionArgs,
+					state: aggregateFunctionStateOrNil(functionNameToken.TokenValue),
 				}, nil
 			case ctx.IsASupportedFunction(token.TokenValue):
 				fn, err := parseFunction(token)

@@ -1,16 +1,15 @@
 package context
 
 import (
-	"errors"
-	"goselect/parser/error/messages"
 	"strings"
 	"time"
 )
 
 type FunctionDefinition struct {
-	aliases     []string
-	block       FunctionBlock
-	isAggregate bool
+	aliases        []string
+	block          FunctionBlock
+	aggregateBlock AggregationFunctionBlock
+	isAggregate    bool
 }
 
 type FunctionBlock interface {
@@ -18,11 +17,16 @@ type FunctionBlock interface {
 }
 
 type AggregationFunctionBlock interface {
-	finalState() Value
+	initialState() *AggregateFunctionState
+	run(initialState *AggregateFunctionState, args ...Value) (*AggregateFunctionState, error)
 }
 
 type AllFunctions struct {
 	supportedFunctions map[string]*FunctionDefinition
+}
+
+type AggregateFunctionState struct {
+	Initial Value
 }
 
 const (
@@ -46,7 +50,6 @@ const (
 	FunctionNameContains            = "contains"
 	FunctionNameSubstring           = "substr"
 	FunctionNameCount               = "count"
-	FunctionNameCountDistinct       = "countdistinct"
 )
 
 var functionDefinitions = map[string]*FunctionDefinition{
@@ -127,14 +130,9 @@ var functionDefinitions = map[string]*FunctionDefinition{
 		block:   SubstringFunctionBlock{},
 	},
 	FunctionNameCount: {
-		aliases:     []string{"count"},
-		isAggregate: true,
-		block:       &CountFunctionBlock{},
-	},
-	FunctionNameCountDistinct: {
-		aliases:     []string{"countdistinct"},
-		isAggregate: true,
-		block:       &CountDistinctFunctionBlock{values: make(map[Value]bool)},
+		aliases:        []string{"count"},
+		isAggregate:    true,
+		aggregateBlock: &CountFunctionBlock{},
 	},
 }
 
@@ -155,16 +153,28 @@ func (functions *AllFunctions) IsASupportedFunction(function string) bool {
 	return ok
 }
 
+func (functions *AllFunctions) IsAnAggregateFunction(function string) bool {
+	fn, ok := functions.supportedFunctions[strings.ToLower(function)]
+	if ok {
+		return fn.isAggregate
+	}
+	return false
+}
+
 func (functions *AllFunctions) Execute(fn string, args ...Value) (Value, error) {
 	return functions.supportedFunctions[strings.ToLower(fn)].block.run(args...)
 }
 
-func (functions *AllFunctions) FinalState(fn string) (Value, error) {
+func (functions *AllFunctions) ExecuteAggregate(fn string, initialState *AggregateFunctionState, args ...Value) (*AggregateFunctionState, error) {
+	return functions.supportedFunctions[strings.ToLower(fn)].aggregateBlock.run(initialState, args...)
+}
+
+func (functions *AllFunctions) InitialState(fn string) *AggregateFunctionState {
 	function := functions.supportedFunctions[strings.ToLower(fn)]
 	if function.isAggregate {
-		return function.block.(AggregationFunctionBlock).finalState(), nil
+		return function.aggregateBlock.initialState()
 	}
-	return EmptyValue(), errors.New(messages.ErrorMessageFinalStateCalledOnScalarFunction)
+	return nil
 }
 
 var nowFunc = func() time.Time {
