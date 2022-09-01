@@ -19,7 +19,8 @@ The idea is to provide support for `selecting` files based on various conditions
   - [X] projections with scalar functions: `contains`, `lower`
   - [X] projections with alias in scalar functions: `low` instead of `lower`
   - [ ] projections with aggregate functions: `min`, `max`
-  - [ ] projections with expression: `1 + 2`
+  - [X] projections with expression: `1 + 2`
+    - support by giving functions like `add`, `sub`, `mul`, `div`
 - Support for `order by` clause
   - [X] order by with positions: `order by 1`
   - [X] order by with descending order: `order by 1 desc`
@@ -34,6 +35,10 @@ The idea is to provide support for `selecting` files based on various conditions
   - [X] count
   - [ ] median
 - Support for various `scalar functions`
+  - [X] add
+  - [X] subtract
+  - [X] multiply
+  - [X] divide
   - [X] lower
   - [X] upper
   - [X] title
