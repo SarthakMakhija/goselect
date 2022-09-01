@@ -22,6 +22,9 @@ func NewWhere(
 		if isWhereSpecified && expressions.Count() == 0 {
 			return nil, errors.New(messages.ErrorMessageExpectedExpressionInWhere)
 		}
+		if isWhereSpecified && expressions.Count() > 1 {
+			return nil, errors.New(messages.ErrorMessageExpectedSingleExpressionInWhere)
+		}
 		return &Where{expressions: expressions}, nil
 	}
 }

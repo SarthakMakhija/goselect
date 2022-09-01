@@ -15,6 +15,7 @@ const (
 	ErrorMessageInvalidProjection                 = "invalid projection, please check parentheses for all the functions"
 	ErrorMessageExpectedExpressionInProjection    = "expected an expression in projection"
 	ErrorMessageExpectedExpressionInWhere         = "expected an expression in where clause"
+	ErrorMessageExpectedSingleExpressionInWhere   = "expected a single expression in where clause"
 	ErrorMessageInvalidWhere                      = "invalid where clause, please check parentheses for all the functions"
 	ErrorMessageMissingParameterInScalarFunctions = "expected %v parameters in the function %v"
 	ErrorMessageIncorrectValueType                = "expected a %v value type but was not"
