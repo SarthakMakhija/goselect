@@ -6,7 +6,18 @@ import (
 	"testing"
 )
 
-func TestWhereWithoutAnyWhereClause(t *testing.T) {
+func TestWhereWithoutAnyWhereClause1(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+
+	where, _ := NewWhere(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	expected := ""
+
+	if expected != where.Display() {
+		t.Fatalf("Expected where clause to be blank %v, received %v", "", where.Display())
+	}
+}
+
+func TestWhereWithoutAnyWhereClause2(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "order"))
 	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "by"))

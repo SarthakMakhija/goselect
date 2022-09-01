@@ -9,6 +9,7 @@ import (
 	"goselect/parser/projection"
 	"goselect/parser/source"
 	"goselect/parser/tokenizer"
+	"goselect/parser/where"
 	"strings"
 )
 
@@ -17,6 +18,7 @@ type SelectQuery struct {
 	Source      *source.Source
 	Order       *order.Order
 	Limit       *limit.Limit
+	Where       *where.Where
 }
 
 func (selectQuery *SelectQuery) IsLimitDefined() bool {
@@ -54,6 +56,10 @@ func (parser *Parser) Parse() (*SelectQuery, error) {
 	if err != nil {
 		return nil, err
 	}
+	whereClause, err := where.NewWhere(iterator, parser.context)
+	if err != nil {
+		return nil, err
+	}
 	orderBy, err := order.NewOrder(iterator, projections.Count())
 	if err != nil {
 		return nil, err
@@ -66,6 +72,7 @@ func (parser *Parser) Parse() (*SelectQuery, error) {
 	return &SelectQuery{
 		Projections: projections,
 		Source:      fileSource,
+		Where:       whereClause,
 		Order:       orderBy,
 		Limit:       limitResults,
 	}, nil

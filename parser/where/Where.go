@@ -46,6 +46,9 @@ func all(
 ) (expression.Expressions, bool, error) {
 
 	var expressions []*expression.Expression
+	if !tokenIterator.HasNext() {
+		return expression.Expressions{}, false, nil
+	}
 	if tokenIterator.HasNext() && !tokenIterator.Peek().Equals("where") {
 		return expression.Expressions{}, false, nil
 	}

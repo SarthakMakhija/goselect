@@ -60,6 +60,29 @@ func TestParsesAQueryIntoAnASTWithMultipleProjections(t *testing.T) {
 	}
 }
 
+func TestParsesAQueryIntoAnASTWithWhereClause(t *testing.T) {
+	parser, _ := NewParser("SELECT name, lower(name) from ~ where contains(lower(name), log)", context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	selectStatement, _ := parser.Parse()
+
+	totalProjections := selectStatement.Projections.Count()
+	expected := 2
+	if totalProjections != expected {
+		t.Fatalf("Expected projection count %v, received %v", expected, totalProjections)
+	}
+
+	attributes := selectStatement.Projections.DisplayableAttributes()
+	expectedAttributes := []string{"name", "lower(name)"}
+
+	if !reflect.DeepEqual(attributes, expectedAttributes) {
+		t.Fatalf("Expected attributes to be %v, received %v", attributes, expectedAttributes)
+	}
+
+	where := selectStatement.Where
+	if where.Display() != "contains(lower(name),log)" {
+		t.Fatalf("Expected where clause to be %v, received %v", "contains(lower(name),log)", where.Display())
+	}
+}
+
 func TestParsesAQueryIntoAnASTWithAnOrderBy(t *testing.T) {
 	parser, _ := NewParser("SELECT name, upper(lower(name)) from ~ Order by 1", context.NewContext(context.NewFunctions(), context.NewAttributes()))
 	selectStatement, _ := parser.Parse()
