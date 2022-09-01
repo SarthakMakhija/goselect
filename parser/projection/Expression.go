@@ -115,7 +115,8 @@ func (expressions Expressions) evaluateWith(fileAttributes *context.FileAttribut
 			}
 			values = append(values, v)
 		}
-		if functions.IsAnAggregateFunction(expression.function.name) {
+		isAnAggregateFunction := functions.IsAnAggregateFunction(expression.function.name)
+		if isAnAggregateFunction && !isAtleastOneExpressionAnAggregateFunction {
 			state, err := functions.ExecuteAggregate(expression.function.name, expression.function.state, values...)
 			if err != nil {
 				return context.EmptyValue(), err, true
@@ -123,8 +124,11 @@ func (expressions Expressions) evaluateWith(fileAttributes *context.FileAttribut
 			expression.function.state = state
 			return state.Initial, err, true
 		}
-		v, err := functions.Execute(expression.function.name, values...)
-		return v, err, isAtleastOneExpressionAnAggregateFunction
+		if !isAnAggregateFunction && !isAtleastOneExpressionAnAggregateFunction {
+			v, err := functions.Execute(expression.function.name, values...)
+			return v, err, isAtleastOneExpressionAnAggregateFunction
+		}
+		return context.EmptyValue(), nil, isAtleastOneExpressionAnAggregateFunction
 	}
 
 	var values []context.Value
@@ -163,22 +167,26 @@ func (expression Expression) getNonFunctionValue(fileAttributes *context.FileAtt
 	return context.StringValue(expression.value)
 }
 
-func (expression *Expression) FullyEvaluate(functions *context.AllFunctions) context.Value {
-	var execute func(expression *Expression) context.Value
-	execute = func(expression *Expression) context.Value {
+func (expression *Expression) FullyEvaluate(functions *context.AllFunctions) (context.Value, error) {
+	var execute func(expression *Expression) (context.Value, error)
+	execute = func(expression *Expression) (context.Value, error) {
 		if !expression.isAFunction() {
-			return context.EmptyValue()
+			return context.EmptyValue(), nil
 		}
 		var values []context.Value
 		for _, arg := range expression.function.args {
-			v := execute(arg)
-			values = append(values, v)
+			if arg.isAFunction() && functions.IsAnAggregateFunction(arg.function.name) {
+				v, err := execute(arg)
+				if err != nil {
+					return context.EmptyValue(), err
+				}
+				values = append(values, v)
+			}
 		}
 		if functions.IsAnAggregateFunction(expression.function.name) {
-			return functions.FinalValue(expression.function.name, expression.function.state)
+			return functions.FinalValue(expression.function.name, expression.function.state, values)
 		}
-		v, _ := functions.Execute(expression.function.name, values...)
-		return v
+		return functions.Execute(expression.function.name, values...)
 	}
 	return execute(expression)
 }

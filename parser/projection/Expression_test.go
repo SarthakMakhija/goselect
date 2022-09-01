@@ -170,17 +170,11 @@ func TestExpressionEvaluate5(t *testing.T) {
 				state: functions.InitialState("count"),
 			}),
 		},
-		state: functions.InitialState("count"),
 	})
 	expressions := Expressions{expressions: []*Expression{expression}}
 
-	values, fullyEvaluated, _, _ := expressions.evaluateWith(nil, functions)
+	_, fullyEvaluated, _, _ := expressions.evaluateWith(nil, functions)
 
-	expected := "1"
-	actual := values[0].GetAsString()
-	if actual != expected {
-		t.Fatalf("Expected function evaluation to return %v, received %v", expected, actual)
-	}
 	if fullyEvaluated[0] != false {
 		t.Fatalf("Expected count to be partially evaluated but was not")
 	}
@@ -202,11 +196,112 @@ func TestExpressionFullyEvaluate(t *testing.T) {
 	expressions := Expressions{expressions: []*Expression{expression}}
 
 	_, _, allExpressions, _ := expressions.evaluateWith(nil, functions)
-	value := allExpressions[0].FullyEvaluate(functions)
+	value, _ := allExpressions[0].FullyEvaluate(functions)
 
 	expected := "1"
 	actual := value.GetAsString()
 	if actual != expected {
 		t.Fatalf("Expected function evaluation to return %v, received %v", expected, actual)
 	}
+}
+
+func TestExpressionEvaluateWithNestingOfCount(t *testing.T) {
+	functions := context.NewFunctions()
+	expression := expressionWithFunctionInstance(&FunctionInstance{
+		name: "lower",
+		args: []*Expression{
+			expressionWithFunctionInstance(&FunctionInstance{
+				name: "count",
+				args: []*Expression{
+					expressionWithFunctionInstance(&FunctionInstance{
+						name:  "count",
+						args:  []*Expression{},
+						state: functions.InitialState("count"),
+					}),
+				},
+				state: functions.InitialState("count"),
+			}),
+		},
+	})
+	expressions := Expressions{expressions: []*Expression{expression}}
+	allExpressions1, allExpressions2 := simulate2RowExecution(expressions, functions)
+
+	value1, _ := allExpressions1[0].FullyEvaluate(functions)
+	if value1.GetAsString() != "1" {
+		t.Fatalf("Expected lower(count(count)) to be %v, received %v", "1", value1.GetAsString())
+	}
+
+	value2, _ := allExpressions2[0].FullyEvaluate(functions)
+	if value2.GetAsString() != "1" {
+		t.Fatalf("Expected lower(count(count)) to be %v, received %v", "1", value2.GetAsString())
+	}
+}
+
+func TestExpressionEvaluateWithLowerFunctionInsideCount(t *testing.T) {
+	functions := context.NewFunctions()
+	expression := expressionWithFunctionInstance(&FunctionInstance{
+		name: "count",
+		args: []*Expression{
+			expressionWithFunctionInstance(&FunctionInstance{
+				name: "lower",
+				args: []*Expression{
+					expressionWithValue("NAME"),
+				},
+			}),
+		},
+		state: functions.InitialState("count"),
+	})
+	expressions := Expressions{expressions: []*Expression{expression}}
+	allExpressions1, allExpressions2 := simulate2RowExecution(expressions, functions)
+
+	value1, _ := allExpressions1[0].FullyEvaluate(functions)
+	if value1.GetAsString() != "2" {
+		t.Fatalf("Expected count(lower) to be %v, received %v", "2", value1.GetAsString())
+	}
+
+	value2, _ := allExpressions2[0].FullyEvaluate(functions)
+	if value2.GetAsString() != "2" {
+		t.Fatalf("Expected count(lower) to be %v, received %v", "2", value2.GetAsString())
+	}
+}
+
+func TestExpressionEvaluateWithNestingOfAverage(t *testing.T) {
+	functions := context.NewFunctions()
+	expression := expressionWithFunctionInstance(&FunctionInstance{
+		name: "avg",
+		args: []*Expression{
+			expressionWithFunctionInstance(&FunctionInstance{
+				name: "avg",
+				args: []*Expression{
+					expressionWithFunctionInstance(&FunctionInstance{
+						name: "len",
+						args: []*Expression{
+							expressionWithValue("CONTENT"),
+						},
+					}),
+				},
+				state: functions.InitialState("avg"),
+			}),
+		},
+		state: functions.InitialState("avg"),
+	})
+	expressions := Expressions{expressions: []*Expression{expression}}
+	allExpressions1, allExpressions2 := simulate2RowExecution(expressions, functions)
+
+	value1, _ := allExpressions1[0].FullyEvaluate(functions)
+	if value1.GetAsString() != "7.00" {
+		t.Fatalf("Expected avg(avg(len('CONTENT'))) to be %v, received %v", "7.00", value1.GetAsString())
+	}
+
+	value2, _ := allExpressions2[0].FullyEvaluate(functions)
+	if value2.GetAsString() != "7.00" {
+		t.Fatalf("Expected avg(avg(len('CONTENT'))) to be %v, received %v", "7.00", value2.GetAsString())
+	}
+}
+
+func simulate2RowExecution(expressions Expressions, functions *context.AllFunctions) ([]*Expression, []*Expression) {
+	_, _, allExpressions1, _ := expressions.evaluateWith(nil, functions)
+	_, _, allExpressions2, _ := expressions.evaluateWith(nil, functions)
+
+	return allExpressions1, allExpressions2
 }

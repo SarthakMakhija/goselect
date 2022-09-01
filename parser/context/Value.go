@@ -116,6 +116,8 @@ func (value Value) GetNumericAsFloat64() (float64, error) {
 		return float64(value.uint32Value), nil
 	case ValueTypeFloat64:
 		return value.float64Value, nil
+	case ValueTypeString:
+		return strconv.ParseFloat(value.stringValue, 64)
 	}
 	return -1, errors.New(messages.ErrorMessageExpectedNumericArgument)
 }

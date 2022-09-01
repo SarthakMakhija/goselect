@@ -19,7 +19,7 @@ type FunctionBlock interface {
 type AggregationFunctionBlock interface {
 	initialState() *FunctionState
 	run(initialState *FunctionState, args ...Value) (*FunctionState, error)
-	finalValue(*FunctionState) Value
+	finalValue(*FunctionState, []Value) (Value, error)
 }
 
 type AllFunctions struct {
@@ -27,8 +27,9 @@ type AllFunctions struct {
 }
 
 type FunctionState struct {
-	Initial Value
-	extras  map[interface{}]Value
+	Initial   Value
+	isUpdated bool
+	extras    map[interface{}]Value
 }
 
 const (
@@ -185,12 +186,12 @@ func (functions *AllFunctions) InitialState(fn string) *FunctionState {
 	return nil
 }
 
-func (functions *AllFunctions) FinalValue(fn string, state *FunctionState) Value {
+func (functions *AllFunctions) FinalValue(fn string, state *FunctionState, values []Value) (Value, error) {
 	function := functions.supportedFunctions[strings.ToLower(fn)]
 	if function.isAggregate {
-		return function.aggregateBlock.finalValue(state)
+		return function.aggregateBlock.finalValue(state, values)
 	}
-	return EmptyValue()
+	return EmptyValue(), nil
 }
 
 var nowFunc = func() time.Time {

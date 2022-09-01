@@ -75,7 +75,10 @@ func (row *EvaluatingRow) AllAttributes() []context.Value {
 		if row.fullyEvaluated[index] {
 			values = append(values, attributeValue)
 		} else {
-			value := row.expressions[index].FullyEvaluate(row.functions)
+			value, err := row.expressions[index].FullyEvaluate(row.functions)
+			if err != nil {
+				value = context.StringValue(err.Error())
+			}
 			values = append(values, value)
 			row.attributeValues[index] = value
 			row.fullyEvaluated[index] = true
