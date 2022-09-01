@@ -13,3 +13,4 @@
 13. Support for date/time in projections
 14. Handler lower case at one place for the incoming query
 15. Handle nonNilParameterCount() in functions.go
+16. (Important), ensure no aggregate functions are inside add/sub/mul/div
