@@ -22,7 +22,7 @@
 13. Support for date/time in projections
 14. Handler lower case at one place for the incoming query
 15. Handle nonNilParameterCount() in functions.go
-16. (Important), ensure following with aggregate functions
+16. (Important), ensure following with aggregate functions + handle " & ' in string functions. Because tokeniser will return "CONTENT"
     - add(count(), 7)
     - min(substr(name), 1, 6)
     - substr(min(name), 1, 6)
