@@ -6,6 +6,64 @@ import (
 	"time"
 )
 
+func TestAdd(t *testing.T) {
+	value, _ := NewFunctions().Execute("add", StringValue("1"), IntValue(2), IntValue(4))
+	var expected float64 = 7
+
+	actualValue, _ := value.GetNumericAsFloat64()
+	if actualValue != expected {
+		t.Fatalf("Expected addition to be %v, received %v", expected, actualValue)
+	}
+}
+
+func TestSubtract(t *testing.T) {
+	value, _ := NewFunctions().Execute("sub", StringValue("1"), IntValue(2))
+	var expected float64 = -1
+
+	actualValue, _ := value.GetNumericAsFloat64()
+	if actualValue != expected {
+		t.Fatalf("Expected subtraction to be %v, received %v", expected, actualValue)
+	}
+}
+
+func TestMultiply(t *testing.T) {
+	value, _ := NewFunctions().Execute("mul", StringValue("6"), IntValue(8))
+	var expected float64 = 48
+
+	actualValue, _ := value.GetNumericAsFloat64()
+	if actualValue != expected {
+		t.Fatalf("Expected multiplication to be %v, received %v", expected, actualValue)
+	}
+}
+
+func TestDivision(t *testing.T) {
+	value, _ := NewFunctions().Execute("div", StringValue("9"), IntValue(2))
+	var expected = 4.5
+
+	actualValue, _ := value.GetNumericAsFloat64()
+	if actualValue != expected {
+		t.Fatalf("Expected division to be %v, received %v", expected, actualValue)
+	}
+}
+
+func TestDivisionFailure(t *testing.T) {
+	_, err := NewFunctions().Execute("div", StringValue("9"), IntValue(0))
+
+	if err == nil {
+		t.Fatalf("Expected an error while dividing with zero but received none")
+	}
+}
+
+func TestDivisionWithNegative(t *testing.T) {
+	value, _ := NewFunctions().Execute("div", StringValue("9"), IntValue(-2))
+	var expected = -4.5
+
+	actualValue, _ := value.GetNumericAsFloat64()
+	if actualValue != expected {
+		t.Fatalf("Expected division to be %v, received %v", expected, actualValue)
+	}
+}
+
 func TestLower1(t *testing.T) {
 	value, _ := NewFunctions().Execute("lower", StringValue("ABC"))
 	expected := "abc"

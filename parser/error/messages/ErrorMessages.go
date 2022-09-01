@@ -18,4 +18,6 @@ const (
 	ErrorMessageIncorrectEndIndexInSubstring      = "expected the end index to be greater than the from index in substr"
 	ErrorMessageIllegalFromToIndexInSubstring     = "expected the from and to index to be positive integers"
 	ErrorMessageExpectedNumericArgument           = "expected numeric type argument value"
+	ErrorMessageExpectedNonZeroInDivide           = "expected a non zero value in divide operation"
+	ErrorMessageExpectedNonZeroInModulo           = "expected a non zero value in modulo operation"
 )

@@ -33,6 +33,10 @@ type FunctionState struct {
 }
 
 const (
+	FunctionNameAdd                 = "add"
+	FunctionNameSubtract            = "subtract"
+	FunctionNameMultiply            = "multiply"
+	FunctionNameDivide              = "divide"
 	FunctionNameLower               = "lower"
 	FunctionNameUpper               = "upper"
 	FunctionNameTitle               = "title"
@@ -57,6 +61,22 @@ const (
 )
 
 var functionDefinitions = map[string]*FunctionDefinition{
+	FunctionNameAdd: {
+		aliases: []string{"add", "addition"},
+		block:   AddFunctionBlock{},
+	},
+	FunctionNameSubtract: {
+		aliases: []string{"sub", "subtract"},
+		block:   SubtractFunctionBlock{},
+	},
+	FunctionNameMultiply: {
+		aliases: []string{"mul", "multiply"},
+		block:   MultipleFunctionBlock{},
+	},
+	FunctionNameDivide: {
+		aliases: []string{"div", "divide"},
+		block:   DivideFunctionBlock{},
+	},
 	FunctionNameLower: {
 		aliases: []string{"lower", "low"},
 		block:   LowerFunctionBlock{},

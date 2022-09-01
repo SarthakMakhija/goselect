@@ -10,6 +10,10 @@ import (
 	"strings"
 )
 
+type AddFunctionBlock struct{}
+type SubtractFunctionBlock struct{}
+type MultipleFunctionBlock struct{}
+type DivideFunctionBlock struct{}
 type LowerFunctionBlock struct{}
 type UpperFunctionBlock struct{}
 type TitleFunctionBlock struct{}
@@ -29,6 +33,69 @@ type ConcatFunctionBlock struct{}
 type ConcatWithSeparatorFunctionBlock struct{}
 type ContainsFunctionBlock struct{}
 type SubstringFunctionBlock struct{}
+
+func (a AddFunctionBlock) run(args ...Value) (Value, error) {
+	if err := ensureNParametersOrError(args, FunctionNameAdd, 2); err != nil {
+		return EmptyValue(), err
+	}
+	var result float64 = 0
+	for _, arg := range args {
+		asFloat64, err := arg.GetNumericAsFloat64()
+		if err != nil {
+			return EmptyValue(), err
+		}
+		result = result + asFloat64
+	}
+	return Float64Value(result), nil
+}
+
+func (s SubtractFunctionBlock) run(args ...Value) (Value, error) {
+	if err := ensureNParametersOrError(args, FunctionNameSubtract, 2); err != nil {
+		return EmptyValue(), err
+	}
+	oneFloat64, err := args[0].GetNumericAsFloat64()
+	if err != nil {
+		return EmptyValue(), err
+	}
+	otherFloat64, err := args[1].GetNumericAsFloat64()
+	if err != nil {
+		return EmptyValue(), err
+	}
+	return Float64Value(oneFloat64 - otherFloat64), nil
+}
+
+func (m MultipleFunctionBlock) run(args ...Value) (Value, error) {
+	if err := ensureNParametersOrError(args, FunctionNameMultiply, 2); err != nil {
+		return EmptyValue(), err
+	}
+	var result float64 = 1
+	for _, arg := range args {
+		asFloat64, err := arg.GetNumericAsFloat64()
+		if err != nil {
+			return EmptyValue(), err
+		}
+		result = result * asFloat64
+	}
+	return Float64Value(result), nil
+}
+
+func (d DivideFunctionBlock) run(args ...Value) (Value, error) {
+	if err := ensureNParametersOrError(args, FunctionNameDivide, 2); err != nil {
+		return EmptyValue(), err
+	}
+	oneFloat64, err := args[0].GetNumericAsFloat64()
+	if err != nil {
+		return EmptyValue(), err
+	}
+	otherFloat64, err := args[1].GetNumericAsFloat64()
+	if err != nil {
+		return EmptyValue(), err
+	}
+	if otherFloat64 == float64(0) {
+		return EmptyValue(), errors.New(messages.ErrorMessageExpectedNonZeroInDivide)
+	}
+	return Float64Value(oneFloat64 / otherFloat64), nil
+}
 
 func (l LowerFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameLower, 1); err != nil {
