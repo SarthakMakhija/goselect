@@ -104,7 +104,10 @@ func (expressions Expressions) DisplayableAttributes() []string {
 	return attributes
 }
 
-func (expressions Expressions) EvaluateWith(fileAttributes *context.FileAttributes, functions *context.AllFunctions) ([]context.Value, []bool, []*Expression, error) {
+func (expressions Expressions) EvaluateWith(
+	fileAttributes *context.FileAttributes,
+	functions *context.AllFunctions,
+) ([]context.Value, []bool, []*Expression, error) {
 	var execute func(expression *Expression) (context.Value, error, bool)
 
 	execute = func(expression *Expression) (context.Value, error, bool) {

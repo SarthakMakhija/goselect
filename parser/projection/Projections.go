@@ -12,7 +12,10 @@ type Projections struct {
 	expressions expression.Expressions
 }
 
-func NewProjections(tokenIterator *tokenizer.TokenIterator, context *context.ParsingApplicationContext) (*Projections, error) {
+func NewProjections(
+	tokenIterator *tokenizer.TokenIterator,
+	context *context.ParsingApplicationContext,
+) (*Projections, error) {
 	if expressions, err := all(tokenIterator, context); err != nil {
 		return nil, err
 	} else {
@@ -31,7 +34,10 @@ func (projections Projections) DisplayableAttributes() []string {
 	return projections.expressions.DisplayableAttributes()
 }
 
-func (projections Projections) EvaluateWith(fileAttributes *context.FileAttributes, functions *context.AllFunctions) ([]context.Value, []bool, []*expression.Expression, error) {
+func (projections Projections) EvaluateWith(
+	fileAttributes *context.FileAttributes,
+	functions *context.AllFunctions,
+) ([]context.Value, []bool, []*expression.Expression, error) {
 	return projections.expressions.EvaluateWith(fileAttributes, functions)
 }
 
@@ -39,9 +45,12 @@ func (projections Projections) EvaluateWith(fileAttributes *context.FileAttribut
 projection:  attributes Or functions Or expressions
 attributes:  name, size etc
 functions: 	 min(size), lower(name), min(Count(size)) etc
-expressions: 2 + 3, 2 > 3 etc
+expressions: add(..), mul(..), gt(..)
 */
-func all(tokenIterator *tokenizer.TokenIterator, ctx *context.ParsingApplicationContext) (expression.Expressions, error) {
+func all(
+	tokenIterator *tokenizer.TokenIterator,
+	ctx *context.ParsingApplicationContext,
+) (expression.Expressions, error) {
 	var expressions []*expression.Expression
 	var expectComma bool
 
