@@ -245,6 +245,106 @@ func TestResultsWithProjectionsIncludingContainsFunction(t *testing.T) {
 	assertMatch(t, expected, queryResults)
 }
 
+func TestResultsWithProjectionsIncludingAddFunction(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select lower(name), add(len(name), 4) from ../resources/TestResultsWithProjections/multi order by 1", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	expected := [][]context.Value{
+		{context.StringValue("testresultswithprojections_a.log"), context.Float64Value(36)},
+		{context.StringValue("testresultswithprojections_b.log"), context.Float64Value(36)},
+		{context.StringValue("testresultswithprojections_c.txt"), context.Float64Value(36)},
+		{context.StringValue("testresultswithprojections_d.txt"), context.Float64Value(36)},
+	}
+	assertMatch(t, expected, queryResults)
+}
+
+func TestResultsWithProjectionsIncludingSubtractFunction(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select lower(name), sub(len(name), 2) from ../resources/TestResultsWithProjections/multi order by 1", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	expected := [][]context.Value{
+		{context.StringValue("testresultswithprojections_a.log"), context.Float64Value(30)},
+		{context.StringValue("testresultswithprojections_b.log"), context.Float64Value(30)},
+		{context.StringValue("testresultswithprojections_c.txt"), context.Float64Value(30)},
+		{context.StringValue("testresultswithprojections_d.txt"), context.Float64Value(30)},
+	}
+	assertMatch(t, expected, queryResults)
+}
+
+func TestResultsWithProjectionsIncludingMultiplyFunction(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select lower(name), mul(len(name), 2) from ../resources/TestResultsWithProjections/multi order by 1", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	expected := [][]context.Value{
+		{context.StringValue("testresultswithprojections_a.log"), context.Float64Value(64)},
+		{context.StringValue("testresultswithprojections_b.log"), context.Float64Value(64)},
+		{context.StringValue("testresultswithprojections_c.txt"), context.Float64Value(64)},
+		{context.StringValue("testresultswithprojections_d.txt"), context.Float64Value(64)},
+	}
+	assertMatch(t, expected, queryResults)
+}
+
+func TestResultsWithProjectionsIncludingDivideFunction(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select lower(name), div(len(name), 2) from ../resources/TestResultsWithProjections/multi order by 1", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	expected := [][]context.Value{
+		{context.StringValue("testresultswithprojections_a.log"), context.Float64Value(16)},
+		{context.StringValue("testresultswithprojections_b.log"), context.Float64Value(16)},
+		{context.StringValue("testresultswithprojections_c.txt"), context.Float64Value(16)},
+		{context.StringValue("testresultswithprojections_d.txt"), context.Float64Value(16)},
+	}
+	assertMatch(t, expected, queryResults)
+}
+
+func TestResultsWithProjectionsIncludingNegativeValueInAddSubMulDivFunction(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select add(len(name), -2), sub(len(name), -2), mul(len(name), -2), div(len(name), -2) from ../resources/TestResultsWithProjections/multi order by 1", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	expected := [][]context.Value{
+		{context.Float64Value(30), context.Float64Value(34), context.Float64Value(-64), context.Float64Value(-16)},
+		{context.Float64Value(30), context.Float64Value(34), context.Float64Value(-64), context.Float64Value(-16)},
+		{context.Float64Value(30), context.Float64Value(34), context.Float64Value(-64), context.Float64Value(-16)},
+		{context.Float64Value(30), context.Float64Value(34), context.Float64Value(-64), context.Float64Value(-16)},
+	}
+	assertMatch(t, expected, queryResults)
+}
+
 func TestResultsWithProjectionsWithoutProperParametersToAFunction(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
 	aParser, err := parser.NewParser("select name, lower() from ../resources/TestResultsWithProjections/single", newContext)
