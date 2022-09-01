@@ -64,6 +64,24 @@ func TestDivisionWithNegative(t *testing.T) {
 	}
 }
 
+func TestEqualsReturningTrue(t *testing.T) {
+	value, _ := NewFunctions().Execute("eq", StringValue("one"), StringValue("one"))
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != true {
+		t.Fatalf("Expected equals to be %v, received %v", true, actualValue)
+	}
+}
+
+func TestEqualsReturningFalse(t *testing.T) {
+	value, _ := NewFunctions().Execute("eq", StringValue("one"), StringValue("another"))
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != false {
+		t.Fatalf("Expected equals to be %v, received %v", false, actualValue)
+	}
+}
+
 func TestLower1(t *testing.T) {
 	value, _ := NewFunctions().Execute("lower", StringValue("ABC"))
 	expected := "abc"
