@@ -20,7 +20,7 @@ The idea is to provide support for `selecting` files based on various conditions
   - [X] projections with alias in scalar functions: `low` instead of `lower`
   - [ ] projections with aggregate functions: `min`, `max`
   - [X] projections with expression: `1 + 2`
-    - support by giving functions like `add`, `sub`, `mul`, `div`
+    - supports by giving functions like `add`, `sub`, `mul` and `div`
 - Support for `order by` clause
   - [X] order by with positions: `order by 1`
   - [X] order by with descending order: `order by 1 desc`
