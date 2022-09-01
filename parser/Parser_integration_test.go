@@ -1,7 +1,6 @@
 package parser
 
 import (
-	"fmt"
 	"goselect/parser/context"
 	"goselect/parser/order"
 	"reflect"
@@ -171,8 +170,7 @@ func TestParsesAQueryIntoAnASTWithLimitWithoutAnyOrdering(t *testing.T) {
 
 func TestParsesAQueryIntoAnASTWithMultipleProjectionsInCaseInsensitiveManner(t *testing.T) {
 	parser, _ := NewParser("SELECT NAME, LOWER(NAME) FROM ../resources", context.NewContext(context.NewFunctions(), context.NewAttributes()))
-	selectStatement, err := parser.Parse()
-	fmt.Println(err)
+	selectStatement, _ := parser.Parse()
 
 	totalProjections := selectStatement.Projections.Count()
 	expected := 2

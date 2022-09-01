@@ -36,8 +36,18 @@ func (where Where) Display() string {
 func (where Where) EvaluateWith(
 	fileAttributes *context.FileAttributes,
 	functions *context.AllFunctions,
-) ([]context.Value, []bool, []*expression.Expression, error) {
-	return where.expressions.EvaluateWith(fileAttributes, functions)
+) (bool, error) {
+
+	if where.expressions.Count() == 1 {
+		if expr := where.expressions.ExpressionAt(0); expr != nil {
+			value, err, _ := expr.Evaluate(fileAttributes, functions)
+			if err != nil {
+				return false, err
+			}
+			return value.GetBoolean()
+		}
+	}
+	return true, nil
 }
 
 func all(

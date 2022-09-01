@@ -70,6 +70,13 @@ func (expressions Expressions) Count() int {
 	return len(expressions.Expressions)
 }
 
+func (expressions Expressions) ExpressionAt(index int) *Expression {
+	if index < len(expressions.Expressions) {
+		return expressions.Expressions[index]
+	}
+	return nil
+}
+
 func (expressions Expressions) DisplayableAttributes() []string {
 	var functionAsString func(expression *Expression) string
 	functionAsString = func(expression *Expression) string {
