@@ -164,3 +164,23 @@ func TestResultsWithProjectionsIncludingNestedAverageFunction2(t *testing.T) {
 	}
 	assertMatch(t, expected, queryResults)
 }
+
+func TestResultsWithProjectionsIncludingNestedAverageFunction200(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select add(count(), 7) from ../resources/TestResultsWithProjections/multi order by 1", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	expected := [][]context.Value{
+		{context.Float64Value(11)},
+		{context.Float64Value(11)},
+		{context.Float64Value(11)},
+		{context.Float64Value(11)},
+	}
+	assertMatch(t, expected, queryResults)
+}

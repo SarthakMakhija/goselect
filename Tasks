@@ -13,4 +13,9 @@
 13. Support for date/time in projections
 14. Handler lower case at one place for the incoming query
 15. Handle nonNilParameterCount() in functions.go
-16. (Important), ensure no aggregate functions are inside add/sub/mul/div
+16. (Important), ensure following with aggregate functions
+    - add(count(), 7)
+    - min(substr(name), 1, 6)
+    - substr(min(name), 1, 6)
+    - if possible, have checks to ensure: scalar function inside a scalar (with an attribute) + aggregate fn is not permitted
+        - add(count(), len(name)) is not allowed

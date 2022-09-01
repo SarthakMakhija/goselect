@@ -181,6 +181,10 @@ func (expression *Expression) FullyEvaluate(functions *context.AllFunctions) (co
 					return context.EmptyValue(), err
 				}
 				values = append(values, v)
+			} else {
+				if arg.eType == ExpressionTypeValue {
+					values = append(values, context.StringValue(arg.value))
+				}
 			}
 		}
 		if functions.IsAnAggregateFunction(expression.function.name) {
