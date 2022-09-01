@@ -11,9 +11,9 @@ type Expressions struct {
 type expressionType int
 
 const (
-	ExpressionTypeValue     = 0
-	ExpressionTypeAttribute = 1
-	ExpressionTypeFunction  = 2
+	TypeValue     = 0
+	TypeAttribute = 1
+	TypeFunction  = 2
 )
 
 type Expression struct {
@@ -39,7 +39,7 @@ func FunctionInstanceWith(name string, args []*Expression, state *context.Functi
 
 func ExpressionWithAttribute(attribute string) *Expression {
 	return &Expression{
-		eType:     ExpressionTypeAttribute,
+		eType:     TypeAttribute,
 		attribute: attribute,
 	}
 }
@@ -54,14 +54,14 @@ func ExpressionsWithAttributes(attributes []string) []*Expression {
 
 func ExpressionWithFunctionInstance(fn *FunctionInstance) *Expression {
 	return &Expression{
-		eType:    ExpressionTypeFunction,
+		eType:    TypeFunction,
 		function: fn,
 	}
 }
 
 func ExpressionWithValue(value string) *Expression {
 	return &Expression{
-		eType: ExpressionTypeValue,
+		eType: TypeValue,
 		value: value,
 	}
 }
@@ -74,7 +74,7 @@ func (expressions Expressions) DisplayableAttributes() []string {
 	var functionAsString func(expression *Expression) string
 	functionAsString = func(expression *Expression) string {
 		if !expression.isAFunction() {
-			if expression.eType == ExpressionTypeAttribute {
+			if expression.eType == TypeAttribute {
 				return expression.attribute
 			}
 			return expression.value
@@ -182,7 +182,7 @@ func (expression *Expression) FullyEvaluate(functions *context.AllFunctions) (co
 				}
 				values = append(values, v)
 			} else {
-				if arg.eType == ExpressionTypeValue {
+				if arg.eType == TypeValue {
 					values = append(values, context.StringValue(arg.value))
 				}
 			}
@@ -200,7 +200,7 @@ func (expression Expression) isAFunction() bool {
 }
 
 func (expression Expression) getNonFunctionValue(fileAttributes *context.FileAttributes) context.Value {
-	if expression.eType == ExpressionTypeAttribute {
+	if expression.eType == TypeAttribute {
 		return fileAttributes.Get(expression.attribute)
 	}
 	return context.StringValue(expression.value)
