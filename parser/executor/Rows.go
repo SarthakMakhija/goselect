@@ -2,7 +2,7 @@ package executor
 
 import (
 	"goselect/parser/context"
-	"goselect/parser/projection"
+	"goselect/parser/expression"
 )
 
 type EvaluatingRows struct {
@@ -18,7 +18,7 @@ type RowsIterator struct {
 type EvaluatingRow struct {
 	attributeValues []context.Value
 	fullyEvaluated  []bool
-	expressions     []*projection.Expression
+	expressions     []*expression.Expression
 	functions       *context.AllFunctions
 }
 
@@ -26,14 +26,14 @@ type AttributeIterator struct {
 	currentIndex    int
 	attributeValues []context.Value
 	fullyEvaluated  []bool
-	expressions     []*projection.Expression
+	expressions     []*expression.Expression
 }
 
 func emptyRows(functions *context.AllFunctions) *EvaluatingRows {
 	return &EvaluatingRows{functions: functions}
 }
 
-func (rows *EvaluatingRows) addRow(attributeValues []context.Value, fullyEvaluated []bool, expressions []*projection.Expression) *EvaluatingRow {
+func (rows *EvaluatingRows) addRow(attributeValues []context.Value, fullyEvaluated []bool, expressions []*expression.Expression) *EvaluatingRow {
 	row := &EvaluatingRow{
 		attributeValues: attributeValues,
 		fullyEvaluated:  fullyEvaluated,

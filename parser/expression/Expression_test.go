@@ -1,4 +1,4 @@
-package projection
+package expression
 
 import (
 	"goselect/parser/context"
@@ -7,8 +7,8 @@ import (
 )
 
 func TestExpressionsDisplayableAttributesWithAttributeName(t *testing.T) {
-	expressions := Expressions{expressions: []*Expression{expressionWithAttribute("name")}}
-	attributes := expressions.displayableAttributes()
+	expressions := Expressions{Expressions: []*Expression{ExpressionWithAttribute("name")}}
+	attributes := expressions.DisplayableAttributes()
 	expected := []string{"name"}
 
 	if !reflect.DeepEqual(expected, attributes) {
@@ -23,13 +23,13 @@ func TestExpressionsDisplayableAttributesWithFunction(t *testing.T) {
 			{
 				function: &FunctionInstance{
 					name: "upper",
-					args: []*Expression{expressionWithAttribute("uid")},
+					args: []*Expression{ExpressionWithAttribute("uid")},
 				},
 			},
 		},
 	}
-	expressions := Expressions{expressions: []*Expression{expressionWithFunctionInstance(fun)}}
-	attributes := expressions.displayableAttributes()
+	expressions := Expressions{Expressions: []*Expression{ExpressionWithFunctionInstance(fun)}}
+	attributes := expressions.DisplayableAttributes()
 	expected := []string{"lower(upper(uid))"}
 
 	if !reflect.DeepEqual(expected, attributes) {
@@ -61,16 +61,16 @@ func TestExpressionIsNotFunction(t *testing.T) {
 }
 
 func TestExpressionEvaluate1(t *testing.T) {
-	expression := expressionWithFunctionInstance(&FunctionInstance{
+	expression := ExpressionWithFunctionInstance(&FunctionInstance{
 		name: "lower",
 		args: []*Expression{
-			expressionWithValue("CONTENT"),
+			ExpressionWithValue("CONTENT"),
 		},
 	})
-	expressions := Expressions{expressions: []*Expression{expression}}
+	expressions := Expressions{Expressions: []*Expression{expression}}
 	functions := context.NewFunctions()
 
-	values, _, _, _ := expressions.evaluateWith(nil, functions)
+	values, _, _, _ := expressions.EvaluateWith(nil, functions)
 
 	expected := "content"
 	actual := values[0].GetAsString()
@@ -80,28 +80,28 @@ func TestExpressionEvaluate1(t *testing.T) {
 }
 
 func TestExpressionEvaluate2(t *testing.T) {
-	expression := expressionWithFunctionInstance(&FunctionInstance{
+	expression := ExpressionWithFunctionInstance(&FunctionInstance{
 		name: "concat",
 		args: []*Expression{
-			expressionWithFunctionInstance(&FunctionInstance{
+			ExpressionWithFunctionInstance(&FunctionInstance{
 				name: "lower",
 				args: []*Expression{
-					expressionWithValue("CONTENT"),
+					ExpressionWithValue("CONTENT"),
 				},
 			}),
-			expressionWithValue("##"),
-			expressionWithFunctionInstance(&FunctionInstance{
+			ExpressionWithValue("##"),
+			ExpressionWithFunctionInstance(&FunctionInstance{
 				name: "upper",
 				args: []*Expression{
-					expressionWithValue("value"),
+					ExpressionWithValue("value"),
 				},
 			}),
 		},
 	})
-	expressions := Expressions{expressions: []*Expression{expression}}
+	expressions := Expressions{Expressions: []*Expression{expression}}
 	functions := context.NewFunctions()
 
-	values, _, _, _ := expressions.evaluateWith(nil, functions)
+	values, _, _, _ := expressions.EvaluateWith(nil, functions)
 
 	expected := "content##VALUE"
 	actual := values[0].GetAsString()
@@ -112,14 +112,14 @@ func TestExpressionEvaluate2(t *testing.T) {
 
 func TestExpressionEvaluate3(t *testing.T) {
 	functions := context.NewFunctions()
-	expression := expressionWithFunctionInstance(&FunctionInstance{
-		name:  "count",
+	expression := ExpressionWithFunctionInstance(&FunctionInstance{
+		name:  "Count",
 		args:  []*Expression{},
-		state: functions.InitialState("count"),
+		state: functions.InitialState("Count"),
 	})
-	expressions := Expressions{expressions: []*Expression{expression}}
+	expressions := Expressions{Expressions: []*Expression{expression}}
 
-	values, fullyEvaluated, _, _ := expressions.evaluateWith(nil, functions)
+	values, fullyEvaluated, _, _ := expressions.EvaluateWith(nil, functions)
 
 	expected := "1"
 	actual := values[0].GetAsString()
@@ -127,27 +127,27 @@ func TestExpressionEvaluate3(t *testing.T) {
 		t.Fatalf("Expected function evaluation to return %v, received %v", expected, actual)
 	}
 	if fullyEvaluated[0] != false {
-		t.Fatalf("Expected count to be partially evaluated but was not")
+		t.Fatalf("Expected Count to be partially evaluated but was not")
 	}
 }
 
 func TestExpressionEvaluate4(t *testing.T) {
 	functions := context.NewFunctions()
-	expression := expressionWithFunctionInstance(&FunctionInstance{
-		name: "count",
+	expression := ExpressionWithFunctionInstance(&FunctionInstance{
+		name: "Count",
 		args: []*Expression{
-			expressionWithFunctionInstance(&FunctionInstance{
+			ExpressionWithFunctionInstance(&FunctionInstance{
 				name: "lower",
 				args: []*Expression{
-					expressionWithValue("CONTENT"),
+					ExpressionWithValue("CONTENT"),
 				},
 			}),
 		},
-		state: functions.InitialState("count"),
+		state: functions.InitialState("Count"),
 	})
-	expressions := Expressions{expressions: []*Expression{expression}}
+	expressions := Expressions{Expressions: []*Expression{expression}}
 
-	values, fullyEvaluated, _, _ := expressions.evaluateWith(nil, functions)
+	values, fullyEvaluated, _, _ := expressions.EvaluateWith(nil, functions)
 
 	expected := "1"
 	actual := values[0].GetAsString()
@@ -155,47 +155,47 @@ func TestExpressionEvaluate4(t *testing.T) {
 		t.Fatalf("Expected function evaluation to return %v, received %v", expected, actual)
 	}
 	if fullyEvaluated[0] != false {
-		t.Fatalf("Expected count to be partially evaluated but was not")
+		t.Fatalf("Expected Count to be partially evaluated but was not")
 	}
 }
 
 func TestExpressionEvaluate5(t *testing.T) {
 	functions := context.NewFunctions()
-	expression := expressionWithFunctionInstance(&FunctionInstance{
+	expression := ExpressionWithFunctionInstance(&FunctionInstance{
 		name: "lower",
 		args: []*Expression{
-			expressionWithFunctionInstance(&FunctionInstance{
-				name:  "count",
+			ExpressionWithFunctionInstance(&FunctionInstance{
+				name:  "Count",
 				args:  []*Expression{},
-				state: functions.InitialState("count"),
+				state: functions.InitialState("Count"),
 			}),
 		},
 	})
-	expressions := Expressions{expressions: []*Expression{expression}}
+	expressions := Expressions{Expressions: []*Expression{expression}}
 
-	_, fullyEvaluated, _, _ := expressions.evaluateWith(nil, functions)
+	_, fullyEvaluated, _, _ := expressions.EvaluateWith(nil, functions)
 
 	if fullyEvaluated[0] != false {
-		t.Fatalf("Expected count to be partially evaluated but was not")
+		t.Fatalf("Expected Count to be partially evaluated but was not")
 	}
 }
 
 func TestExpressionFullyEvaluate(t *testing.T) {
 	functions := context.NewFunctions()
-	expression := expressionWithFunctionInstance(&FunctionInstance{
+	expression := ExpressionWithFunctionInstance(&FunctionInstance{
 		name: "lower",
 		args: []*Expression{
-			expressionWithFunctionInstance(&FunctionInstance{
-				name:  "count",
+			ExpressionWithFunctionInstance(&FunctionInstance{
+				name:  "Count",
 				args:  []*Expression{},
-				state: functions.InitialState("count"),
+				state: functions.InitialState("Count"),
 			}),
 		},
-		state: functions.InitialState("count"),
+		state: functions.InitialState("Count"),
 	})
-	expressions := Expressions{expressions: []*Expression{expression}}
+	expressions := Expressions{Expressions: []*Expression{expression}}
 
-	_, _, allExpressions, _ := expressions.evaluateWith(nil, functions)
+	_, _, allExpressions, _ := expressions.EvaluateWith(nil, functions)
 	value, _ := allExpressions[0].FullyEvaluate(functions)
 
 	expected := "1"
@@ -207,76 +207,76 @@ func TestExpressionFullyEvaluate(t *testing.T) {
 
 func TestExpressionEvaluateWithNestingOfCount(t *testing.T) {
 	functions := context.NewFunctions()
-	expression := expressionWithFunctionInstance(&FunctionInstance{
+	expression := ExpressionWithFunctionInstance(&FunctionInstance{
 		name: "lower",
 		args: []*Expression{
-			expressionWithFunctionInstance(&FunctionInstance{
-				name: "count",
+			ExpressionWithFunctionInstance(&FunctionInstance{
+				name: "Count",
 				args: []*Expression{
-					expressionWithFunctionInstance(&FunctionInstance{
-						name:  "count",
+					ExpressionWithFunctionInstance(&FunctionInstance{
+						name:  "Count",
 						args:  []*Expression{},
-						state: functions.InitialState("count"),
+						state: functions.InitialState("Count"),
 					}),
 				},
-				state: functions.InitialState("count"),
+				state: functions.InitialState("Count"),
 			}),
 		},
 	})
-	expressions := Expressions{expressions: []*Expression{expression}}
+	expressions := Expressions{Expressions: []*Expression{expression}}
 	allExpressions1, allExpressions2 := simulate2RowExecution(expressions, functions)
 
 	value1, _ := allExpressions1[0].FullyEvaluate(functions)
 	if value1.GetAsString() != "1" {
-		t.Fatalf("Expected lower(count(count)) to be %v, received %v", "1", value1.GetAsString())
+		t.Fatalf("Expected lower(Count(Count)) to be %v, received %v", "1", value1.GetAsString())
 	}
 
 	value2, _ := allExpressions2[0].FullyEvaluate(functions)
 	if value2.GetAsString() != "1" {
-		t.Fatalf("Expected lower(count(count)) to be %v, received %v", "1", value2.GetAsString())
+		t.Fatalf("Expected lower(Count(Count)) to be %v, received %v", "1", value2.GetAsString())
 	}
 }
 
 func TestExpressionEvaluateWithLowerFunctionInsideCount(t *testing.T) {
 	functions := context.NewFunctions()
-	expression := expressionWithFunctionInstance(&FunctionInstance{
-		name: "count",
+	expression := ExpressionWithFunctionInstance(&FunctionInstance{
+		name: "Count",
 		args: []*Expression{
-			expressionWithFunctionInstance(&FunctionInstance{
+			ExpressionWithFunctionInstance(&FunctionInstance{
 				name: "lower",
 				args: []*Expression{
-					expressionWithValue("NAME"),
+					ExpressionWithValue("NAME"),
 				},
 			}),
 		},
-		state: functions.InitialState("count"),
+		state: functions.InitialState("Count"),
 	})
-	expressions := Expressions{expressions: []*Expression{expression}}
+	expressions := Expressions{Expressions: []*Expression{expression}}
 	allExpressions1, allExpressions2 := simulate2RowExecution(expressions, functions)
 
 	value1, _ := allExpressions1[0].FullyEvaluate(functions)
 	if value1.GetAsString() != "2" {
-		t.Fatalf("Expected count(lower) to be %v, received %v", "2", value1.GetAsString())
+		t.Fatalf("Expected Count(lower) to be %v, received %v", "2", value1.GetAsString())
 	}
 
 	value2, _ := allExpressions2[0].FullyEvaluate(functions)
 	if value2.GetAsString() != "2" {
-		t.Fatalf("Expected count(lower) to be %v, received %v", "2", value2.GetAsString())
+		t.Fatalf("Expected Count(lower) to be %v, received %v", "2", value2.GetAsString())
 	}
 }
 
 func TestExpressionEvaluateWithNestingOfAverage(t *testing.T) {
 	functions := context.NewFunctions()
-	expression := expressionWithFunctionInstance(&FunctionInstance{
+	expression := ExpressionWithFunctionInstance(&FunctionInstance{
 		name: "avg",
 		args: []*Expression{
-			expressionWithFunctionInstance(&FunctionInstance{
+			ExpressionWithFunctionInstance(&FunctionInstance{
 				name: "avg",
 				args: []*Expression{
-					expressionWithFunctionInstance(&FunctionInstance{
+					ExpressionWithFunctionInstance(&FunctionInstance{
 						name: "len",
 						args: []*Expression{
-							expressionWithValue("CONTENT"),
+							ExpressionWithValue("CONTENT"),
 						},
 					}),
 				},
@@ -285,7 +285,7 @@ func TestExpressionEvaluateWithNestingOfAverage(t *testing.T) {
 		},
 		state: functions.InitialState("avg"),
 	})
-	expressions := Expressions{expressions: []*Expression{expression}}
+	expressions := Expressions{Expressions: []*Expression{expression}}
 	allExpressions1, allExpressions2 := simulate2RowExecution(expressions, functions)
 
 	value1, _ := allExpressions1[0].FullyEvaluate(functions)
@@ -300,8 +300,8 @@ func TestExpressionEvaluateWithNestingOfAverage(t *testing.T) {
 }
 
 func simulate2RowExecution(expressions Expressions, functions *context.AllFunctions) ([]*Expression, []*Expression) {
-	_, _, allExpressions1, _ := expressions.evaluateWith(nil, functions)
-	_, _, allExpressions2, _ := expressions.evaluateWith(nil, functions)
+	_, _, allExpressions1, _ := expressions.EvaluateWith(nil, functions)
+	_, _, allExpressions2, _ := expressions.EvaluateWith(nil, functions)
 
 	return allExpressions1, allExpressions2
 }

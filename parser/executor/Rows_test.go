@@ -2,7 +2,7 @@ package executor
 
 import (
 	"goselect/parser/context"
-	"goselect/parser/projection"
+	"goselect/parser/expression"
 	"reflect"
 	"testing"
 )
@@ -10,7 +10,7 @@ import (
 func TestEvaluatingRowAllAttributesThatAreFullyEvaluated(t *testing.T) {
 	_ = context.NewContext(context.NewFunctions(), context.NewAttributes())
 	rows := emptyRows(context.NewFunctions())
-	rows.addRow([]context.Value{context.StringValue("someValue")}, []bool{true}, []*projection.Expression{})
+	rows.addRow([]context.Value{context.StringValue("someValue")}, []bool{true}, []*expression.Expression{})
 
 	attributes := rows.atIndex(0).AllAttributes()
 	expected := []context.Value{context.StringValue("someValue")}
@@ -23,7 +23,7 @@ func TestEvaluatingRowAllAttributesThatAreFullyEvaluated(t *testing.T) {
 func TestEvaluatingRowCount(t *testing.T) {
 	_ = context.NewContext(context.NewFunctions(), context.NewAttributes())
 	rows := emptyRows(context.NewFunctions())
-	rows.addRow([]context.Value{context.StringValue("someValue")}, []bool{true}, []*projection.Expression{})
+	rows.addRow([]context.Value{context.StringValue("someValue")}, []bool{true}, []*expression.Expression{})
 
 	count := rows.Count()
 	expected := 1
@@ -36,7 +36,7 @@ func TestEvaluatingRowCount(t *testing.T) {
 func TestEvaluatingRowIterator(t *testing.T) {
 	_ = context.NewContext(context.NewFunctions(), context.NewAttributes())
 	rows := emptyRows(context.NewFunctions())
-	rows.addRow([]context.Value{context.StringValue("someValue")}, []bool{true}, []*projection.Expression{})
+	rows.addRow([]context.Value{context.StringValue("someValue")}, []bool{true}, []*expression.Expression{})
 
 	attributes := rows.RowIterator().Next().AllAttributes()
 	expected := []context.Value{context.StringValue("someValue")}
@@ -49,7 +49,7 @@ func TestEvaluatingRowIterator(t *testing.T) {
 func TestEvaluatingRowIteratorHasNextWithAnAvailableRow(t *testing.T) {
 	_ = context.NewContext(context.NewFunctions(), context.NewAttributes())
 	rows := emptyRows(context.NewFunctions())
-	rows.addRow([]context.Value{context.StringValue("someValue")}, []bool{true}, []*projection.Expression{})
+	rows.addRow([]context.Value{context.StringValue("someValue")}, []bool{true}, []*expression.Expression{})
 
 	hasNext := rows.RowIterator().HasNext()
 	if hasNext != true {
@@ -70,7 +70,7 @@ func TestEvaluatingRowIteratorHasNextWithNoAvailableRows(t *testing.T) {
 func TestEvaluatingRowTotalAttributes(t *testing.T) {
 	_ = context.NewContext(context.NewFunctions(), context.NewAttributes())
 	rows := emptyRows(context.NewFunctions())
-	rows.addRow([]context.Value{context.StringValue("someValue")}, []bool{true}, []*projection.Expression{})
+	rows.addRow([]context.Value{context.StringValue("someValue")}, []bool{true}, []*expression.Expression{})
 
 	totalAttributes := rows.RowIterator().Next().TotalAttributes()
 	if totalAttributes != 1 {

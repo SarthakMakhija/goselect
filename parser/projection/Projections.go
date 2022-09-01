@@ -4,18 +4,19 @@ import (
 	"errors"
 	"goselect/parser/context"
 	"goselect/parser/error/messages"
+	"goselect/parser/expression"
 	"goselect/parser/tokenizer"
 )
 
 type Projections struct {
-	expressions Expressions
+	expressions expression.Expressions
 }
 
 func NewProjections(tokenIterator *tokenizer.TokenIterator, context *context.ParsingApplicationContext) (*Projections, error) {
 	if expressions, err := all(tokenIterator, context); err != nil {
 		return nil, err
 	} else {
-		if expressions.count() == 0 {
+		if expressions.Count() == 0 {
 			return nil, errors.New("expected at least one attribute in projection list")
 		}
 		return &Projections{expressions: expressions}, nil
@@ -23,15 +24,15 @@ func NewProjections(tokenIterator *tokenizer.TokenIterator, context *context.Par
 }
 
 func (projections Projections) Count() int {
-	return projections.expressions.count()
+	return projections.expressions.Count()
 }
 
 func (projections Projections) DisplayableAttributes() []string {
-	return projections.expressions.displayableAttributes()
+	return projections.expressions.DisplayableAttributes()
 }
 
-func (projections Projections) EvaluateWith(fileAttributes *context.FileAttributes, functions *context.AllFunctions) ([]context.Value, []bool, []*Expression, error) {
-	return projections.expressions.evaluateWith(fileAttributes, functions)
+func (projections Projections) EvaluateWith(fileAttributes *context.FileAttributes, functions *context.AllFunctions) ([]context.Value, []bool, []*expression.Expression, error) {
+	return projections.expressions.EvaluateWith(fileAttributes, functions)
 }
 
 /*
@@ -40,8 +41,8 @@ attributes:  name, size etc
 functions: 	 min(size), lower(name), min(Count(size)) etc
 expressions: 2 + 3, 2 > 3 etc
 */
-func all(tokenIterator *tokenizer.TokenIterator, ctx *context.ParsingApplicationContext) (Expressions, error) {
-	var expressions []*Expression
+func all(tokenIterator *tokenizer.TokenIterator, ctx *context.ParsingApplicationContext) (expression.Expressions, error) {
+	var expressions []*expression.Expression
 	var expectComma bool
 
 	for tokenIterator.HasNext() && !tokenIterator.Peek().Equals("from") {
@@ -49,29 +50,33 @@ func all(tokenIterator *tokenizer.TokenIterator, ctx *context.ParsingApplication
 		switch {
 		case expectComma:
 			if !token.Equals(",") {
-				return Expressions{}, errors.New(messages.ErrorMessageMissingCommaProjection)
+				return expression.Expressions{}, errors.New(messages.ErrorMessageMissingCommaProjection)
 			}
 			expectComma = false
 		case context.IsAWildcardAttribute(token.TokenValue):
-			expressions = append(expressions, expressionsWithAttributes(context.AttributesOnWildcard())...)
+			expressions = append(expressions, expression.ExpressionsWithAttributes(context.AttributesOnWildcard())...)
 			expectComma = true
 		case ctx.IsASupportedAttribute(token.TokenValue):
-			expressions = append(expressions, expressionWithAttribute(token.TokenValue))
+			expressions = append(expressions, expression.ExpressionWithAttribute(token.TokenValue))
 			expectComma = true
 		case ctx.IsASupportedFunction(token.TokenValue):
 			if function, err := function(token, tokenIterator, ctx); err != nil {
-				return Expressions{}, err
+				return expression.Expressions{}, err
 			} else {
-				expressions = append(expressions, expressionWithFunctionInstance(function))
+				expressions = append(expressions, expression.ExpressionWithFunctionInstance(function))
 			}
 			expectComma = true
 		}
 	}
-	return Expressions{expressions: expressions}, nil
+	return expression.Expressions{Expressions: expressions}, nil
 }
 
-func function(functionNameToken tokenizer.Token, tokenIterator *tokenizer.TokenIterator, ctx *context.ParsingApplicationContext) (*FunctionInstance, error) {
-	var parseFunction func(functionNameToken tokenizer.Token) (*FunctionInstance, error)
+func function(
+	functionNameToken tokenizer.Token,
+	tokenIterator *tokenizer.TokenIterator,
+	ctx *context.ParsingApplicationContext,
+) (*expression.FunctionInstance, error) {
+	var parseFunction func(functionNameToken tokenizer.Token) (*expression.FunctionInstance, error)
 
 	aggregateFunctionStateOrNil := func(fn string) *context.FunctionState {
 		if ctx.IsAnAggregateFunction(fn) {
@@ -79,8 +84,8 @@ func function(functionNameToken tokenizer.Token, tokenIterator *tokenizer.TokenI
 		}
 		return nil
 	}
-	parseFunction = func(functionNameToken tokenizer.Token) (*FunctionInstance, error) {
-		var functionArgs []*Expression
+	parseFunction = func(functionNameToken tokenizer.Token) (*expression.FunctionInstance, error) {
+		var functionArgs []*expression.Expression
 		expectOpeningParentheses := true
 
 		for tokenIterator.HasNext() && !tokenIterator.Peek().Equals("from") {
@@ -92,23 +97,23 @@ func function(functionNameToken tokenizer.Token, tokenIterator *tokenizer.TokenI
 				}
 				expectOpeningParentheses = false
 			case token.Equals(")"):
-				return &FunctionInstance{
-					name:  functionNameToken.TokenValue,
-					args:  functionArgs,
-					state: aggregateFunctionStateOrNil(functionNameToken.TokenValue),
-				}, nil
+				return expression.FunctionInstanceWith(
+					functionNameToken.TokenValue,
+					functionArgs,
+					aggregateFunctionStateOrNil(functionNameToken.TokenValue),
+				), nil
 			case ctx.IsASupportedFunction(token.TokenValue):
 				fn, err := parseFunction(token)
 				if err != nil {
 					return nil, err
 				}
-				functionArgs = append(functionArgs, expressionWithFunctionInstance(fn))
+				functionArgs = append(functionArgs, expression.ExpressionWithFunctionInstance(fn))
 			case ctx.IsASupportedAttribute(token.TokenValue):
-				functionArgs = append(functionArgs, expressionWithAttribute(token.TokenValue))
+				functionArgs = append(functionArgs, expression.ExpressionWithAttribute(token.TokenValue))
 				expectOpeningParentheses = false
 			default:
 				if !token.Equals(",") {
-					functionArgs = append(functionArgs, expressionWithValue(token.TokenValue))
+					functionArgs = append(functionArgs, expression.ExpressionWithValue(token.TokenValue))
 				}
 			}
 		}

@@ -1,11 +1,11 @@
-package projection
+package expression
 
 import (
 	"goselect/parser/context"
 )
 
 type Expressions struct {
-	expressions []*Expression
+	Expressions []*Expression
 }
 
 type expressionType int
@@ -29,40 +29,48 @@ type FunctionInstance struct {
 	state *context.FunctionState
 }
 
-func expressionWithAttribute(attribute string) *Expression {
+func FunctionInstanceWith(name string, args []*Expression, state *context.FunctionState) *FunctionInstance {
+	return &FunctionInstance{
+		name:  name,
+		args:  args,
+		state: state,
+	}
+}
+
+func ExpressionWithAttribute(attribute string) *Expression {
 	return &Expression{
 		eType:     ExpressionTypeAttribute,
 		attribute: attribute,
 	}
 }
 
-func expressionsWithAttributes(attributes []string) []*Expression {
+func ExpressionsWithAttributes(attributes []string) []*Expression {
 	var expressions = make([]*Expression, len(attributes))
 	for index, attribute := range attributes {
-		expressions[index] = expressionWithAttribute(attribute)
+		expressions[index] = ExpressionWithAttribute(attribute)
 	}
 	return expressions
 }
 
-func expressionWithFunctionInstance(fn *FunctionInstance) *Expression {
+func ExpressionWithFunctionInstance(fn *FunctionInstance) *Expression {
 	return &Expression{
 		eType:    ExpressionTypeFunction,
 		function: fn,
 	}
 }
 
-func expressionWithValue(value string) *Expression {
+func ExpressionWithValue(value string) *Expression {
 	return &Expression{
 		eType: ExpressionTypeValue,
 		value: value,
 	}
 }
 
-func (expressions Expressions) count() int {
-	return len(expressions.expressions)
+func (expressions Expressions) Count() int {
+	return len(expressions.Expressions)
 }
 
-func (expressions Expressions) displayableAttributes() []string {
+func (expressions Expressions) DisplayableAttributes() []string {
 	var functionAsString func(expression *Expression) string
 	functionAsString = func(expression *Expression) string {
 		if !expression.isAFunction() {
@@ -84,7 +92,7 @@ func (expressions Expressions) displayableAttributes() []string {
 	}
 
 	var attributes []string
-	for _, expression := range expressions.expressions {
+	for _, expression := range expressions.Expressions {
 		if len(expression.attribute) != 0 {
 			attributes = append(attributes, expression.attribute)
 		} else if len(expression.value) != 0 {
@@ -96,7 +104,7 @@ func (expressions Expressions) displayableAttributes() []string {
 	return attributes
 }
 
-func (expressions Expressions) evaluateWith(fileAttributes *context.FileAttributes, functions *context.AllFunctions) ([]context.Value, []bool, []*Expression, error) {
+func (expressions Expressions) EvaluateWith(fileAttributes *context.FileAttributes, functions *context.AllFunctions) ([]context.Value, []bool, []*Expression, error) {
 	var execute func(expression *Expression) (context.Value, error, bool)
 
 	execute = func(expression *Expression) (context.Value, error, bool) {
@@ -135,7 +143,7 @@ func (expressions Expressions) evaluateWith(fileAttributes *context.FileAttribut
 	var fullyEvaluated []bool
 	var resultingExpressions []*Expression
 
-	for _, expression := range expressions.expressions {
+	for _, expression := range expressions.Expressions {
 		resultingExpressions = append(resultingExpressions, expression)
 		if !expression.isAFunction() {
 			values = append(values, expression.getNonFunctionValue(fileAttributes))
@@ -154,17 +162,6 @@ func (expressions Expressions) evaluateWith(fileAttributes *context.FileAttribut
 		}
 	}
 	return values, fullyEvaluated, resultingExpressions, nil
-}
-
-func (expression Expression) isAFunction() bool {
-	return expression.function != nil
-}
-
-func (expression Expression) getNonFunctionValue(fileAttributes *context.FileAttributes) context.Value {
-	if expression.eType == ExpressionTypeAttribute {
-		return fileAttributes.Get(expression.attribute)
-	}
-	return context.StringValue(expression.value)
 }
 
 func (expression *Expression) FullyEvaluate(functions *context.AllFunctions) (context.Value, error) {
@@ -193,4 +190,15 @@ func (expression *Expression) FullyEvaluate(functions *context.AllFunctions) (co
 		return functions.Execute(expression.function.name, values...)
 	}
 	return execute(expression)
+}
+
+func (expression Expression) isAFunction() bool {
+	return expression.function != nil
+}
+
+func (expression Expression) getNonFunctionValue(fileAttributes *context.FileAttributes) context.Value {
+	if expression.eType == ExpressionTypeAttribute {
+		return fileAttributes.Get(expression.attribute)
+	}
+	return context.StringValue(expression.value)
 }
