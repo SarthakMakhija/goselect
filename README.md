@@ -29,9 +29,9 @@ The idea is to provide support for `selecting` files based on various conditions
 - Support for `aggregation functions`
   - [ ] min
   - [ ] max
-  - [ ] avg
+  - [X] avg
   - [ ] sum
-  - [ ] count
+  - [X] count
   - [ ] median
 - Support for various `scalar functions`
   - [X] lower
