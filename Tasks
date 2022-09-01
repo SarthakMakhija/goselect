@@ -1,14 +1,23 @@
 1. Parse where condition
 2. Support for expressions of the form 2+3 in projection
+    - done, provided functions for these expressions
 3. Handle error conditions in each type of parsing - projection, where, order by etc
 4. Create an AST
+    - done
 5. Execute the AST
+    - done
 6. Building a finite list of supported columns
+    - done
 7. Building a finite list of supported functions
+    - done
 8. Decide on executing aggregation function Vs normal function
+    - done
 9. What if normal function is wrapped inside an aggregate function
+    - done
 10. What if an aggregate function is wrapped inside a normal function
+    - done
 11. Returning the results
+    - done
 12. Support for date/time in where condition
 13. Support for date/time in projections
 14. Handler lower case at one place for the incoming query
