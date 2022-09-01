@@ -245,65 +245,6 @@ func TestResultsWithProjectionsIncludingContainsFunction(t *testing.T) {
 	assertMatch(t, expected, queryResults)
 }
 
-func TestResultsWithProjectionsIncludingCountFunction1(t *testing.T) {
-	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name), count(lower(name)), count() from ../resources/TestResultsWithProjections/multi order by 1", newContext)
-	if err != nil {
-		t.Fatalf("error is %v", err)
-	}
-	selectQuery, err := aParser.Parse()
-	if err != nil {
-		t.Fatalf("error is %v", err)
-	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
-	expected := [][]context.Value{
-		{context.StringValue("testresultswithprojections_a.log"), context.Uint32Value(4), context.Uint32Value(4)},
-		{context.StringValue("testresultswithprojections_b.log"), context.Uint32Value(4), context.Uint32Value(4)},
-		{context.StringValue("testresultswithprojections_c.txt"), context.Uint32Value(4), context.Uint32Value(4)},
-		{context.StringValue("testresultswithprojections_d.txt"), context.Uint32Value(4), context.Uint32Value(4)},
-	}
-	assertMatch(t, expected, queryResults)
-}
-
-func TestResultsWithProjectionsIncludingAverageFunctionWithLimitReturningTheAverageForAllTheValues(t *testing.T) {
-	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select avg(len(name)) from ../resources/TestResultsWithProjections/multi limit 3", newContext)
-	if err != nil {
-		t.Fatalf("error is %v", err)
-	}
-	selectQuery, err := aParser.Parse()
-	if err != nil {
-		t.Fatalf("error is %v", err)
-	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
-	expected := [][]context.Value{
-		{context.Float64Value(32)},
-		{context.Float64Value(32)},
-		{context.Float64Value(32)},
-	}
-	assertMatch(t, expected, queryResults)
-}
-
-func TestResultsWithProjectionsIncludingAggregateFunctionInsideAScalar(t *testing.T) {
-	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(count()) from ../resources/TestResultsWithProjections/multi order by 1", newContext)
-	if err != nil {
-		t.Fatalf("error is %v", err)
-	}
-	selectQuery, err := aParser.Parse()
-	if err != nil {
-		t.Fatalf("error is %v", err)
-	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
-	expected := [][]context.Value{
-		{context.StringValue("4")},
-		{context.StringValue("4")},
-		{context.StringValue("4")},
-		{context.StringValue("4")},
-	}
-	assertMatch(t, expected, queryResults)
-}
-
 func TestResultsWithProjectionsWithoutProperParametersToAFunction(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
 	aParser, err := parser.NewParser("select name, lower() from ../resources/TestResultsWithProjections/single", newContext)
