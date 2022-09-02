@@ -10,6 +10,7 @@ const (
 	ErrorMessageMissingOrderByAttributes          = "expected a attribute after 'order by'"
 	ErrorMessageNonZeroPositivePositions          = "expected non-zero & positive order by positions"
 	ErrorMessageMissingSource                     = "expected a source path after 'from`"
+	ErrorMessageInaccessibleSource                = "expected directory path %v to exist. please check the path, also ensure that it is accessible"
 	ErrorMessageMissingCommaProjection            = "expected a comma in projection list or from keyword"
 	ErrorMessageOpeningParenthesesProjection      = "expected an opening parentheses in projection"
 	ErrorMessageInvalidProjection                 = "invalid projection, please check parentheses for all the functions"

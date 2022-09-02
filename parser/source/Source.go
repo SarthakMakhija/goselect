@@ -2,8 +2,10 @@ package source
 
 import (
 	"errors"
+	"fmt"
 	"goselect/parser/error/messages"
 	"goselect/parser/tokenizer"
+	"os"
 	"os/user"
 	"strings"
 )
@@ -16,6 +18,13 @@ func NewSource(tokenIterator *tokenizer.TokenIterator) (*Source, error) {
 	if directory, err := getDirectory(tokenIterator); err != nil {
 		return nil, err
 	} else {
+		if _, err := os.Stat(directory); err != nil {
+			if os.IsNotExist(err) {
+				return nil, errors.New(fmt.Sprintf(messages.ErrorMessageInaccessibleSource, directory))
+			} else {
+				return nil, err
+			}
+		}
 		return &Source{Directory: directory}, nil
 	}
 }

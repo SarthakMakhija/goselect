@@ -144,7 +144,7 @@ func TestParsesAQueryIntoAnASTWithLimit(t *testing.T) {
 }
 
 func TestParsesAQueryIntoAnASTWithLimitWithoutAnyOrdering(t *testing.T) {
-	parser, _ := NewParser("SELECT name, lower(name) from ~/home Limit 10", context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	parser, _ := NewParser("SELECT name, lower(name) from ~ Limit 10", context.NewContext(context.NewFunctions(), context.NewAttributes()))
 	selectStatement, _ := parser.Parse()
 
 	totalProjections := selectStatement.Projections.Count()
@@ -169,7 +169,7 @@ func TestParsesAQueryIntoAnASTWithLimitWithoutAnyOrdering(t *testing.T) {
 }
 
 func TestParsesAQueryIntoAnASTWithMultipleProjectionsInCaseInsensitiveManner(t *testing.T) {
-	parser, _ := NewParser("SELECT NAME, LOWER(NAME) FROM ../resources", context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	parser, _ := NewParser("SELECT NAME, LOWER(NAME) FROM ./resources", context.NewContext(context.NewFunctions(), context.NewAttributes()))
 	selectStatement, _ := parser.Parse()
 
 	totalProjections := selectStatement.Projections.Count()

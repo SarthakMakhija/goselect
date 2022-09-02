@@ -41,13 +41,23 @@ func TestCreatesANewSourceWithHomeDirectorySymbol1(t *testing.T) {
 
 func TestCreatesANewSourceWithHomeDirectorySymbol2(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
-	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "~/apps"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "~"))
 
 	source, _ := NewSource(tokens.Iterator())
-	expectedPath := homeDirectory() + "/apps"
+	expectedPath := homeDirectory()
 
 	if source.Directory != expectedPath {
 		t.Fatalf("Expected Directory path to be %v, received %v", expectedPath, source.Directory)
+	}
+}
+
+func TestThrowsAnErrorForInaccessiblePath(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "~/apps"))
+
+	_, err := NewSource(tokens.Iterator())
+	if err == nil {
+		t.Fatalf("Expected an error given an invalid path, received no error")
 	}
 }
 
