@@ -33,20 +33,40 @@ func (selectQueryExecutor *SelectQueryExecutor) Execute() (*EvaluatingRows, erro
 
 	var rowCount uint32 = 0
 	rows := emptyRows(selectQueryExecutor.context.AllFunctions())
+
 	for _, file := range files {
 		if rowCount >= limit && !selectQueryExecutor.query.IsOrderDefined() {
 			break
 		}
 		fileAttributes := context.ToFileAttributes(file, selectQueryExecutor.context)
-		values, fullyEvaluated, expressions, err := selectQueryExecutor.query.Projections.EvaluateWith(fileAttributes, selectQueryExecutor.context.AllFunctions())
+		shouldChoose, err := selectQueryExecutor.shouldChoose(fileAttributes)
 		if err != nil {
 			return nil, err
 		}
-		rows.addRow(values, fullyEvaluated, expressions)
-		rowCount = rowCount + 1
+		if shouldChoose {
+			values, fullyEvaluated, expressions, err := selectQueryExecutor.query.Projections.EvaluateWith(fileAttributes, selectQueryExecutor.context.AllFunctions())
+			if err != nil {
+				return nil, err
+			}
+			rows.addRow(values, fullyEvaluated, expressions)
+			rowCount = rowCount + 1
+		}
 		//handle recursion
 	}
 	newOrdering(selectQueryExecutor.query.Order).doOrder(rows)
 	//handle limit
 	return rows, nil
+}
+
+func (selectQueryExecutor SelectQueryExecutor) shouldChoose(fileAttributes *context.FileAttributes) (bool, error) {
+	if selectQueryExecutor.query.IsWhereDefined() {
+		if passesWhere, err := selectQueryExecutor.query.Where.EvaluateWith(fileAttributes, selectQueryExecutor.context.AllFunctions()); err != nil {
+			return false, err
+		} else if passesWhere {
+			return true, nil
+		} else {
+			return false, nil
+		}
+	}
+	return true, nil
 }
