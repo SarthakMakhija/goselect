@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"goselect/parser/error/messages"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -123,12 +124,19 @@ func (value Value) GetNumericAsFloat64() (float64, error) {
 }
 
 func (value Value) CompareTo(other Value) int {
+	receiver, arg := value, other
 	if value.valueType != other.valueType {
-		return -1
+		if rec, ar, possible, err := value.attemptCommonType(other); err != nil {
+			return -1
+		} else if possible {
+			receiver, arg = rec, ar
+		} else {
+			return -1
+		}
 	}
-	switch value.valueType {
+	switch receiver.valueType {
 	case ValueTypeString:
-		first, second := value.stringValue, other.stringValue
+		first, second := receiver.stringValue, arg.stringValue
 		if first == second {
 			return 0
 		}
@@ -137,7 +145,7 @@ func (value Value) CompareTo(other Value) int {
 		}
 		return 1
 	case ValueTypeInt:
-		first, second := value.intValue, other.intValue
+		first, second := receiver.intValue, arg.intValue
 		if first == second {
 			return 0
 		}
@@ -146,7 +154,7 @@ func (value Value) CompareTo(other Value) int {
 		}
 		return 1
 	case ValueTypeInt64:
-		first, second := value.int64Value, other.int64Value
+		first, second := receiver.int64Value, arg.int64Value
 		if first == second {
 			return 0
 		}
@@ -155,7 +163,7 @@ func (value Value) CompareTo(other Value) int {
 		}
 		return 1
 	case ValueTypeUint32:
-		first, second := value.uint32Value, other.uint32Value
+		first, second := receiver.uint32Value, arg.uint32Value
 		if first == second {
 			return 0
 		}
@@ -164,7 +172,7 @@ func (value Value) CompareTo(other Value) int {
 		}
 		return 1
 	case ValueTypeFloat64:
-		first, second := value.float64Value, other.float64Value
+		first, second := receiver.float64Value, arg.float64Value
 		if first == second {
 			return 0
 		}
@@ -173,13 +181,13 @@ func (value Value) CompareTo(other Value) int {
 		}
 		return 1
 	case ValueTypeBoolean:
-		first, second := value.booleanValue, other.booleanValue
+		first, second := receiver.booleanValue, arg.booleanValue
 		if first == second {
 			return 0
 		}
 		return 1
 	case ValueTypeDateTime:
-		first, second := value.timeValue, other.timeValue
+		first, second := receiver.timeValue, arg.timeValue
 		if first.Equal(second) {
 			return 0
 		}
@@ -189,6 +197,91 @@ func (value Value) CompareTo(other Value) int {
 		return 1
 	}
 	return -1
+}
+
+func (value Value) attemptCommonType(other Value) (Value, Value, bool, error) {
+	switch {
+	case (value.valueType == ValueTypeInt ||
+		value.valueType == ValueTypeInt64 ||
+		value.valueType == ValueTypeUint32) && other.valueType == ValueTypeFloat64:
+		if v, err := value.GetNumericAsFloat64(); err != nil {
+			return value, other, false, err
+		} else {
+			return Float64Value(v), other, true, nil
+		}
+	case value.valueType == ValueTypeFloat64 &&
+		(other.valueType == ValueTypeInt ||
+			other.valueType == ValueTypeInt64 ||
+			other.valueType == ValueTypeUint32):
+		if v, err := other.GetNumericAsFloat64(); err != nil {
+			return value, other, false, err
+		} else {
+			return value, Float64Value(v), true, nil
+		}
+	case value.valueType == ValueTypeInt &&
+		other.valueType == ValueTypeInt64:
+		return Int64Value(int64(value.intValue)), other, true, nil
+	case value.valueType == ValueTypeInt64 &&
+		other.valueType == ValueTypeInt:
+		return value, Int64Value(int64(other.intValue)), true, nil
+	case value.valueType == ValueTypeInt &&
+		other.valueType == ValueTypeUint32:
+		return Uint32Value(uint32(value.intValue)), other, true, nil
+	case value.valueType == ValueTypeUint32 &&
+		other.valueType == ValueTypeInt:
+		return value, Uint32Value(uint32(other.intValue)), true, nil
+	case value.valueType == ValueTypeUint32 &&
+		other.valueType == ValueTypeInt64:
+		if v, err := value.GetNumericAsFloat64(); err != nil {
+			return value, other, false, err
+		} else {
+			if o, err := other.GetNumericAsFloat64(); err != nil {
+				return value, other, false, err
+			} else {
+				return Float64Value(v), Float64Value(o), true, nil
+			}
+		}
+	case value.valueType == ValueTypeString &&
+		other.valueType == ValueTypeBoolean:
+		if strings.ToLower(value.stringValue) == "true" || strings.ToLower(value.stringValue) == "y" {
+			return BooleanValue(true), other, true, nil
+		}
+		if strings.ToLower(value.stringValue) == "false" || strings.ToLower(value.stringValue) == "n" {
+			return BooleanValue(false), other, true, nil
+		}
+		return value, other, false, nil
+	case value.valueType == ValueTypeBoolean &&
+		other.valueType == ValueTypeString:
+		if strings.ToLower(other.stringValue) == "true" || strings.ToLower(other.stringValue) == "y" {
+			return value, BooleanValue(true), true, nil
+		}
+		if strings.ToLower(other.stringValue) == "false" || strings.ToLower(other.stringValue) == "n" {
+			return value, BooleanValue(false), true, nil
+		}
+		return value, other, false, nil
+	case value.valueType == ValueTypeString && other.isNumericType():
+		if v, err := value.GetNumericAsFloat64(); err != nil {
+			return value, other, false, err
+		} else {
+			if o, err := other.GetNumericAsFloat64(); err != nil {
+				return value, other, false, err
+			} else {
+				return Float64Value(v), Float64Value(o), true, nil
+			}
+		}
+	case value.isNumericType() && other.valueType == ValueTypeString:
+		if v, err := value.GetNumericAsFloat64(); err != nil {
+			return value, other, false, err
+		} else {
+			if o, err := other.GetNumericAsFloat64(); err != nil {
+				return value, other, false, err
+			} else {
+				return Float64Value(v), Float64Value(o), true, nil
+			}
+		}
+	}
+	//Handle time
+	return value, other, false, nil
 }
 
 func (value Value) GetAsString() string {
@@ -212,4 +305,14 @@ func (value Value) GetAsString() string {
 		return value.timeValue.String()
 	}
 	return ""
+}
+
+func (value Value) isNumericType() bool {
+	if value.valueType == ValueTypeInt ||
+		value.valueType == ValueTypeInt64 ||
+		value.valueType == ValueTypeUint32 ||
+		value.valueType == ValueTypeFloat64 {
+		return true
+	}
+	return false
 }
