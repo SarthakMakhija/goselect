@@ -100,3 +100,30 @@ func TestCompareTo11(t *testing.T) {
 		t.Fatalf("Expected int and float64 values to not match but they did")
 	}
 }
+
+func TestCompareTo12(t *testing.T) {
+	value := IntValue(10)
+	other := StringValue("content")
+
+	if value.CompareTo(other) == 0 {
+		t.Fatalf("Expected int and string values to not match but they did")
+	}
+}
+
+func TestCompareTo13(t *testing.T) {
+	value := Float64Value(10)
+	other := StringValue("content")
+
+	if value.CompareTo(other) == 0 {
+		t.Fatalf("Expected float64 and string values to not match but they did")
+	}
+}
+
+func TestCompareTo14(t *testing.T) {
+	value := BooleanValue(false)
+	other := StringValue("content")
+
+	if value.CompareTo(other) == 0 {
+		t.Fatalf("Expected boolean and string values to not match but they did")
+	}
+}
