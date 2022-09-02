@@ -176,3 +176,23 @@ func TestEvaluatesWhereClauseEq3(t *testing.T) {
 		t.Fatalf("Expected where clause to evaluate to true but it did not")
 	}
 }
+
+func TestEvaluatesWhereClauseWithAnErrorGivenWhereClauseContainsAggregateFunction(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "where"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "eq"))
+	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "count"))
+	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
+	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
+	tokens.Add(tokenizer.NewToken(tokenizer.Comma, ","))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "1"))
+	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
+
+	functions := context.NewFunctions()
+	_, err := NewWhere(tokens.Iterator(), context.NewContext(functions, context.NewAttributes()))
+
+	if err == nil {
+		t.Fatalf("Expected an error clause given an aggregate function inside where clause, but received none")
+	}
+}

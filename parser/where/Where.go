@@ -108,6 +108,9 @@ func function(
 					nil,
 				), nil
 			case ctx.IsASupportedFunction(token.TokenValue):
+				if ctx.IsAnAggregateFunction(token.TokenValue) {
+					return nil, errors.New(messages.ErrorMessageAggregateFunctionInsideWhere)
+				}
 				fn, err := parseFunction(token)
 				if err != nil {
 					return nil, err

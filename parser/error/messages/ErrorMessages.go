@@ -18,6 +18,7 @@ const (
 	ErrorMessageExpectedExpressionInWhere         = "expected an expression in where clause"
 	ErrorMessageExpectedSingleExpressionInWhere   = "expected a single expression in where clause"
 	ErrorMessageInvalidWhere                      = "invalid where clause, please check parentheses for all the functions"
+	ErrorMessageAggregateFunctionInsideWhere      = "invalid where clause, aggregate functions are not supported in where clause"
 	ErrorMessageMissingParameterInScalarFunctions = "expected %v parameters in the function %v"
 	ErrorMessageIncorrectValueType                = "expected a %v value type but was not"
 	ErrorMessageIncorrectEndIndexInSubstring      = "expected the end index to be greater than the from index in substr"
