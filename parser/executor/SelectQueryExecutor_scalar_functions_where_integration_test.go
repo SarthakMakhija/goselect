@@ -118,3 +118,21 @@ func TestResultsWithAWhereClause6(t *testing.T) {
 	}
 	assertMatch(t, expected, queryResults)
 }
+
+func TestResultsWithAWhereClause7(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select lower(name) from ../resources/TestResultsWithProjections/multi where gt(lower(substr(ext, 1)), log) order by 1", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	expected := [][]context.Value{
+		{context.StringValue("testresultswithprojections_c.txt")},
+		{context.StringValue("testresultswithprojections_d.txt")},
+	}
+	assertMatch(t, expected, queryResults)
+}
