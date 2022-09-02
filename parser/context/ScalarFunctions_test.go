@@ -136,6 +136,33 @@ func TestGreaterThanReturningFalse(t *testing.T) {
 	}
 }
 
+func TestLessThanEqualReturningTrue1(t *testing.T) {
+	value, _ := NewFunctions().Execute("lte", StringValue("one"), StringValue("two"))
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != true {
+		t.Fatalf("Expected less than equal to be %v, received %v", true, actualValue)
+	}
+}
+
+func TestLessThanEqualReturningTrue2(t *testing.T) {
+	value, _ := NewFunctions().Execute("le", StringValue("1"), Float64Value(1))
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != true {
+		t.Fatalf("Expected less than equal to be %v, received %v", true, actualValue)
+	}
+}
+
+func TestLessThanEqualReturningFalse(t *testing.T) {
+	value, _ := NewFunctions().Execute("le", StringValue("5"), Float64Value(4))
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != false {
+		t.Fatalf("Expected less than equal to be %v, received %v", false, actualValue)
+	}
+}
+
 func TestLower1(t *testing.T) {
 	value, _ := NewFunctions().Execute("lower", StringValue("ABC"))
 	expected := "abc"
