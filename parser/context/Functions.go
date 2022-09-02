@@ -38,6 +38,7 @@ const (
 	FunctionNameMultiply            = "multiply"
 	FunctionNameDivide              = "divide"
 	FunctionNameEqual               = "equal"
+	FunctionNameLessThan            = "lessthan"
 	FunctionNameLower               = "lower"
 	FunctionNameUpper               = "upper"
 	FunctionNameTitle               = "title"
@@ -81,6 +82,10 @@ var functionDefinitions = map[string]*FunctionDefinition{
 	FunctionNameEqual: {
 		aliases: []string{"equal", "eq", "equals"},
 		block:   EqualFunctionBlock{},
+	},
+	FunctionNameLessThan: {
+		aliases: []string{"lt", "lessthan", "less"},
+		block:   LessThanFunctionBlock{},
 	},
 	FunctionNameLower: {
 		aliases: []string{"lower", "low"},

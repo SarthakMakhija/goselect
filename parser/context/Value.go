@@ -12,6 +12,13 @@ import (
 type valueType int
 
 const (
+	CompareToEqual       = 0
+	CompareToLessThan    = -1
+	CompareToGreaterThan = 1
+	CompareToNotPossible = -999
+)
+
+const (
 	ValueTypeString    = 1
 	ValueTypeInt       = 2
 	ValueTypeInt64     = 3
@@ -127,76 +134,76 @@ func (value Value) CompareTo(other Value) int {
 	receiver, arg := value, other
 	if value.valueType != other.valueType {
 		if rec, ar, possible, err := value.attemptCommonType(other); err != nil {
-			return -1
+			return CompareToNotPossible
 		} else if possible {
 			receiver, arg = rec, ar
 		} else {
-			return -1
+			return CompareToNotPossible
 		}
 	}
 	switch receiver.valueType {
 	case ValueTypeString:
 		first, second := receiver.stringValue, arg.stringValue
 		if first == second {
-			return 0
+			return CompareToEqual
 		}
 		if first < second {
-			return -1
+			return CompareToLessThan
 		}
-		return 1
+		return CompareToGreaterThan
 	case ValueTypeInt:
 		first, second := receiver.intValue, arg.intValue
 		if first == second {
-			return 0
+			return CompareToEqual
 		}
 		if first < second {
-			return -1
+			return CompareToLessThan
 		}
-		return 1
+		return CompareToGreaterThan
 	case ValueTypeInt64:
 		first, second := receiver.int64Value, arg.int64Value
 		if first == second {
-			return 0
+			return CompareToEqual
 		}
 		if first < second {
-			return -1
+			return CompareToLessThan
 		}
-		return 1
+		return CompareToGreaterThan
 	case ValueTypeUint32:
 		first, second := receiver.uint32Value, arg.uint32Value
 		if first == second {
-			return 0
+			return CompareToEqual
 		}
 		if first < second {
-			return -1
+			return CompareToLessThan
 		}
-		return 1
+		return CompareToGreaterThan
 	case ValueTypeFloat64:
 		first, second := receiver.float64Value, arg.float64Value
 		if first == second {
-			return 0
+			return CompareToEqual
 		}
 		if first < second {
-			return -1
+			return CompareToLessThan
 		}
-		return 1
+		return CompareToGreaterThan
 	case ValueTypeBoolean:
 		first, second := receiver.booleanValue, arg.booleanValue
 		if first == second {
-			return 0
+			return CompareToEqual
 		}
-		return 1
+		return CompareToGreaterThan
 	case ValueTypeDateTime:
 		first, second := receiver.timeValue, arg.timeValue
 		if first.Equal(second) {
-			return 0
+			return CompareToEqual
 		}
 		if first.Before(second) {
-			return -1
+			return CompareToLessThan
 		}
-		return 1
+		return CompareToGreaterThan
 	}
-	return -1
+	return CompareToNotPossible
 }
 
 func (value Value) attemptCommonType(other Value) (Value, Value, bool, error) {
