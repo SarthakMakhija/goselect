@@ -6,6 +6,7 @@ import (
 )
 
 type CountFunctionBlock struct{}
+type CountDistinctFunctionBlock struct{}
 type AverageFunctionBlock struct{}
 
 func (c *CountFunctionBlock) initialState() *FunctionState {
@@ -23,8 +24,39 @@ func (c *CountFunctionBlock) finalValue(currentState *FunctionState, _ []Value) 
 	return Uint32Value(1), nil
 }
 
+func (c *CountDistinctFunctionBlock) initialState() *FunctionState {
+	return &FunctionState{
+		extras:    make(map[interface{}]Value),
+		isUpdated: false,
+	}
+}
+
+func (c *CountDistinctFunctionBlock) run(initialState *FunctionState, args ...Value) (*FunctionState, error) {
+	if err := ensureNParametersOrError(args, FunctionNameCountDistinct, 1); err != nil {
+		return nil, err
+	}
+	theOnlyArgument, existenceByValue := args[0].GetAsString(), initialState.extras
+	existenceByValue[theOnlyArgument] = BooleanValue(true)
+
+	return &FunctionState{
+		extras:    existenceByValue,
+		isUpdated: true,
+	}, nil
+}
+
+func (c *CountDistinctFunctionBlock) finalValue(currentState *FunctionState, _ []Value) (Value, error) {
+	if currentState.isUpdated {
+		return Uint32Value(uint32(len(currentState.extras))), nil
+	}
+	return Uint32Value(1), nil
+}
+
 func (a *AverageFunctionBlock) initialState() *FunctionState {
-	return &FunctionState{Initial: Float64Value(0.0), extras: make(map[interface{}]Value), isUpdated: false}
+	return &FunctionState{
+		Initial:   Float64Value(0.0),
+		extras:    make(map[interface{}]Value),
+		isUpdated: false,
+	}
 }
 
 func (a *AverageFunctionBlock) run(initialState *FunctionState, args ...Value) (*FunctionState, error) {

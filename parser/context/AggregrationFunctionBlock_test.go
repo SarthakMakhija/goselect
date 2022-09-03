@@ -19,6 +19,51 @@ func TestCount(t *testing.T) {
 	}
 }
 
+func TestCountDistinct1(t *testing.T) {
+	allFunctions := NewFunctions()
+	initialState := allFunctions.InitialState("countd")
+
+	state, _ := allFunctions.ExecuteAggregate("countd", initialState, IntValue(10))
+	state, _ = allFunctions.ExecuteAggregate("countd", state, IntValue(2))
+	state, _ = allFunctions.ExecuteAggregate("countd", state, IntValue(10))
+
+	finalValue, _ := allFunctions.FinalValue("countd", state, nil)
+	actualValue := finalValue.GetAsString()
+	if actualValue != "2" {
+		t.Fatalf("Expected count distinct to be %v, received %v", "2", actualValue)
+	}
+}
+
+func TestCountDistinct2(t *testing.T) {
+	allFunctions := NewFunctions()
+	initialState := allFunctions.InitialState("countd")
+
+	state, _ := allFunctions.ExecuteAggregate("countd", initialState, BooleanValue(true))
+	state, _ = allFunctions.ExecuteAggregate("countd", state, BooleanValue(true))
+	state, _ = allFunctions.ExecuteAggregate("countd", state, BooleanValue(true))
+
+	finalValue, _ := allFunctions.FinalValue("countd", state, nil)
+	actualValue := finalValue.GetAsString()
+	if actualValue != "1" {
+		t.Fatalf("Expected count distinct to be %v, received %v", "1", actualValue)
+	}
+}
+
+func TestCountDistinct3(t *testing.T) {
+	allFunctions := NewFunctions()
+	initialState := allFunctions.InitialState("countd")
+
+	state, _ := allFunctions.ExecuteAggregate("countd", initialState, BooleanValue(true))
+	state, _ = allFunctions.ExecuteAggregate("countd", state, BooleanValue(true))
+	state, _ = allFunctions.ExecuteAggregate("countd", state, BooleanValue(false))
+
+	finalValue, _ := allFunctions.FinalValue("countd", state, nil)
+	actualValue := finalValue.GetAsString()
+	if actualValue != "2" {
+		t.Fatalf("Expected count distinct to be %v, received %v", "2", actualValue)
+	}
+}
+
 func TestAverage(t *testing.T) {
 	allFunctions := NewFunctions()
 	initialState := allFunctions.InitialState("average")

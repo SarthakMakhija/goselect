@@ -138,6 +138,29 @@ func (value Value) GetNumericAsFloat64() (float64, error) {
 	return -1, errors.New(messages.ErrorMessageExpectedNumericArgument)
 }
 
+func (value Value) GetAsString() string {
+	switch value.valueType {
+	case ValueTypeString:
+		return value.stringValue
+	case ValueTypeInt:
+		return strconv.Itoa(value.intValue)
+	case ValueTypeInt64:
+		return strconv.FormatInt(value.int64Value, 10)
+	case ValueTypeUint32:
+		return strconv.Itoa(int(value.uint32Value))
+	case ValueTypeFloat64:
+		return strconv.FormatFloat(value.float64Value, 'f', 2, 64)
+	case ValueTypeBoolean:
+		if value.booleanValue {
+			return "Y"
+		}
+		return "N"
+	case ValueTypeDateTime:
+		return value.timeValue.String()
+	}
+	return ""
+}
+
 func (value Value) CompareTo(other Value) int {
 	receiver, arg := value, other
 	if value.valueType != other.valueType {
@@ -297,29 +320,6 @@ func (value Value) attemptCommonType(other Value) (Value, Value, bool, error) {
 	}
 	//Handle time
 	return value, other, false, nil
-}
-
-func (value Value) GetAsString() string {
-	switch value.valueType {
-	case ValueTypeString:
-		return value.stringValue
-	case ValueTypeInt:
-		return strconv.Itoa(value.intValue)
-	case ValueTypeInt64:
-		return strconv.FormatInt(value.int64Value, 10)
-	case ValueTypeUint32:
-		return strconv.Itoa(int(value.uint32Value))
-	case ValueTypeFloat64:
-		return strconv.FormatFloat(value.float64Value, 'f', 2, 64)
-	case ValueTypeBoolean:
-		if value.booleanValue {
-			return "Y"
-		}
-		return "N"
-	case ValueTypeDateTime:
-		return value.timeValue.String()
-	}
-	return ""
 }
 
 func (value Value) isNumericType() bool {
