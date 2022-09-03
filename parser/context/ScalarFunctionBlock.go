@@ -18,6 +18,7 @@ type EqualFunctionBlock struct{}
 type LessThanFunctionBlock struct{}
 type GreaterThanFunctionBlock struct{}
 type LessThanEqualFunctionBlock struct{}
+type GreaterThanEqualFunctionBlock struct{}
 type LowerFunctionBlock struct{}
 type UpperFunctionBlock struct{}
 type TitleFunctionBlock struct{}
@@ -136,6 +137,16 @@ func (l LessThanEqualFunctionBlock) run(args ...Value) (Value, error) {
 		return EmptyValue(), err
 	}
 	if args[0].CompareTo(args[1]) == CompareToLessThan || args[0].CompareTo(args[1]) == CompareToEqual {
+		return BooleanValue(true), nil
+	}
+	return BooleanValue(false), nil
+}
+
+func (g GreaterThanEqualFunctionBlock) run(args ...Value) (Value, error) {
+	if err := ensureNParametersOrError(args, FunctionNameGreaterThanEqual, 2); err != nil {
+		return EmptyValue(), err
+	}
+	if args[0].CompareTo(args[1]) == CompareToGreaterThan || args[0].CompareTo(args[1]) == CompareToEqual {
 		return BooleanValue(true), nil
 	}
 	return BooleanValue(false), nil

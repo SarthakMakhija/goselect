@@ -41,6 +41,7 @@ const (
 	FunctionNameLessThan            = "lessthan"
 	FunctionNameGreaterThan         = "greaterthan"
 	FunctionNameLessThanEqual       = "lessthanequal"
+	FunctionNameGreaterThanEqual    = "greaterthanequal"
 	FunctionNameLower               = "lower"
 	FunctionNameUpper               = "upper"
 	FunctionNameTitle               = "title"
@@ -96,6 +97,10 @@ var functionDefinitions = map[string]*FunctionDefinition{
 	FunctionNameLessThanEqual: {
 		aliases: []string{"lte", "lessthanequal", "lessequal", "le"},
 		block:   LessThanEqualFunctionBlock{},
+	},
+	FunctionNameGreaterThanEqual: {
+		aliases: []string{"gte", "greaterthanequal", "greaterequal", "ge"},
+		block:   GreaterThanEqualFunctionBlock{},
 	},
 	FunctionNameLower: {
 		aliases: []string{"lower", "low"},
