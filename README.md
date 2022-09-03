@@ -53,7 +53,7 @@ The idea is to provide support for `selecting` files based on various conditions
   - [X] or
   - [X] and 
   - [X] not 
-  - [ ] like 
+  - [X] like 
   - [X] lower
   - [X] upper
   - [X] title
