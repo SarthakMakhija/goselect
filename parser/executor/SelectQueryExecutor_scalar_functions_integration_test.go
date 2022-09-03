@@ -20,7 +20,7 @@ func TestResultsWithProjections1(t *testing.T) {
 	}
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
 	expected := [][]context.Value{
-		{context.StringValue("TestResultsWithProjections_A.txt"), context.EmptyValue()},
+		{context.StringValue("TestResultsWithProjections_A.txt"), context.EmptyValue},
 	}
 	assertMatch(t, expected, queryResults, 1)
 }

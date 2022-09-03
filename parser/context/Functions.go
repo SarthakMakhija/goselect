@@ -303,7 +303,7 @@ func (functions *AllFunctions) FinalValue(fn string, state *FunctionState, value
 	if function.isAggregate {
 		return function.aggregateBlock.finalValue(state, values)
 	}
-	return EmptyValue(), nil
+	return EmptyValue, nil
 }
 
 var nowFunc = func() time.Time {

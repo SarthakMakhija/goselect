@@ -29,6 +29,14 @@ const (
 	ValueTypeUndefined = 8
 )
 
+var (
+	EmptyValue        = emptyValue()
+	zeroUint32Value   = Uint32Value(0)
+	oneUint32Value    = Uint32Value(1)
+	trueBooleanValue  = BooleanValue(true)
+	falseBooleanValue = BooleanValue(false)
+)
+
 type Value struct {
 	valueType    valueType
 	stringValue  string
@@ -89,7 +97,7 @@ func DateTimeValue(time time.Time) Value {
 	}
 }
 
-func EmptyValue() Value {
+func emptyValue() Value {
 	return Value{valueType: ValueTypeUndefined}
 }
 

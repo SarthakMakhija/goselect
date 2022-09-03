@@ -109,5 +109,5 @@ func (fileAttributes *FileAttributes) Get(attribute string) Value {
 	if ok {
 		return v
 	}
-	return EmptyValue()
+	return EmptyValue
 }

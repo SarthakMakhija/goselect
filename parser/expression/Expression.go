@@ -155,7 +155,7 @@ func (expression Expression) Evaluate(
 	for _, arg := range expression.function.args {
 		v, err, isAggregate := arg.Evaluate(fileAttributes, functions)
 		if err != nil {
-			return context.EmptyValue(), err, isAggregate
+			return context.EmptyValue, err, isAggregate
 		}
 		if isAggregate {
 			isAtleastOneExpressionAnAggregateFunction = true
@@ -167,7 +167,7 @@ func (expression Expression) Evaluate(
 	if isAnAggregateFunction && !isAtleastOneExpressionAnAggregateFunction {
 		state, err := functions.ExecuteAggregate(expression.function.name, expression.function.state, values...)
 		if err != nil {
-			return context.EmptyValue(), err, true
+			return context.EmptyValue, err, true
 		}
 		expression.function.state = state
 		return state.Initial, err, true
@@ -176,21 +176,21 @@ func (expression Expression) Evaluate(
 		v, err := functions.Execute(expression.function.name, values...)
 		return v, err, isAtleastOneExpressionAnAggregateFunction
 	}
-	return context.EmptyValue(), nil, isAtleastOneExpressionAnAggregateFunction
+	return context.EmptyValue, nil, isAtleastOneExpressionAnAggregateFunction
 }
 
 func (expression *Expression) FullyEvaluate(functions *context.AllFunctions) (context.Value, error) {
 	var execute func(expression *Expression) (context.Value, error)
 	execute = func(expression *Expression) (context.Value, error) {
 		if !expression.isAFunction() {
-			return context.EmptyValue(), nil
+			return context.EmptyValue, nil
 		}
 		var values []context.Value
 		for _, arg := range expression.function.args {
 			if arg.isAFunction() && functions.IsAnAggregateFunction(arg.function.name) {
 				v, err := execute(arg)
 				if err != nil {
-					return context.EmptyValue(), err
+					return context.EmptyValue, err
 				}
 				values = append(values, v)
 			} else {

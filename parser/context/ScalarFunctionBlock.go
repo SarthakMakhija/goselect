@@ -47,13 +47,13 @@ type SubstringFunctionBlock struct{}
 
 func (a AddFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameAdd, 2); err != nil {
-		return EmptyValue(), err
+		return EmptyValue, err
 	}
 	var result float64 = 0
 	for _, arg := range args {
 		asFloat64, err := arg.GetNumericAsFloat64()
 		if err != nil {
-			return EmptyValue(), fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameAdd, err)
+			return EmptyValue, fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameAdd, err)
 		}
 		result = result + asFloat64
 	}
@@ -62,28 +62,28 @@ func (a AddFunctionBlock) run(args ...Value) (Value, error) {
 
 func (s SubtractFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameSubtract, 2); err != nil {
-		return EmptyValue(), err
+		return EmptyValue, err
 	}
 	oneFloat64, err := args[0].GetNumericAsFloat64()
 	if err != nil {
-		return EmptyValue(), fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameSubtract, err)
+		return EmptyValue, fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameSubtract, err)
 	}
 	otherFloat64, err := args[1].GetNumericAsFloat64()
 	if err != nil {
-		return EmptyValue(), fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameSubtract, err)
+		return EmptyValue, fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameSubtract, err)
 	}
 	return Float64Value(oneFloat64 - otherFloat64), nil
 }
 
 func (m MultipleFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameMultiply, 2); err != nil {
-		return EmptyValue(), err
+		return EmptyValue, err
 	}
 	var result float64 = 1
 	for _, arg := range args {
 		asFloat64, err := arg.GetNumericAsFloat64()
 		if err != nil {
-			return EmptyValue(), fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameMultiply, err)
+			return EmptyValue, fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameMultiply, err)
 		}
 		result = result * asFloat64
 	}
@@ -92,132 +92,132 @@ func (m MultipleFunctionBlock) run(args ...Value) (Value, error) {
 
 func (d DivideFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameDivide, 2); err != nil {
-		return EmptyValue(), err
+		return EmptyValue, err
 	}
 	oneFloat64, err := args[0].GetNumericAsFloat64()
 	if err != nil {
-		return EmptyValue(), err
+		return EmptyValue, err
 	}
 	otherFloat64, err := args[1].GetNumericAsFloat64()
 	if err != nil {
-		return EmptyValue(), fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameDivide, err)
+		return EmptyValue, fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameDivide, err)
 	}
 	if otherFloat64 == float64(0) {
-		return EmptyValue(), errors.New(messages.ErrorMessageExpectedNonZeroInDivide)
+		return EmptyValue, errors.New(messages.ErrorMessageExpectedNonZeroInDivide)
 	}
 	return Float64Value(oneFloat64 / otherFloat64), nil
 }
 
 func (e EqualFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameEqual, 2); err != nil {
-		return EmptyValue(), err
+		return EmptyValue, err
 	}
 	if args[0].CompareTo(args[1]) == CompareToEqual {
-		return BooleanValue(true), nil
+		return trueBooleanValue, nil
 	}
-	return BooleanValue(false), nil
+	return falseBooleanValue, nil
 }
 
 func (n NotEqualFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameEqual, 2); err != nil {
-		return EmptyValue(), err
+		return EmptyValue, err
 	}
 	if args[0].CompareTo(args[1]) == CompareToEqual {
-		return BooleanValue(false), nil
+		return falseBooleanValue, nil
 	}
-	return BooleanValue(true), nil
+	return trueBooleanValue, nil
 }
 
 func (l LessThanFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameLessThan, 2); err != nil {
-		return EmptyValue(), err
+		return EmptyValue, err
 	}
 	if args[0].CompareTo(args[1]) == CompareToLessThan {
-		return BooleanValue(true), nil
+		return trueBooleanValue, nil
 	}
-	return BooleanValue(false), nil
+	return falseBooleanValue, nil
 }
 
 func (g GreaterThanFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameLessThan, 2); err != nil {
-		return EmptyValue(), err
+		return EmptyValue, err
 	}
 	if args[0].CompareTo(args[1]) == CompareToGreaterThan {
-		return BooleanValue(true), nil
+		return trueBooleanValue, nil
 	}
-	return BooleanValue(false), nil
+	return falseBooleanValue, nil
 }
 
 func (l LessThanEqualFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameLessThanEqual, 2); err != nil {
-		return EmptyValue(), err
+		return EmptyValue, err
 	}
 	if args[0].CompareTo(args[1]) == CompareToLessThan || args[0].CompareTo(args[1]) == CompareToEqual {
-		return BooleanValue(true), nil
+		return trueBooleanValue, nil
 	}
-	return BooleanValue(false), nil
+	return falseBooleanValue, nil
 }
 
 func (g GreaterThanEqualFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameGreaterThanEqual, 2); err != nil {
-		return EmptyValue(), err
+		return EmptyValue, err
 	}
 	if args[0].CompareTo(args[1]) == CompareToGreaterThan || args[0].CompareTo(args[1]) == CompareToEqual {
-		return BooleanValue(true), nil
+		return trueBooleanValue, nil
 	}
-	return BooleanValue(false), nil
+	return falseBooleanValue, nil
 }
 
 func (o OrFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameOr, 1); err != nil {
-		return EmptyValue(), err
+		return EmptyValue, err
 	}
 	for _, arg := range args {
 		result, err := arg.GetBoolean()
 		if err != nil {
-			return EmptyValue(), fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameOr, err)
+			return EmptyValue, fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameOr, err)
 		}
 		if result == true {
-			return BooleanValue(true), nil
+			return trueBooleanValue, nil
 		}
 	}
-	return BooleanValue(false), nil
+	return falseBooleanValue, nil
 }
 
 func (a AndFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameAnd, 1); err != nil {
-		return EmptyValue(), err
+		return EmptyValue, err
 	}
 	for _, arg := range args {
 		result, err := arg.GetBoolean()
 		if err != nil {
-			return EmptyValue(), fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameAnd, err)
+			return EmptyValue, fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameAnd, err)
 		}
 		if result == false {
-			return BooleanValue(false), nil
+			return falseBooleanValue, nil
 		}
 	}
-	return BooleanValue(true), nil
+	return trueBooleanValue, nil
 }
 
 func (n NotFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameNot, 1); err != nil {
-		return EmptyValue(), err
+		return EmptyValue, err
 	}
 	result, err := args[0].GetBoolean()
 	if err != nil {
-		return EmptyValue(), fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameNot, err)
+		return EmptyValue, fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameNot, err)
 	}
 	return BooleanValue(!result), nil
 }
 
 func (l LikeFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameLike, 2); err != nil {
-		return EmptyValue(), err
+		return EmptyValue, err
 	}
 	toMatch := args[0].GetAsString()
 	if compiled, err := regexp.Compile(args[1].GetAsString()); err != nil {
-		return EmptyValue(), err
+		return EmptyValue, err
 	} else {
 		return BooleanValue(compiled.MatchString(toMatch)), nil
 	}
@@ -225,28 +225,28 @@ func (l LikeFunctionBlock) run(args ...Value) (Value, error) {
 
 func (l LowerFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameLower, 1); err != nil {
-		return EmptyValue(), err
+		return EmptyValue, err
 	}
 	return StringValue(strings.ToLower(args[0].GetAsString())), nil
 }
 
 func (u UpperFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameUpper, 1); err != nil {
-		return EmptyValue(), err
+		return EmptyValue, err
 	}
 	return StringValue(strings.ToUpper(args[0].GetAsString())), nil
 }
 
 func (t TitleFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameTitle, 1); err != nil {
-		return EmptyValue(), err
+		return EmptyValue, err
 	}
 	return StringValue(strings.Title(args[0].GetAsString())), nil
 }
 
 func (b Base64FunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameBase64, 1); err != nil {
-		return EmptyValue(), err
+		return EmptyValue, err
 	}
 	d := []byte(args[0].GetAsString())
 	return StringValue(b64.StdEncoding.EncodeToString(d)), nil
@@ -254,28 +254,28 @@ func (b Base64FunctionBlock) run(args ...Value) (Value, error) {
 
 func (l LengthFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameLength, 1); err != nil {
-		return EmptyValue(), err
+		return EmptyValue, err
 	}
 	return IntValue(len(args[0].GetAsString())), nil
 }
 
 func (t TrimFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameTrim, 1); err != nil {
-		return EmptyValue(), err
+		return EmptyValue, err
 	}
 	return StringValue(strings.TrimSpace(args[0].GetAsString())), nil
 }
 
 func (l LeftTrimFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameLeftTrim, 1); err != nil {
-		return EmptyValue(), err
+		return EmptyValue, err
 	}
 	return StringValue(strings.TrimLeft(args[0].GetAsString(), " ")), nil
 }
 
 func (r RightTrimFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameRightTrim, 1); err != nil {
-		return EmptyValue(), err
+		return EmptyValue, err
 	}
 	return StringValue(strings.TrimRight(args[0].GetAsString(), " ")), nil
 }
@@ -307,7 +307,7 @@ func (d DayOfWeekFunctionBlock) run(_ ...Value) (Value, error) {
 
 func (w WorkingDirectoryFunctionBlock) run(_ ...Value) (Value, error) {
 	if dir, err := os.Getwd(); err != nil {
-		return EmptyValue(), err
+		return EmptyValue, err
 	} else {
 		return StringValue(dir), nil
 	}
@@ -331,27 +331,27 @@ func (c ConcatWithSeparatorFunctionBlock) run(args ...Value) (Value, error) {
 
 func (c ContainsFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameContains, 2); err != nil {
-		return EmptyValue(), err
+		return EmptyValue, err
 	}
 	return BooleanValue(strings.Contains(args[0].stringValue, args[1].GetAsString())), nil
 }
 
 func (s SubstringFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameSubstring, 2); err != nil {
-		return EmptyValue(), err
+		return EmptyValue, err
 	}
 	str := args[0].GetAsString()
 	length := len(str)
 	from, err := strconv.Atoi(args[1].GetAsString())
 	if err != nil {
-		return EmptyValue(), fmt.Errorf(
+		return EmptyValue, fmt.Errorf(
 			messages.ErrorMessageFunctionNamePrefixWithExistingError,
 			FunctionNameSubstring,
 			messages.ErrorMessageIllegalFromToIndexInSubstring,
 		)
 	}
 	if from < 0 {
-		return EmptyValue(), fmt.Errorf(
+		return EmptyValue, fmt.Errorf(
 			messages.ErrorMessageFunctionNamePrefixWithExistingError,
 			FunctionNameSubstring,
 			messages.ErrorMessageIllegalFromToIndexInSubstring,
@@ -364,21 +364,21 @@ func (s SubstringFunctionBlock) run(args ...Value) (Value, error) {
 	if len(args) >= 3 {
 		to, err = strconv.Atoi(args[2].GetAsString())
 		if err != nil {
-			return EmptyValue(), fmt.Errorf(
+			return EmptyValue, fmt.Errorf(
 				messages.ErrorMessageFunctionNamePrefixWithExistingError,
 				FunctionNameSubstring,
 				messages.ErrorMessageIllegalFromToIndexInSubstring,
 			)
 		}
 		if to < 0 {
-			return EmptyValue(), fmt.Errorf(
+			return EmptyValue, fmt.Errorf(
 				messages.ErrorMessageFunctionNamePrefixWithExistingError,
 				FunctionNameSubstring,
 				messages.ErrorMessageIllegalFromToIndexInSubstring,
 			)
 		}
 		if to < from {
-			return EmptyValue(), fmt.Errorf(
+			return EmptyValue, fmt.Errorf(
 				messages.ErrorMessageFunctionNamePrefixWithExistingError,
 				FunctionNameSubstring,
 				messages.ErrorMessageIncorrectEndIndexInSubstring,

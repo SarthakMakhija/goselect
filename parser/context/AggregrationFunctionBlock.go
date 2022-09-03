@@ -11,7 +11,7 @@ type SumFunctionBlock struct{}
 type AverageFunctionBlock struct{}
 
 func (c *CountFunctionBlock) initialState() *FunctionState {
-	return &FunctionState{Initial: Uint32Value(0), isUpdated: false}
+	return &FunctionState{Initial: zeroUint32Value, isUpdated: false}
 }
 
 func (c *CountFunctionBlock) run(initialState *FunctionState, _ ...Value) (*FunctionState, error) {
@@ -22,7 +22,7 @@ func (c *CountFunctionBlock) finalValue(currentState *FunctionState, _ []Value) 
 	if currentState.isUpdated {
 		return currentState.Initial, nil
 	}
-	return Uint32Value(1), nil
+	return oneUint32Value, nil
 }
 
 func (c *CountDistinctFunctionBlock) initialState() *FunctionState {
@@ -37,7 +37,7 @@ func (c *CountDistinctFunctionBlock) run(initialState *FunctionState, args ...Va
 		return nil, err
 	}
 	theOnlyArgument, existenceByValue := args[0].GetAsString(), initialState.extras
-	existenceByValue[theOnlyArgument] = BooleanValue(true)
+	existenceByValue[theOnlyArgument] = trueBooleanValue
 
 	return &FunctionState{
 		extras:    existenceByValue,
@@ -49,7 +49,7 @@ func (c *CountDistinctFunctionBlock) finalValue(currentState *FunctionState, _ [
 	if currentState.isUpdated {
 		return Uint32Value(uint32(len(currentState.extras))), nil
 	}
-	return Uint32Value(1), nil
+	return oneUint32Value, nil
 }
 
 func (c *SumFunctionBlock) initialState() *FunctionState {
@@ -78,10 +78,10 @@ func (c *SumFunctionBlock) finalValue(currentState *FunctionState, values []Valu
 		return currentState.Initial, nil
 	}
 	if err := ensureNParametersOrError(values, FunctionNameSum, 1); err != nil {
-		return EmptyValue(), err
+		return EmptyValue, err
 	}
 	if v, err := values[0].GetNumericAsFloat64(); err != nil {
-		return EmptyValue(), fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameSum, err)
+		return EmptyValue, fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameSum, err)
 	} else {
 		return Float64Value(v), nil
 	}
@@ -117,10 +117,10 @@ func (a *AverageFunctionBlock) finalValue(currentState *FunctionState, values []
 		return Float64Value(asFloat64 / ((float64)(currentState.extras["count"].uint32Value))), nil
 	}
 	if err := ensureNParametersOrError(values, FunctionNameAverage, 1); err != nil {
-		return EmptyValue(), err
+		return EmptyValue, err
 	}
 	if v, err := values[0].GetNumericAsFloat64(); err != nil {
-		return EmptyValue(), fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameAverage, err)
+		return EmptyValue, fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameAverage, err)
 	} else {
 		return Float64Value(v), nil
 	}
