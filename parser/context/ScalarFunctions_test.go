@@ -190,6 +190,24 @@ func TestGreaterThanEqualReturningFalse(t *testing.T) {
 	}
 }
 
+func TestOrReturningTrue(t *testing.T) {
+	value, _ := NewFunctions().Execute("or", BooleanValue(false), StringValue("n"), BooleanValue(true))
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != true {
+		t.Fatalf("Expected or to be %v, received %v", true, actualValue)
+	}
+}
+
+func TestOrReturningFalse(t *testing.T) {
+	value, _ := NewFunctions().Execute("or", BooleanValue(false), StringValue("n"), BooleanValue(false))
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != false {
+		t.Fatalf("Expected or to be %v, received %v", false, actualValue)
+	}
+}
+
 func TestLower1(t *testing.T) {
 	value, _ := NewFunctions().Execute("lower", StringValue("ABC"))
 	expected := "abc"

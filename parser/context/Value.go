@@ -108,10 +108,18 @@ func (value Value) GetInt() (int, error) {
 }
 
 func (value Value) GetBoolean() (bool, error) {
-	if value.valueType != ValueTypeBoolean {
-		return false, errors.New(fmt.Sprintf(messages.ErrorMessageIncorrectValueType, "boolean"))
+	if value.valueType == ValueTypeString {
+		if strings.ToLower(value.stringValue) == "true" || strings.ToLower(value.stringValue) == "y" {
+			return true, nil
+		}
+		if strings.ToLower(value.stringValue) == "false" || strings.ToLower(value.stringValue) == "n" {
+			return false, nil
+		}
 	}
-	return value.booleanValue, nil
+	if value.valueType == ValueTypeBoolean {
+		return value.booleanValue, nil
+	}
+	return false, errors.New(fmt.Sprintf(messages.ErrorMessageIncorrectValueType, "boolean"))
 }
 
 func (value Value) GetNumericAsFloat64() (float64, error) {
