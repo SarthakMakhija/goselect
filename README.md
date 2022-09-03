@@ -38,6 +38,7 @@ The idea is to provide support for `selecting` files based on various conditions
   - [ ] sum
   - [X] count
   - [ ] median
+  - [ ] countDistinct
 - Support for various `scalar functions`
   - [X] add
   - [X] subtract
