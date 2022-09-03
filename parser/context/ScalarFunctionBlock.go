@@ -21,6 +21,7 @@ type LessThanEqualFunctionBlock struct{}
 type GreaterThanEqualFunctionBlock struct{}
 type OrFunctionBlock struct{}
 type AndFunctionBlock struct{}
+type NotFunctionBlock struct{}
 type LowerFunctionBlock struct{}
 type UpperFunctionBlock struct{}
 type TitleFunctionBlock struct{}
@@ -184,6 +185,17 @@ func (a AndFunctionBlock) run(args ...Value) (Value, error) {
 		}
 	}
 	return BooleanValue(true), nil
+}
+
+func (n NotFunctionBlock) run(args ...Value) (Value, error) {
+	if err := ensureNParametersOrError(args, FunctionNameNot, 1); err != nil {
+		return EmptyValue(), err
+	}
+	result, err := args[0].GetBoolean()
+	if err != nil {
+		return EmptyValue(), err
+	}
+	return BooleanValue(!result), nil
 }
 
 func (l LowerFunctionBlock) run(args ...Value) (Value, error) {

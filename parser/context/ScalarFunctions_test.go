@@ -226,6 +226,24 @@ func TestAndReturningFalse(t *testing.T) {
 	}
 }
 
+func TestNotReturningTrue(t *testing.T) {
+	value, _ := NewFunctions().Execute("not", BooleanValue(false))
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != true {
+		t.Fatalf("Expected not to be %v, received %v", true, actualValue)
+	}
+}
+
+func TestNotReturningFalse(t *testing.T) {
+	value, _ := NewFunctions().Execute("not", BooleanValue(true))
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != false {
+		t.Fatalf("Expected not to be %v, received %v", false, actualValue)
+	}
+}
+
 func TestLower1(t *testing.T) {
 	value, _ := NewFunctions().Execute("lower", StringValue("ABC"))
 	expected := "abc"
