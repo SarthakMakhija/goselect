@@ -9,7 +9,7 @@ import (
 
 func TestEvaluatingRowAllAttributesThatAreFullyEvaluated(t *testing.T) {
 	_ = context.NewContext(context.NewFunctions(), context.NewAttributes())
-	rows := emptyRows(context.NewFunctions())
+	rows := emptyRows(context.NewFunctions(), 1)
 	rows.addRow([]context.Value{context.StringValue("someValue")}, []bool{true}, []*expression.Expression{})
 
 	attributes := rows.atIndex(0).AllAttributes()
@@ -22,11 +22,11 @@ func TestEvaluatingRowAllAttributesThatAreFullyEvaluated(t *testing.T) {
 
 func TestEvaluatingRowCount(t *testing.T) {
 	_ = context.NewContext(context.NewFunctions(), context.NewAttributes())
-	rows := emptyRows(context.NewFunctions())
+	rows := emptyRows(context.NewFunctions(), 1)
 	rows.addRow([]context.Value{context.StringValue("someValue")}, []bool{true}, []*expression.Expression{})
 
 	count := rows.Count()
-	expected := 1
+	expected := uint32(1)
 
 	if count != expected {
 		t.Fatalf("Expected count to be %v, received %v", expected, count)
@@ -35,7 +35,7 @@ func TestEvaluatingRowCount(t *testing.T) {
 
 func TestEvaluatingRowIterator(t *testing.T) {
 	_ = context.NewContext(context.NewFunctions(), context.NewAttributes())
-	rows := emptyRows(context.NewFunctions())
+	rows := emptyRows(context.NewFunctions(), 1)
 	rows.addRow([]context.Value{context.StringValue("someValue")}, []bool{true}, []*expression.Expression{})
 
 	attributes := rows.RowIterator().Next().AllAttributes()
@@ -48,7 +48,7 @@ func TestEvaluatingRowIterator(t *testing.T) {
 
 func TestEvaluatingRowIteratorHasNextWithAnAvailableRow(t *testing.T) {
 	_ = context.NewContext(context.NewFunctions(), context.NewAttributes())
-	rows := emptyRows(context.NewFunctions())
+	rows := emptyRows(context.NewFunctions(), 1)
 	rows.addRow([]context.Value{context.StringValue("someValue")}, []bool{true}, []*expression.Expression{})
 
 	hasNext := rows.RowIterator().HasNext()
@@ -57,9 +57,36 @@ func TestEvaluatingRowIteratorHasNextWithAnAvailableRow(t *testing.T) {
 	}
 }
 
+func TestEvaluatingRowIteratorHasNextWithLimit(t *testing.T) {
+	_ = context.NewContext(context.NewFunctions(), context.NewAttributes())
+	rows := emptyRows(context.NewFunctions(), 2)
+	rows.addRow([]context.Value{context.StringValue("someValue")}, []bool{true}, []*expression.Expression{})
+	rows.addRow([]context.Value{context.StringValue("someValue")}, []bool{true}, []*expression.Expression{})
+	rows.addRow([]context.Value{context.StringValue("someValue")}, []bool{true}, []*expression.Expression{})
+
+	iterator := rows.RowIterator()
+
+	hasNext := iterator.HasNext()
+	if hasNext != true {
+		t.Fatalf("Expected a row using row iterator but hasNext returned false")
+	}
+	iterator.Next()
+
+	hasNext = iterator.HasNext()
+	if hasNext != true {
+		t.Fatalf("Expected a row using row iterator but hasNext returned false")
+	}
+	iterator.Next()
+
+	hasNext = iterator.HasNext()
+	if hasNext != false {
+		t.Fatalf("Expected no row given limit is reached but hasNext returned true")
+	}
+}
+
 func TestEvaluatingRowIteratorHasNextWithNoAvailableRows(t *testing.T) {
 	_ = context.NewContext(context.NewFunctions(), context.NewAttributes())
-	rows := emptyRows(context.NewFunctions())
+	rows := emptyRows(context.NewFunctions(), 1)
 
 	hasNext := rows.RowIterator().HasNext()
 	if hasNext != false {
@@ -69,7 +96,7 @@ func TestEvaluatingRowIteratorHasNextWithNoAvailableRows(t *testing.T) {
 
 func TestEvaluatingRowTotalAttributes(t *testing.T) {
 	_ = context.NewContext(context.NewFunctions(), context.NewAttributes())
-	rows := emptyRows(context.NewFunctions())
+	rows := emptyRows(context.NewFunctions(), 1)
 	rows.addRow([]context.Value{context.StringValue("someValue")}, []bool{true}, []*expression.Expression{})
 
 	totalAttributes := rows.RowIterator().Next().TotalAttributes()

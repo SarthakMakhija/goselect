@@ -218,7 +218,7 @@ func TestAndReturningTrue(t *testing.T) {
 }
 
 func TestAndReturningFalse(t *testing.T) {
-	value, _ := NewFunctions().Execute("and", BooleanValue(true), StringValue("y"), BooleanValue(false))
+	value, _ := NewFunctions().Execute("and", StringValue("ok"), StringValue("y"), BooleanValue(false))
 
 	actualValue, _ := value.GetBoolean()
 	if actualValue != false {

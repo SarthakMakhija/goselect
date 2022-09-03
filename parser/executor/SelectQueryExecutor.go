@@ -32,7 +32,7 @@ func (selectQueryExecutor *SelectQueryExecutor) Execute() (*EvaluatingRows, erro
 	}
 
 	var rowCount uint32 = 0
-	rows := emptyRows(selectQueryExecutor.context.AllFunctions())
+	rows := emptyRows(selectQueryExecutor.context.AllFunctions(), limit)
 
 	for _, file := range files {
 		if rowCount >= limit && !selectQueryExecutor.query.IsOrderDefined() {

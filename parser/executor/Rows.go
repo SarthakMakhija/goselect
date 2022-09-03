@@ -8,10 +8,12 @@ import (
 type EvaluatingRows struct {
 	rows      []*EvaluatingRow
 	functions *context.AllFunctions
+	limit     uint32
 }
 
 type RowsIterator struct {
-	currentIndex int
+	currentIndex uint32
+	limit        uint32
 	rows         []*EvaluatingRow
 }
 
@@ -29,8 +31,8 @@ type AttributeIterator struct {
 	expressions     []*expression.Expression
 }
 
-func emptyRows(functions *context.AllFunctions) *EvaluatingRows {
-	return &EvaluatingRows{functions: functions}
+func emptyRows(functions *context.AllFunctions, limit uint32) *EvaluatingRows {
+	return &EvaluatingRows{functions: functions, limit: limit}
 }
 
 func (rows *EvaluatingRows) addRow(attributeValues []context.Value, fullyEvaluated []bool, expressions []*expression.Expression) *EvaluatingRow {
@@ -44,12 +46,18 @@ func (rows *EvaluatingRows) addRow(attributeValues []context.Value, fullyEvaluat
 	return row
 }
 
-func (rows EvaluatingRows) Count() int {
-	return len(rows.rows)
+func (rows EvaluatingRows) Count() uint32 {
+	minOf := func(a, b uint32) uint32 {
+		if a < b {
+			return a
+		}
+		return b
+	}
+	return minOf(uint32(len(rows.rows)), rows.limit)
 }
 
 func (rows *EvaluatingRows) RowIterator() *RowsIterator {
-	return &RowsIterator{currentIndex: 0, rows: rows.rows}
+	return &RowsIterator{currentIndex: 0, limit: rows.limit, rows: rows.rows}
 }
 
 func (rows EvaluatingRows) atIndex(index int) *EvaluatingRow {
@@ -60,7 +68,8 @@ func (rows EvaluatingRows) atIndex(index int) *EvaluatingRow {
 }
 
 func (rowsIterator *RowsIterator) HasNext() bool {
-	return rowsIterator.currentIndex < len(rowsIterator.rows)
+	return rowsIterator.currentIndex < uint32(len(rowsIterator.rows)) &&
+		rowsIterator.currentIndex+1 <= rowsIterator.limit
 }
 
 func (rowsIterator *RowsIterator) Next() *EvaluatingRow {

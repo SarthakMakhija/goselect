@@ -38,7 +38,7 @@ func (jsonFormatter JsonFormatter) Format(projections *projection.Projections, r
 
 		iterator := rows.RowIterator()
 
-		for rowIndex := 0; iterator.HasNext(); rowIndex++ {
+		for rowIndex := uint32(0); iterator.HasNext(); rowIndex++ {
 			row := iterator.Next()
 			jsonFormatter.beginRow(json)
 			for attributeIndex, attributeValue := range row.AllAttributes() {

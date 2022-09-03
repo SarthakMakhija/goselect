@@ -145,6 +145,24 @@ func TestResultsWithProjectionsAndLimit2(t *testing.T) {
 	}
 }
 
+func TestResultsWithProjectionsAndLimit3(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select lower(name) from ../resources/TestResultsWithProjections/multi order by 1 limit 2", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	expected := [][]context.Value{
+		{context.StringValue("testresultswithprojections_a.log")},
+		{context.StringValue("testresultswithprojections_b.log")},
+	}
+	assertMatch(t, expected, queryResults)
+}
+
 func TestResultsWithProjectionsOrderBy1(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
 	aParser, err := parser.NewParser("select upper(lower(name)), ext from ../resources/TestResultsWithProjections/multi order by 1 desc", newContext)
@@ -370,7 +388,7 @@ func assertMatch(t *testing.T, expected [][]context.Value, queryResults *Evaluat
 		}
 		return false
 	}
-	if len(expected) != queryResults.Count() {
+	if uint32(len(expected)) != queryResults.Count() {
 		t.Fatalf("Expected length of the query results to be %v, received %v", len(expected), queryResults.Count())
 	}
 	for rowIndex, row := range expected {

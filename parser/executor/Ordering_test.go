@@ -17,7 +17,7 @@ func TestAscendingOrderWithASingleColumn(t *testing.T) {
 	anOrder, _ := order.NewOrder(tokens.Iterator(), 1)
 
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	rows := emptyRows(newContext.AllFunctions())
+	rows := emptyRows(newContext.AllFunctions(), 2)
 	rows.addRow([]context.Value{context.StringValue("fileA")}, []bool{true}, []*expression.Expression{})
 	rows.addRow([]context.Value{context.StringValue("fileB")}, []bool{true}, []*expression.Expression{})
 
@@ -43,7 +43,7 @@ func TestAscendingOrderWith2Columns(t *testing.T) {
 	anOrder, _ := order.NewOrder(tokens.Iterator(), 2)
 
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	rows := emptyRows(newContext.AllFunctions())
+	rows := emptyRows(newContext.AllFunctions(), 3)
 	rows.addRow([]context.Value{context.StringValue("fileB"), context.IntValue(10)}, []bool{true, true}, []*expression.Expression{})
 	rows.addRow([]context.Value{context.StringValue("fileA"), context.IntValue(20)}, []bool{true, true}, []*expression.Expression{})
 	rows.addRow([]context.Value{context.StringValue("fileA"), context.IntValue(30)}, []bool{true, true}, []*expression.Expression{})
@@ -70,7 +70,7 @@ func TestDescendingOrderWithASingleColumn(t *testing.T) {
 	anOrder, _ := order.NewOrder(tokens.Iterator(), 1)
 
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	rows := emptyRows(newContext.AllFunctions())
+	rows := emptyRows(newContext.AllFunctions(), 2)
 	rows.addRow([]context.Value{context.StringValue("fileA")}, []bool{true}, []*expression.Expression{})
 	rows.addRow([]context.Value{context.StringValue("fileB")}, []bool{true}, []*expression.Expression{})
 
@@ -98,7 +98,7 @@ func TestDescendingOrderWith2Columns(t *testing.T) {
 	anOrder, _ := order.NewOrder(tokens.Iterator(), 2)
 
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	rows := emptyRows(newContext.AllFunctions())
+	rows := emptyRows(newContext.AllFunctions(), 3)
 	rows.addRow([]context.Value{context.StringValue("fileB"), context.IntValue(10)}, []bool{true, true}, []*expression.Expression{})
 	rows.addRow([]context.Value{context.StringValue("fileA"), context.IntValue(20)}, []bool{true, true}, []*expression.Expression{})
 	rows.addRow([]context.Value{context.StringValue("fileA"), context.IntValue(30)}, []bool{true, true}, []*expression.Expression{})
@@ -128,7 +128,7 @@ func TestMixOrderWith2Columns(t *testing.T) {
 	anOrder, _ := order.NewOrder(tokens.Iterator(), 2)
 
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	rows := emptyRows(newContext.AllFunctions())
+	rows := emptyRows(newContext.AllFunctions(), 3)
 	rows.addRow([]context.Value{context.StringValue("fileB"), context.IntValue(10)}, []bool{true, true}, []*expression.Expression{})
 	rows.addRow([]context.Value{context.StringValue("fileA"), context.IntValue(20)}, []bool{true, true}, []*expression.Expression{})
 	rows.addRow([]context.Value{context.StringValue("fileA"), context.IntValue(30)}, []bool{true, true}, []*expression.Expression{})
