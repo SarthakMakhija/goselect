@@ -7,8 +7,12 @@ SQL like 'select' interface for files
 
 # Initial thoughts
 
-The idea is to provide support for `selecting` files based on various conditions. At this stage some of the features that are planned include:
+The idea is to provide support for `selecting` files based on various conditions. At this stage some features that are planned include:
 - Support for `where` clause
+  - [X] select * from /home/apps where eq(add(2,3), 5)
+  - [X] select * from /home/apps where eq(lower(ext), .log)
+  - [X] select * from /home/apps where ne(lower(ext), .log)
+  - [X] `where` clause should support functions for comparison like `eq`, `le`, `lt`, `ge`, `gt`, `ne`, `contains`, `or`, `and` and `not`
 - Support for searching text within a file
 - Support for some shortcuts for common files types like images, videos, text:
   - select * from /home/apps where fileType = 'image' and fileSize > 10MB
@@ -39,6 +43,16 @@ The idea is to provide support for `selecting` files based on various conditions
   - [X] subtract
   - [X] multiply
   - [X] divide
+  - [X] equal (eq)
+  - [X] lessThan (lt)
+  - [X] greaterThan (gt)
+  - [X] lessEqual (le)
+  - [X] greaterEqual (ge)
+  - [X] notEqual (ne)
+  - [X] or
+  - [X] and 
+  - [X] not 
+  - [ ] like 
   - [X] lower
   - [X] upper
   - [X] title
