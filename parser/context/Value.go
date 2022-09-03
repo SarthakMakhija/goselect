@@ -97,10 +97,6 @@ func DateTimeValue(time time.Time) Value {
 	}
 }
 
-func emptyValue() Value {
-	return Value{valueType: ValueTypeUndefined}
-}
-
 func (value Value) GetString() (string, error) {
 	if value.valueType != ValueTypeString {
 		return "", errors.New(fmt.Sprintf(messages.ErrorMessageIncorrectValueType, "string"))
@@ -243,6 +239,10 @@ func (value Value) CompareTo(other Value) int {
 		return CompareToGreaterThan
 	}
 	return CompareToNotPossible
+}
+
+func emptyValue() Value {
+	return Value{valueType: ValueTypeUndefined}
 }
 
 func (value Value) attemptCommonType(other Value) (Value, Value, bool, error) {
