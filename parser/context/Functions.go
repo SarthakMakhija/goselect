@@ -43,6 +43,7 @@ const (
 	FunctionNameLessThanEqual       = "lessthanequal"
 	FunctionNameGreaterThanEqual    = "greaterthanequal"
 	FunctionNameOr                  = "or"
+	FunctionNameAnd                 = "and"
 	FunctionNameLower               = "lower"
 	FunctionNameUpper               = "upper"
 	FunctionNameTitle               = "title"
@@ -106,6 +107,10 @@ var functionDefinitions = map[string]*FunctionDefinition{
 	FunctionNameOr: {
 		aliases: []string{"or"},
 		block:   OrFunctionBlock{},
+	},
+	FunctionNameAnd: {
+		aliases: []string{"and"},
+		block:   AndFunctionBlock{},
 	},
 	FunctionNameLower: {
 		aliases: []string{"lower", "low"},

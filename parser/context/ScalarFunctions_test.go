@@ -208,6 +208,24 @@ func TestOrReturningFalse(t *testing.T) {
 	}
 }
 
+func TestAndReturningTrue(t *testing.T) {
+	value, _ := NewFunctions().Execute("and", BooleanValue(true), StringValue("y"), BooleanValue(true))
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != true {
+		t.Fatalf("Expected and to be %v, received %v", true, actualValue)
+	}
+}
+
+func TestAndReturningFalse(t *testing.T) {
+	value, _ := NewFunctions().Execute("and", BooleanValue(true), StringValue("y"), BooleanValue(false))
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != false {
+		t.Fatalf("Expected and to be %v, received %v", false, actualValue)
+	}
+}
+
 func TestLower1(t *testing.T) {
 	value, _ := NewFunctions().Execute("lower", StringValue("ABC"))
 	expected := "abc"
