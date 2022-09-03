@@ -47,6 +47,7 @@ const (
 	FunctionNameOr                  = "or"
 	FunctionNameAnd                 = "and"
 	FunctionNameNot                 = "not"
+	FunctionNameLike                = "like"
 	FunctionNameLower               = "lower"
 	FunctionNameUpper               = "upper"
 	FunctionNameTitle               = "title"
@@ -132,6 +133,11 @@ var functionDefinitions = map[string]*FunctionDefinition{
 	FunctionNameNot: {
 		aliases: []string{"not"},
 		block:   NotFunctionBlock{},
+		tags:    map[string]bool{"where": true},
+	},
+	FunctionNameLike: {
+		aliases: []string{"like"},
+		block:   LikeFunctionBlock{},
 		tags:    map[string]bool{"where": true},
 	},
 	FunctionNameLower: {

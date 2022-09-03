@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"goselect/parser/error/messages"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -23,6 +24,7 @@ type GreaterThanEqualFunctionBlock struct{}
 type OrFunctionBlock struct{}
 type AndFunctionBlock struct{}
 type NotFunctionBlock struct{}
+type LikeFunctionBlock struct{}
 type LowerFunctionBlock struct{}
 type UpperFunctionBlock struct{}
 type TitleFunctionBlock struct{}
@@ -207,6 +209,18 @@ func (n NotFunctionBlock) run(args ...Value) (Value, error) {
 		return EmptyValue(), fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameNot, err)
 	}
 	return BooleanValue(!result), nil
+}
+
+func (l LikeFunctionBlock) run(args ...Value) (Value, error) {
+	if err := ensureNParametersOrError(args, FunctionNameLike, 2); err != nil {
+		return EmptyValue(), err
+	}
+	toMatch := args[0].GetAsString()
+	if compiled, err := regexp.Compile(args[1].GetAsString()); err != nil {
+		return EmptyValue(), err
+	} else {
+		return BooleanValue(compiled.MatchString(toMatch)), nil
+	}
 }
 
 func (l LowerFunctionBlock) run(args ...Value) (Value, error) {
