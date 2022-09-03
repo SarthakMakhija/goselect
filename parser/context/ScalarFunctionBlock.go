@@ -50,7 +50,7 @@ func (a AddFunctionBlock) run(args ...Value) (Value, error) {
 	for _, arg := range args {
 		asFloat64, err := arg.GetNumericAsFloat64()
 		if err != nil {
-			return EmptyValue(), fmt.Errorf(messages.ErorMessageFunctionNamePrefixWithExistingError, FunctionNameAdd, err)
+			return EmptyValue(), fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameAdd, err)
 		}
 		result = result + asFloat64
 	}
@@ -63,11 +63,11 @@ func (s SubtractFunctionBlock) run(args ...Value) (Value, error) {
 	}
 	oneFloat64, err := args[0].GetNumericAsFloat64()
 	if err != nil {
-		return EmptyValue(), fmt.Errorf(messages.ErorMessageFunctionNamePrefixWithExistingError, FunctionNameSubtract, err)
+		return EmptyValue(), fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameSubtract, err)
 	}
 	otherFloat64, err := args[1].GetNumericAsFloat64()
 	if err != nil {
-		return EmptyValue(), fmt.Errorf(messages.ErorMessageFunctionNamePrefixWithExistingError, FunctionNameSubtract, err)
+		return EmptyValue(), fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameSubtract, err)
 	}
 	return Float64Value(oneFloat64 - otherFloat64), nil
 }
@@ -80,7 +80,7 @@ func (m MultipleFunctionBlock) run(args ...Value) (Value, error) {
 	for _, arg := range args {
 		asFloat64, err := arg.GetNumericAsFloat64()
 		if err != nil {
-			return EmptyValue(), fmt.Errorf(messages.ErorMessageFunctionNamePrefixWithExistingError, FunctionNameMultiply, err)
+			return EmptyValue(), fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameMultiply, err)
 		}
 		result = result * asFloat64
 	}
@@ -97,7 +97,7 @@ func (d DivideFunctionBlock) run(args ...Value) (Value, error) {
 	}
 	otherFloat64, err := args[1].GetNumericAsFloat64()
 	if err != nil {
-		return EmptyValue(), fmt.Errorf(messages.ErorMessageFunctionNamePrefixWithExistingError, FunctionNameDivide, err)
+		return EmptyValue(), fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameDivide, err)
 	}
 	if otherFloat64 == float64(0) {
 		return EmptyValue(), errors.New(messages.ErrorMessageExpectedNonZeroInDivide)
@@ -162,7 +162,7 @@ func (o OrFunctionBlock) run(args ...Value) (Value, error) {
 	for _, arg := range args {
 		result, err := arg.GetBoolean()
 		if err != nil {
-			return EmptyValue(), fmt.Errorf(messages.ErorMessageFunctionNamePrefixWithExistingError, FunctionNameOr, err)
+			return EmptyValue(), fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameOr, err)
 		}
 		if result == true {
 			return BooleanValue(true), nil
@@ -178,7 +178,7 @@ func (a AndFunctionBlock) run(args ...Value) (Value, error) {
 	for _, arg := range args {
 		result, err := arg.GetBoolean()
 		if err != nil {
-			return EmptyValue(), fmt.Errorf(messages.ErorMessageFunctionNamePrefixWithExistingError, FunctionNameAnd, err)
+			return EmptyValue(), fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameAnd, err)
 		}
 		if result == false {
 			return BooleanValue(false), nil
@@ -193,7 +193,7 @@ func (n NotFunctionBlock) run(args ...Value) (Value, error) {
 	}
 	result, err := args[0].GetBoolean()
 	if err != nil {
-		return EmptyValue(), fmt.Errorf(messages.ErorMessageFunctionNamePrefixWithExistingError, FunctionNameNot, err)
+		return EmptyValue(), fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameNot, err)
 	}
 	return BooleanValue(!result), nil
 }
@@ -320,14 +320,14 @@ func (s SubstringFunctionBlock) run(args ...Value) (Value, error) {
 	from, err := strconv.Atoi(args[1].GetAsString())
 	if err != nil {
 		return EmptyValue(), fmt.Errorf(
-			messages.ErorMessageFunctionNamePrefixWithExistingError,
+			messages.ErrorMessageFunctionNamePrefixWithExistingError,
 			FunctionNameSubstring,
 			messages.ErrorMessageIllegalFromToIndexInSubstring,
 		)
 	}
 	if from < 0 {
 		return EmptyValue(), fmt.Errorf(
-			messages.ErorMessageFunctionNamePrefixWithExistingError,
+			messages.ErrorMessageFunctionNamePrefixWithExistingError,
 			FunctionNameSubstring,
 			messages.ErrorMessageIllegalFromToIndexInSubstring,
 		)
@@ -340,21 +340,21 @@ func (s SubstringFunctionBlock) run(args ...Value) (Value, error) {
 		to, err = strconv.Atoi(args[2].GetAsString())
 		if err != nil {
 			return EmptyValue(), fmt.Errorf(
-				messages.ErorMessageFunctionNamePrefixWithExistingError,
+				messages.ErrorMessageFunctionNamePrefixWithExistingError,
 				FunctionNameSubstring,
 				messages.ErrorMessageIllegalFromToIndexInSubstring,
 			)
 		}
 		if to < 0 {
 			return EmptyValue(), fmt.Errorf(
-				messages.ErorMessageFunctionNamePrefixWithExistingError,
+				messages.ErrorMessageFunctionNamePrefixWithExistingError,
 				FunctionNameSubstring,
 				messages.ErrorMessageIllegalFromToIndexInSubstring,
 			)
 		}
 		if to < from {
 			return EmptyValue(), fmt.Errorf(
-				messages.ErorMessageFunctionNamePrefixWithExistingError,
+				messages.ErrorMessageFunctionNamePrefixWithExistingError,
 				FunctionNameSubstring,
 				messages.ErrorMessageIncorrectEndIndexInSubstring,
 			)
