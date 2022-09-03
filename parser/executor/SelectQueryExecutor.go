@@ -54,7 +54,6 @@ func (selectQueryExecutor *SelectQueryExecutor) Execute() (*EvaluatingRows, erro
 		//handle recursion
 	}
 	newOrdering(selectQueryExecutor.query.Order).doOrder(rows)
-	//handle limit
 	return rows, nil
 }
 
