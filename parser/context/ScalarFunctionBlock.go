@@ -50,7 +50,7 @@ func (a AddFunctionBlock) run(args ...Value) (Value, error) {
 	for _, arg := range args {
 		asFloat64, err := arg.GetNumericAsFloat64()
 		if err != nil {
-			return EmptyValue(), err
+			return EmptyValue(), fmt.Errorf(messages.ErorMessageFunctionNamePrefixWithExistingError, FunctionNameAdd, err)
 		}
 		result = result + asFloat64
 	}
@@ -63,11 +63,11 @@ func (s SubtractFunctionBlock) run(args ...Value) (Value, error) {
 	}
 	oneFloat64, err := args[0].GetNumericAsFloat64()
 	if err != nil {
-		return EmptyValue(), err
+		return EmptyValue(), fmt.Errorf(messages.ErorMessageFunctionNamePrefixWithExistingError, FunctionNameSubtract, err)
 	}
 	otherFloat64, err := args[1].GetNumericAsFloat64()
 	if err != nil {
-		return EmptyValue(), err
+		return EmptyValue(), fmt.Errorf(messages.ErorMessageFunctionNamePrefixWithExistingError, FunctionNameSubtract, err)
 	}
 	return Float64Value(oneFloat64 - otherFloat64), nil
 }
@@ -80,7 +80,7 @@ func (m MultipleFunctionBlock) run(args ...Value) (Value, error) {
 	for _, arg := range args {
 		asFloat64, err := arg.GetNumericAsFloat64()
 		if err != nil {
-			return EmptyValue(), err
+			return EmptyValue(), fmt.Errorf(messages.ErorMessageFunctionNamePrefixWithExistingError, FunctionNameMultiply, err)
 		}
 		result = result * asFloat64
 	}
@@ -97,7 +97,7 @@ func (d DivideFunctionBlock) run(args ...Value) (Value, error) {
 	}
 	otherFloat64, err := args[1].GetNumericAsFloat64()
 	if err != nil {
-		return EmptyValue(), err
+		return EmptyValue(), fmt.Errorf(messages.ErorMessageFunctionNamePrefixWithExistingError, FunctionNameDivide, err)
 	}
 	if otherFloat64 == float64(0) {
 		return EmptyValue(), errors.New(messages.ErrorMessageExpectedNonZeroInDivide)
@@ -162,7 +162,7 @@ func (o OrFunctionBlock) run(args ...Value) (Value, error) {
 	for _, arg := range args {
 		result, err := arg.GetBoolean()
 		if err != nil {
-			return EmptyValue(), err
+			return EmptyValue(), fmt.Errorf(messages.ErorMessageFunctionNamePrefixWithExistingError, FunctionNameOr, err)
 		}
 		if result == true {
 			return BooleanValue(true), nil
@@ -178,7 +178,7 @@ func (a AndFunctionBlock) run(args ...Value) (Value, error) {
 	for _, arg := range args {
 		result, err := arg.GetBoolean()
 		if err != nil {
-			return EmptyValue(), err
+			return EmptyValue(), fmt.Errorf(messages.ErorMessageFunctionNamePrefixWithExistingError, FunctionNameAnd, err)
 		}
 		if result == false {
 			return BooleanValue(false), nil
@@ -193,7 +193,7 @@ func (n NotFunctionBlock) run(args ...Value) (Value, error) {
 	}
 	result, err := args[0].GetBoolean()
 	if err != nil {
-		return EmptyValue(), err
+		return EmptyValue(), fmt.Errorf(messages.ErorMessageFunctionNamePrefixWithExistingError, FunctionNameNot, err)
 	}
 	return BooleanValue(!result), nil
 }
@@ -319,10 +319,18 @@ func (s SubstringFunctionBlock) run(args ...Value) (Value, error) {
 	length := len(str)
 	from, err := strconv.Atoi(args[1].GetAsString())
 	if err != nil {
-		return EmptyValue(), errors.New(messages.ErrorMessageIllegalFromToIndexInSubstring)
+		return EmptyValue(), fmt.Errorf(
+			messages.ErorMessageFunctionNamePrefixWithExistingError,
+			FunctionNameSubstring,
+			messages.ErrorMessageIllegalFromToIndexInSubstring,
+		)
 	}
 	if from < 0 {
-		return EmptyValue(), errors.New(messages.ErrorMessageIllegalFromToIndexInSubstring)
+		return EmptyValue(), fmt.Errorf(
+			messages.ErorMessageFunctionNamePrefixWithExistingError,
+			FunctionNameSubstring,
+			messages.ErrorMessageIllegalFromToIndexInSubstring,
+		)
 	}
 	if from >= length {
 		from = 0
@@ -331,13 +339,25 @@ func (s SubstringFunctionBlock) run(args ...Value) (Value, error) {
 	if len(args) >= 3 {
 		to, err = strconv.Atoi(args[2].GetAsString())
 		if err != nil {
-			return EmptyValue(), errors.New(messages.ErrorMessageIllegalFromToIndexInSubstring)
+			return EmptyValue(), fmt.Errorf(
+				messages.ErorMessageFunctionNamePrefixWithExistingError,
+				FunctionNameSubstring,
+				messages.ErrorMessageIllegalFromToIndexInSubstring,
+			)
 		}
 		if to < 0 {
-			return EmptyValue(), errors.New(messages.ErrorMessageIllegalFromToIndexInSubstring)
+			return EmptyValue(), fmt.Errorf(
+				messages.ErorMessageFunctionNamePrefixWithExistingError,
+				FunctionNameSubstring,
+				messages.ErrorMessageIllegalFromToIndexInSubstring,
+			)
 		}
 		if to < from {
-			return EmptyValue(), errors.New(messages.ErrorMessageIncorrectEndIndexInSubstring)
+			return EmptyValue(), fmt.Errorf(
+				messages.ErorMessageFunctionNamePrefixWithExistingError,
+				FunctionNameSubstring,
+				messages.ErrorMessageIncorrectEndIndexInSubstring,
+			)
 		}
 		if to >= length {
 			to = length - 1

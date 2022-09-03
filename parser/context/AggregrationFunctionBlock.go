@@ -1,5 +1,10 @@
 package context
 
+import (
+	"fmt"
+	"goselect/parser/error/messages"
+)
+
 type CountFunctionBlock struct{}
 type AverageFunctionBlock struct{}
 
@@ -27,7 +32,7 @@ func (a *AverageFunctionBlock) run(initialState *FunctionState, args ...Value) (
 		return nil, err
 	}
 	if theOnlyArgument, err := args[0].GetNumericAsFloat64(); err != nil {
-		return nil, err
+		return nil, fmt.Errorf(messages.ErorMessageFunctionNamePrefixWithExistingError, FunctionNameAverage, err)
 	} else {
 		existingCount := initialState.extras["count"]
 		return &FunctionState{
@@ -47,7 +52,7 @@ func (a *AverageFunctionBlock) finalValue(currentState *FunctionState, values []
 		return EmptyValue(), err
 	}
 	if v, err := values[0].GetNumericAsFloat64(); err != nil {
-		return EmptyValue(), nil
+		return EmptyValue(), fmt.Errorf(messages.ErorMessageFunctionNamePrefixWithExistingError, FunctionNameAverage, err)
 	} else {
 		return Float64Value(v), nil
 	}
