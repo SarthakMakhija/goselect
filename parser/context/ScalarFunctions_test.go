@@ -82,6 +82,24 @@ func TestEqualsReturningFalse(t *testing.T) {
 	}
 }
 
+func TestNotEqualReturningTrue(t *testing.T) {
+	value, _ := NewFunctions().Execute("ne", StringValue("one"), StringValue("two"))
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != true {
+		t.Fatalf("Expected not equal to be %v, received %v", true, actualValue)
+	}
+}
+
+func TestNotEqualReturningFalse(t *testing.T) {
+	value, _ := NewFunctions().Execute("ne", StringValue("one"), StringValue("one"))
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != false {
+		t.Fatalf("Expected not equal to be %v, received %v", false, actualValue)
+	}
+}
+
 func TestLessThanReturningTrue1(t *testing.T) {
 	value, _ := NewFunctions().Execute("lt", StringValue("one"), StringValue("two"))
 

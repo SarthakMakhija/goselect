@@ -15,6 +15,7 @@ type SubtractFunctionBlock struct{}
 type MultipleFunctionBlock struct{}
 type DivideFunctionBlock struct{}
 type EqualFunctionBlock struct{}
+type NotEqualFunctionBlock struct{}
 type LessThanFunctionBlock struct{}
 type GreaterThanFunctionBlock struct{}
 type LessThanEqualFunctionBlock struct{}
@@ -113,6 +114,16 @@ func (e EqualFunctionBlock) run(args ...Value) (Value, error) {
 		return BooleanValue(true), nil
 	}
 	return BooleanValue(false), nil
+}
+
+func (n NotEqualFunctionBlock) run(args ...Value) (Value, error) {
+	if err := ensureNParametersOrError(args, FunctionNameEqual, 2); err != nil {
+		return EmptyValue(), err
+	}
+	if args[0].CompareTo(args[1]) == CompareToEqual {
+		return BooleanValue(false), nil
+	}
+	return BooleanValue(true), nil
 }
 
 func (l LessThanFunctionBlock) run(args ...Value) (Value, error) {
