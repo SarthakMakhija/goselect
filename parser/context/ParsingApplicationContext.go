@@ -17,6 +17,14 @@ func (context *ParsingApplicationContext) IsASupportedFunction(functionName stri
 	return context.allFunctions.IsASupportedFunction(functionName)
 }
 
+func (context *ParsingApplicationContext) FunctionContainsATag(function string, tag string) bool {
+	return context.allFunctions.ContainsATag(function, tag)
+}
+
+func (context *ParsingApplicationContext) FunctionAliasesWithTag(tag string) []string {
+	return context.allFunctions.AliasesWithTag(tag)
+}
+
 func (context *ParsingApplicationContext) IsAnAggregateFunction(functionName string) bool {
 	return context.allFunctions.IsAnAggregateFunction(functionName)
 }

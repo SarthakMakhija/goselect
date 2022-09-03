@@ -82,27 +82,6 @@ func TestEvaluatesWhereClauseWithContains(t *testing.T) {
 	}
 }
 
-func TestEvaluatesWhereClauseWithSubstrWithAnError(t *testing.T) {
-	tokens := tokenizer.NewEmptyTokens()
-	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "where"))
-	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "substr"))
-	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
-	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "\"Dummylog\""))
-	tokens.Add(tokenizer.NewToken(tokenizer.Comma, ","))
-	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "1"))
-	tokens.Add(tokenizer.NewToken(tokenizer.Comma, ","))
-	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "3"))
-	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
-
-	functions := context.NewFunctions()
-	where, _ := NewWhere(tokens.Iterator(), context.NewContext(functions, context.NewAttributes()))
-	_, err := where.EvaluateWith(nil, functions)
-
-	if err == nil {
-		t.Fatalf("Expected an error while evaluating a where clause that does not return a boolean value")
-	}
-}
-
 func TestEvaluatesWhereClauseEq1(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "where"))
@@ -194,5 +173,43 @@ func TestEvaluatesWhereClauseWithAnErrorGivenWhereClauseContainsAggregateFunctio
 
 	if err == nil {
 		t.Fatalf("Expected an error clause given an aggregate function inside where clause, but received none")
+	}
+}
+
+func TestEvaluatesWhereClauseWithAnErrorGivenAFunctionOtherThanWhereClauseSupportedFunctionIsUsed1(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "where"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "add"))
+	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "2"))
+	tokens.Add(tokenizer.NewToken(tokenizer.Comma, ","))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "3"))
+	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
+
+	functions := context.NewFunctions()
+	_, err := NewWhere(tokens.Iterator(), context.NewContext(functions, context.NewAttributes()))
+
+	if err == nil {
+		t.Fatalf("Expected an error clause given an supported function in where clause")
+	}
+}
+
+func TestEvaluatesWhereClauseWithAnErrorGivenAFunctionOtherThanWhereClauseSupportedFunctionIsUsed2(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "where"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "substr"))
+	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "\"Dummylog\""))
+	tokens.Add(tokenizer.NewToken(tokenizer.Comma, ","))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "1"))
+	tokens.Add(tokenizer.NewToken(tokenizer.Comma, ","))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "3"))
+	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
+
+	functions := context.NewFunctions()
+	_, err := NewWhere(tokens.Iterator(), context.NewContext(functions, context.NewAttributes()))
+
+	if err == nil {
+		t.Fatalf("Expected an error clause given an supported function in where clause")
 	}
 }

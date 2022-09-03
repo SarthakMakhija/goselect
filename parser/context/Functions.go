@@ -7,6 +7,7 @@ import (
 
 type FunctionDefinition struct {
 	aliases        []string
+	tags           map[string]bool
 	block          FunctionBlock
 	aggregateBlock AggregationFunctionBlock
 	isAggregate    bool
@@ -91,38 +92,47 @@ var functionDefinitions = map[string]*FunctionDefinition{
 	FunctionNameEqual: {
 		aliases: []string{"equal", "eq", "equals"},
 		block:   EqualFunctionBlock{},
+		tags:    map[string]bool{"where": true},
 	},
 	FunctionNameNotEqual: {
 		aliases: []string{"notequal", "ne", "notequals"},
 		block:   NotEqualFunctionBlock{},
+		tags:    map[string]bool{"where": true},
 	},
 	FunctionNameLessThan: {
 		aliases: []string{"lt", "lessthan", "less"},
 		block:   LessThanFunctionBlock{},
+		tags:    map[string]bool{"where": true},
 	},
 	FunctionNameGreaterThan: {
 		aliases: []string{"gt", "greater", "greaterthan"},
 		block:   GreaterThanFunctionBlock{},
+		tags:    map[string]bool{"where": true},
 	},
 	FunctionNameLessThanEqual: {
 		aliases: []string{"lte", "lessthanequal", "lessequal", "le"},
 		block:   LessThanEqualFunctionBlock{},
+		tags:    map[string]bool{"where": true},
 	},
 	FunctionNameGreaterThanEqual: {
 		aliases: []string{"gte", "greaterthanequal", "greaterequal", "ge"},
 		block:   GreaterThanEqualFunctionBlock{},
+		tags:    map[string]bool{"where": true},
 	},
 	FunctionNameOr: {
 		aliases: []string{"or"},
 		block:   OrFunctionBlock{},
+		tags:    map[string]bool{"where": true},
 	},
 	FunctionNameAnd: {
 		aliases: []string{"and"},
 		block:   AndFunctionBlock{},
+		tags:    map[string]bool{"where": true},
 	},
 	FunctionNameNot: {
 		aliases: []string{"not"},
 		block:   NotFunctionBlock{},
+		tags:    map[string]bool{"where": true},
 	},
 	FunctionNameLower: {
 		aliases: []string{"lower", "low"},
@@ -195,6 +205,7 @@ var functionDefinitions = map[string]*FunctionDefinition{
 	FunctionNameContains: {
 		aliases: []string{"contains"},
 		block:   ContainsFunctionBlock{},
+		tags:    map[string]bool{"where": true},
 	},
 	FunctionNameSubstring: {
 		aliases: []string{"substr", "str"},
@@ -237,6 +248,24 @@ func NewFunctions() *AllFunctions {
 func (functions *AllFunctions) IsASupportedFunction(function string) bool {
 	_, ok := functions.supportedFunctions[strings.ToLower(function)]
 	return ok
+}
+
+func (functions *AllFunctions) ContainsATag(function string, tag string) bool {
+	definition, ok := functions.supportedFunctions[strings.ToLower(function)]
+	if !ok {
+		return false
+	}
+	return definition.tags[strings.ToLower(tag)]
+}
+
+func (functions *AllFunctions) AliasesWithTag(tag string) []string {
+	var functionAliases []string
+	for _, definition := range functionDefinitions {
+		if definition.tags[tag] {
+			functionAliases = append(functionAliases, definition.aliases...)
+		}
+	}
+	return functionAliases
 }
 
 func (functions *AllFunctions) IsAnAggregateFunction(function string) bool {

@@ -2,6 +2,7 @@ package where
 
 import (
 	"errors"
+	"fmt"
 	"goselect/parser/context"
 	"goselect/parser/error/messages"
 	"goselect/parser/expression"
@@ -71,12 +72,14 @@ func all(
 	if tokenIterator.HasNext() && !tokenIterator.Peek().Equals("order") {
 		token := tokenIterator.Next()
 		switch {
-		case ctx.IsASupportedFunction(token.TokenValue):
+		case ctx.IsASupportedFunction(token.TokenValue) && ctx.FunctionContainsATag(token.TokenValue, "where"):
 			if function, err := function(token, tokenIterator, ctx); err != nil {
 				return expression.Expressions{}, true, err
 			} else {
 				expressions = append(expressions, expression.ExpressionWithFunctionInstance(function))
 			}
+		default:
+			return expression.Expressions{}, true, errors.New(fmt.Sprintf(messages.ErrorMessageInvalidWhereFunctionUsed, ctx.FunctionAliasesWithTag("where")))
 		}
 	}
 	return expression.Expressions{Expressions: expressions}, true, nil
