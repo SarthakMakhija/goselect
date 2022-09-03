@@ -224,3 +224,43 @@ func TestResultsWithProjectionsIncludingCountDistinct2(t *testing.T) {
 	}
 	assertMatch(t, expected, queryResults)
 }
+
+func TestResultsWithProjectionsIncludingSum1(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select sum(len(ext)) from ../resources/TestResultsWithProjections/multi order by 1", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	expected := [][]context.Value{
+		{context.Float64Value(16)},
+		{context.Float64Value(16)},
+		{context.Float64Value(16)},
+		{context.Float64Value(16)},
+	}
+	assertMatch(t, expected, queryResults)
+}
+
+func TestResultsWithProjectionsIncludingSum2(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select sum(countd(lower(ext))) from ../resources/TestResultsWithProjections/multi order by 1", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	expected := [][]context.Value{
+		{context.Float64Value(2)},
+		{context.Float64Value(2)},
+		{context.Float64Value(2)},
+		{context.Float64Value(2)},
+	}
+	assertMatch(t, expected, queryResults)
+}

@@ -64,6 +64,21 @@ func TestCountDistinct3(t *testing.T) {
 	}
 }
 
+func TestSum(t *testing.T) {
+	allFunctions := NewFunctions()
+	initialState := allFunctions.InitialState("sum")
+
+	state, _ := allFunctions.ExecuteAggregate("sum", initialState, IntValue(10))
+	state, _ = allFunctions.ExecuteAggregate("sum", state, IntValue(11))
+	state, _ = allFunctions.ExecuteAggregate("sum", state, IntValue(11))
+
+	finalValue, _ := allFunctions.FinalValue("sum", state, nil)
+	actualValue := finalValue.GetAsString()
+	if actualValue != "32.00" {
+		t.Fatalf("Expected sum to be %v, received %v", "32.00", actualValue)
+	}
+}
+
 func TestAverage(t *testing.T) {
 	allFunctions := NewFunctions()
 	initialState := allFunctions.InitialState("average")
@@ -75,7 +90,17 @@ func TestAverage(t *testing.T) {
 	finalValue, _ := allFunctions.FinalValue("average", state, nil)
 	actualValue := finalValue.GetAsString()
 	if actualValue != "10.67" {
-		t.Fatalf("Expected count to be %v, received %v", "10.67", actualValue)
+		t.Fatalf("Expected average to be %v, received %v", "10.67", actualValue)
+	}
+}
+
+func TestSumGivenANonNumericParameter(t *testing.T) {
+	allFunctions := NewFunctions()
+	initialState := allFunctions.InitialState("sum")
+
+	_, err := allFunctions.ExecuteAggregate("sum", initialState, StringValue("a"))
+	if err == nil {
+		t.Fatalf("Expected an error on running sum with a non numeric parameter")
 	}
 }
 

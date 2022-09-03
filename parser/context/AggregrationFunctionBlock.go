@@ -7,6 +7,7 @@ import (
 
 type CountFunctionBlock struct{}
 type CountDistinctFunctionBlock struct{}
+type SumFunctionBlock struct{}
 type AverageFunctionBlock struct{}
 
 func (c *CountFunctionBlock) initialState() *FunctionState {
@@ -49,6 +50,41 @@ func (c *CountDistinctFunctionBlock) finalValue(currentState *FunctionState, _ [
 		return Uint32Value(uint32(len(currentState.extras))), nil
 	}
 	return Uint32Value(1), nil
+}
+
+func (c *SumFunctionBlock) initialState() *FunctionState {
+	return &FunctionState{
+		Initial:   Float64Value(0),
+		isUpdated: false,
+	}
+}
+
+func (c *SumFunctionBlock) run(initialState *FunctionState, args ...Value) (*FunctionState, error) {
+	if err := ensureNParametersOrError(args, FunctionNameSum, 1); err != nil {
+		return nil, err
+	}
+	if theOnlyArgument, err := args[0].GetNumericAsFloat64(); err != nil {
+		return nil, fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameSum, err)
+	} else {
+		return &FunctionState{
+			Initial:   Float64Value(initialState.Initial.float64Value + theOnlyArgument),
+			isUpdated: true,
+		}, nil
+	}
+}
+
+func (c *SumFunctionBlock) finalValue(currentState *FunctionState, values []Value) (Value, error) {
+	if currentState.isUpdated {
+		return currentState.Initial, nil
+	}
+	if err := ensureNParametersOrError(values, FunctionNameSum, 1); err != nil {
+		return EmptyValue(), err
+	}
+	if v, err := values[0].GetNumericAsFloat64(); err != nil {
+		return EmptyValue(), fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameSum, err)
+	} else {
+		return Float64Value(v), nil
+	}
 }
 
 func (a *AverageFunctionBlock) initialState() *FunctionState {

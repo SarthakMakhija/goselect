@@ -35,7 +35,7 @@ The idea is to provide support for `selecting` files based on various conditions
   - [ ] min
   - [ ] max
   - [X] avg
-  - [ ] sum
+  - [X] sum
   - [X] count
   - [ ] median
   - [X] countDistinct
