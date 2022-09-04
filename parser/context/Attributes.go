@@ -3,33 +3,35 @@ package context
 import "strings"
 
 const (
-	AttributeName         = "name"
-	AttributeBaseName     = "basename"
-	AttributePath         = "path"
-	AttributeAbsolutePath = "absolutepath"
-	AttributeSize         = "size"
-	AttributeModifiedTime = "modifiedtime"
-	AttributeExtension    = "extension"
-	AttributePermission   = "permission"
-	AttributeUserId       = "userid"
-	AttributeUserName     = "username"
-	AttributeGroupId      = "groupid"
-	AttributeGroupName    = "groupname"
+	AttributeName          = "name"
+	AttributeBaseName      = "basename"
+	AttributePath          = "path"
+	AttributeAbsolutePath  = "absolutepath"
+	AttributeSize          = "size"
+	AttributeFormattedSize = "fmtsize"
+	AttributeModifiedTime  = "modifiedtime"
+	AttributeExtension     = "extension"
+	AttributePermission    = "permission"
+	AttributeUserId        = "userid"
+	AttributeUserName      = "username"
+	AttributeGroupId       = "groupid"
+	AttributeGroupName     = "groupname"
 )
 
 var attributeAliases = map[string][]string{
-	AttributeName:         {"filename", "name", "fname"},
-	AttributeBaseName:     {"basename", "bname"},
-	AttributePath:         {"filepath", "path", "fpath"},
-	AttributeAbsolutePath: {"absolutepath", "apath", "abspath"},
-	AttributeSize:         {"filesize", "size", "fsize"},
-	AttributeModifiedTime: {"modifiedTime", "mtime"},
-	AttributeExtension:    {"extension", "ext"},
-	AttributePermission:   {"permission", "perm"},
-	AttributeUserId:       {"userid", "uid"},
-	AttributeUserName:     {"username", "uname"},
-	AttributeGroupId:      {"groupid", "gid"},
-	AttributeGroupName:    {"groupname", "gname"},
+	AttributeName:          {"filename", "name", "fname"},
+	AttributeBaseName:      {"basename", "bname"},
+	AttributePath:          {"filepath", "path", "fpath"},
+	AttributeAbsolutePath:  {"absolutepath", "apath", "abspath"},
+	AttributeSize:          {"filesize", "size", "fsize"},
+	AttributeFormattedSize: {"fmtsize", "hsize"},
+	AttributeModifiedTime:  {"modifiedTime", "mtime"},
+	AttributeExtension:     {"extension", "ext"},
+	AttributePermission:    {"permission", "perm"},
+	AttributeUserId:        {"userid", "uid"},
+	AttributeUserName:      {"username", "uname"},
+	AttributeGroupId:       {"groupid", "gid"},
+	AttributeGroupName:     {"groupname", "gname"},
 }
 
 type AllAttributes struct {

@@ -1,6 +1,7 @@
 package context
 
 import (
+	"github.com/dustin/go-humanize"
 	"io/fs"
 	"os/user"
 	"path/filepath"
@@ -24,6 +25,7 @@ func ToFileAttributes(directory string, file fs.FileInfo, ctx *ParsingApplicatio
 	fileAttributes.setExtension(extension, ctx.allAttributes)
 	fileAttributes.setBaseName(strings.Replace(fileName, extension, "", 1), ctx.allAttributes)
 	fileAttributes.setSize(file.Size(), ctx.allAttributes)
+	fileAttributes.setFormattedSize(file.Size(), ctx.allAttributes)
 	path := directory + "/" + fileName
 	absolutePath, err := filepath.Abs(path)
 	if err == nil {
@@ -50,6 +52,11 @@ func (fileAttributes *FileAttributes) setBaseName(name string, attributes *AllAt
 
 func (fileAttributes *FileAttributes) setSize(size int64, attributes *AllAttributes) {
 	fileAttributes.setAllAliasesForAttribute(AttributeSize, Int64Value(size), attributes)
+}
+
+func (fileAttributes *FileAttributes) setFormattedSize(size int64, attributes *AllAttributes) {
+	formattedSize := humanize.Bytes(uint64(size))
+	fileAttributes.setAllAliasesForAttribute(AttributeFormattedSize, StringValue(formattedSize), attributes)
 }
 
 func (fileAttributes *FileAttributes) setPath(path string, attributes *AllAttributes) {
