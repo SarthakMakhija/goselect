@@ -10,7 +10,7 @@ var rootCmd = &cobra.Command{
 	Use:   "goselect",
 	Short: "SQL like select interface for file system",
 	Long: `goselect provides SQL like 'select' interface for file system. The syntax for select query is: select <attributes> from <directory> [where condition] [order by] [limit].
-Queries are case-insensitive in nature. goselect provides various features including:
+Queries are case-insensitive in nature. goselect is available here: https://github.com/SarthakMakhija/goselect. goselect provides various features including:
 
 1. Support for attribute aliases. Example, filename is same as fname  
 2. Support for function aliases. Example, lower is same as low 
