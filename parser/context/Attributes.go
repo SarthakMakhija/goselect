@@ -24,6 +24,8 @@ const (
 	AttributeOthersRead    = "otherread"
 	AttributeOthersWrite   = "otherwrite"
 	AttributeOthersExecute = "otherexecute"
+	AttributeBlockSize     = "blocksize"
+	AttributeBlocks        = "blocks"
 	AttributeUserId        = "userid"
 	AttributeUserName      = "username"
 	AttributeGroupId       = "groupid"
@@ -52,6 +54,8 @@ var attributeAliases = map[string][]string{
 	AttributeOthersRead:    {"otherread", "oread"},
 	AttributeOthersWrite:   {"otherwrite", "owrite"},
 	AttributeOthersExecute: {"otherexecute", "oexecute"},
+	AttributeBlockSize:     {"blocksize", "bsize", "blksize"},
+	AttributeBlocks:        {"blocks", "blks"},
 	AttributeUserId:        {"userid", "uid"},
 	AttributeUserName:      {"username", "uname"},
 	AttributeGroupId:       {"groupid", "gid"},

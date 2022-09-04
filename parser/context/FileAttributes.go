@@ -34,6 +34,7 @@ func ToFileAttributes(directory string, file fs.FileInfo, ctx *ParsingApplicatio
 	}
 	fileAttributes.setPath(path, ctx.allAttributes)
 	fileAttributes.setPermission(file, ctx.allAttributes)
+	fileAttributes.setBlock(file, ctx.allAttributes)
 	fileAttributes.setUserGroup(file, ctx.allAttributes)
 
 	return fileAttributes
@@ -97,6 +98,17 @@ func (fileAttributes *FileAttributes) setPermission(file fs.FileInfo, attributes
 	fileAttributes.setAllAliasesForAttribute(AttributeOthersRead, booleanValueUsing(perm.othersRead()), attributes)
 	fileAttributes.setAllAliasesForAttribute(AttributeOthersWrite, booleanValueUsing(perm.othersWrite()), attributes)
 	fileAttributes.setAllAliasesForAttribute(AttributeOthersExecute, booleanValueUsing(perm.othersExecute()), attributes)
+}
+
+func (fileAttributes *FileAttributes) setBlock(file fs.FileInfo, attributes *AllAttributes) {
+	stat := file.Sys().(*syscall.Stat_t)
+	if stat != nil {
+		fileAttributes.setAllAliasesForAttribute(AttributeBlockSize, Int64Value(int64(stat.Blksize)), attributes)
+		fileAttributes.setAllAliasesForAttribute(AttributeBlocks, Int64Value(stat.Blocks), attributes)
+	} else {
+		fileAttributes.setAllAliasesForAttribute(AttributeBlockSize, StringValue("NA"), attributes)
+		fileAttributes.setAllAliasesForAttribute(AttributeBlocks, StringValue("NA"), attributes)
+	}
 }
 
 func (fileAttributes *FileAttributes) setUserGroup(file fs.FileInfo, attributes *AllAttributes) {
