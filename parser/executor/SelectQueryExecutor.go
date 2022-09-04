@@ -38,7 +38,7 @@ func (selectQueryExecutor *SelectQueryExecutor) Execute() (*EvaluatingRows, erro
 		if rowCount >= limit && !selectQueryExecutor.query.IsOrderDefined() {
 			break
 		}
-		fileAttributes := context.ToFileAttributes(file, selectQueryExecutor.context)
+		fileAttributes := context.ToFileAttributes(source.Directory, file, selectQueryExecutor.context)
 		shouldChoose, err := selectQueryExecutor.shouldChoose(fileAttributes)
 		if err != nil {
 			return nil, err

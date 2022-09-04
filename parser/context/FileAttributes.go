@@ -14,12 +14,18 @@ type FileAttributes struct {
 	attributes map[string]Value
 }
 
-func ToFileAttributes(file fs.FileInfo, ctx *ParsingApplicationContext) *FileAttributes {
+func ToFileAttributes(directory string, file fs.FileInfo, ctx *ParsingApplicationContext) *FileAttributes {
 	fileAttributes := newFileAttributes()
 
 	fileAttributes.setName(file.Name(), ctx.allAttributes)
 	fileAttributes.setExtension(filepath.Ext(file.Name()), ctx.allAttributes)
 	fileAttributes.setSize(file.Size(), ctx.allAttributes)
+	path := directory + "/" + file.Name()
+	absolutePath, err := filepath.Abs(path)
+	if err == nil {
+		fileAttributes.setAbsolutePath(absolutePath, ctx.allAttributes)
+	}
+	fileAttributes.setPath(path, ctx.allAttributes)
 	fileAttributes.setPermission(file.Mode().Perm().String(), ctx.allAttributes)
 	fileAttributes.setUserGroup(file, ctx.allAttributes)
 
@@ -36,6 +42,14 @@ func (fileAttributes *FileAttributes) setName(name string, attributes *AllAttrib
 
 func (fileAttributes *FileAttributes) setSize(size int64, attributes *AllAttributes) {
 	fileAttributes.setAllAliasesForAttribute(AttributeSize, Int64Value(size), attributes)
+}
+
+func (fileAttributes *FileAttributes) setPath(path string, attributes *AllAttributes) {
+	fileAttributes.setAllAliasesForAttribute(AttributePath, StringValue(path), attributes)
+}
+
+func (fileAttributes *FileAttributes) setAbsolutePath(path string, attributes *AllAttributes) {
+	fileAttributes.setAllAliasesForAttribute(AttributeAbsolutePath, StringValue(path), attributes)
 }
 
 func (fileAttributes *FileAttributes) setModifiedTime(time time.Time, attributes *AllAttributes) {
