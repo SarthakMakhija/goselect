@@ -22,14 +22,14 @@ var listAttributesCmd = &cobra.Command{
 		printAttribute := func(attribute string, aliases []string) {
 			fmt.Printf("%v%-14v %-18v\n", contentColor, attribute, asString(aliases))
 		}
-		printAttributes := func(aliasesByAttributes map[string][]string) {
-			for attribute, aliases := range aliasesByAttributes {
+		printAttributes := func(aliasesByAttribute map[string][]string) {
+			for attribute, aliases := range aliasesByAttribute {
 				printAttribute(attribute, aliases)
 			}
 		}
-		sortAttributes := func(aliasesByAttributes map[string][]string) []string {
-			attributes := make([]string, 0, len(aliasesByAttributes))
-			for attribute := range aliasesByAttributes {
+		sortAttributes := func(aliasesByAttribute map[string][]string) []string {
+			attributes := make([]string, 0, len(aliasesByAttribute))
+			for attribute := range aliasesByAttribute {
 				attributes = append(attributes, attribute)
 			}
 			sort.Strings(attributes)
@@ -37,14 +37,14 @@ var listAttributesCmd = &cobra.Command{
 		}
 
 		isSorted, _ := cmd.Flags().GetBool("sorted")
-		aliasesByAttributes := context.NewAttributes().AllAttributeWithAliases()
+		aliasesByAttribute := context.NewAttributes().AllAttributeWithAliases()
 		printHeader()
 
 		if !isSorted {
-			printAttributes(aliasesByAttributes)
+			printAttributes(aliasesByAttribute)
 		} else {
-			for _, attribute := range sortAttributes(aliasesByAttributes) {
-				printAttribute(attribute, aliasesByAttributes[attribute])
+			for _, attribute := range sortAttributes(aliasesByAttribute) {
+				printAttribute(attribute, aliasesByAttribute[attribute])
 			}
 		}
 	},

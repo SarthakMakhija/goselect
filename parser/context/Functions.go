@@ -282,6 +282,14 @@ func (functions *AllFunctions) IsAnAggregateFunction(function string) bool {
 	return false
 }
 
+func (functions *AllFunctions) AllFunctionsWithAliases() map[string][]string {
+	aliasesByFunction := make(map[string][]string, len(functionDefinitions))
+	for function, definition := range functionDefinitions {
+		aliasesByFunction[function] = definition.aliases
+	}
+	return aliasesByFunction
+}
+
 func (functions *AllFunctions) Execute(fn string, args ...Value) (Value, error) {
 	return functions.supportedFunctions[strings.ToLower(fn)].block.run(args...)
 }
