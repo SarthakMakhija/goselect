@@ -63,6 +63,8 @@ func (fileAttributes *FileAttributes) setFormattedSize(size int64, attributes *A
 func (fileAttributes *FileAttributes) setFileType(file fs.FileInfo, attributes *AllAttributes) {
 	fileAttributes.setAllAliasesForAttribute(AttributeNameIsDir, booleanValueUsing(file.IsDir()), attributes)
 	fileAttributes.setAllAliasesForAttribute(AttributeNameIsFile, booleanValueUsing(file.Mode().IsRegular()), attributes)
+	hiddenFile, _ := isHiddenFile(file.Name())
+	fileAttributes.setAllAliasesForAttribute(AttributeNameIsHidden, booleanValueUsing(hiddenFile), attributes)
 }
 
 func (fileAttributes *FileAttributes) setPath(path string, attributes *AllAttributes) {

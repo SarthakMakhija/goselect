@@ -11,6 +11,7 @@ const (
 	AttributeFormattedSize = "fmtsize"
 	AttributeNameIsDir     = "isdirectory"
 	AttributeNameIsFile    = "isfile"
+	AttributeNameIsHidden  = "ishidden"
 	AttributeModifiedTime  = "modifiedtime"
 	AttributeExtension     = "extension"
 	AttributePermission    = "permission"
@@ -29,6 +30,7 @@ var attributeAliases = map[string][]string{
 	AttributeFormattedSize: {"fmtsize", "hsize"},
 	AttributeNameIsDir:     {"isdir", "isdirectory"},
 	AttributeNameIsFile:    {"isfile"},
+	AttributeNameIsHidden:  {"ishidden"},
 	AttributeModifiedTime:  {"modifiedTime", "mtime"},
 	AttributeExtension:     {"extension", "ext"},
 	AttributePermission:    {"permission", "perm"},
