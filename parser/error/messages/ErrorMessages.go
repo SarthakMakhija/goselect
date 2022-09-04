@@ -15,7 +15,7 @@ const (
 	ErrorMessageMissingSource                             = "expected a source path after 'from`"
 	ErrorMessageInaccessibleSource                        = "expected directory path %v to exist. please check the path, also ensure that it is accessible"
 	ErrorMessageMissingCommaProjection                    = "expected a comma in the projection list. please check the spellings, supported attributes and supported functions as well"
-	ErrorMessageOpeningParenthesesProjection              = "expected an opening parentheses in the projection list"
+	ErrorMessageOpeningParenthesesProjection              = "expected an opening parentheses in the projection list after '%v'"
 	ErrorMessageInvalidProjection                         = "invalid projection list, please check the opening and closing parentheses for all the functions"
 	ErrorMessageExpectedExpressionInProjection            = "expected atleast one expression in the projection list. please check the supported attributes and functions"
 	ErrorMessageExpectedExpressionInWhere                 = "expected one expression in the where clause, or remove 'where' keyword"

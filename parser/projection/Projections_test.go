@@ -29,6 +29,18 @@ func TestThrowsAnErrorWithInvalidProjection(t *testing.T) {
 	}
 }
 
+func TestThrowsAnErrorWithMissingParenthesesAfterAFunction(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "date"))
+	tokens.Add(tokenizer.NewToken(tokenizer.Comma, ","))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "2"))
+
+	_, err := NewProjections(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	if err == nil {
+		t.Fatalf("Expected an error given no parentheses after the function name but received none")
+	}
+}
+
 func TestAllAttributes1(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "name"))

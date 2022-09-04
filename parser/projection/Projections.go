@@ -2,6 +2,7 @@ package projection
 
 import (
 	"errors"
+	"fmt"
 	"goselect/parser/context"
 	"goselect/parser/error/messages"
 	"goselect/parser/expression"
@@ -102,7 +103,7 @@ func function(
 			switch {
 			case expectOpeningParentheses:
 				if !token.Equals("(") {
-					return nil, errors.New(messages.ErrorMessageOpeningParenthesesProjection)
+					return nil, errors.New(fmt.Sprintf(messages.ErrorMessageOpeningParenthesesProjection, functionNameToken.TokenValue))
 				}
 				expectOpeningParentheses = false
 			case token.Equals(")"):
