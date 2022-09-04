@@ -33,7 +33,7 @@ func ToFileAttributes(directory string, file fs.FileInfo, ctx *ParsingApplicatio
 		fileAttributes.setAbsolutePath(absolutePath, ctx.allAttributes)
 	}
 	fileAttributes.setPath(path, ctx.allAttributes)
-	fileAttributes.setPermission(file.Mode().Perm().String(), ctx.allAttributes)
+	fileAttributes.setPermission(file, ctx.allAttributes)
 	fileAttributes.setUserGroup(file, ctx.allAttributes)
 
 	return fileAttributes
@@ -63,6 +63,7 @@ func (fileAttributes *FileAttributes) setFormattedSize(size int64, attributes *A
 func (fileAttributes *FileAttributes) setFileType(file fs.FileInfo, attributes *AllAttributes) {
 	fileAttributes.setAllAliasesForAttribute(AttributeNameIsDir, booleanValueUsing(file.IsDir()), attributes)
 	fileAttributes.setAllAliasesForAttribute(AttributeNameIsFile, booleanValueUsing(file.Mode().IsRegular()), attributes)
+
 	hiddenFile, _ := isHiddenFile(file.Name())
 	fileAttributes.setAllAliasesForAttribute(AttributeNameIsHidden, booleanValueUsing(hiddenFile), attributes)
 }
@@ -83,8 +84,19 @@ func (fileAttributes *FileAttributes) setExtension(extension string, attributes 
 	fileAttributes.setAllAliasesForAttribute(AttributeExtension, StringValue(extension), attributes)
 }
 
-func (fileAttributes *FileAttributes) setPermission(permission string, attributes *AllAttributes) {
-	fileAttributes.setAllAliasesForAttribute(AttributePermission, StringValue(permission), attributes)
+func (fileAttributes *FileAttributes) setPermission(file fs.FileInfo, attributes *AllAttributes) {
+	fileAttributes.setAllAliasesForAttribute(AttributePermission, StringValue(file.Mode().Perm().String()), attributes)
+
+	perm := filePermission(file.Mode().Perm())
+	fileAttributes.setAllAliasesForAttribute(AttributeUserRead, booleanValueUsing(perm.userRead()), attributes)
+	fileAttributes.setAllAliasesForAttribute(AttributeUserWrite, booleanValueUsing(perm.userWrite()), attributes)
+	fileAttributes.setAllAliasesForAttribute(AttributeUserExecute, booleanValueUsing(perm.userExecute()), attributes)
+	fileAttributes.setAllAliasesForAttribute(AttributeGroupRead, booleanValueUsing(perm.groupRead()), attributes)
+	fileAttributes.setAllAliasesForAttribute(AttributeGroupWrite, booleanValueUsing(perm.groupWrite()), attributes)
+	fileAttributes.setAllAliasesForAttribute(AttributeGroupExecute, booleanValueUsing(perm.groupExecute()), attributes)
+	fileAttributes.setAllAliasesForAttribute(AttributeOthersRead, booleanValueUsing(perm.othersRead()), attributes)
+	fileAttributes.setAllAliasesForAttribute(AttributeOthersWrite, booleanValueUsing(perm.othersWrite()), attributes)
+	fileAttributes.setAllAliasesForAttribute(AttributeOthersExecute, booleanValueUsing(perm.othersExecute()), attributes)
 }
 
 func (fileAttributes *FileAttributes) setUserGroup(file fs.FileInfo, attributes *AllAttributes) {
@@ -147,4 +159,54 @@ func (fileAttributes *FileAttributes) Get(attribute string) Value {
 		return v
 	}
 	return EmptyValue
+}
+
+type filePermission uint32
+
+const (
+	userRead      filePermission = 1 << 8
+	userWrite                    = 1 << 7
+	userExecute                  = 1 << 6
+	groupRead                    = 1 << 5
+	groupWrite                   = 1 << 4
+	groupExecute                 = 1 << 3
+	othersRead                   = 1 << 2
+	othersWrite                  = 1 << 1
+	othersExecute                = 1 << 0
+)
+
+func (p filePermission) userRead() bool {
+	return p&userRead != 0
+}
+
+func (p filePermission) userWrite() bool {
+	return p&userWrite != 0
+}
+
+func (p filePermission) userExecute() bool {
+	return p&userExecute != 0
+}
+
+func (p filePermission) groupRead() bool {
+	return p&groupRead != 0
+}
+
+func (p filePermission) groupWrite() bool {
+	return p&groupWrite != 0
+}
+
+func (p filePermission) groupExecute() bool {
+	return p&groupExecute != 0
+}
+
+func (p filePermission) othersRead() bool {
+	return p&othersRead != 0
+}
+
+func (p filePermission) othersWrite() bool {
+	return p&othersWrite != 0
+}
+
+func (p filePermission) othersExecute() bool {
+	return p&othersExecute != 0
 }

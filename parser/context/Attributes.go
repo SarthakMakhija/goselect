@@ -15,6 +15,15 @@ const (
 	AttributeModifiedTime  = "modifiedtime"
 	AttributeExtension     = "extension"
 	AttributePermission    = "permission"
+	AttributeUserRead      = "userread"
+	AttributeUserWrite     = "userwrite"
+	AttributeUserExecute   = "userexecute"
+	AttributeGroupRead     = "groupread"
+	AttributeGroupWrite    = "groupwrite"
+	AttributeGroupExecute  = "groupexecute"
+	AttributeOthersRead    = "otherread"
+	AttributeOthersWrite   = "otherwrite"
+	AttributeOthersExecute = "otherexecute"
 	AttributeUserId        = "userid"
 	AttributeUserName      = "username"
 	AttributeGroupId       = "groupid"
@@ -34,6 +43,15 @@ var attributeAliases = map[string][]string{
 	AttributeModifiedTime:  {"modifiedTime", "mtime"},
 	AttributeExtension:     {"extension", "ext"},
 	AttributePermission:    {"permission", "perm"},
+	AttributeUserRead:      {"userread", "uread"},
+	AttributeUserWrite:     {"userwrite", "uwrite"},
+	AttributeUserExecute:   {"userexecute", "uexecute"},
+	AttributeGroupRead:     {"groupread", "gread"},
+	AttributeGroupWrite:    {"groupwrite", "gwrite"},
+	AttributeGroupExecute:  {"groupexecute", "gexecute"},
+	AttributeOthersRead:    {"otherread", "oread"},
+	AttributeOthersWrite:   {"otherwrite", "owrite"},
+	AttributeOthersExecute: {"otherexecute", "oexecute"},
 	AttributeUserId:        {"userid", "uid"},
 	AttributeUserName:      {"username", "uname"},
 	AttributeGroupId:       {"groupid", "gid"},
