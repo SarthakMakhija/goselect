@@ -79,6 +79,7 @@ The idea is to provide support for `selecting` files based on various conditions
 - Support for formatting the results
   - [X] Json formatter
   - [X] Html formatter
+  - [X] Table formatter
 - Support for exporting the formatted result
   - [X] Console
   - [X] File
