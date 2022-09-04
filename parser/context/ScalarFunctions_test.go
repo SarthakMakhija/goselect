@@ -209,7 +209,7 @@ func TestGreaterThanEqualReturningFalse(t *testing.T) {
 }
 
 func TestOrReturningTrue(t *testing.T) {
-	value, _ := NewFunctions().Execute("or", BooleanValue(false), StringValue("n"), BooleanValue(true))
+	value, _ := NewFunctions().Execute("or", falseBooleanValue, StringValue("n"), trueBooleanValue)
 
 	actualValue, _ := value.GetBoolean()
 	if actualValue != true {
@@ -218,7 +218,7 @@ func TestOrReturningTrue(t *testing.T) {
 }
 
 func TestOrReturningFalse(t *testing.T) {
-	value, _ := NewFunctions().Execute("or", BooleanValue(false), StringValue("n"), BooleanValue(false))
+	value, _ := NewFunctions().Execute("or", falseBooleanValue, StringValue("n"), falseBooleanValue)
 
 	actualValue, _ := value.GetBoolean()
 	if actualValue != false {
@@ -227,7 +227,7 @@ func TestOrReturningFalse(t *testing.T) {
 }
 
 func TestAndReturningTrue(t *testing.T) {
-	value, _ := NewFunctions().Execute("and", BooleanValue(true), StringValue("y"), BooleanValue(true))
+	value, _ := NewFunctions().Execute("and", trueBooleanValue, StringValue("y"), trueBooleanValue)
 
 	actualValue, _ := value.GetBoolean()
 	if actualValue != true {
@@ -236,7 +236,7 @@ func TestAndReturningTrue(t *testing.T) {
 }
 
 func TestAndReturningFalse(t *testing.T) {
-	value, _ := NewFunctions().Execute("and", StringValue("ok"), StringValue("y"), BooleanValue(false))
+	value, _ := NewFunctions().Execute("and", StringValue("ok"), StringValue("y"), falseBooleanValue)
 
 	actualValue, _ := value.GetBoolean()
 	if actualValue != false {
@@ -245,7 +245,7 @@ func TestAndReturningFalse(t *testing.T) {
 }
 
 func TestNotReturningTrue(t *testing.T) {
-	value, _ := NewFunctions().Execute("not", BooleanValue(false))
+	value, _ := NewFunctions().Execute("not", falseBooleanValue)
 
 	actualValue, _ := value.GetBoolean()
 	if actualValue != true {
@@ -254,7 +254,7 @@ func TestNotReturningTrue(t *testing.T) {
 }
 
 func TestNotReturningFalse(t *testing.T) {
-	value, _ := NewFunctions().Execute("not", BooleanValue(true))
+	value, _ := NewFunctions().Execute("not", trueBooleanValue)
 
 	actualValue, _ := value.GetBoolean()
 	if actualValue != false {

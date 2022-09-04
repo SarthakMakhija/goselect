@@ -208,7 +208,7 @@ func (n NotFunctionBlock) run(args ...Value) (Value, error) {
 	if err != nil {
 		return EmptyValue, fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameNot, err)
 	}
-	return BooleanValue(!result), nil
+	return booleanValueUsing(!result), nil
 }
 
 func (l LikeFunctionBlock) run(args ...Value) (Value, error) {
@@ -219,7 +219,7 @@ func (l LikeFunctionBlock) run(args ...Value) (Value, error) {
 	if compiled, err := regexp.Compile(args[1].GetAsString()); err != nil {
 		return EmptyValue, err
 	} else {
-		return BooleanValue(compiled.MatchString(toMatch)), nil
+		return booleanValueUsing(compiled.MatchString(toMatch)), nil
 	}
 }
 
@@ -333,7 +333,7 @@ func (c ContainsFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameContains, 2); err != nil {
 		return EmptyValue, err
 	}
-	return BooleanValue(strings.Contains(args[0].stringValue, args[1].GetAsString())), nil
+	return booleanValueUsing(strings.Contains(args[0].stringValue, args[1].GetAsString())), nil
 }
 
 func (s SubstringFunctionBlock) run(args ...Value) (Value, error) {

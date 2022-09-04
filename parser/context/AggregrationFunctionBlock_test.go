@@ -38,9 +38,9 @@ func TestCountDistinct2(t *testing.T) {
 	allFunctions := NewFunctions()
 	initialState := allFunctions.InitialState("countd")
 
-	state, _ := allFunctions.ExecuteAggregate("countd", initialState, BooleanValue(true))
-	state, _ = allFunctions.ExecuteAggregate("countd", state, BooleanValue(true))
-	state, _ = allFunctions.ExecuteAggregate("countd", state, BooleanValue(true))
+	state, _ := allFunctions.ExecuteAggregate("countd", initialState, trueBooleanValue)
+	state, _ = allFunctions.ExecuteAggregate("countd", state, trueBooleanValue)
+	state, _ = allFunctions.ExecuteAggregate("countd", state, trueBooleanValue)
 
 	finalValue, _ := allFunctions.FinalValue("countd", state, nil)
 	actualValue := finalValue.GetAsString()
@@ -53,9 +53,9 @@ func TestCountDistinct3(t *testing.T) {
 	allFunctions := NewFunctions()
 	initialState := allFunctions.InitialState("countd")
 
-	state, _ := allFunctions.ExecuteAggregate("countd", initialState, BooleanValue(true))
-	state, _ = allFunctions.ExecuteAggregate("countd", state, BooleanValue(true))
-	state, _ = allFunctions.ExecuteAggregate("countd", state, BooleanValue(false))
+	state, _ := allFunctions.ExecuteAggregate("countd", initialState, trueBooleanValue)
+	state, _ = allFunctions.ExecuteAggregate("countd", state, trueBooleanValue)
+	state, _ = allFunctions.ExecuteAggregate("countd", state, falseBooleanValue)
 
 	finalValue, _ := allFunctions.FinalValue("countd", state, nil)
 	actualValue := finalValue.GetAsString()

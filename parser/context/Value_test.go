@@ -75,7 +75,7 @@ func TestCompareTo8(t *testing.T) {
 }
 
 func TestCompareTo9(t *testing.T) {
-	value := BooleanValue(true)
+	value := trueBooleanValue
 	other := StringValue("Y")
 
 	if value.CompareTo(other) != 0 {
@@ -84,7 +84,7 @@ func TestCompareTo9(t *testing.T) {
 }
 
 func TestCompareTo10(t *testing.T) {
-	value := BooleanValue(false)
+	value := falseBooleanValue
 	other := StringValue("Y")
 
 	if value.CompareTo(other) == 0 {
@@ -120,7 +120,7 @@ func TestCompareTo13(t *testing.T) {
 }
 
 func TestCompareTo14(t *testing.T) {
-	value := BooleanValue(false)
+	value := falseBooleanValue
 	other := StringValue("content")
 
 	if value.CompareTo(other) == 0 {

@@ -245,6 +245,13 @@ func emptyValue() Value {
 	return Value{valueType: ValueTypeUndefined}
 }
 
+func booleanValueUsing(value bool) Value {
+	if value {
+		return trueBooleanValue
+	}
+	return falseBooleanValue
+}
+
 func (value Value) attemptCommonType(other Value) (Value, Value, bool, error) {
 	switch {
 	case (value.valueType == ValueTypeInt ||
@@ -290,19 +297,19 @@ func (value Value) attemptCommonType(other Value) (Value, Value, bool, error) {
 	case value.valueType == ValueTypeString &&
 		other.valueType == ValueTypeBoolean:
 		if strings.ToLower(value.stringValue) == "true" || strings.ToLower(value.stringValue) == "y" {
-			return BooleanValue(true), other, true, nil
+			return trueBooleanValue, other, true, nil
 		}
 		if strings.ToLower(value.stringValue) == "false" || strings.ToLower(value.stringValue) == "n" {
-			return BooleanValue(false), other, true, nil
+			return falseBooleanValue, other, true, nil
 		}
 		return value, other, false, nil
 	case value.valueType == ValueTypeBoolean &&
 		other.valueType == ValueTypeString:
 		if strings.ToLower(other.stringValue) == "true" || strings.ToLower(other.stringValue) == "y" {
-			return value, BooleanValue(true), true, nil
+			return value, trueBooleanValue, true, nil
 		}
 		if strings.ToLower(other.stringValue) == "false" || strings.ToLower(other.stringValue) == "n" {
-			return value, BooleanValue(false), true, nil
+			return value, falseBooleanValue, true, nil
 		}
 		return value, other, false, nil
 	case value.valueType == ValueTypeString && other.isNumericType():
