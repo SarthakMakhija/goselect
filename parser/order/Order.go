@@ -52,7 +52,7 @@ func NewOrder(iterator *tokenizer.TokenIterator, projectionCount int) (*Order, e
 			expectComma = false
 		default:
 			if projectionPosition, err := strconv.Atoi(token.TokenValue); err != nil {
-				return nil, err
+				return nil, fmt.Errorf(messages.ErrorMessageNonZeroPositivePositionsWithExistingError, err)
 			} else {
 				if projectionPosition <= 0 {
 					return nil, errors.New(messages.ErrorMessageNonZeroPositivePositions)
