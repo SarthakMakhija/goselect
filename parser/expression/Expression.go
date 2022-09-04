@@ -100,9 +100,9 @@ func (expressions Expressions) DisplayableAttributes() []string {
 
 	var attributes []string
 	for _, expression := range expressions.Expressions {
-		if len(expression.attribute) != 0 {
+		if expression.eType == TypeAttribute {
 			attributes = append(attributes, expression.attribute)
-		} else if len(expression.value) != 0 {
+		} else if expression.eType == TypeValue {
 			attributes = append(attributes, expression.value)
 		} else {
 			attributes = append(attributes, functionAsString(expression))
