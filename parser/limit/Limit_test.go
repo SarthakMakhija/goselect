@@ -26,7 +26,7 @@ func TestLimitWithAFloatingValue(t *testing.T) {
 	}
 }
 
-func TestLimitWithIllegalLimit(t *testing.T) {
+func TestLimitWithIllegalLimit1(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.Limit, "limit"))
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "10@123"))
@@ -34,6 +34,17 @@ func TestLimitWithIllegalLimit(t *testing.T) {
 	_, err := NewLimit(tokens.Iterator())
 	if err == nil {
 		t.Fatalf("Expected an error with floating point limit")
+	}
+}
+
+func TestLimitWithIllegalLimit2(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.Limit, "limit"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "-10"))
+
+	_, err := NewLimit(tokens.Iterator())
+	if err == nil {
+		t.Fatalf("Expected an error negative limit")
 	}
 }
 

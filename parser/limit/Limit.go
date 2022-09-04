@@ -2,6 +2,7 @@ package limit
 
 import (
 	"errors"
+	"fmt"
 	"goselect/parser/error/messages"
 	"goselect/parser/tokenizer"
 	"strconv"
@@ -27,7 +28,7 @@ func NewLimit(iterator *tokenizer.TokenIterator) (*Limit, error) {
 	}
 	token := iterator.Next()
 	if value, err := strconv.ParseUint(token.TokenValue, 10, 32); err != nil {
-		return nil, err
+		return nil, fmt.Errorf(messages.ErrorMessageLimitValueIntWithExistingError, err)
 	} else {
 		return &Limit{Limit: uint32(value)}, nil
 	}
