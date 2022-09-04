@@ -290,6 +290,16 @@ func (functions *AllFunctions) AllFunctionsWithAliases() map[string][]string {
 	return aliasesByFunction
 }
 
+func (functions *AllFunctions) AllFunctionsWithAliasesHavingTag(tag string) map[string][]string {
+	aliasesByFunction := make(map[string][]string)
+	for function, definition := range functionDefinitions {
+		if definition.tags[tag] {
+			aliasesByFunction[function] = definition.aliases
+		}
+	}
+	return aliasesByFunction
+}
+
 func (functions *AllFunctions) Execute(fn string, args ...Value) (Value, error) {
 	return functions.supportedFunctions[strings.ToLower(fn)].block.run(args...)
 }
