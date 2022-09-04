@@ -9,6 +9,7 @@ const (
 	ErrorMessageMissingCommaOrderBy                 = "expected a comma after 'order by' in attribute positions"
 	ErrorMessageMissingOrderByAttributes            = "expected an attribute position after 'order by'. attribute positions start with 1"
 	ErrorMessageNonZeroPositivePositions            = "expected non-zero & positive 'order by' positions"
+	ErrorMessageOrderByPositionOutOfRange           = "expected 'order by' position to be between %v and %v, both inclusive"
 	ErrorMessageMissingSource                       = "expected a source path after 'from`"
 	ErrorMessageInaccessibleSource                  = "expected directory path %v to exist. please check the path, also ensure that it is accessible"
 	ErrorMessageMissingCommaProjection              = "expected a comma in the projection list. please check the spellings as well"

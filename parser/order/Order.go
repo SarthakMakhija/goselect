@@ -2,6 +2,7 @@ package order
 
 import (
 	"errors"
+	"fmt"
 	"goselect/parser/error/messages"
 	"goselect/parser/tokenizer"
 	"strconv"
@@ -53,8 +54,11 @@ func NewOrder(iterator *tokenizer.TokenIterator, projectionCount int) (*Order, e
 			if projectionPosition, err := strconv.Atoi(token.TokenValue); err != nil {
 				return nil, err
 			} else {
-				if projectionPosition == 0 {
+				if projectionPosition <= 0 {
 					return nil, errors.New(messages.ErrorMessageNonZeroPositivePositions)
+				}
+				if projectionPosition > projectionCount {
+					return nil, errors.New(fmt.Sprintf(messages.ErrorMessageOrderByPositionOutOfRange, 1, projectionCount))
 				}
 				if projectionPosition <= projectionCount {
 					attributes = append(attributes, AttributeRef{ProjectionPosition: projectionPosition})

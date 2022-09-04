@@ -144,6 +144,32 @@ func TestThrowsAErrorOrderByAttributePositionZero(t *testing.T) {
 	}
 }
 
+func TestThrowsAErrorOrderByAttributePositionNegative(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.Order, "order"))
+	tokens.Add(tokenizer.NewToken(tokenizer.By, "by"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "-9"))
+
+	_, err := NewOrder(tokens.Iterator(), 1)
+
+	if err == nil {
+		t.Fatalf("Expected an error when -9 is given as the order by position")
+	}
+}
+
+func TestThrowsAErrorOrderByAttributePositionBeyondProjectCount(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.Order, "order"))
+	tokens.Add(tokenizer.NewToken(tokenizer.By, "by"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "2"))
+
+	_, err := NewOrder(tokens.Iterator(), 1)
+
+	if err == nil {
+		t.Fatalf("Expected an error when 2 is given as the order by position and projection count is 1")
+	}
+}
+
 func TestOrderBy2AttributesWithOneAsTheProjectionPosition(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.Order, "order"))
