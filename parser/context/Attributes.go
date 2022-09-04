@@ -21,7 +21,7 @@ var attributeAliases = map[string][]string{
 	AttributeName:         {"filename", "name", "fname"},
 	AttributeBaseName:     {"basename", "bname"},
 	AttributePath:         {"filepath", "path", "fpath"},
-	AttributeAbsolutePath: {"absolutepath", "apath"},
+	AttributeAbsolutePath: {"absolutepath", "apath", "abspath"},
 	AttributeSize:         {"filesize", "size", "fsize"},
 	AttributeModifiedTime: {"modifiedTime", "mtime"},
 	AttributeExtension:    {"extension", "ext"},
