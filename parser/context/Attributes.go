@@ -5,18 +5,18 @@ import "strings"
 const (
 	AttributeName         = "name"
 	AttributeSize         = "size"
-	AttributeModifiedTime = "modifiedTime"
+	AttributeModifiedTime = "modifiedtime"
 	AttributeExtension    = "extension"
 	AttributePermission   = "permission"
-	AttributeUserId       = "userId"
-	AttributeUserName     = "userName"
-	AttributeGroupId      = "groupId"
-	AttributeGroupName    = "groupName"
+	AttributeUserId       = "userid"
+	AttributeUserName     = "username"
+	AttributeGroupId      = "groupid"
+	AttributeGroupName    = "groupname"
 )
 
 var attributeAliases = map[string][]string{
-	AttributeName:         {"name", "fname"},
-	AttributeSize:         {"size", "fsize"},
+	AttributeName:         {"filename", "name", "fname"},
+	AttributeSize:         {"filesize", "size", "fsize"},
 	AttributeModifiedTime: {"modifiedTime", "mtime"},
 	AttributeExtension:    {"extension", "ext"},
 	AttributePermission:   {"permission", "perm"},
@@ -42,6 +42,10 @@ func NewAttributes() *AllAttributes {
 
 func (attributes *AllAttributes) IsASupportedAttribute(attribute string) bool {
 	return attributes.supportedAttributes[strings.ToLower(attribute)]
+}
+
+func (attributes *AllAttributes) AllAttributeWithAliases() map[string][]string {
+	return attributeAliases
 }
 
 func (attributes *AllAttributes) aliasesFor(attribute string) []string {
