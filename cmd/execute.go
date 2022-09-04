@@ -39,7 +39,7 @@ var executeCmd = &cobra.Command{
 			fmt.Println(err)
 			return
 		}
-		res := writer.NewJsonFormatter().Format(query.Projections, rows)
+		res := writer.NewTableFormatter().Format(query.Projections, rows)
 		_ = writer.NewConsoleWriter().Write(res)
 	},
 }
