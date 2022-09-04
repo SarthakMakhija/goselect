@@ -10,8 +10,8 @@ import (
 
 var listAttributesCmd = &cobra.Command{
 	Use:   "listAttributes",
-	Short: "List all the attributes supported by goselect.",
-	Long:  `List all the attributes along with their aliases supported by goselect.`,
+	Short: "List all the attributes supported by goselect",
+	Long:  `List all the attributes along with their aliases supported by goselect`,
 	Run: func(cmd *cobra.Command, args []string) {
 		asString := func(aliases []string) string {
 			return strings.Join(aliases, ", ")
@@ -52,5 +52,5 @@ var listAttributesCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(listAttributesCmd)
-	listAttributesCmd.PersistentFlags().Bool("sorted", false, "Display the attributes in sorted order. Use --sorted=true or --sorted=false.")
+	listAttributesCmd.PersistentFlags().Bool("sorted", false, "display the attributes in sorted order. Use --sorted=true or --sorted=false")
 }

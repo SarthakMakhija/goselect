@@ -1,7 +1,3 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
-*/
 package cmd
 
 import (
@@ -10,19 +6,24 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "goselect",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
+	Short: "SQL like select interface for file system",
+	Long: `goselect provides SQL like 'select' interface for file system. The syntax for select query is: select <attributes> from <directory> [where condition] [order by] [limit].
+goselect provides various features including:	
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
+1. Support for attribute aliases. Example, filename is same as fname  
+2. Support for function aliases. Example, lower is same as low 
+3. Support for various scalar functions like lower, upper, now, concat etc
+4. Support for various aggregate functions like count, countdistinct, average etc
+5. Support for exporting the results in table, json and html format
+
+Features that are different from SQL:
+1. goselect does not support 'group by'. All the aggregating functions return results that repeat for each row
+2. goselect does not support expressions like '1+2', '1*2'. Instead, goselect gives functions like 'add', 'mul' etc to write such expressions
+3. goselect does not support expressions like name='sample.log' in 'where' clause. Instead, various functions are given to represent such expressions. These functions include: 'eq', 'ne', 'lt' etc
+4. goselect has a weak grammar. For example, a query like 'select 1+2, name from /home/projects' will ignore 1+2
+5. goselect's 'order by' clause supports only attribute positions. For example, a query like 'select name, size from /home/projects order by 1'`,
 }
 
 const (
@@ -48,5 +49,4 @@ func init() {
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

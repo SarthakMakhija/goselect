@@ -47,5 +47,5 @@ var executeCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(executeCmd)
-	rootCmd.PersistentFlags().String("query", "", "Specify the query. Use --query=<query>")
+	rootCmd.PersistentFlags().StringP("query", "q", "", "specify the query. Use --query=<query> or --q=<query>")
 }

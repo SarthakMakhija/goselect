@@ -10,8 +10,8 @@ import (
 
 var listWhereClauseFunctionsCmd = &cobra.Command{
 	Use:   "listWhereClauseFunctions",
-	Short: "List all the function supported by goselect in 'where' clause.",
-	Long:  `List all the function along with their aliases supported by goselect in 'where' clause.`,
+	Short: "List all the function supported by goselect in 'where' clause",
+	Long:  `List all the function along with their aliases supported by goselect in 'where' clause`,
 	Run: func(cmd *cobra.Command, args []string) {
 		asString := func(aliases []string) string {
 			return strings.Join(aliases, ", ")
@@ -52,5 +52,5 @@ var listWhereClauseFunctionsCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(listWhereClauseFunctionsCmd)
-	listWhereClauseFunctionsCmd.PersistentFlags().Bool("sorted", false, "Display the functions supported 'where' clause in sorted order. Use --sorted=true or --sorted=false.")
+	listWhereClauseFunctionsCmd.PersistentFlags().Bool("sorted", false, "display the functions supported 'where' clause in sorted order. Use --sorted=true or --sorted=false")
 }

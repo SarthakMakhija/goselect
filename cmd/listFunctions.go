@@ -10,8 +10,8 @@ import (
 
 var listFunctionsCmd = &cobra.Command{
 	Use:   "listFunctions",
-	Short: "List all the function supported by goselect.",
-	Long:  `List all the function along with their aliases supported by goselect.`,
+	Short: "List all the function supported by goselect",
+	Long:  `List all the function along with their aliases supported by goselect`,
 	Run: func(cmd *cobra.Command, args []string) {
 		asString := func(aliases []string) string {
 			return strings.Join(aliases, ", ")
@@ -52,5 +52,5 @@ var listFunctionsCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(listFunctionsCmd)
-	listFunctionsCmd.PersistentFlags().Bool("sorted", false, "Display the functions in sorted order. Use --sorted=true or --sorted=false.")
+	listFunctionsCmd.PersistentFlags().Bool("sorted", false, "display the functions in sorted order. Use --sorted=true or --sorted=false")
 }
