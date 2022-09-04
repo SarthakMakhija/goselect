@@ -4,6 +4,7 @@ import "strings"
 
 const (
 	AttributeName         = "name"
+	AttributeBaseName     = "basename"
 	AttributePath         = "path"
 	AttributeAbsolutePath = "absolutepath"
 	AttributeSize         = "size"
@@ -18,6 +19,7 @@ const (
 
 var attributeAliases = map[string][]string{
 	AttributeName:         {"filename", "name", "fname"},
+	AttributeBaseName:     {"basename", "bname"},
 	AttributePath:         {"filepath", "path", "fpath"},
 	AttributeAbsolutePath: {"absolutepath", "apath"},
 	AttributeSize:         {"filesize", "size", "fsize"},

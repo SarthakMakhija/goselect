@@ -17,10 +17,14 @@ type FileAttributes struct {
 func ToFileAttributes(directory string, file fs.FileInfo, ctx *ParsingApplicationContext) *FileAttributes {
 	fileAttributes := newFileAttributes()
 
-	fileAttributes.setName(file.Name(), ctx.allAttributes)
-	fileAttributes.setExtension(filepath.Ext(file.Name()), ctx.allAttributes)
+	fileName := file.Name()
+	extension := filepath.Ext(fileName)
+
+	fileAttributes.setName(fileName, ctx.allAttributes)
+	fileAttributes.setExtension(extension, ctx.allAttributes)
+	fileAttributes.setBaseName(strings.Replace(fileName, extension, "", 1), ctx.allAttributes)
 	fileAttributes.setSize(file.Size(), ctx.allAttributes)
-	path := directory + "/" + file.Name()
+	path := directory + "/" + fileName
 	absolutePath, err := filepath.Abs(path)
 	if err == nil {
 		fileAttributes.setAbsolutePath(absolutePath, ctx.allAttributes)
@@ -38,6 +42,10 @@ func newFileAttributes() *FileAttributes {
 
 func (fileAttributes *FileAttributes) setName(name string, attributes *AllAttributes) {
 	fileAttributes.setAllAliasesForAttribute(AttributeName, StringValue(name), attributes)
+}
+
+func (fileAttributes *FileAttributes) setBaseName(name string, attributes *AllAttributes) {
+	fileAttributes.setAllAliasesForAttribute(AttributeBaseName, StringValue(name), attributes)
 }
 
 func (fileAttributes *FileAttributes) setSize(size int64, attributes *AllAttributes) {
