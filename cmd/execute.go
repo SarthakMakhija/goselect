@@ -15,28 +15,29 @@ var executeCmd = &cobra.Command{
 	Long:  `Select SQL Query syntax: select <columns> from <source directory> [where <condition>] [order by] [limit]`,
 	Run: func(cmd *cobra.Command, args []string) {
 		rawQuery, err := cmd.Flags().GetString("query")
+		errorColor := "\033[31m"
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println(errorColor, err)
 			return
 		}
 		if len(rawQuery) == 0 {
-			fmt.Println("select query is mandatory. please use --query to specify the query.")
+			fmt.Println(errorColor, "select query is mandatory. please use --query to specify the query.")
 			return
 		}
 		newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
 		parser, err := parser.NewParser(rawQuery, newContext)
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println(errorColor, err)
 			return
 		}
 		query, err := parser.Parse()
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println(errorColor, err)
 			return
 		}
 		rows, err := executor.NewSelectQueryExecutor(query, newContext).Execute()
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println(errorColor, err)
 			return
 		}
 		res := writer.NewTableFormatter().Format(query.Projections, rows)
