@@ -9,6 +9,8 @@ const (
 	AttributeAbsolutePath  = "absolutepath"
 	AttributeSize          = "size"
 	AttributeFormattedSize = "fmtsize"
+	AttributeNameIsDir     = "isdirectory"
+	AttributeNameIsFile    = "isfile"
 	AttributeModifiedTime  = "modifiedtime"
 	AttributeExtension     = "extension"
 	AttributePermission    = "permission"
@@ -25,6 +27,8 @@ var attributeAliases = map[string][]string{
 	AttributeAbsolutePath:  {"absolutepath", "apath", "abspath"},
 	AttributeSize:          {"filesize", "size", "fsize"},
 	AttributeFormattedSize: {"fmtsize", "hsize"},
+	AttributeNameIsDir:     {"isdir", "isdirectory"},
+	AttributeNameIsFile:    {"isfile"},
 	AttributeModifiedTime:  {"modifiedTime", "mtime"},
 	AttributeExtension:     {"extension", "ext"},
 	AttributePermission:    {"permission", "perm"},

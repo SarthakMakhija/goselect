@@ -26,6 +26,7 @@ func ToFileAttributes(directory string, file fs.FileInfo, ctx *ParsingApplicatio
 	fileAttributes.setBaseName(strings.Replace(fileName, extension, "", 1), ctx.allAttributes)
 	fileAttributes.setSize(file.Size(), ctx.allAttributes)
 	fileAttributes.setFormattedSize(file.Size(), ctx.allAttributes)
+	fileAttributes.setFileType(file, ctx.allAttributes)
 	path := directory + "/" + fileName
 	absolutePath, err := filepath.Abs(path)
 	if err == nil {
@@ -57,6 +58,11 @@ func (fileAttributes *FileAttributes) setSize(size int64, attributes *AllAttribu
 func (fileAttributes *FileAttributes) setFormattedSize(size int64, attributes *AllAttributes) {
 	formattedSize := humanize.Bytes(uint64(size))
 	fileAttributes.setAllAliasesForAttribute(AttributeFormattedSize, StringValue(formattedSize), attributes)
+}
+
+func (fileAttributes *FileAttributes) setFileType(file fs.FileInfo, attributes *AllAttributes) {
+	fileAttributes.setAllAliasesForAttribute(AttributeNameIsDir, booleanValueUsing(file.IsDir()), attributes)
+	fileAttributes.setAllAliasesForAttribute(AttributeNameIsFile, booleanValueUsing(file.Mode().IsRegular()), attributes)
 }
 
 func (fileAttributes *FileAttributes) setPath(path string, attributes *AllAttributes) {
