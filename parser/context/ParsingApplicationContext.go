@@ -21,10 +21,6 @@ func (context *ParsingApplicationContext) FunctionContainsATag(function string, 
 	return context.allFunctions.ContainsATag(function, tag)
 }
 
-func (context *ParsingApplicationContext) FunctionAliasesWithTag(tag string) []string {
-	return context.allFunctions.AliasesWithTag(tag)
-}
-
 func (context *ParsingApplicationContext) IsAnAggregateFunction(functionName string) bool {
 	return context.allFunctions.IsAnAggregateFunction(functionName)
 }

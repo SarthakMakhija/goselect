@@ -2,7 +2,6 @@ package where
 
 import (
 	"errors"
-	"fmt"
 	"goselect/parser/context"
 	"goselect/parser/error/messages"
 	"goselect/parser/expression"
@@ -79,7 +78,7 @@ func all(
 				expressions = append(expressions, expression.ExpressionWithFunctionInstance(function))
 			}
 		default:
-			return expression.Expressions{}, true, errors.New(fmt.Sprintf(messages.ErrorMessageInvalidWhereFunctionUsed, ctx.FunctionAliasesWithTag("where")))
+			return expression.Expressions{}, true, errors.New(messages.ErrorMessageInvalidWhereFunctionUsed)
 		}
 	}
 	return expression.Expressions{Expressions: expressions}, true, nil

@@ -264,16 +264,6 @@ func (functions *AllFunctions) ContainsATag(function string, tag string) bool {
 	return definition.tags[strings.ToLower(tag)]
 }
 
-func (functions *AllFunctions) AliasesWithTag(tag string) []string {
-	var functionAliases []string
-	for _, definition := range functionDefinitions {
-		if definition.tags[tag] {
-			functionAliases = append(functionAliases, definition.aliases...)
-		}
-	}
-	return functionAliases
-}
-
 func (functions *AllFunctions) IsAnAggregateFunction(function string) bool {
 	fn, ok := functions.supportedFunctions[strings.ToLower(function)]
 	if ok {
