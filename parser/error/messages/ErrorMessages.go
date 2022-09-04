@@ -23,7 +23,7 @@ const (
 	ErrorMessageInvalidWhere                              = "invalid where clause, please check opening and closing parentheses for all the functions"
 	ErrorMessageInvalidWhereFunctionUsed                  = "invalid where clause, 'where' supports only functions. please check all the function supported in 'where' clause"
 	ErrorMessageAggregateFunctionInsideWhere              = "invalid where clause, aggregate functions are not supported in the where clause"
-	ErrorMessageMissingParameterInScalarFunctions         = "expected %v parameters in the function %v but did not receive all"
+	ErrorMessageMissingParameterInScalarFunctions         = "expected %v parameter(s) in the function %v but did not receive the required parameter(s)"
 	ErrorMessageIncorrectValueType                        = "expected a %v value type but was not"
 	ErrorMessageIncorrectEndIndexInSubstring              = "expected the end index to be greater than the from index in substr"
 	ErrorMessageIllegalFromToIndexInSubstring             = "expected the from and to index to be positive integers"
