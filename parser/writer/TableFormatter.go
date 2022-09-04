@@ -19,13 +19,13 @@ func (tableFormatter TableFormatter) Format(projections *projection.Projections,
 	contentColor := "\033[0m"
 
 	for _, attributeHeader := range projections.DisplayableAttributes() {
-		result.WriteString(fmt.Sprintf("%v%-28v", headerColor, attributeHeader))
+		result.WriteString(fmt.Sprintf("%v%-24v", headerColor, attributeHeader))
 	}
 	result.WriteString("\n")
 	iterator := rows.RowIterator()
 	for iterator.HasNext() {
 		for _, attribute := range iterator.Next().AllAttributes() {
-			result.WriteString(fmt.Sprintf("%v%-28v", contentColor, attribute.GetAsString()))
+			result.WriteString(fmt.Sprintf("%v%-24v", contentColor, attribute.GetAsString()))
 		}
 		result.WriteString("\n")
 	}
