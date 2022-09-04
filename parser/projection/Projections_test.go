@@ -17,6 +17,18 @@ func TestThrowsAnErrorWithoutAnyAttributes(t *testing.T) {
 	}
 }
 
+func TestThrowsAnErrorWithInvalidProjection(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "ok"))
+	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
+	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
+
+	_, err := NewProjections(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	if err == nil {
+		t.Fatalf("Expected an error with invalid projection list but received none")
+	}
+}
+
 func TestAllAttributes1(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "name"))

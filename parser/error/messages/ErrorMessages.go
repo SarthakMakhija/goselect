@@ -17,7 +17,7 @@ const (
 	ErrorMessageMissingCommaProjection                    = "expected a comma in the projection list. please check the spellings, supported attributes and supported functions as well"
 	ErrorMessageOpeningParenthesesProjection              = "expected an opening parentheses in the projection list"
 	ErrorMessageInvalidProjection                         = "invalid projection list, please check the opening and closing parentheses for all the functions"
-	ErrorMessageExpectedExpressionInProjection            = "expected atleast one expression in the projection list"
+	ErrorMessageExpectedExpressionInProjection            = "expected atleast one expression in the projection list. please check the supported attributes and functions"
 	ErrorMessageExpectedExpressionInWhere                 = "expected one expression in the where clause, or remove 'where' keyword"
 	ErrorMessageExpectedSingleExpressionInWhere           = "expected only a single expression in the where clause"
 	ErrorMessageInvalidWhere                              = "invalid where clause, please check opening and closing parentheses for all the functions"
