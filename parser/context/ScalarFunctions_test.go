@@ -6,6 +6,16 @@ import (
 	"time"
 )
 
+func TestIdentity(t *testing.T) {
+	value, _ := NewFunctions().Execute("identity", StringValue("100"))
+	var expected = "100"
+
+	actualValue := value.GetAsString()
+	if actualValue != expected {
+		t.Fatalf("Expected identity to be %v, received %v", expected, actualValue)
+	}
+}
+
 func TestAdd(t *testing.T) {
 	value, _ := NewFunctions().Execute("add", StringValue("1"), IntValue(2), IntValue(4))
 	var expected float64 = 7

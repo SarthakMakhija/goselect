@@ -11,6 +11,7 @@ import (
 	"strings"
 )
 
+type IdentityFunctionBlock struct{}
 type AddFunctionBlock struct{}
 type SubtractFunctionBlock struct{}
 type MultipleFunctionBlock struct{}
@@ -44,6 +45,13 @@ type ConcatFunctionBlock struct{}
 type ConcatWithSeparatorFunctionBlock struct{}
 type ContainsFunctionBlock struct{}
 type SubstringFunctionBlock struct{}
+
+func (receiver IdentityFunctionBlock) run(args ...Value) (Value, error) {
+	if err := ensureNParametersOrError(args, FunctionNameIdentity, 1); err != nil {
+		return EmptyValue, err
+	}
+	return args[0], nil
+}
 
 func (a AddFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameAdd, 2); err != nil {

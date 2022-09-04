@@ -34,6 +34,7 @@ type FunctionState struct {
 }
 
 const (
+	FunctionNameIdentity            = "identity"
 	FunctionNameAdd                 = "add"
 	FunctionNameSubtract            = "subtract"
 	FunctionNameMultiply            = "multiply"
@@ -74,6 +75,10 @@ const (
 )
 
 var functionDefinitions = map[string]*FunctionDefinition{
+	FunctionNameIdentity: {
+		aliases: []string{"identity", "iden"},
+		block:   IdentityFunctionBlock{},
+	},
 	FunctionNameAdd: {
 		aliases: []string{"add", "addition"},
 		block:   AddFunctionBlock{},
