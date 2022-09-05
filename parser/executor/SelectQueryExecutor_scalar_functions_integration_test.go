@@ -43,6 +43,28 @@ func TestResultsWithProjections2(t *testing.T) {
 	assertMatch(t, expected, queryResults)
 }
 
+func TestResultsWithProjectionsInNestedDirectories(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select lower(name), path from ../resources/TestResultsWithProjections/ order by 1", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	expected := [][]context.Value{
+		{context.StringValue("empty.log"), context.StringValue("../resources/TestResultsWithProjections/empty/Empty.log")},
+		{context.StringValue("testresultswithprojections_a.log"), context.StringValue("../resources/TestResultsWithProjections/multi/TestResultsWithProjections_A.log")},
+		{context.StringValue("testresultswithprojections_a.txt"), context.StringValue("../resources/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")},
+		{context.StringValue("testresultswithprojections_b.log"), context.StringValue("../resources/TestResultsWithProjections/multi/TestResultsWithProjections_B.log")},
+		{context.StringValue("testresultswithprojections_c.txt"), context.StringValue("../resources/TestResultsWithProjections/multi/TestResultsWithProjections_C.txt")},
+		{context.StringValue("testresultswithprojections_d.txt"), context.StringValue("../resources/TestResultsWithProjections/multi/TestResultsWithProjections_D.txt")},
+	}
+	assertMatch(t, expected, queryResults)
+}
+
 func TestResultsWithProjectionsInCaseInsensitiveManner(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
 	aParser, err := parser.NewParser("SELECT LOWER(NAME), BASE64(NAME) FROM ../resources/TestResultsWithProjections/single", newContext)

@@ -5,6 +5,8 @@ import (
 	"goselect/parser/context"
 	"io/ioutil"
 	"math"
+	"os"
+	"strings"
 )
 
 type SelectQueryExecutor struct {
@@ -21,39 +23,64 @@ func NewSelectQueryExecutor(query *parser.SelectQuery, context *context.ParsingA
 
 func (selectQueryExecutor *SelectQueryExecutor) Execute() (*EvaluatingRows, error) {
 	source := selectQueryExecutor.query.Source
-	files, err := ioutil.ReadDir(source.Directory)
-	if err != nil {
-		return nil, err
-	}
 
 	var limit uint32 = math.MaxInt32
 	if selectQueryExecutor.query.IsLimitDefined() {
 		limit = selectQueryExecutor.query.Limit.Limit
 	}
-
-	var rowCount uint32 = 0
-	rows := emptyRows(selectQueryExecutor.context.AllFunctions(), limit)
-
-	for _, file := range files {
-		if rowCount >= limit && !selectQueryExecutor.query.IsOrderDefined() {
-			break
-		}
-		fileAttributes := context.ToFileAttributes(source.Directory, file, selectQueryExecutor.context)
-		shouldChoose, err := selectQueryExecutor.shouldChoose(fileAttributes)
-		if err != nil {
-			return nil, err
-		}
-		if shouldChoose {
-			values, fullyEvaluated, expressions, err := selectQueryExecutor.query.Projections.EvaluateWith(fileAttributes, selectQueryExecutor.context.AllFunctions())
-			if err != nil {
-				return nil, err
-			}
-			rows.addRow(values, fullyEvaluated, expressions)
-			rowCount = rowCount + 1
-		}
-		//handle recursion
+	rows, err := selectQueryExecutor.executeFrom(source.Directory, limit)
+	if err != nil {
+		return nil, err
 	}
 	newOrdering(selectQueryExecutor.query.Order).doOrder(rows)
+	return rows, nil
+}
+
+func (selectQueryExecutor SelectQueryExecutor) executeFrom(directory string, maxLimit uint32) (*EvaluatingRows, error) {
+	var pathSeparator = string(os.PathSeparator)
+	var execute func(directory string) error
+
+	rows := emptyRows(selectQueryExecutor.context.AllFunctions(), maxLimit)
+	execute = func(directory string) error {
+		files, err := ioutil.ReadDir(directory)
+		if err != nil {
+			return err
+		}
+		for _, file := range files {
+			if file.IsDir() {
+				newPath := directory + pathSeparator + file.Name()
+				if strings.HasSuffix(directory, "/") {
+					newPath = directory + file.Name()
+				}
+				if err := execute(newPath); err != nil {
+					return err
+				}
+				continue
+			}
+			if rows.Count() >= maxLimit && !selectQueryExecutor.query.IsOrderDefined() {
+				return nil
+			}
+			fileAttributes := context.ToFileAttributes(directory, file, selectQueryExecutor.context)
+			shouldChoose, err := selectQueryExecutor.shouldChoose(fileAttributes)
+			if err != nil {
+				return err
+			}
+			if shouldChoose {
+				values, fullyEvaluated, expressions, err := selectQueryExecutor.query.Projections.EvaluateWith(
+					fileAttributes,
+					selectQueryExecutor.context.AllFunctions(),
+				)
+				if err != nil {
+					return err
+				}
+				rows.addRow(values, fullyEvaluated, expressions)
+			}
+		}
+		return nil
+	}
+	if err := execute(directory); err != nil {
+		return nil, err
+	}
 	return rows, nil
 }
 
