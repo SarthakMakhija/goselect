@@ -30,4 +30,5 @@ const (
 	ErrorMessageExpectedNumericArgument                   = "expected numeric type argument value"
 	ErrorMessageExpectedNonZeroInDivide                   = "expected a non zero denominator in divide operation"
 	ErrorMessageFunctionNamePrefixWithExistingError       = "[Function %v], %s"
+	ErrorMessageIncorrectExtractionKey                    = "expected either of %v to be passed to extract as an extraction key"
 )

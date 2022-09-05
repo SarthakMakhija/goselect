@@ -483,7 +483,7 @@ func TestDay(t *testing.T) {
 	// after finish with the test, reset the time implementation
 	defer resetClock()
 
-	value, _ := NewFunctions().Execute("day")
+	value, _ := NewFunctions().Execute("cday")
 	expected := 22
 
 	actualValue, _ := value.GetInt()
@@ -499,7 +499,7 @@ func TestDate(t *testing.T) {
 	// after finish with the test, reset the time implementation
 	defer resetClock()
 
-	value, _ := NewFunctions().Execute("date")
+	value, _ := NewFunctions().Execute("cdate")
 	expected := "2022-August-22"
 
 	actualValue, _ := value.GetString()
@@ -515,7 +515,7 @@ func TestMonth1(t *testing.T) {
 	// after finish with the test, reset the time implementation
 	defer resetClock()
 
-	value, _ := NewFunctions().Execute("month")
+	value, _ := NewFunctions().Execute("cmonth")
 	expected := "August"
 
 	actualValue, _ := value.GetString()
@@ -531,7 +531,7 @@ func TestMonth2(t *testing.T) {
 	// after finish with the test, reset the time implementation
 	defer resetClock()
 
-	value, _ := NewFunctions().Execute("mon")
+	value, _ := NewFunctions().Execute("cmon")
 	expected := "August"
 
 	actualValue, _ := value.GetString()
@@ -547,7 +547,7 @@ func TestYear1(t *testing.T) {
 	// after finish with the test, reset the time implementation
 	defer resetClock()
 
-	value, _ := NewFunctions().Execute("year")
+	value, _ := NewFunctions().Execute("cyear")
 	expected := 2022
 
 	actualValue, _ := value.GetInt()
@@ -563,7 +563,7 @@ func TestYear2(t *testing.T) {
 	// after finish with the test, reset the time implementation
 	defer resetClock()
 
-	value, _ := NewFunctions().Execute("yr")
+	value, _ := NewFunctions().Execute("cyr")
 	expected := 2022
 
 	actualValue, _ := value.GetInt()
@@ -601,6 +601,86 @@ func TestDayOfWeek2(t *testing.T) {
 	actualValue, _ := value.GetString()
 	if actualValue != expected {
 		t.Fatalf("Expected day of week to be %v, received %v", expected, actualValue)
+	}
+}
+
+func TestExtractDay(t *testing.T) {
+	nowFunc = func() time.Time {
+		return time.Date(2022, 8, 28, 15, 8, 00, 0, time.UTC)
+	}
+	// after finish with the test, reset the time implementation
+	defer resetClock()
+
+	value, _ := NewFunctions().Execute("extract", DateTimeValue(now()), StringValue("day"))
+	expected := "28"
+
+	actualValue := value.GetAsString()
+	if actualValue != expected {
+		t.Fatalf("Expected extract with day to be %v, received %v", expected, actualValue)
+	}
+}
+
+func TestExtractYear(t *testing.T) {
+	nowFunc = func() time.Time {
+		return time.Date(2022, 8, 28, 15, 8, 00, 0, time.UTC)
+	}
+	// after finish with the test, reset the time implementation
+	defer resetClock()
+
+	value, _ := NewFunctions().Execute("extract", DateTimeValue(now()), StringValue("year"))
+	expected := "2022"
+
+	actualValue := value.GetAsString()
+	if actualValue != expected {
+		t.Fatalf("Expected extract with year to be %v, received %v", expected, actualValue)
+	}
+}
+
+func TestExtractMonth(t *testing.T) {
+	nowFunc = func() time.Time {
+		return time.Date(2022, 8, 28, 15, 8, 00, 0, time.UTC)
+	}
+	// after finish with the test, reset the time implementation
+	defer resetClock()
+
+	value, _ := NewFunctions().Execute("extract", DateTimeValue(now()), StringValue("month"))
+	expected := "August"
+
+	actualValue := value.GetAsString()
+	if actualValue != expected {
+		t.Fatalf("Expected extract with month to be %v, received %v", expected, actualValue)
+	}
+}
+
+func TestExtractWeekDay(t *testing.T) {
+	nowFunc = func() time.Time {
+		return time.Date(2022, 8, 28, 15, 8, 00, 0, time.UTC)
+	}
+	// after finish with the test, reset the time implementation
+	defer resetClock()
+
+	value, _ := NewFunctions().Execute("extract", DateTimeValue(now()), StringValue("weekday"))
+	expected := "Sunday"
+
+	actualValue := value.GetAsString()
+	if actualValue != expected {
+		t.Fatalf("Expected extract with week day to be %v, received %v", expected, actualValue)
+	}
+}
+
+func TestExtractDate(t *testing.T) {
+	nowFunc = func() time.Time {
+		return time.Date(2022, 8, 28, 15, 8, 00, 0, time.UTC)
+	}
+	// after finish with the test, reset the time implementation
+	defer resetClock()
+
+	value, _ := NewFunctions().Execute("extract", DateTimeValue(now()), StringValue("date"))
+	expected := "2022-August-28"
+
+	actualValue := value.GetAsString()
+	if actualValue != expected {
+		t.Fatalf("Expected extract with date to be %v, received %v", expected, actualValue)
 	}
 }
 

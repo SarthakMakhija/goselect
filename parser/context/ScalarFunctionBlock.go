@@ -40,6 +40,7 @@ type CurrentDateFunctionBlock struct{}
 type CurrentMonthFunctionBlock struct{}
 type CurrentYearFunctionBlock struct{}
 type DayOfWeekFunctionBlock struct{}
+type ExtractFunctionBlock struct{}
 type WorkingDirectoryFunctionBlock struct{}
 type ConcatFunctionBlock struct{}
 type ConcatWithSeparatorFunctionBlock struct{}
@@ -397,6 +398,31 @@ func (s SubstringFunctionBlock) run(args ...Value) (Value, error) {
 		}
 	}
 	return StringValue(str[from : to+1]), nil
+}
+
+func (e ExtractFunctionBlock) run(args ...Value) (Value, error) {
+	if err := ensureNParametersOrError(args, FunctionNameExtract, 2); err != nil {
+		return EmptyValue, err
+	}
+	time, err := args[0].GetDateTime()
+	if err != nil {
+		return EmptyValue, fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameExtract, err)
+	}
+	extractionKey := args[1].GetAsString()
+	switch strings.ToLower(extractionKey) {
+	case "date":
+		return StringValue(strconv.Itoa(time.Year()) + "-" + time.Month().String() + "-" + strconv.Itoa(time.Day())), nil
+	case "day":
+		return IntValue(time.Day()), nil
+	case "year":
+		return IntValue(time.Year()), nil
+	case "month":
+		return StringValue(time.Month().String()), nil
+	case "weekday":
+		return StringValue(time.Weekday().String()), nil
+	default:
+		return EmptyValue, errors.New(fmt.Sprintf(messages.ErrorMessageIncorrectExtractionKey, "date, day, year, month, weekday"))
+	}
 }
 
 func ensureNParametersOrError(parameters []Value, fn string, n int) error {

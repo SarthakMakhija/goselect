@@ -111,6 +111,13 @@ func (value Value) GetInt() (int, error) {
 	return value.intValue, nil
 }
 
+func (value Value) GetDateTime() (time.Time, error) {
+	if value.valueType != ValueTypeDateTime {
+		return time.Time{}, errors.New(fmt.Sprintf(messages.ErrorMessageIncorrectValueType, "time"))
+	}
+	return value.timeValue, nil
+}
+
 func (value Value) GetBoolean() (bool, error) {
 	if value.valueType == ValueTypeString {
 		if strings.ToLower(value.stringValue) == "true" || strings.ToLower(value.stringValue) == "y" {

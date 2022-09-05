@@ -58,10 +58,10 @@ const (
 	FunctionNameLeftTrim            = "ltrim"
 	FunctionNameRightTrim           = "rtrim"
 	FunctionNameNow                 = "now"
-	FunctionNameCurrentDay          = "day"
-	FunctionNameCurrentDate         = "date"
-	FunctionNameCurrentMonth        = "month"
-	FunctionNameCurrentYear         = "year"
+	FunctionNameCurrentDay          = "cday"
+	FunctionNameCurrentDate         = "cdate"
+	FunctionNameCurrentMonth        = "cmonth"
+	FunctionNameCurrentYear         = "cyear"
 	FunctionNameDayOfWeek           = "dayofweek"
 	FunctionNameWorkingDirectory    = "cwd"
 	FunctionNameConcat              = "concat"
@@ -72,6 +72,7 @@ const (
 	FunctionNameCountDistinct       = "countdistinct"
 	FunctionNameSum                 = "sum"
 	FunctionNameAverage             = "average"
+	FunctionNameExtract             = "extract"
 )
 
 var functionDefinitions = map[string]*FunctionDefinition{
@@ -182,24 +183,28 @@ var functionDefinitions = map[string]*FunctionDefinition{
 		block:   NowFunctionBlock{},
 	},
 	FunctionNameCurrentDay: {
-		aliases: []string{"day"},
+		aliases: []string{"cday", "currentday"},
 		block:   CurrentDayFunctionBlock{},
 	},
 	FunctionNameCurrentDate: {
-		aliases: []string{"date"},
+		aliases: []string{"cdate", "currentdate"},
 		block:   CurrentDateFunctionBlock{},
 	},
 	FunctionNameCurrentMonth: {
-		aliases: []string{"month", "mon"},
+		aliases: []string{"cmonth", "cmon", "currentmonth", "currentmon"},
 		block:   CurrentMonthFunctionBlock{},
 	},
 	FunctionNameCurrentYear: {
-		aliases: []string{"year", "yr"},
+		aliases: []string{"cyear", "cyr", "currentyear", "currentyr"},
 		block:   CurrentYearFunctionBlock{},
 	},
 	FunctionNameDayOfWeek: {
 		aliases: []string{"dayofweek", "dow"},
 		block:   DayOfWeekFunctionBlock{},
+	},
+	FunctionNameExtract: {
+		aliases: []string{"extract"},
+		block:   ExtractFunctionBlock{},
 	},
 	FunctionNameWorkingDirectory: {
 		aliases: []string{"cwd", "wd"},
