@@ -2,6 +2,7 @@ package context
 
 import (
 	"github.com/dustin/go-humanize"
+	"goselect/parser/context/platform"
 	"io/fs"
 	"io/ioutil"
 	"os"
@@ -58,12 +59,12 @@ func (fileAttributes *FileAttributes) setFileType(file fs.FileInfo, attributes *
 	} else {
 		fileAttributes.setAllAliasesForAttribute(AttributeNameIsEmpty, booleanValueUsing(file.Size() == 0), attributes)
 	}
-	hiddenFile, _ := isHiddenFile(file.Name())
+	hiddenFile, _ := platform.IsHiddenFile(file.Name())
 	fileAttributes.setAllAliasesForAttribute(AttributeNameIsHidden, booleanValueUsing(hiddenFile), attributes)
 }
 
 func (fileAttributes *FileAttributes) setTimes(file fs.FileInfo, attributes *AllAttributes) {
-	created, modified, accessed := fileTimes(file)
+	created, modified, accessed := platform.FileTimes(file)
 	fileAttributes.setAllAliasesForAttribute(AttributeCreatedTime, DateTimeValue(created), attributes)
 	fileAttributes.setAllAliasesForAttribute(AttributeModifiedTime, DateTimeValue(modified), attributes)
 	fileAttributes.setAllAliasesForAttribute(AttributeAccessedTime, DateTimeValue(accessed), attributes)

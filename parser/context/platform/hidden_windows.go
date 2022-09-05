@@ -1,13 +1,13 @@
 //go:build windows
 // +build windows
 
-package context
+package platform
 
 import (
 	"syscall"
 )
 
-func isHiddenFile(filename string) (bool, error) {
+func IsHiddenFile(filename string) (bool, error) {
 	pointer, err := syscall.UTF16PtrFromString(filename)
 	if err != nil {
 		return false, err
