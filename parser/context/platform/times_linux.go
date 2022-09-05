@@ -9,11 +9,7 @@ import (
 	"time"
 )
 
-type createdTime = time.Time
-type modifiedTime = time.Time
-type accessTime = time.Time
-
-func FileTimes(file fs.FileInfo) (createdTime, modifiedTime, accessTime) {
+func FileTimes(file fs.FileInfo) (CreatedTime, ModifiedTime, AccessTime) {
 	toTime := func(ts syscall.Timespec) time.Time {
 		return time.Unix(ts.Sec, ts.Nsec)
 	}
