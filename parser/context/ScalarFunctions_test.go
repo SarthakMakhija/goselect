@@ -1,6 +1,7 @@
 package context
 
 import (
+	"math"
 	"os"
 	"testing"
 	"time"
@@ -812,8 +813,8 @@ func TestDaysDifference3(t *testing.T) {
 	)
 
 	actualValue, _ := value.GetNumericAsFloat64()
-	if actualValue != 0 {
-		t.Fatalf("Expected days difference to be 0 but received %v", actualValue)
+	if math.Round(actualValue) != 0 {
+		t.Fatalf("Expected days difference to be 0 but received %v, and round resulted in %v", actualValue, math.Round(actualValue))
 	}
 }
 
