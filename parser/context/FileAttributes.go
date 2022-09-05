@@ -4,6 +4,7 @@ import (
 	"github.com/dustin/go-humanize"
 	"io/fs"
 	"io/ioutil"
+	"os"
 	"os/user"
 	"path/filepath"
 	"strconv"
@@ -65,6 +66,7 @@ func (fileAttributes *FileAttributes) setFormattedSize(size int64, attributes *A
 func (fileAttributes *FileAttributes) setFileType(file fs.FileInfo, attributes *AllAttributes) {
 	fileAttributes.setAllAliasesForAttribute(AttributeNameIsDir, booleanValueUsing(file.IsDir()), attributes)
 	fileAttributes.setAllAliasesForAttribute(AttributeNameIsFile, booleanValueUsing(file.Mode().IsRegular()), attributes)
+	fileAttributes.setAllAliasesForAttribute(AttributeNameIsSymbolicLink, booleanValueUsing(file.Mode()&os.ModeSymlink == os.ModeSymlink), attributes)
 	if file.Mode().IsDir() {
 		files, _ := ioutil.ReadDir(file.Name())
 		fileAttributes.setAllAliasesForAttribute(AttributeNameIsEmpty, booleanValueUsing(len(files) == 0), attributes)
