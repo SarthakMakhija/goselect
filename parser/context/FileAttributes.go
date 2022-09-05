@@ -116,23 +116,24 @@ func (fileAttributes *FileAttributes) setBlock(file fs.FileInfo, attributes *All
 
 func (fileAttributes *FileAttributes) setUserGroup(file fs.FileInfo, attributes *AllAttributes) {
 	stat := file.Sys().(*syscall.Stat_t)
-	userId := strconv.FormatUint(uint64(stat.Uid), 10)
+	if stat != nil {
+		userId := strconv.FormatUint(uint64(stat.Uid), 10)
 
-	lookedUpUser, err := user.LookupId(userId)
-	if err != nil {
-		fileAttributes.setBlankUserGroup(attributes)
-		return
+		lookedUpUser, err := user.LookupId(userId)
+		if err != nil {
+			fileAttributes.setBlankUserGroup(attributes)
+			return
+		}
+		group, err := user.LookupGroupId(lookedUpUser.Gid)
+		if err != nil {
+			fileAttributes.setBlankUserGroup(attributes)
+			return
+		}
+		fileAttributes.setUserId(lookedUpUser.Uid, attributes)
+		fileAttributes.setUserName(lookedUpUser.Username, attributes)
+		fileAttributes.setGroupId(lookedUpUser.Gid, attributes)
+		fileAttributes.setGroupName(group.Name, attributes)
 	}
-
-	group, err := user.LookupGroupId(lookedUpUser.Gid)
-	if err != nil {
-		fileAttributes.setBlankUserGroup(attributes)
-		return
-	}
-	fileAttributes.setUserId(lookedUpUser.Uid, attributes)
-	fileAttributes.setUserName(lookedUpUser.Username, attributes)
-	fileAttributes.setGroupId(lookedUpUser.Gid, attributes)
-	fileAttributes.setGroupName(group.Name, attributes)
 }
 
 func (fileAttributes *FileAttributes) setBlankUserGroup(attributes *AllAttributes) {
