@@ -63,6 +63,8 @@ const (
 	FunctionNameCurrentMonth        = "cmonth"
 	FunctionNameCurrentYear         = "cyear"
 	FunctionNameDayOfWeek           = "dayofweek"
+	FunctionNameExtract             = "extract"
+	FunctionNameDaysDifference      = "daysdifference"
 	FunctionNameWorkingDirectory    = "cwd"
 	FunctionNameConcat              = "concat"
 	FunctionNameConcatWithSeparator = "concatws"
@@ -72,7 +74,6 @@ const (
 	FunctionNameCountDistinct       = "countdistinct"
 	FunctionNameSum                 = "sum"
 	FunctionNameAverage             = "average"
-	FunctionNameExtract             = "extract"
 )
 
 var functionDefinitions = map[string]*FunctionDefinition{
@@ -205,6 +206,10 @@ var functionDefinitions = map[string]*FunctionDefinition{
 	FunctionNameExtract: {
 		aliases: []string{"extract"},
 		block:   ExtractFunctionBlock{},
+	},
+	FunctionNameDaysDifference: {
+		aliases: []string{"daysdifference", "daydifference", "daysdiff", "daydiff"},
+		block:   DaysDifferenceFunctionBlock{},
 	},
 	FunctionNameWorkingDirectory: {
 		aliases: []string{"cwd", "wd"},

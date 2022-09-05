@@ -42,6 +42,7 @@ type CurrentMonthFunctionBlock struct{}
 type CurrentYearFunctionBlock struct{}
 type DayOfWeekFunctionBlock struct{}
 type ExtractFunctionBlock struct{}
+type DaysDifferenceFunctionBlock struct{}
 type WorkingDirectoryFunctionBlock struct{}
 type ConcatFunctionBlock struct{}
 type ConcatWithSeparatorFunctionBlock struct{}
@@ -423,6 +424,26 @@ func (e ExtractFunctionBlock) run(args ...Value) (Value, error) {
 	default:
 		return EmptyValue, errors.New(fmt.Sprintf(messages.ErrorMessageIncorrectExtractionKey, "date, day, year, month, weekday"))
 	}
+}
+
+func (d DaysDifferenceFunctionBlock) run(args ...Value) (Value, error) {
+	if err := ensureNParametersOrError(args, FunctionNameDaysDifference, 1); err != nil {
+		return EmptyValue, err
+	}
+	aTime, err := args[0].GetDateTime()
+	if err != nil {
+		return EmptyValue, fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameDaysDifference, err)
+	}
+	bTime := now()
+	if len(args) > 1 {
+		bTime, err = args[1].GetDateTime()
+		if err != nil {
+			return EmptyValue, fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameDaysDifference, err)
+		}
+	}
+	duration := bTime.Sub(aTime) //bTime - aTime
+	days := duration.Hours() / float64(24)
+	return Float64Value(days), nil
 }
 
 func formatDate(time time.Time) Value {

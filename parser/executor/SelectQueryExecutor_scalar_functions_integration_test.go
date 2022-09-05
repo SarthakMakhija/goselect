@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"goselect/parser"
 	"goselect/parser/context"
+	"math"
 	"os"
 	"testing"
 )
@@ -111,6 +112,26 @@ func TestResultsWithProjectionsWithSubstringFunction(t *testing.T) {
 		{context.StringValue("testresultswithprojections_a.txt"), context.StringValue("projections_a.txt")},
 	}
 	assertMatch(t, expected, queryResults)
+}
+
+func TestResultsWithProjectionsWithDayDifference(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select daydiff(now(), now()) from ../resources/TestResultsWithProjections/single", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
+
+	result := queryResults.atIndex(0).AllAttributes()[0]
+	asFloat64, _ := result.GetNumericAsFloat64()
+
+	if math.Round(asFloat64) != float64(0) {
+		t.Fatalf("Expected date difference of 2 current times to be equal to zero but received %v and round resulted in %v", asFloat64, math.Round(asFloat64))
+	}
 }
 
 func TestResultsWithProjectionsAndLimit1(t *testing.T) {

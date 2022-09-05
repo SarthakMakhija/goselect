@@ -714,6 +714,63 @@ func TestFormatDate2(t *testing.T) {
 	}
 }
 
+func TestDaysDifference1(t *testing.T) {
+	nowFunc = func() time.Time {
+		return time.Date(2022, 8, 28, 15, 8, 00, 0, time.UTC)
+	}
+	// after finish with the test, reset the time implementation
+	defer resetClock()
+
+	value, _ := NewFunctions().Execute("daysdiff",
+		DateTimeValue(
+			time.Date(2022, 8, 24, 15, 8, 00, 0, time.UTC),
+		),
+		DateTimeValue(
+			now(),
+		),
+	)
+	expected := 4.00
+
+	actualValue, _ := value.GetNumericAsFloat64()
+	if actualValue != expected {
+		t.Fatalf("Expected days difference to be %v, received %v", expected, actualValue)
+	}
+}
+
+func TestDaysDifference2(t *testing.T) {
+	nowFunc = func() time.Time {
+		return time.Date(2022, 8, 24, 18, 8, 00, 0, time.UTC)
+	}
+	// after finish with the test, reset the time implementation
+	defer resetClock()
+
+	value, _ := NewFunctions().Execute("daysdiff",
+		DateTimeValue(
+			time.Date(2022, 8, 24, 15, 8, 00, 0, time.UTC),
+		),
+		DateTimeValue(
+			now(),
+		),
+	)
+
+	actualValue, _ := value.GetNumericAsFloat64()
+	if actualValue > 1 {
+		t.Fatalf("Expected days difference to be less than 1 but received %v", actualValue)
+	}
+}
+
+func TestDaysDifference3(t *testing.T) {
+	value, _ := NewFunctions().Execute("daysdiff",
+		DateTimeValue(now()),
+		DateTimeValue(now()),
+	)
+
+	actualValue, _ := value.GetNumericAsFloat64()
+	if actualValue != 0 {
+		t.Fatalf("Expected days difference to be 0 but received %v", actualValue)
+	}
+}
+
 func TestCurrentWorkingDirectory1(t *testing.T) {
 	value, _ := NewFunctions().Execute("cwd")
 	expected, _ := os.Getwd()
