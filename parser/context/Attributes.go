@@ -14,7 +14,9 @@ const (
 	AttributeNameIsHidden       = "ishidden"
 	AttributeNameIsEmpty        = "isempty"
 	AttributeNameIsSymbolicLink = "issymboliclink"
+	AttributeCreatedTime        = "createdtime"
 	AttributeModifiedTime       = "modifiedtime"
+	AttributeAccessedTime       = "accessedtime"
 	AttributeExtension          = "extension"
 	AttributePermission         = "permission"
 	AttributeUserRead           = "userread"
@@ -46,7 +48,9 @@ var attributeAliases = map[string][]string{
 	AttributeNameIsHidden:       {"ishidden"},
 	AttributeNameIsEmpty:        {"isempty"},
 	AttributeNameIsSymbolicLink: {"issymboliclink", "issymlink"},
-	AttributeModifiedTime:       {"modifiedTime", "mtime"},
+	AttributeCreatedTime:        {"createdtime", "ctime"},
+	AttributeModifiedTime:       {"modifiedtime", "mtime", "modtime"},
+	AttributeAccessedTime:       {"accessedtime", "accesstime", "atime"},
 	AttributeExtension:          {"extension", "ext"},
 	AttributePermission:         {"permission", "perm"},
 	AttributeUserRead:           {"userread", "uread"},
