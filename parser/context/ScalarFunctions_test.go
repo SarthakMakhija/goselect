@@ -714,6 +714,52 @@ func TestFormatDate2(t *testing.T) {
 	}
 }
 
+func TestHoursDifference1(t *testing.T) {
+	nowFunc = func() time.Time {
+		return time.Date(2022, 8, 28, 15, 8, 00, 0, time.UTC)
+	}
+	// after finish with the test, reset the time implementation
+	defer resetClock()
+
+	value, _ := NewFunctions().Execute("hoursdiff",
+		DateTimeValue(
+			time.Date(2022, 8, 28, 14, 8, 00, 0, time.UTC),
+		),
+		DateTimeValue(
+			now(),
+		),
+	)
+	expected := 1.00
+
+	actualValue, _ := value.GetNumericAsFloat64()
+	if actualValue != expected {
+		t.Fatalf("Expected hours difference to be %v, received %v", expected, actualValue)
+	}
+}
+
+func TestHoursDifference2(t *testing.T) {
+	nowFunc = func() time.Time {
+		return time.Date(2022, 8, 28, 15, 15, 00, 0, time.UTC)
+	}
+	// after finish with the test, reset the time implementation
+	defer resetClock()
+
+	value, _ := NewFunctions().Execute("hoursdiff",
+		DateTimeValue(
+			time.Date(2022, 8, 28, 12, 45, 00, 0, time.UTC),
+		),
+		DateTimeValue(
+			now(),
+		),
+	)
+	expected := 2.5
+
+	actualValue, _ := value.GetNumericAsFloat64()
+	if actualValue != expected {
+		t.Fatalf("Expected hours difference to be %v, received %v", expected, actualValue)
+	}
+}
+
 func TestDaysDifference1(t *testing.T) {
 	nowFunc = func() time.Time {
 		return time.Date(2022, 8, 28, 15, 8, 00, 0, time.UTC)

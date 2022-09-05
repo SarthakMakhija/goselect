@@ -130,7 +130,27 @@ func TestResultsWithProjectionsWithDayDifference(t *testing.T) {
 	asFloat64, _ := result.GetNumericAsFloat64()
 
 	if math.Round(asFloat64) != float64(0) {
-		t.Fatalf("Expected date difference of 2 current times to be equal to zero but received %v and round resulted in %v", asFloat64, math.Round(asFloat64))
+		t.Fatalf("Expected day difference of 2 current times to be equal to zero but received %v and round resulted in %v", asFloat64, math.Round(asFloat64))
+	}
+}
+
+func TestResultsWithProjectionsWithHourDifference(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select hourdiff(now(), now()) from ../resources/TestResultsWithProjections/single", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
+
+	result := queryResults.atIndex(0).AllAttributes()[0]
+	asFloat64, _ := result.GetNumericAsFloat64()
+
+	if math.Round(asFloat64) != float64(0) {
+		t.Fatalf("Expected hour difference of 2 current times to be equal to zero but received %v and round resulted in %v", asFloat64, math.Round(asFloat64))
 	}
 }
 

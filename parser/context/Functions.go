@@ -64,6 +64,7 @@ const (
 	FunctionNameCurrentYear         = "cyear"
 	FunctionNameDayOfWeek           = "dayofweek"
 	FunctionNameExtract             = "extract"
+	FunctionNameHoursDifference     = "hoursdifference"
 	FunctionNameDaysDifference      = "daysdifference"
 	FunctionNameWorkingDirectory    = "cwd"
 	FunctionNameConcat              = "concat"
@@ -206,6 +207,10 @@ var functionDefinitions = map[string]*FunctionDefinition{
 	FunctionNameExtract: {
 		aliases: []string{"extract"},
 		block:   ExtractFunctionBlock{},
+	},
+	FunctionNameHoursDifference: {
+		aliases: []string{"hoursdifference", "hourdifference", "hoursdiff", "hourdiff"},
+		block:   HoursDifferenceFunctionBlock{},
 	},
 	FunctionNameDaysDifference: {
 		aliases: []string{"daysdifference", "daydifference", "daysdiff", "daydiff"},
