@@ -10,7 +10,6 @@ import (
 	"strconv"
 	"strings"
 	"syscall"
-	"time"
 )
 
 type FileAttributes struct {
@@ -64,15 +63,10 @@ func (fileAttributes *FileAttributes) setFileType(file fs.FileInfo, attributes *
 }
 
 func (fileAttributes *FileAttributes) setTimes(file fs.FileInfo, attributes *AllAttributes) {
-	toTime := func(ts syscall.Timespec) time.Time {
-		return time.Unix(ts.Sec, ts.Nsec)
-	}
-	stat := file.Sys().(*syscall.Stat_t)
-	if stat != nil {
-		fileAttributes.setAllAliasesForAttribute(AttributeCreatedTime, DateTimeValue(toTime(stat.Ctimespec)), attributes)
-		fileAttributes.setAllAliasesForAttribute(AttributeModifiedTime, DateTimeValue(toTime(stat.Mtimespec)), attributes)
-		fileAttributes.setAllAliasesForAttribute(AttributeAccessedTime, DateTimeValue(toTime(stat.Atimespec)), attributes)
-	}
+	created, modified, accessed := fileTimes(file)
+	fileAttributes.setAllAliasesForAttribute(AttributeCreatedTime, DateTimeValue(created), attributes)
+	fileAttributes.setAllAliasesForAttribute(AttributeModifiedTime, DateTimeValue(modified), attributes)
+	fileAttributes.setAllAliasesForAttribute(AttributeAccessedTime, DateTimeValue(accessed), attributes)
 }
 
 func (fileAttributes *FileAttributes) setPath(directory string, file fs.FileInfo, attributes *AllAttributes) {
