@@ -9,6 +9,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type IdentityFunctionBlock struct{}
@@ -298,8 +299,7 @@ func (c CurrentDayFunctionBlock) run(_ ...Value) (Value, error) {
 }
 
 func (c CurrentDateFunctionBlock) run(_ ...Value) (Value, error) {
-	year, month, day := now().Date()
-	return StringValue(strconv.Itoa(year) + "-" + month.String() + "-" + strconv.Itoa(day)), nil
+	return formatDate(now()), nil
 }
 
 func (c CurrentMonthFunctionBlock) run(_ ...Value) (Value, error) {
@@ -404,27 +404,30 @@ func (e ExtractFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameExtract, 2); err != nil {
 		return EmptyValue, err
 	}
-	time, err := args[0].GetDateTime()
+	aTime, err := args[0].GetDateTime()
 	if err != nil {
 		return EmptyValue, fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameExtract, err)
 	}
 	extractionKey := args[1].GetAsString()
 	switch strings.ToLower(extractionKey) {
 	case "date":
-		return StringValue(strconv.Itoa(time.Year()) + "-" + time.Month().String() + "-" + strconv.Itoa(time.Day())), nil
+		return formatDate(aTime), nil
 	case "day":
-		return IntValue(time.Day()), nil
+		return IntValue(aTime.Day()), nil
 	case "year":
-		return IntValue(time.Year()), nil
+		return IntValue(aTime.Year()), nil
 	case "month":
-		return StringValue(time.Month().String()), nil
+		return StringValue(aTime.Month().String()), nil
 	case "weekday":
-		return StringValue(time.Weekday().String()), nil
+		return StringValue(aTime.Weekday().String()), nil
 	default:
 		return EmptyValue, errors.New(fmt.Sprintf(messages.ErrorMessageIncorrectExtractionKey, "date, day, year, month, weekday"))
 	}
 }
 
+func formatDate(time time.Time) Value {
+	return StringValue(strconv.Itoa(time.Year()) + "-" + time.Month().String() + "-" + fmt.Sprintf("%02v", time.Day()))
+}
 func ensureNParametersOrError(parameters []Value, fn string, n int) error {
 	nonNilParameterCount := func() int {
 		count := 0

@@ -684,6 +684,36 @@ func TestExtractDate(t *testing.T) {
 	}
 }
 
+func TestFormatDate1(t *testing.T) {
+	nowFunc = func() time.Time {
+		return time.Date(2022, 8, 5, 15, 8, 00, 0, time.UTC)
+	}
+	// after finish with the test, reset the time implementation
+	defer resetClock()
+
+	value := formatDate(now())
+	expected := "2022-August-05"
+
+	if value.GetAsString() != expected {
+		t.Fatalf("Expected date to be %v, received %v", expected, value.GetAsString())
+	}
+}
+
+func TestFormatDate2(t *testing.T) {
+	nowFunc = func() time.Time {
+		return time.Date(2022, 8, 26, 15, 8, 00, 0, time.UTC)
+	}
+	// after finish with the test, reset the time implementation
+	defer resetClock()
+
+	value := formatDate(now())
+	expected := "2022-August-26"
+
+	if value.GetAsString() != expected {
+		t.Fatalf("Expected date to be %v, received %v", expected, value.GetAsString())
+	}
+}
+
 func TestCurrentWorkingDirectory1(t *testing.T) {
 	value, _ := NewFunctions().Execute("cwd")
 	expected, _ := os.Getwd()
