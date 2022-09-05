@@ -3,6 +3,12 @@
 
 package context
 
+import (
+	"io/fs"
+	"syscall"
+	"time"
+)
+
 type createdTime = time.Time
 type modifiedTime = time.Time
 type accessTime = time.Time
