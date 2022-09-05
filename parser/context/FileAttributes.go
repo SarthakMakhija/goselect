@@ -3,6 +3,7 @@ package context
 import (
 	"github.com/dustin/go-humanize"
 	"io/fs"
+	"io/ioutil"
 	"os/user"
 	"path/filepath"
 	"strconv"
@@ -64,7 +65,12 @@ func (fileAttributes *FileAttributes) setFormattedSize(size int64, attributes *A
 func (fileAttributes *FileAttributes) setFileType(file fs.FileInfo, attributes *AllAttributes) {
 	fileAttributes.setAllAliasesForAttribute(AttributeNameIsDir, booleanValueUsing(file.IsDir()), attributes)
 	fileAttributes.setAllAliasesForAttribute(AttributeNameIsFile, booleanValueUsing(file.Mode().IsRegular()), attributes)
-
+	if file.Mode().IsDir() {
+		files, _ := ioutil.ReadDir(file.Name())
+		fileAttributes.setAllAliasesForAttribute(AttributeNameIsEmpty, booleanValueUsing(len(files) == 0), attributes)
+	} else {
+		fileAttributes.setAllAliasesForAttribute(AttributeNameIsEmpty, booleanValueUsing(file.Size() == 0), attributes)
+	}
 	hiddenFile, _ := isHiddenFile(file.Name())
 	fileAttributes.setAllAliasesForAttribute(AttributeNameIsHidden, booleanValueUsing(hiddenFile), attributes)
 }
