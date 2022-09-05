@@ -227,7 +227,10 @@ func (value Value) CompareTo(other Value) int {
 		if first == second {
 			return CompareToEqual
 		}
-		return CompareToGreaterThan
+		if first {
+			return CompareToGreaterThan
+		}
+		return CompareToLessThan
 	case ValueTypeDateTime:
 		first, second := receiver.timeValue, arg.timeValue
 		if first.Equal(second) {
