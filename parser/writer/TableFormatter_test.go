@@ -31,4 +31,7 @@ func TestTableFormatter(t *testing.T) {
 	if !strings.Contains(str, "testresultswithprojections_b.log") {
 		t.Fatalf("Expected testresultswithprojections_b.log to be contained in the string but was not, received string is %v", str)
 	}
+	if !strings.Contains(str, "Total Rows: 2") {
+		t.Fatalf("Expected Total Rows: 2 to be contained in the string but was not, received string is %v", str)
+	}
 }

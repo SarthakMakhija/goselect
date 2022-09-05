@@ -29,5 +29,7 @@ func (tableFormatter TableFormatter) Format(projections *projection.Projections,
 		}
 		result.WriteString("\n")
 	}
+	result.WriteString(fmt.Sprintf("%vTotal Rows: %v", headerColor, rows.Count()))
+	result.WriteString("\n")
 	return result.String()
 }
