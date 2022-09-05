@@ -1,6 +1,7 @@
 package writer
 
 import (
+	"fmt"
 	"goselect/parser/executor"
 	"goselect/parser/projection"
 	"strings"
@@ -19,6 +20,7 @@ func (htmlFormatter HtmlFormatter) Format(projections *projection.Projections, r
 	htmlFormatter.beginTable(result)
 	htmlFormatter.beginTableHeader(result, projections)
 	htmlFormatter.beginTableContent(result, rows)
+	htmlFormatter.beginFooterRow(result, projections, rows)
 	htmlFormatter.closeTable(result)
 	htmlFormatter.closeBody(result)
 	htmlFormatter.closeHtml(result)
@@ -56,6 +58,14 @@ func (htmlFormatter HtmlFormatter) beginTableContent(html *strings.Builder, rows
 		}
 		htmlFormatter.closeRow(html)
 	}
+}
+
+func (htmlFormatter HtmlFormatter) beginFooterRow(html *strings.Builder, projections *projection.Projections, rows *executor.EvaluatingRows) {
+	htmlFormatter.beginRow(html)
+	html.WriteString(fmt.Sprintf("<td colspan=\"%v\" style=\"border: 1px solid black\">", projections.Count()))
+	html.WriteString(fmt.Sprintf("Total Rows: %v", rows.Count()))
+	html.WriteString("</td>")
+	htmlFormatter.closeRow(html)
 }
 
 func (htmlFormatter HtmlFormatter) beginRow(html *strings.Builder) {
