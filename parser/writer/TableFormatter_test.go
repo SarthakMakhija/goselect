@@ -18,7 +18,7 @@ func TestTableFormatter(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 
 	str := NewTableFormatter().Format(selectQuery.Projections, queryResults)
 

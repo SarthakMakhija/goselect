@@ -10,14 +10,16 @@ import (
 )
 
 type SelectQueryExecutor struct {
+	options *Options
 	query   *parser.SelectQuery
 	context *context.ParsingApplicationContext
 }
 
-func NewSelectQueryExecutor(query *parser.SelectQuery, context *context.ParsingApplicationContext) *SelectQueryExecutor {
+func NewSelectQueryExecutor(query *parser.SelectQuery, context *context.ParsingApplicationContext, options *Options) *SelectQueryExecutor {
 	return &SelectQueryExecutor{
 		query:   query,
 		context: context,
+		options: options,
 	}
 }
 
@@ -47,7 +49,7 @@ func (selectQueryExecutor SelectQueryExecutor) executeFrom(directory string, max
 			return err
 		}
 		for _, file := range files {
-			if file.IsDir() {
+			if file.IsDir() && selectQueryExecutor.options.TraverseNestedDirectories {
 				newPath := directory + pathSeparator + file.Name()
 				if strings.HasSuffix(directory, pathSeparator) {
 					newPath = directory + file.Name()

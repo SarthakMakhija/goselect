@@ -17,7 +17,7 @@ func TestHtmlFormatter(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 
 	html := NewHtmlFormatter().Format(selectQuery.Projections, queryResults)
 	expected := "<html><body><table style=\"width:100%; border: 1px solid black\"><tr><th style=\"border: 1px solid black\">lower(name)</th><th style=\"border: 1px solid black\">contains(lower(name),log)</th></tr><tr><td style=\"border: 1px solid black\">testresultswithprojections_a.log</td><td style=\"border: 1px solid black\">Y</td></tr><tr><td style=\"border: 1px solid black\">testresultswithprojections_b.log</td><td style=\"border: 1px solid black\">Y</td></tr><tr><td style=\"border: 1px solid black\">testresultswithprojections_c.txt</td><td style=\"border: 1px solid black\">N</td></tr><tr><td style=\"border: 1px solid black\">testresultswithprojections_d.txt</td><td style=\"border: 1px solid black\">N</td></tr><tr><td colspan=\"2\" style=\"border: 1px solid black\">Total Rows: 4</td></tr></table></body></html>"

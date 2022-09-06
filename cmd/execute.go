@@ -24,6 +24,8 @@ var executeCmd = &cobra.Command{
 			fmt.Println(errorColor, "select query is mandatory. please use --query to specify the query.")
 			return
 		}
+		nestedTraversal, _ := cmd.Flags().GetBool("nestedTraversal")
+
 		newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
 		parser, err := parser.NewParser(rawQuery, newContext)
 		if err != nil {
@@ -35,7 +37,7 @@ var executeCmd = &cobra.Command{
 			fmt.Println(errorColor, err)
 			return
 		}
-		rows, err := executor.NewSelectQueryExecutor(query, newContext).Execute()
+		rows, err := executor.NewSelectQueryExecutor(query, newContext, executor.OptionsWith(nestedTraversal)).Execute()
 		if err != nil {
 			fmt.Println(errorColor, err)
 			return
@@ -47,5 +49,6 @@ var executeCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(executeCmd)
-	rootCmd.PersistentFlags().StringP("query", "q", "", "specify the query. Use --query=<query> or --q=<query>")
+	rootCmd.PersistentFlags().StringP("query", "q", "", "specify the query. Use --query=<query> or -q=<query>")
+	rootCmd.PersistentFlags().BoolP("nestedTraversal", "n", true, "specify the if nested directories should be traversed. Use --nestedTraversal=<true/false> or -n=<true/false>")
 }

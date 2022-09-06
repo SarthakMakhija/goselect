@@ -17,7 +17,7 @@ func TestJsonFormatter(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 
 	json := NewJsonFormatter().Format(selectQuery.Projections, queryResults)
 	expected := "[{\"lower(name)\" : \"testresultswithprojections_a.log\", \"contains(lower(name),log)\" : \"Y\"}, {\"lower(name)\" : \"testresultswithprojections_b.log\", \"contains(lower(name),log)\" : \"Y\"}, {\"lower(name)\" : \"testresultswithprojections_c.txt\", \"contains(lower(name),log)\" : \"N\"}, {\"lower(name)\" : \"testresultswithprojections_d.txt\", \"contains(lower(name),log)\" : \"N\"}]"

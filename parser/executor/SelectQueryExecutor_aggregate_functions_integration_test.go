@@ -16,7 +16,7 @@ func TestResultsWithProjectionsIncludingCountFunction1(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("testresultswithprojections_a.log"), context.Uint32Value(4), context.Uint32Value(4)},
 		{context.StringValue("testresultswithprojections_b.log"), context.Uint32Value(4), context.Uint32Value(4)},
@@ -36,7 +36,7 @@ func TestResultsWithProjectionsIncludingAverageFunctionWithLimitReturningTheAver
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.Float64Value(32)},
 		{context.Float64Value(32)},
@@ -55,7 +55,7 @@ func TestResultsWithProjectionsIncludingAggregateFunctionInsideAScalar(t *testin
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("4")},
 		{context.StringValue("4")},
@@ -75,7 +75,7 @@ func TestResultsWithProjectionsIncludingNestedCountFunction1(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.Uint32Value(1)},
 		{context.Uint32Value(1)},
@@ -95,7 +95,7 @@ func TestResultsWithProjectionsIncludingNestedCountFunction2(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.Uint32Value(1)},
 		{context.Uint32Value(1)},
@@ -115,7 +115,7 @@ func TestResultsWithProjectionsIncludingNestedCountFunction3(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("1")},
 		{context.StringValue("1")},
@@ -135,7 +135,7 @@ func TestResultsWithProjectionsIncludingNestedAverageFunction1(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.Float64Value(32)},
 		{context.Float64Value(32)},
@@ -155,7 +155,7 @@ func TestResultsWithProjectionsIncludingNestedAverageFunction2(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.Uint32Value(1)},
 		{context.Uint32Value(1)},
@@ -175,7 +175,7 @@ func TestResultsWithProjectionsIncludingNestedAverageFunction3(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.Float64Value(11)},
 		{context.Float64Value(11)},
@@ -195,7 +195,7 @@ func TestResultsWithProjectionsIncludingCountDistinct1(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.Uint32Value(2)},
 		{context.Uint32Value(2)},
@@ -215,7 +215,7 @@ func TestResultsWithProjectionsIncludingCountDistinct2(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.Uint32Value(1)},
 		{context.Uint32Value(1)},
@@ -235,7 +235,7 @@ func TestResultsWithProjectionsIncludingSum1(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.Float64Value(16)},
 		{context.Float64Value(16)},
@@ -255,7 +255,7 @@ func TestResultsWithProjectionsIncludingSum2(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.Float64Value(2)},
 		{context.Float64Value(2)},
