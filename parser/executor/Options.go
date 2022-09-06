@@ -1,6 +1,8 @@
 package executor
 
-import "strings"
+import (
+	"strings"
+)
 
 type Options struct {
 	traverseNestedDirectories    bool
@@ -24,7 +26,7 @@ func (options *Options) DisableNestedTraversal() *Options {
 func (options *Options) DirectoriesToIgnoreTraversal(names []string) *Options {
 	directoriesToIgnore := make(map[string]bool)
 	for _, directory := range names {
-		directoriesToIgnore[strings.ToLower(directory)] = true
+		directoriesToIgnore[strings.ToLower(strings.Trim(directory, " "))] = true
 	}
 	options.directoriesToIgnoreTraversal = directoriesToIgnore
 	return options

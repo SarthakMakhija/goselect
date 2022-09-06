@@ -25,12 +25,14 @@ var executeCmd = &cobra.Command{
 			return
 		}
 		nestedTraversal, _ := cmd.Flags().GetBool("nestedTraversal")
+		ignoreTraversal, _ := cmd.Flags().GetStringSlice("ignoreTraversal")
 		options := executor.NewDefaultOptions()
 		if nestedTraversal {
 			options.EnableNestedTraversal()
 		} else {
 			options.DisableNestedTraversal()
 		}
+		options.DirectoriesToIgnoreTraversal(ignoreTraversal)
 
 		newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
 		parser, err := parser.NewParser(rawQuery, newContext)
@@ -57,4 +59,5 @@ func init() {
 	rootCmd.AddCommand(executeCmd)
 	rootCmd.PersistentFlags().StringP("query", "q", "", "specify the query. Use --query=<query> or -q=<query>")
 	rootCmd.PersistentFlags().BoolP("nestedTraversal", "n", true, "specify the if nested directories should be traversed. Use --nestedTraversal=<true/false> or -n=<true/false>")
+	rootCmd.PersistentFlags().StringSliceP("ignoreTraversal", "i", []string{".git", ".github"}, "specify the directory names that should not be traversed. Use --ignoreTraversal=<directory> or -i=<directory>. Multiple directory names can be passed by using --ignoreTraversal=.git --ignoreTraversal=.github")
 }

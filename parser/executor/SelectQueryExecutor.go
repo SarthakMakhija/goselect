@@ -3,6 +3,7 @@ package executor
 import (
 	"goselect/parser"
 	"goselect/parser/context"
+	"io/fs"
 	"io/ioutil"
 	"math"
 	"os"
@@ -42,6 +43,12 @@ func (selectQueryExecutor SelectQueryExecutor) executeFrom(directory string, max
 	var pathSeparator = string(os.PathSeparator)
 	var execute func(directory string) error
 
+	shouldTraverseDirectory := func(file fs.FileInfo) bool {
+		return file.IsDir() &&
+			selectQueryExecutor.options.traverseNestedDirectories &&
+			!selectQueryExecutor.options.IsDirectoryTraversalIgnored(file.Name())
+	}
+
 	rows := emptyRows(selectQueryExecutor.context.AllFunctions(), maxLimit)
 	execute = func(directory string) error {
 		files, err := ioutil.ReadDir(directory)
@@ -49,7 +56,7 @@ func (selectQueryExecutor SelectQueryExecutor) executeFrom(directory string, max
 			return err
 		}
 		for _, file := range files {
-			if file.IsDir() && selectQueryExecutor.options.traverseNestedDirectories && !selectQueryExecutor.options.IsDirectoryTraversalIgnored(file.Name()) {
+			if shouldTraverseDirectory(file) {
 				newPath := directory + pathSeparator + file.Name()
 				if strings.HasSuffix(directory, pathSeparator) {
 					newPath = directory + file.Name()
