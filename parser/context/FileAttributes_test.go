@@ -48,6 +48,22 @@ func TestFileBaseName(t *testing.T) {
 	}
 }
 
+func TestFilePath(t *testing.T) {
+	file, err := os.Stat("../resources/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")
+	if err != nil {
+		panic(err)
+	}
+	context := NewContext(nil, NewAttributes())
+	fileAttributes := ToFileAttributes("../resource/TestResultsWithProjections/single/", file, context)
+
+	path := fileAttributes.Get(AttributePath).GetAsString()
+	expected := "../resource/TestResultsWithProjections/single/TestResultsWithProjections_A.txt"
+
+	if path != expected {
+		t.Fatalf("Expected file path to be %v, received %v", expected, path)
+	}
+}
+
 func TestFileSize(t *testing.T) {
 	file, err := os.Stat("../resources/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")
 	if err != nil {

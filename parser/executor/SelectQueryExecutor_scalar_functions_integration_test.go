@@ -45,7 +45,7 @@ func TestResultsWithProjections2(t *testing.T) {
 
 func TestResultsWithProjectionsInNestedDirectories(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name), path from ../resources/TestResultsWithProjections/ order by 1", newContext)
+	aParser, err := parser.NewParser("select isdir, lower(name), path from ../resources/TestResultsWithProjections/ order by 1 desc, 2 asc", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -55,12 +55,15 @@ func TestResultsWithProjectionsInNestedDirectories(t *testing.T) {
 	}
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext).Execute()
 	expected := [][]context.Value{
-		{context.StringValue("empty.log"), context.StringValue("../resources/TestResultsWithProjections/empty/Empty.log")},
-		{context.StringValue("testresultswithprojections_a.log"), context.StringValue("../resources/TestResultsWithProjections/multi/TestResultsWithProjections_A.log")},
-		{context.StringValue("testresultswithprojections_a.txt"), context.StringValue("../resources/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")},
-		{context.StringValue("testresultswithprojections_b.log"), context.StringValue("../resources/TestResultsWithProjections/multi/TestResultsWithProjections_B.log")},
-		{context.StringValue("testresultswithprojections_c.txt"), context.StringValue("../resources/TestResultsWithProjections/multi/TestResultsWithProjections_C.txt")},
-		{context.StringValue("testresultswithprojections_d.txt"), context.StringValue("../resources/TestResultsWithProjections/multi/TestResultsWithProjections_D.txt")},
+		{context.BooleanValue(true), context.StringValue("empty"), context.StringValue("../resources/TestResultsWithProjections/empty")},
+		{context.BooleanValue(true), context.StringValue("multi"), context.StringValue("../resources/TestResultsWithProjections/multi")},
+		{context.BooleanValue(true), context.StringValue("single"), context.StringValue("../resources/TestResultsWithProjections/single")},
+		{context.BooleanValue(false), context.StringValue("empty.log"), context.StringValue("../resources/TestResultsWithProjections/empty/Empty.log")},
+		{context.BooleanValue(false), context.StringValue("testresultswithprojections_a.log"), context.StringValue("../resources/TestResultsWithProjections/multi/TestResultsWithProjections_A.log")},
+		{context.BooleanValue(false), context.StringValue("testresultswithprojections_a.txt"), context.StringValue("../resources/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")},
+		{context.BooleanValue(false), context.StringValue("testresultswithprojections_b.log"), context.StringValue("../resources/TestResultsWithProjections/multi/TestResultsWithProjections_B.log")},
+		{context.BooleanValue(false), context.StringValue("testresultswithprojections_c.txt"), context.StringValue("../resources/TestResultsWithProjections/multi/TestResultsWithProjections_C.txt")},
+		{context.BooleanValue(false), context.StringValue("testresultswithprojections_d.txt"), context.StringValue("../resources/TestResultsWithProjections/multi/TestResultsWithProjections_D.txt")},
 	}
 	assertMatch(t, expected, queryResults)
 }

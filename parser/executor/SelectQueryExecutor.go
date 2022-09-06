@@ -55,7 +55,6 @@ func (selectQueryExecutor SelectQueryExecutor) executeFrom(directory string, max
 				if err := execute(newPath); err != nil {
 					return err
 				}
-				continue
 			}
 			if rows.Count() >= maxLimit && !selectQueryExecutor.query.IsOrderDefined() {
 				return nil

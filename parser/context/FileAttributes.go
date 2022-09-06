@@ -71,12 +71,16 @@ func (fileAttributes *FileAttributes) setTimes(file fs.FileInfo, attributes *All
 }
 
 func (fileAttributes *FileAttributes) setPath(directory string, file fs.FileInfo, attributes *AllAttributes) {
-	path := directory + "/" + file.Name()
-	absolutePath, err := filepath.Abs(path)
+	pathSeparator := string(os.PathSeparator)
+	newPath := directory + pathSeparator + file.Name()
+	if strings.HasSuffix(directory, pathSeparator) {
+		newPath = directory + file.Name()
+	}
+	absolutePath, err := filepath.Abs(newPath)
 	if err == nil {
 		fileAttributes.setAllAliasesForAttribute(AttributeAbsolutePath, StringValue(absolutePath), attributes)
 	}
-	fileAttributes.setAllAliasesForAttribute(AttributePath, StringValue(path), attributes)
+	fileAttributes.setAllAliasesForAttribute(AttributePath, StringValue(newPath), attributes)
 }
 
 func (fileAttributes *FileAttributes) setExtension(file fs.FileInfo, attributes *AllAttributes) {
