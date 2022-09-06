@@ -25,6 +25,12 @@ var executeCmd = &cobra.Command{
 			return
 		}
 		nestedTraversal, _ := cmd.Flags().GetBool("nestedTraversal")
+		options := executor.NewDefaultOptions()
+		if nestedTraversal {
+			options.EnableNestedTraversal()
+		} else {
+			options.DisableNestedTraversal()
+		}
 
 		newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
 		parser, err := parser.NewParser(rawQuery, newContext)
@@ -37,7 +43,7 @@ var executeCmd = &cobra.Command{
 			fmt.Println(errorColor, err)
 			return
 		}
-		rows, err := executor.NewSelectQueryExecutor(query, newContext, executor.OptionsWith(nestedTraversal)).Execute()
+		rows, err := executor.NewSelectQueryExecutor(query, newContext, options).Execute()
 		if err != nil {
 			fmt.Println(errorColor, err)
 			return

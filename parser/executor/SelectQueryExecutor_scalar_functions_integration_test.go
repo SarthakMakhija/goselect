@@ -78,7 +78,7 @@ func TestResultsWithProjectionsInNestedDirectoriesWithOptionToTraverseNestedDire
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, OptionsWith(false)).Execute()
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions().DisableNestedTraversal()).Execute()
 	expected := [][]context.Value{
 		{context.BooleanValue(true), context.StringValue("empty"), context.StringValue("../resources/TestResultsWithProjections/empty")},
 		{context.BooleanValue(true), context.StringValue("multi"), context.StringValue("../resources/TestResultsWithProjections/multi")},
