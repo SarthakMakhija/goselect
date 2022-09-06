@@ -43,6 +43,27 @@ func TestResultsWithProjections2(t *testing.T) {
 	assertMatch(t, expected, queryResults)
 }
 
+func TestResultsWithProjections4(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select lower(name), replace(name, txt, log), replaceall(name, i, u) from ../resources/TestResultsWithProjections/single", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	expected := [][]context.Value{
+		{
+			context.StringValue("testresultswithprojections_a.txt"),
+			context.StringValue("TestResultsWithProjections_A.log"),
+			context.StringValue("TestResultsWuthProjectuons_A.txt"),
+		},
+	}
+	assertMatch(t, expected, queryResults)
+}
+
 func TestResultsWithProjectionsInNestedDirectories(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
 	aParser, err := parser.NewParser("select isdir, lower(name), path from ../resources/TestResultsWithProjections/ order by 1 desc, 2 asc", newContext)

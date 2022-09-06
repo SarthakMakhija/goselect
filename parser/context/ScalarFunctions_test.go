@@ -875,6 +875,51 @@ func TestContainsWithInsufficientParameters(t *testing.T) {
 	}
 }
 
+func TestReplace1(t *testing.T) {
+	value, _ := NewFunctions().Execute("replace", StringValue("sample.log"), StringValue("log"), StringValue("txt"))
+
+	actualValue, _ := value.GetString()
+	if actualValue != "sample.txt" {
+		t.Fatalf("Expected replace to be %v, received %v", "sample.txt", actualValue)
+	}
+}
+
+func TestReplace2(t *testing.T) {
+	value, _ := NewFunctions().Execute("replace", StringValue("sample.log.log"), StringValue("log"), StringValue("txt"))
+
+	actualValue, _ := value.GetString()
+	if actualValue != "sample.txt.log" {
+		t.Fatalf("Expected replace to be %v, received %v", "sample.txt.log", actualValue)
+	}
+}
+
+func TestReplace3(t *testing.T) {
+	value, _ := NewFunctions().Execute("replace", StringValue("sample.log.log"), StringValue("log"), StringValue("12.39"))
+
+	actualValue, _ := value.GetString()
+	if actualValue != "sample.12.39.log" {
+		t.Fatalf("Expected replace to be %v, received %v", "sample.12.39.log", actualValue)
+	}
+}
+
+func TestReplaceAll1(t *testing.T) {
+	value, _ := NewFunctions().Execute("replaceall", StringValue("sample.log.log"), StringValue("log"), StringValue("txt"))
+
+	actualValue, _ := value.GetString()
+	if actualValue != "sample.txt.txt" {
+		t.Fatalf("Expected replace all to be %v, received %v", "sample.txt.txt", actualValue)
+	}
+}
+
+func TestReplaceAll2(t *testing.T) {
+	value, _ := NewFunctions().Execute("replaceall", StringValue("sample.log.log"), StringValue("log"), StringValue("12.39"))
+
+	actualValue, _ := value.GetString()
+	if actualValue != "sample.12.39.12.39" {
+		t.Fatalf("Expected replace all to be %v, received %v", "sample.12.39.12.39", actualValue)
+	}
+}
+
 func TestSubstringWithBeginIndexOnly(t *testing.T) {
 	value, _ := NewFunctions().Execute("substr", StringValue("abcdef"), StringValue("2"))
 

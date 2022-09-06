@@ -71,6 +71,8 @@ const (
 	FunctionNameConcatWithSeparator = "concatws"
 	FunctionNameContains            = "contains"
 	FunctionNameSubstring           = "substr"
+	FunctionNameReplace             = "replace"
+	FunctionNameReplaceAll          = "replaceall"
 	FunctionNameCount               = "count"
 	FunctionNameCountDistinct       = "countdistinct"
 	FunctionNameSum                 = "sum"
@@ -236,6 +238,14 @@ var functionDefinitions = map[string]*FunctionDefinition{
 	FunctionNameSubstring: {
 		aliases: []string{"substr", "str"},
 		block:   SubstringFunctionBlock{},
+	},
+	FunctionNameReplace: {
+		aliases: []string{"replace"},
+		block:   ReplaceFunctionBlock{},
+	},
+	FunctionNameReplaceAll: {
+		aliases: []string{"replaceall"},
+		block:   ReplaceAllFunctionBlock{},
 	},
 	FunctionNameCount: {
 		aliases:        []string{"count"},

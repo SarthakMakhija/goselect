@@ -49,6 +49,8 @@ type ConcatFunctionBlock struct{}
 type ConcatWithSeparatorFunctionBlock struct{}
 type ContainsFunctionBlock struct{}
 type SubstringFunctionBlock struct{}
+type ReplaceFunctionBlock struct{}
+type ReplaceAllFunctionBlock struct{}
 
 func (receiver IdentityFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameIdentity, 1); err != nil {
@@ -400,6 +402,20 @@ func (s SubstringFunctionBlock) run(args ...Value) (Value, error) {
 		}
 	}
 	return StringValue(str[from : to+1]), nil
+}
+
+func (r ReplaceFunctionBlock) run(args ...Value) (Value, error) {
+	if err := ensureNParametersOrError(args, FunctionNameReplace, 2); err != nil {
+		return EmptyValue, err
+	}
+	return StringValue(strings.Replace(args[0].GetAsString(), args[1].GetAsString(), args[2].GetAsString(), 1)), nil
+}
+
+func (r ReplaceAllFunctionBlock) run(args ...Value) (Value, error) {
+	if err := ensureNParametersOrError(args, FunctionNameReplaceAll, 2); err != nil {
+		return EmptyValue, err
+	}
+	return StringValue(strings.ReplaceAll(args[0].GetAsString(), args[1].GetAsString(), args[2].GetAsString())), nil
 }
 
 func (e ExtractFunctionBlock) run(args ...Value) (Value, error) {
