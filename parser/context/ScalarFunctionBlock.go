@@ -405,14 +405,14 @@ func (s SubstringFunctionBlock) run(args ...Value) (Value, error) {
 }
 
 func (r ReplaceFunctionBlock) run(args ...Value) (Value, error) {
-	if err := ensureNParametersOrError(args, FunctionNameReplace, 2); err != nil {
+	if err := ensureNParametersOrError(args, FunctionNameReplace, 3); err != nil {
 		return EmptyValue, err
 	}
 	return StringValue(strings.Replace(args[0].GetAsString(), args[1].GetAsString(), args[2].GetAsString(), 1)), nil
 }
 
 func (r ReplaceAllFunctionBlock) run(args ...Value) (Value, error) {
-	if err := ensureNParametersOrError(args, FunctionNameReplaceAll, 2); err != nil {
+	if err := ensureNParametersOrError(args, FunctionNameReplaceAll, 3); err != nil {
 		return EmptyValue, err
 	}
 	return StringValue(strings.ReplaceAll(args[0].GetAsString(), args[1].GetAsString(), args[2].GetAsString())), nil

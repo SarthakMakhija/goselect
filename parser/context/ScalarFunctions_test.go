@@ -902,6 +902,14 @@ func TestReplace3(t *testing.T) {
 	}
 }
 
+func TestReplace4(t *testing.T) {
+	_, err := NewFunctions().Execute("replace", StringValue("sample.log.log"), StringValue("log"))
+
+	if err == nil {
+		t.Fatalf("Expected an error with replace given insufficient parameters")
+	}
+}
+
 func TestReplaceAll1(t *testing.T) {
 	value, _ := NewFunctions().Execute("replaceall", StringValue("sample.log.log"), StringValue("log"), StringValue("txt"))
 
@@ -917,6 +925,14 @@ func TestReplaceAll2(t *testing.T) {
 	actualValue, _ := value.GetString()
 	if actualValue != "sample.12.39.12.39" {
 		t.Fatalf("Expected replace all to be %v, received %v", "sample.12.39.12.39", actualValue)
+	}
+}
+
+func TestReplaceAll3(t *testing.T) {
+	_, err := NewFunctions().Execute("replaceall", StringValue("sample.log.log"), StringValue("log"))
+
+	if err == nil {
+		t.Fatalf("Expected an error with replace all given insufficient parameters")
 	}
 }
 
