@@ -49,7 +49,7 @@ func (selectQueryExecutor SelectQueryExecutor) executeFrom(directory string, max
 		for _, file := range files {
 			if file.IsDir() {
 				newPath := directory + pathSeparator + file.Name()
-				if strings.HasSuffix(directory, "/") {
+				if strings.HasSuffix(directory, pathSeparator) {
 					newPath = directory + file.Name()
 				}
 				if err := execute(newPath); err != nil {
