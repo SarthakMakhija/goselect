@@ -124,6 +124,36 @@ func TestMin2(t *testing.T) {
 	}
 }
 
+func TestMax1(t *testing.T) {
+	allFunctions := NewFunctions()
+	initialState := allFunctions.InitialState("max")
+
+	state, _ := allFunctions.ExecuteAggregate("max", initialState, IntValue(10))
+	state, _ = allFunctions.ExecuteAggregate("max", state, IntValue(15))
+	state, _ = allFunctions.ExecuteAggregate("max", state, IntValue(8))
+
+	finalValue, _ := allFunctions.FinalValue("max", state, nil)
+	actualValue := finalValue.GetAsString()
+	if actualValue != "15" {
+		t.Fatalf("Expected max to be %v, received %v", "15", actualValue)
+	}
+}
+
+func TestMax2(t *testing.T) {
+	allFunctions := NewFunctions()
+	initialState := allFunctions.InitialState("max")
+
+	state, _ := allFunctions.ExecuteAggregate("max", initialState, StringValue("name"))
+	state, _ = allFunctions.ExecuteAggregate("max", state, StringValue("abc"))
+	state, _ = allFunctions.ExecuteAggregate("max", state, StringValue("pqr"))
+
+	finalValue, _ := allFunctions.FinalValue("max", state, nil)
+	actualValue := finalValue.GetAsString()
+	if actualValue != "pqr" {
+		t.Fatalf("Expected max to be %v, received %v", "pqr", actualValue)
+	}
+}
+
 func TestSumGivenANonNumericParameter(t *testing.T) {
 	allFunctions := NewFunctions()
 	initialState := allFunctions.InitialState("sum")

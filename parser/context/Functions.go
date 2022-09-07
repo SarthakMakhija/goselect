@@ -78,6 +78,7 @@ const (
 	FunctionNameSum                 = "sum"
 	FunctionNameAverage             = "average"
 	FunctionNameMin                 = "min"
+	FunctionNameMax                 = "max"
 )
 
 var functionDefinitions = map[string]*FunctionDefinition{
@@ -272,6 +273,11 @@ var functionDefinitions = map[string]*FunctionDefinition{
 		aliases:        []string{"min"},
 		isAggregate:    true,
 		aggregateBlock: &MinFunctionBlock{},
+	},
+	FunctionNameMax: {
+		aliases:        []string{"max"},
+		isAggregate:    true,
+		aggregateBlock: &MaxFunctionBlock{},
 	},
 }
 

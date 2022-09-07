@@ -10,6 +10,7 @@ type CountDistinctFunctionBlock struct{}
 type SumFunctionBlock struct{}
 type AverageFunctionBlock struct{}
 type MinFunctionBlock struct{}
+type MaxFunctionBlock struct{}
 
 func (c *CountFunctionBlock) initialState() *FunctionState {
 	return &FunctionState{Initial: zeroUint32Value, isUpdated: false}
@@ -160,6 +161,44 @@ func (m *MinFunctionBlock) finalValue(currentState *FunctionState, values []Valu
 		return currentState.Initial, nil
 	}
 	if err := ensureNParametersOrError(values, FunctionNameMin, 1); err != nil {
+		return EmptyValue, err
+	}
+	return values[0], nil
+}
+
+func (m *MaxFunctionBlock) initialState() *FunctionState {
+	return &FunctionState{
+		Initial:   EmptyValue,
+		isUpdated: false,
+	}
+}
+
+func (m *MaxFunctionBlock) run(initialState *FunctionState, args ...Value) (*FunctionState, error) {
+	if err := ensureNParametersOrError(args, FunctionNameMax, 1); err != nil {
+		return nil, err
+	}
+	if !initialState.isUpdated {
+		return &FunctionState{
+			Initial:   args[0],
+			isUpdated: true,
+		}, nil
+	}
+	comparisonResult := initialState.Initial.CompareTo(args[0])
+	if comparisonResult == CompareToEqual || comparisonResult == CompareToGreaterThan { //initial == incoming || initial > incoming
+		return initialState, nil
+	} else {
+		return &FunctionState{
+			Initial:   args[0],
+			isUpdated: true,
+		}, nil
+	}
+}
+
+func (m *MaxFunctionBlock) finalValue(currentState *FunctionState, values []Value) (Value, error) {
+	if currentState.isUpdated {
+		return currentState.Initial, nil
+	}
+	if err := ensureNParametersOrError(values, FunctionNameMax, 1); err != nil {
 		return EmptyValue, err
 	}
 	return values[0], nil

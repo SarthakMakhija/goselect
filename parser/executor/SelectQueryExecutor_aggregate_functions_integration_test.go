@@ -304,3 +304,43 @@ func TestResultsWithProjectionsIncludingMin2(t *testing.T) {
 	}
 	assertMatch(t, expected, queryResults)
 }
+
+func TestResultsWithProjectionsIncludingMax1(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select max(name) from ../resources/TestResultsWithProjections/multi order by 1", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	expected := [][]context.Value{
+		{context.StringValue("TestResultsWithProjections_D.txt")},
+		{context.StringValue("TestResultsWithProjections_D.txt")},
+		{context.StringValue("TestResultsWithProjections_D.txt")},
+		{context.StringValue("TestResultsWithProjections_D.txt")},
+	}
+	assertMatch(t, expected, queryResults)
+}
+
+func TestResultsWithProjectionsIncludingMax2(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select max(max(len(name))) from ../resources/TestResultsWithProjections/multi order by 1", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	expected := [][]context.Value{
+		{context.IntValue(32)},
+		{context.IntValue(32)},
+		{context.IntValue(32)},
+		{context.IntValue(32)},
+	}
+	assertMatch(t, expected, queryResults)
+}
