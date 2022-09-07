@@ -77,6 +77,7 @@ const (
 	FunctionNameCountDistinct       = "countdistinct"
 	FunctionNameSum                 = "sum"
 	FunctionNameAverage             = "average"
+	FunctionNameMin                 = "min"
 )
 
 var functionDefinitions = map[string]*FunctionDefinition{
@@ -266,6 +267,11 @@ var functionDefinitions = map[string]*FunctionDefinition{
 		aliases:        []string{"average", "avg"},
 		isAggregate:    true,
 		aggregateBlock: &AverageFunctionBlock{},
+	},
+	FunctionNameMin: {
+		aliases:        []string{"min"},
+		isAggregate:    true,
+		aggregateBlock: &MinFunctionBlock{},
 	},
 }
 

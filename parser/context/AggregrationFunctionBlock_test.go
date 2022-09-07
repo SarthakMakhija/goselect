@@ -94,6 +94,36 @@ func TestAverage(t *testing.T) {
 	}
 }
 
+func TestMin1(t *testing.T) {
+	allFunctions := NewFunctions()
+	initialState := allFunctions.InitialState("min")
+
+	state, _ := allFunctions.ExecuteAggregate("min", initialState, IntValue(10))
+	state, _ = allFunctions.ExecuteAggregate("min", state, IntValue(15))
+	state, _ = allFunctions.ExecuteAggregate("min", state, IntValue(8))
+
+	finalValue, _ := allFunctions.FinalValue("min", state, nil)
+	actualValue := finalValue.GetAsString()
+	if actualValue != "8" {
+		t.Fatalf("Expected min to be %v, received %v", "8", actualValue)
+	}
+}
+
+func TestMin2(t *testing.T) {
+	allFunctions := NewFunctions()
+	initialState := allFunctions.InitialState("min")
+
+	state, _ := allFunctions.ExecuteAggregate("min", initialState, StringValue("name"))
+	state, _ = allFunctions.ExecuteAggregate("min", state, StringValue("abc"))
+	state, _ = allFunctions.ExecuteAggregate("min", state, StringValue("pqr"))
+
+	finalValue, _ := allFunctions.FinalValue("min", state, nil)
+	actualValue := finalValue.GetAsString()
+	if actualValue != "abc" {
+		t.Fatalf("Expected min to be %v, received %v", "abc", actualValue)
+	}
+}
+
 func TestSumGivenANonNumericParameter(t *testing.T) {
 	allFunctions := NewFunctions()
 	initialState := allFunctions.InitialState("sum")
