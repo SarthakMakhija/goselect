@@ -44,7 +44,7 @@ const (
 var attributeDefinitions = map[string]*AttributeDefinition{
 	AttributeName: {
 		aliases:     []string{"filename", "name", "fname"},
-		description: "Returns the file name. ",
+		description: "Returns the file name.",
 	},
 	AttributeBaseName: {
 		aliases:     []string{"basename", "bname"},
@@ -84,19 +84,19 @@ var attributeDefinitions = map[string]*AttributeDefinition{
 	},
 	AttributeNameIsSymbolicLink: {
 		aliases:     []string{"issymboliclink", "issymlink"},
-		description: "Returns true if the file is a symbolic link",
+		description: "Returns true if the file is a symbolic link.",
 	},
 	AttributeCreatedTime: {
 		aliases:     []string{"createdtime", "ctime"},
-		description: "Returns the created time of the file",
+		description: "Returns the created time of the file.",
 	},
 	AttributeModifiedTime: {
 		aliases:     []string{"modifiedtime", "mtime", "modtime"},
-		description: "Returns the modified time of the file",
+		description: "Returns the modified time of the file.",
 	},
 	AttributeAccessedTime: {
 		aliases:     []string{"accessedtime", "accesstime", "atime"},
-		description: "Returns the access time of the file",
+		description: "Returns the access time of the file.",
 	},
 	AttributeExtension: {
 		aliases:     []string{"extension", "ext"},
@@ -144,7 +144,7 @@ var attributeDefinitions = map[string]*AttributeDefinition{
 	},
 	AttributeBlockSize: {
 		aliases:     []string{"blocksize", "bsize", "blksize"},
-		description: "Returns the block size, usually 4096 bytes",
+		description: "Returns the block size, usually 4096 bytes.",
 	},
 	AttributeBlocks: {
 		aliases:     []string{"blocks", "blks"},
