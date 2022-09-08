@@ -2,9 +2,9 @@ package writer
 
 import (
 	"fmt"
+	"github.com/bndr/gotabulate"
 	"goselect/parser/executor"
 	"goselect/parser/projection"
-	"strings"
 )
 
 type TableFormatter struct{}
@@ -14,22 +14,34 @@ func NewTableFormatter() *TableFormatter {
 }
 
 func (tableFormatter TableFormatter) Format(projections *projection.Projections, rows *executor.EvaluatingRows) string {
-	var result = new(strings.Builder)
-	headerColor := "\033[34m"
-	contentColor := "\033[0m"
+	var displayableRows [][]string
 
-	for _, attributeHeader := range projections.DisplayableAttributes() {
-		result.WriteString(fmt.Sprintf("%v%-24v", headerColor, attributeHeader))
-	}
-	result.WriteString("\n")
 	iterator := rows.RowIterator()
 	for iterator.HasNext() {
+		var attributes []string
 		for _, attribute := range iterator.Next().AllAttributes() {
-			result.WriteString(fmt.Sprintf("%v%-24v", contentColor, attribute.GetAsString()))
+			attributes = append(attributes, attribute.GetAsString())
 		}
-		result.WriteString("\n")
+		displayableRows = append(displayableRows, attributes)
 	}
-	result.WriteString(fmt.Sprintf("%vTotal Rows: %v", headerColor, rows.Count()))
-	result.WriteString("\n")
-	return result.String()
+
+	return tableFormatter.renderContentTable(projections.DisplayableAttributes(), displayableRows) +
+		tableFormatter.renderFooterTable(displayableRows)
+}
+
+func (tableFormatter TableFormatter) renderContentTable(attributes []string, displayableRows [][]string) string {
+	table := gotabulate.Create(displayableRows)
+	table.SetHeaders(attributes)
+	table.SetMaxCellSize(45)
+	table.SetWrapStrings(true)
+	table.SetAlign("left")
+
+	return table.Render("grid")
+}
+
+func (tableFormatter TableFormatter) renderFooterTable(displayableRows [][]string) string {
+	table := gotabulate.Create([]string{fmt.Sprintf("Total Rows: %v", len(displayableRows))})
+	table.SetHeaders([]string{""})
+	table.SetAlign("left")
+	return table.Render("grid")
 }
