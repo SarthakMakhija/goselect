@@ -195,6 +195,14 @@ func (attributes *AllAttributes) AllAttributeWithAliases() map[string][]string {
 	return supportedAttributes
 }
 
+func (attributes *AllAttributes) DescriptionOf(attribute string) string {
+	definition, ok := attributes.supportedAttributes[strings.ToLower(attribute)]
+	if ok {
+		return definition.description
+	}
+	return ""
+}
+
 func (attributes *AllAttributes) aliasesFor(attribute string) []string {
 	definition, ok := attributeDefinitions[strings.ToLower(attribute)]
 	if ok {

@@ -11,7 +11,7 @@ import (
 
 var executeCmd = &cobra.Command{
 	Use:   "execute",
-	Short: "Execute Select SQL query.",
+	Short: "Execute Select SQL query",
 	Long:  `Select SQL Query syntax: select <columns> from <source directory> [where <condition>] [order by] [limit]`,
 	Run: func(cmd *cobra.Command, args []string) {
 		buildOptions := func() *executor.Options {
