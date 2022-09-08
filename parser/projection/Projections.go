@@ -31,8 +31,12 @@ func (projections Projections) Count() int {
 	return projections.expressions.Count()
 }
 
+func (projections Projections) AggregationCount() int {
+	return projections.expressions.AggregationCount()
+}
+
 func (projections Projections) HasAllAggregates() bool {
-	return projections.Count() == projections.expressions.AggregationCount()
+	return projections.Count() == projections.AggregationCount()
 }
 
 func (projections Projections) DisplayableAttributes() []string {

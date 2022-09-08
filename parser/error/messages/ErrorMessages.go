@@ -21,7 +21,7 @@ const (
 	ErrorMessageExpectedExpressionInWhere                 = "expected one expression in the where clause, or remove 'where' keyword"
 	ErrorMessageExpectedSingleExpressionInWhere           = "expected only a single expression in the where clause"
 	ErrorMessageInvalidWhere                              = "invalid where clause, please check opening and closing parentheses for all the functions"
-	ErrorMessageInvalidWhereFunctionUsed                  = "invalid where clause, 'where' supports only functions. please check all the function supported in 'where' clause"
+	ErrorMessageInvalidWhereFunctionUsed                  = "invalid where clause, 'where' supports a set of functions. please check all the function supported in 'where' clause"
 	ErrorMessageAggregateFunctionInsideWhere              = "invalid where clause, aggregate functions are not supported in the where clause"
 	ErrorMessageMissingParameterInScalarFunctions         = "expected %v parameter(s) in the function %v but did not receive the required parameter(s)"
 	ErrorMessageIncorrectValueType                        = "expected a %v value type but was not"

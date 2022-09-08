@@ -69,7 +69,7 @@ func (selectQueryExecutor SelectQueryExecutor) executeFrom(directory string, max
 					return err
 				}
 			}
-			if rows.Count() >= maxLimit && !selectQueryExecutor.query.IsOrderDefined() {
+			if rows.Count() >= maxLimit && !selectQueryExecutor.query.IsOrderDefined() && selectQueryExecutor.query.Projections.AggregationCount() == 0 {
 				return nil
 			}
 			fileAttributes := context.ToFileAttributes(directory, file, selectQueryExecutor.context)

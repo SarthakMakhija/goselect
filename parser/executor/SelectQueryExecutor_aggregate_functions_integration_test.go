@@ -162,6 +162,23 @@ func TestResultsWithProjectionsIncludingNestedAverageFunction3(t *testing.T) {
 	assertMatch(t, expected, queryResults)
 }
 
+func TestResultsWithProjectionsIncludingNestedAverageFunctionWithoutAnyOrderBy(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select add(count(), 7) from ../resources/TestResultsWithProjections/multi", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	expected := [][]context.Value{
+		{context.Float64Value(11)},
+	}
+	assertMatch(t, expected, queryResults)
+}
+
 func TestResultsWithProjectionsIncludingCountDistinct1(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
 	aParser, err := parser.NewParser("select countd(lower(ext)) from ../resources/TestResultsWithProjections/multi order by 1", newContext)
