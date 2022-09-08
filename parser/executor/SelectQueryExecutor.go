@@ -28,8 +28,12 @@ func (selectQueryExecutor *SelectQueryExecutor) Execute() (*EvaluatingRows, erro
 	source := selectQueryExecutor.query.Source
 
 	var limit uint32 = math.MaxInt32
-	if selectQueryExecutor.query.IsLimitDefined() {
-		limit = selectQueryExecutor.query.Limit.Limit
+	if selectQueryExecutor.query.Projections.HasAllAggregates() {
+		limit = 1
+	} else {
+		if selectQueryExecutor.query.IsLimitDefined() {
+			limit = selectQueryExecutor.query.Limit.Limit
+		}
 	}
 	rows, err := selectQueryExecutor.executeFrom(source.Directory, limit)
 	if err != nil {

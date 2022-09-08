@@ -39,8 +39,6 @@ func TestResultsWithProjectionsIncludingAverageFunctionWithLimitReturningTheAver
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.Float64Value(32)},
-		{context.Float64Value(32)},
-		{context.Float64Value(32)},
 	}
 	assertMatch(t, expected, queryResults)
 }
@@ -57,9 +55,6 @@ func TestResultsWithProjectionsIncludingAggregateFunctionInsideAScalar(t *testin
 	}
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
-		{context.StringValue("4")},
-		{context.StringValue("4")},
-		{context.StringValue("4")},
 		{context.StringValue("4")},
 	}
 	assertMatch(t, expected, queryResults)
@@ -78,9 +73,6 @@ func TestResultsWithProjectionsIncludingNestedCountFunction1(t *testing.T) {
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.Uint32Value(1)},
-		{context.Uint32Value(1)},
-		{context.Uint32Value(1)},
-		{context.Uint32Value(1)},
 	}
 	assertMatch(t, expected, queryResults)
 }
@@ -97,9 +89,6 @@ func TestResultsWithProjectionsIncludingNestedCountFunction2(t *testing.T) {
 	}
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
-		{context.Uint32Value(1)},
-		{context.Uint32Value(1)},
-		{context.Uint32Value(1)},
 		{context.Uint32Value(1)},
 	}
 	assertMatch(t, expected, queryResults)
@@ -118,9 +107,6 @@ func TestResultsWithProjectionsIncludingNestedCountFunction3(t *testing.T) {
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("1")},
-		{context.StringValue("1")},
-		{context.StringValue("1")},
-		{context.StringValue("1")},
 	}
 	assertMatch(t, expected, queryResults)
 }
@@ -137,9 +123,6 @@ func TestResultsWithProjectionsIncludingNestedAverageFunction1(t *testing.T) {
 	}
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
-		{context.Float64Value(32)},
-		{context.Float64Value(32)},
-		{context.Float64Value(32)},
 		{context.Float64Value(32)},
 	}
 	assertMatch(t, expected, queryResults)
@@ -158,9 +141,6 @@ func TestResultsWithProjectionsIncludingNestedAverageFunction2(t *testing.T) {
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.Uint32Value(1)},
-		{context.Uint32Value(1)},
-		{context.Uint32Value(1)},
-		{context.Uint32Value(1)},
 	}
 	assertMatch(t, expected, queryResults)
 }
@@ -177,9 +157,6 @@ func TestResultsWithProjectionsIncludingNestedAverageFunction3(t *testing.T) {
 	}
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
-		{context.Float64Value(11)},
-		{context.Float64Value(11)},
-		{context.Float64Value(11)},
 		{context.Float64Value(11)},
 	}
 	assertMatch(t, expected, queryResults)
@@ -198,9 +175,6 @@ func TestResultsWithProjectionsIncludingCountDistinct1(t *testing.T) {
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.Uint32Value(2)},
-		{context.Uint32Value(2)},
-		{context.Uint32Value(2)},
-		{context.Uint32Value(2)},
 	}
 	assertMatch(t, expected, queryResults)
 }
@@ -217,9 +191,6 @@ func TestResultsWithProjectionsIncludingCountDistinct2(t *testing.T) {
 	}
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
-		{context.Uint32Value(1)},
-		{context.Uint32Value(1)},
-		{context.Uint32Value(1)},
 		{context.Uint32Value(1)},
 	}
 	assertMatch(t, expected, queryResults)
@@ -238,9 +209,6 @@ func TestResultsWithProjectionsIncludingSum1(t *testing.T) {
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.Float64Value(16)},
-		{context.Float64Value(16)},
-		{context.Float64Value(16)},
-		{context.Float64Value(16)},
 	}
 	assertMatch(t, expected, queryResults)
 }
@@ -257,9 +225,6 @@ func TestResultsWithProjectionsIncludingSum2(t *testing.T) {
 	}
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
-		{context.Float64Value(2)},
-		{context.Float64Value(2)},
-		{context.Float64Value(2)},
 		{context.Float64Value(2)},
 	}
 	assertMatch(t, expected, queryResults)
@@ -278,9 +243,6 @@ func TestResultsWithProjectionsIncludingMin1(t *testing.T) {
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("TestResultsWithProjections_A.log")},
-		{context.StringValue("TestResultsWithProjections_A.log")},
-		{context.StringValue("TestResultsWithProjections_A.log")},
-		{context.StringValue("TestResultsWithProjections_A.log")},
 	}
 	assertMatch(t, expected, queryResults)
 }
@@ -297,9 +259,6 @@ func TestResultsWithProjectionsIncludingMin2(t *testing.T) {
 	}
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
-		{context.IntValue(32)},
-		{context.IntValue(32)},
-		{context.IntValue(32)},
 		{context.IntValue(32)},
 	}
 	assertMatch(t, expected, queryResults)
@@ -318,9 +277,6 @@ func TestResultsWithProjectionsIncludingMax1(t *testing.T) {
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("TestResultsWithProjections_D.txt")},
-		{context.StringValue("TestResultsWithProjections_D.txt")},
-		{context.StringValue("TestResultsWithProjections_D.txt")},
-		{context.StringValue("TestResultsWithProjections_D.txt")},
 	}
 	assertMatch(t, expected, queryResults)
 }
@@ -337,9 +293,6 @@ func TestResultsWithProjectionsIncludingMax2(t *testing.T) {
 	}
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
-		{context.IntValue(32)},
-		{context.IntValue(32)},
-		{context.IntValue(32)},
 		{context.IntValue(32)},
 	}
 	assertMatch(t, expected, queryResults)
