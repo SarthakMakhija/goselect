@@ -299,6 +299,123 @@ func TestExpressionEvaluateWithNestingOfAverage(t *testing.T) {
 	}
 }
 
+func TestExpressionHasAnAggregateFalse(t *testing.T) {
+	expression := ExpressionWithFunctionInstance(&FunctionInstance{
+		name: "lower",
+		args: []*Expression{},
+	})
+	hasAnAggregate := expression.HasAnAggregate()
+	if hasAnAggregate != false {
+		t.Fatalf("Expected hasAnAggregate to be false, received true")
+	}
+}
+
+func TestExpressionHasAnAggregateTrue(t *testing.T) {
+	functions := context.NewFunctions()
+	expression := ExpressionWithFunctionInstance(&FunctionInstance{
+		name: "lower",
+		args: []*Expression{
+			ExpressionWithValue("CONTENT"),
+			ExpressionWithFunctionInstance(&FunctionInstance{
+				name:        "min",
+				args:        []*Expression{ExpressionWithValue("45")},
+				state:       functions.InitialState("min"),
+				isAggregate: true,
+			}),
+		},
+	})
+	hasAnAggregate := expression.HasAnAggregate()
+	if hasAnAggregate != true {
+		t.Fatalf("Expected hasAnAggregate to be true, received false")
+	}
+}
+
+func TestAggregationCount1(t *testing.T) {
+	functions := context.NewFunctions()
+	expressions := Expressions{Expressions: []*Expression{
+		ExpressionWithFunctionInstance(&FunctionInstance{
+			name: "lower",
+			args: []*Expression{
+				ExpressionWithValue("CONTENT"),
+				ExpressionWithFunctionInstance(&FunctionInstance{
+					name:        "min",
+					args:        []*Expression{ExpressionWithValue("45")},
+					state:       functions.InitialState("min"),
+					isAggregate: true,
+				}),
+			},
+		}),
+		ExpressionWithFunctionInstance(&FunctionInstance{
+			name: "lower",
+			args: []*Expression{
+				ExpressionWithValue("CONTENT"),
+			},
+		}),
+	}}
+
+	aggregationCount := expressions.AggregationCount()
+	if aggregationCount != 1 {
+		t.Fatalf("Expected aggregation count to be %v, received %v", 1, aggregationCount)
+	}
+}
+
+func TestAggregationCount2(t *testing.T) {
+	expressions := Expressions{Expressions: []*Expression{
+		ExpressionWithFunctionInstance(&FunctionInstance{
+			name: "lower",
+			args: []*Expression{
+				ExpressionWithValue("CONTENT"),
+			},
+		}),
+		ExpressionWithFunctionInstance(&FunctionInstance{
+			name: "lower",
+			args: []*Expression{
+				ExpressionWithValue("CONTENT"),
+			},
+		}),
+	}}
+
+	aggregationCount := expressions.AggregationCount()
+	if aggregationCount != 0 {
+		t.Fatalf("Expected aggregation count to be %v, received %v", 0, aggregationCount)
+	}
+}
+
+func TestAggregationCount3(t *testing.T) {
+	functions := context.NewFunctions()
+	expressions := Expressions{Expressions: []*Expression{
+		ExpressionWithFunctionInstance(&FunctionInstance{
+			name: "lower",
+			args: []*Expression{
+				ExpressionWithValue("CONTENT"),
+				ExpressionWithFunctionInstance(&FunctionInstance{
+					name:        "min",
+					args:        []*Expression{ExpressionWithValue("45")},
+					state:       functions.InitialState("min"),
+					isAggregate: true,
+				}),
+			},
+		}),
+		ExpressionWithFunctionInstance(&FunctionInstance{
+			name: "lower",
+			args: []*Expression{
+				ExpressionWithValue("CONTENT"),
+				ExpressionWithFunctionInstance(&FunctionInstance{
+					name:        "min",
+					args:        []*Expression{ExpressionWithValue("45")},
+					state:       functions.InitialState("min"),
+					isAggregate: true,
+				}),
+			},
+		}),
+	}}
+
+	aggregationCount := expressions.AggregationCount()
+	if aggregationCount != 2 {
+		t.Fatalf("Expected aggregation count to be %v, received %v", 2, aggregationCount)
+	}
+}
+
 func simulate2RowExecution(expressions Expressions, functions *context.AllFunctions) ([]*Expression, []*Expression) {
 	_, _, allExpressions1, _ := expressions.EvaluateWith(nil, functions)
 	_, _, allExpressions2, _ := expressions.EvaluateWith(nil, functions)

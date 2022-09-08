@@ -108,6 +108,7 @@ func function(
 					functionNameToken.TokenValue,
 					functionArgs,
 					nil,
+					false,
 				), nil
 			case ctx.IsASupportedFunction(token.TokenValue):
 				if ctx.IsAnAggregateFunction(token.TokenValue) {

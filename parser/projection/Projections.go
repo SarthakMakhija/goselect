@@ -31,6 +31,10 @@ func (projections Projections) Count() int {
 	return projections.expressions.Count()
 }
 
+func (projections Projections) HasAllAggregates() bool {
+	return projections.Count() == projections.expressions.AggregationCount()
+}
+
 func (projections Projections) DisplayableAttributes() []string {
 	return projections.expressions.DisplayableAttributes()
 }
@@ -107,10 +111,17 @@ func function(
 				}
 				expectOpeningParentheses = false
 			case token.Equals(")"):
+				var isAggregate bool
+				if ctx.IsAnAggregateFunction(functionNameToken.TokenValue) {
+					isAggregate = true
+				} else {
+					isAggregate = false
+				}
 				return expression.FunctionInstanceWith(
 					functionNameToken.TokenValue,
 					functionArgs,
 					aggregateFunctionStateOrNil(functionNameToken.TokenValue),
+					isAggregate,
 				), nil
 			case ctx.IsASupportedFunction(token.TokenValue):
 				fn, err := parseFunction(token)

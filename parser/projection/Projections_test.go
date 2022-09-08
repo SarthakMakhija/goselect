@@ -251,3 +251,45 @@ func TestAllAttributesWithFunctionWithArgs(t *testing.T) {
 		t.Fatalf("Expected function representation as %v, received %v", oneFunctionAsString, projections.DisplayableAttributes()[0])
 	}
 }
+
+func TestProjectionHasAllAggregates1(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "lower"))
+	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "min"))
+	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "fName"))
+	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
+	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
+	tokens.Add(tokenizer.NewToken(tokenizer.Comma, ","))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "size"))
+
+	projections, _ := NewProjections(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	hasAllAggregates := projections.HasAllAggregates()
+
+	if hasAllAggregates != false {
+		t.Fatalf("Expected hasAllAggregates to be %v, received %v", false, hasAllAggregates)
+	}
+}
+
+func TestProjectionHasAllAggregates2(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "lower"))
+	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "min"))
+	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "fName"))
+	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
+	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
+	tokens.Add(tokenizer.NewToken(tokenizer.Comma, ","))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "count"))
+	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
+	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
+
+	projections, _ := NewProjections(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	hasAllAggregates := projections.HasAllAggregates()
+
+	if hasAllAggregates != true {
+		t.Fatalf("Expected hasAllAggregates to be %v, received %v", true, hasAllAggregates)
+	}
+}

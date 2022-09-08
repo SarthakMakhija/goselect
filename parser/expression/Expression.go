@@ -24,16 +24,18 @@ type Expression struct {
 }
 
 type FunctionInstance struct {
-	name  string
-	args  []*Expression
-	state *context.FunctionState
+	name        string
+	args        []*Expression
+	state       *context.FunctionState
+	isAggregate bool
 }
 
-func FunctionInstanceWith(name string, args []*Expression, state *context.FunctionState) *FunctionInstance {
+func FunctionInstanceWith(name string, args []*Expression, state *context.FunctionState, isAggregate bool) *FunctionInstance {
 	return &FunctionInstance{
-		name:  name,
-		args:  args,
-		state: state,
+		name:        name,
+		args:        args,
+		state:       state,
+		isAggregate: isAggregate,
 	}
 }
 
@@ -109,6 +111,16 @@ func (expressions Expressions) DisplayableAttributes() []string {
 		}
 	}
 	return attributes
+}
+
+func (expressions Expressions) AggregationCount() int {
+	count := 0
+	for _, expression := range expressions.Expressions {
+		if expression.HasAnAggregate() {
+			count = count + 1
+		}
+	}
+	return count
 }
 
 func (expressions Expressions) EvaluateWith(
@@ -205,6 +217,21 @@ func (expression *Expression) FullyEvaluate(functions *context.AllFunctions) (co
 		return functions.Execute(expression.function.name, values...)
 	}
 	return execute(expression)
+}
+
+func (expression Expression) HasAnAggregate() bool {
+	isAnyArgumentAnAggregate := func(fn *FunctionInstance) bool {
+		if fn != nil {
+			for _, arg := range fn.args {
+				if arg.isAFunction() && arg.function.isAggregate {
+					return true
+				}
+			}
+			return false
+		}
+		return false
+	}
+	return (expression.isAFunction() && expression.function.isAggregate) || isAnyArgumentAnAggregate(expression.function)
 }
 
 func (expression Expression) isAFunction() bool {
