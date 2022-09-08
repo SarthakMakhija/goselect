@@ -32,8 +32,8 @@ The idea is to provide support for `selecting` files based on various conditions
 - Support for `limit` clause
   - [X] limit clause with a value: `limit 10`
 - Support for `aggregation functions`
-  - [ ] min
-  - [ ] max
+  - [X] min
+  - [X] max
   - [X] avg
   - [X] sum
   - [X] count
@@ -73,8 +73,8 @@ The idea is to provide support for `selecting` files based on various conditions
   - [X] concat with separator (concatWs)
   - [X] contains
   - [X] substr
-  - [ ] replace
-  - [ ] replaceAll
+  - [X] replace
+  - [X] replaceAll
   - [ ] formatSize
 - Support for formatting the results
   - [X] Json formatter
