@@ -818,6 +818,24 @@ func TestDaysDifference3(t *testing.T) {
 	}
 }
 
+func TestDateTimeParse1(t *testing.T) {
+	value, _ := NewFunctions().Execute("parsedatetime", StringValue("2022-09-28"), StringValue("dt"))
+	expected := "2022-September-28"
+	actual := formatDate(value.timeValue)
+
+	if expected != actual.GetAsString() {
+		t.Fatalf("Expected parsedatetime to return %v, received %v", expected, actual.GetAsString())
+	}
+}
+
+func TestDateTimeParse2(t *testing.T) {
+	_, err := NewFunctions().Execute("parsedatetime", StringValue("2022-28-12"), StringValue("dt"))
+
+	if err == nil {
+		t.Fatalf("Expected an error while parsing a date with invalid month but received none")
+	}
+}
+
 func TestCurrentWorkingDirectory1(t *testing.T) {
 	value, _ := NewFunctions().Execute("cwd")
 	expected, _ := os.Getwd()

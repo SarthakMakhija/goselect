@@ -44,6 +44,7 @@ type DayOfWeekFunctionBlock struct{}
 type ExtractFunctionBlock struct{}
 type HoursDifferenceFunctionBlock struct{}
 type DaysDifferenceFunctionBlock struct{}
+type ParseDateTimeFunctionBlock struct{}
 type WorkingDirectoryFunctionBlock struct{}
 type ConcatFunctionBlock struct{}
 type ConcatWithSeparatorFunctionBlock struct{}
@@ -480,6 +481,20 @@ func (d DaysDifferenceFunctionBlock) run(args ...Value) (Value, error) {
 	duration := bTime.Sub(aTime) //bTime - aTime
 	days := duration.Hours() / float64(24)
 	return Float64Value(days), nil
+}
+
+func (p ParseDateTimeFunctionBlock) run(args ...Value) (Value, error) {
+	if err := ensureNParametersOrError(args, FunctionNameDateTimeParse, 2); err != nil {
+		return EmptyValue, err
+	}
+
+	timeAsStr := args[0].GetAsString()
+	formatId := args[1].GetAsString()
+	parsed, err := parse(timeAsStr, formatId)
+	if err != nil {
+		return EmptyValue, err
+	}
+	return DateTimeValue(parsed), nil
 }
 
 func formatDate(time time.Time) Value {

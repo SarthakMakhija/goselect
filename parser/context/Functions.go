@@ -67,6 +67,7 @@ const (
 	FunctionNameExtract             = "extract"
 	FunctionNameHoursDifference     = "hoursdifference"
 	FunctionNameDaysDifference      = "daysdifference"
+	FunctionNameDateTimeParse       = "parsedatetime"
 	FunctionNameWorkingDirectory    = "cwd"
 	FunctionNameConcat              = "concat"
 	FunctionNameConcatWithSeparator = "concatws"
@@ -252,6 +253,11 @@ var functionDefinitions = map[string]*FunctionDefinition{
 		aliases:     []string{"daysdifference", "daydifference", "daysdiff", "daydiff"},
 		description: "Returns the difference between 2 date/times in days.",
 		block:       DaysDifferenceFunctionBlock{},
+	},
+	FunctionNameDateTimeParse: {
+		aliases:     []string{"parsedatetime", "parsedttime", "parsedttm", "parsedatetm"},
+		description: "Returns the time representation after parsing the input string",
+		block:       ParseDateTimeFunctionBlock{},
 	},
 	FunctionNameWorkingDirectory: {
 		aliases:     []string{"cwd", "wd"},
