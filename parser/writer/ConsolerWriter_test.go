@@ -10,7 +10,7 @@ func TestConsoleWriter(t *testing.T) {
 	_ = NewWriter(backingWriter).Write("[{\"a\": \"b\"}]")
 
 	op := backingWriter.String()
-	expected := "[{\"a\": \"b\"}]"
+	expected := "[{\"a\": \"b\"}]\n"
 
 	if expected != op {
 		t.Fatalf("Expected console writer to write %v, received %v", expected, op)

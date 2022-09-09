@@ -1,50 +1,67 @@
 package writer
 
 import (
+	"bufio"
+	"bytes"
 	"fmt"
-	"github.com/bndr/gotabulate"
+	"github.com/jedib0t/go-pretty/v6/table"
 	"goselect/parser/executor"
 	"goselect/parser/projection"
 )
 
-type TableFormatter struct{}
+const (
+	minWidth          = 10
+	maxAvailableWidth = 600
+)
 
-func NewTableFormatter() *TableFormatter {
-	return &TableFormatter{}
+type TableFormatter struct {
+	tableWriter table.Writer
 }
 
-func (tableFormatter TableFormatter) Format(projections *projection.Projections, rows *executor.EvaluatingRows) string {
-	var displayableRows [][]string
+func NewTableFormatter() *TableFormatter {
+	var buffer bytes.Buffer
+	tableWriter := table.NewWriter()
+	tableWriter.SetOutputMirror(bufio.NewWriter(&buffer))
+	tableWriter.SetStyle(table.StyleColoredBlackOnCyanWhite)
+	tableWriter.Style().Options.SeparateColumns = true
+	return &TableFormatter{
+		tableWriter: tableWriter,
+	}
+}
 
+func (tableFormatter *TableFormatter) Format(projections *projection.Projections, rows *executor.EvaluatingRows) string {
+	tableFormatter.addHeader(projections)
+	tableFormatter.addContent(rows)
+	tableFormatter.addFooter(rows)
+
+	return tableFormatter.tableWriter.Render()
+}
+
+func (tableFormatter *TableFormatter) addHeader(projections *projection.Projections) {
+	maxWidth := maxAvailableWidth / projections.Count()
+
+	var attributes []interface{}
+	var columnConfigs []table.ColumnConfig
+
+	for _, headerAttribute := range projections.DisplayableAttributes() {
+		attributes = append(attributes, headerAttribute)
+		columnConfigs = append(columnConfigs, table.ColumnConfig{WidthMin: minWidth, WidthMax: maxWidth, Name: headerAttribute})
+	}
+	tableFormatter.tableWriter.AppendHeader(attributes)
+	tableFormatter.tableWriter.SetColumnConfigs(columnConfigs)
+}
+
+func (tableFormatter *TableFormatter) addContent(rows *executor.EvaluatingRows) {
 	iterator := rows.RowIterator()
 	for iterator.HasNext() {
-		var attributes []string
+		var attributes []interface{}
 		for _, attribute := range iterator.Next().AllAttributes() {
 			attributes = append(attributes, attribute.GetAsString())
 		}
-		displayableRows = append(displayableRows, attributes)
+		tableFormatter.tableWriter.AppendRow(attributes)
 	}
-	if len(displayableRows) == 0 {
-		return "no records found\n"
-	}
-	return tableFormatter.renderContentTable(projections.DisplayableAttributes(), displayableRows) +
-		tableFormatter.renderFooterTable(displayableRows)
 }
 
-func (tableFormatter TableFormatter) renderContentTable(attributes []string, displayableRows [][]string) string {
-	cellSize := 100 / len(attributes)
-	table := gotabulate.Create(displayableRows)
-	table.SetHeaders(attributes)
-	table.SetMaxCellSize(cellSize)
-	table.SetWrapStrings(true)
-	table.SetAlign("left")
-
-	return table.Render("grid")
-}
-
-func (tableFormatter TableFormatter) renderFooterTable(displayableRows [][]string) string {
-	table := gotabulate.Create([]string{fmt.Sprintf("Total Rows: %v", len(displayableRows))})
-	table.SetHeaders([]string{""})
-	table.SetAlign("left")
-	return table.Render("grid")
+func (tableFormatter *TableFormatter) addFooter(rows *executor.EvaluatingRows) {
+	tableFormatter.tableWriter.AppendFooter(table.Row{fmt.Sprintf("Total Rows: %v", rows.Count())})
 }

@@ -27,7 +27,7 @@ func NewConsoleWriter() *ConsoleWriter {
 }
 
 func (writer ConsoleWriter) Write(result string) error {
-	if _, err := fmt.Fprint(writer.backingWriter, result); err != nil {
+	if _, err := fmt.Fprintln(writer.backingWriter, result); err != nil {
 		return err
 	}
 	return nil

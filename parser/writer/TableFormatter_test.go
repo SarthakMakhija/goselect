@@ -21,17 +21,17 @@ func TestTableFormatter(t *testing.T) {
 	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 
 	str := NewTableFormatter().Format(selectQuery.Projections, queryResults)
-
-	if !strings.Contains(str, "lower(name)") {
+	lower := strings.ToLower(str)
+	if !strings.Contains(lower, "lower(name)") {
 		t.Fatalf("Expected lower(name) to be contained in the string but was not, received string is %v", str)
 	}
-	if !strings.Contains(str, "testresultswithprojections_a.log") {
+	if !strings.Contains(lower, "testresultswithprojections_a.log") {
 		t.Fatalf("Expected testresultswithprojections_a.log to be contained in the string but was not, received string is %v", str)
 	}
-	if !strings.Contains(str, "testresultswithprojections_b.log") {
+	if !strings.Contains(lower, "testresultswithprojections_b.log") {
 		t.Fatalf("Expected testresultswithprojections_b.log to be contained in the string but was not, received string is %v", str)
 	}
-	if !strings.Contains(str, "Total Rows: 2") {
+	if !strings.Contains(lower, "total rows: 2") {
 		t.Fatalf("Expected Total Rows: 2 to be contained in the string but was not, received string is %v", str)
 	}
 }
