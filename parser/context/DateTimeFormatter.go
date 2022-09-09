@@ -14,22 +14,22 @@ const (
 )
 
 type FormatDefinition struct {
-	format string
-	id     string
+	Format string
+	Id     string
 }
 
 var formatDefinitions = map[string]FormatDefinition{
 	"dt": {
-		format: layoutDate,
-		id:     "dt",
+		Format: layoutDate,
+		Id:     "dt",
 	},
 	"ts": {
-		format: layoutDateTimestamp,
-		id:     "ts",
+		Format: layoutDateTimestamp,
+		Id:     "ts",
 	},
 	"tsfull": {
-		format: layoutDateTimestampFull,
-		id:     "tsfull",
+		Format: layoutDateTimestampFull,
+		Id:     "tsfull",
 	},
 }
 
@@ -39,5 +39,9 @@ func parse(str, id string) (time.Time, error) {
 	if !ok {
 		return time.Time{}, errors.New(messages.ErrorMessageUnsupportedDateTimeFormat)
 	}
-	return time.Parse(definition.format, str)
+	return time.Parse(definition.Format, str)
+}
+
+func SupportedFormats() map[string]FormatDefinition {
+	return formatDefinitions
 }

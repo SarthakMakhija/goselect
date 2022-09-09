@@ -36,7 +36,7 @@ func TestParseDateTime4(t *testing.T) {
 	_, err := parse("2009-08-28T10:14:29.009Z", "unknown")
 
 	if err == nil {
-		t.Fatalf("Expected an error while parsing a date/time with an unknown id")
+		t.Fatalf("Expected an error while parsing a date/time with an unknown Id")
 	}
 }
 
@@ -44,6 +44,6 @@ func TestParseDateTime5(t *testing.T) {
 	_, err := parse("2009-August-28", "dt")
 
 	if err == nil {
-		t.Fatalf("Expected an error while parsing a date/time in an unsupported format")
+		t.Fatalf("Expected an error while parsing a date/time in an unsupported Format")
 	}
 }
