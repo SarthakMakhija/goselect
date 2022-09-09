@@ -31,4 +31,5 @@ const (
 	ErrorMessageExpectedNonZeroInDivide                   = "expected a non zero denominator in divide operation"
 	ErrorMessageFunctionNamePrefixWithExistingError       = "[Function %v], %s"
 	ErrorMessageIncorrectExtractionKey                    = "expected either of %v to be passed to extract as an extraction key"
+	ErrorMessageUnsupportedDateTimeFormat                 = "expected a supported date/time format id. Use CLI to check the supported date/time format ids"
 )
