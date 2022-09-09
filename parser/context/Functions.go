@@ -86,27 +86,27 @@ const (
 var functionDefinitions = map[string]*FunctionDefinition{
 	FunctionNameIdentity: {
 		aliases:     []string{"identity", "iden"},
-		description: "Returns the provided parameter value as it is. For example, identity(demo) will return the string demo, identity(name) will return the file name.",
+		description: "Returns the provided parameter value as it is. \nFor example, identity(demo) will return the string demo, identity(name) will return the file name.",
 		block:       IdentityFunctionBlock{},
 	},
 	FunctionNameAdd: {
 		aliases:     []string{"add", "addition"},
-		description: "Takes variable number of numeric type parameter values and returns the addition of all the values. For example, add(1, 2) will return 3.00.",
+		description: "Takes variable number of numeric type parameter values and returns the addition of all the values. \nFor example, add(1, 2) will return 3.00.",
 		block:       AddFunctionBlock{},
 	},
 	FunctionNameSubtract: {
 		aliases:     []string{"sub", "subtract"},
-		description: "Takes 2 numeric type parameter values A and B and returns the result of A-B. For example, sub(4, 5) will return -1.00.",
+		description: "Takes 2 numeric type parameter values A and B and returns the result of A-B. \nFor example, sub(4, 5) will return -1.00.",
 		block:       SubtractFunctionBlock{},
 	},
 	FunctionNameMultiply: {
 		aliases:     []string{"mul", "multiply"},
-		description: "Takes variable number of numeric type parameter values and returns the product of all the values. For example, mul(3, 2) will return 6.00.",
+		description: "Takes variable number of numeric type parameter values and returns the product of all the values. \nFor example, mul(3, 2) will return 6.00.",
 		block:       MultipleFunctionBlock{},
 	},
 	FunctionNameDivide: {
 		aliases:     []string{"div", "divide"},
-		description: "Takes 2 numeric type parameter values A and B and returns the result of A/B. For example, div(4, 5) will return 0.80.",
+		description: "Takes 2 numeric type parameter values A and B and returns the result of A/B. \nFor example, div(4, 5) will return 0.80.",
 		block:       DivideFunctionBlock{},
 	},
 	FunctionNameEqual: {
@@ -147,13 +147,13 @@ var functionDefinitions = map[string]*FunctionDefinition{
 	},
 	FunctionNameOr: {
 		aliases:     []string{"or"},
-		description: "Takes variable number of boolean parameter values and returns true if any of them evaluates to true, false otherwise. For example, or(eq(add(1, 2), 3), false) will return true.",
+		description: "Takes variable number of boolean parameter values and returns true if any of them evaluates to true, false otherwise. \nFor example, or(eq(add(1, 2), 3), false) will return true.",
 		block:       OrFunctionBlock{},
 		tags:        map[string]bool{"where": true},
 	},
 	FunctionNameAnd: {
 		aliases:     []string{"and"},
-		description: "Takes variable number of boolean parameter values and returns true if all of them evaluate to true, false otherwise. For example, or(eq(add(1, 2), 3), false) will return false.",
+		description: "Takes variable number of boolean parameter values and returns true if all of them evaluate to true, false otherwise. \nFor example, or(eq(add(1, 2), 3), false) will return false.",
 		block:       AndFunctionBlock{},
 		tags:        map[string]bool{"where": true},
 	},
@@ -221,27 +221,27 @@ var functionDefinitions = map[string]*FunctionDefinition{
 	},
 	FunctionNameCurrentDate: {
 		aliases:     []string{"cdate", "currentdate"},
-		description: "Returns the current date formatted as year-month-day. If today is 9th September 2022, cdate() will return 2022-September-09.",
+		description: "Returns the current date formatted as year-month-day. \nIf today is 9th September 2022, cdate() will return 2022-September-09.",
 		block:       CurrentDateFunctionBlock{},
 	},
 	FunctionNameCurrentMonth: {
 		aliases:     []string{"cmonth", "cmon", "currentmonth", "currentmon"},
-		description: "Returns the current month. If today is 9th September 2022, cmonth() will return September.",
+		description: "Returns the current month. \nIf today is 9th September 2022, cmonth() will return September.",
 		block:       CurrentMonthFunctionBlock{},
 	},
 	FunctionNameCurrentYear: {
 		aliases:     []string{"cyear", "cyr", "currentyear", "currentyr"},
-		description: "Returns the current year. If today is 9th September 2022, cyr() will return 2022.",
+		description: "Returns the current year. \nIf today is 9th September 2022, cyr() will return 2022.",
 		block:       CurrentYearFunctionBlock{},
 	},
 	FunctionNameDayOfWeek: {
 		aliases:     []string{"dayofweek", "dow"},
-		description: "Returns the day of the week. If today is a Friday, dow() will return Friday.",
+		description: "Returns the day of the week. \nIf today is a Friday, dow() will return Friday.",
 		block:       DayOfWeekFunctionBlock{},
 	},
 	FunctionNameExtract: {
 		aliases:     []string{"extract"},
-		description: "Returns the extracted component from date/time. extract allows the extraction of date, day, year, month and week from date/time. For example, extract(atime, month) will extract 'month' from the access time of a file.",
+		description: "Returns the extracted component from date/time. extract allows the extraction of date, day, year, month and week from date/time. \nFor example, extract(atime, month) will extract 'month' from the access time of a file.",
 		block:       ExtractFunctionBlock{},
 	},
 	FunctionNameHoursDifference: {
@@ -256,7 +256,7 @@ var functionDefinitions = map[string]*FunctionDefinition{
 	},
 	FunctionNameDateTimeParse: {
 		aliases:     []string{"parsedatetime", "parsedttime", "parsedttm", "parsedatetm"},
-		description: "Returns the time representation after parsing the input string. It takes 2 parameters, the first parameter is a string to be parsed and the second is the format identifier. Example, parsedatetime(2022-09-09, dt) returns the date/time represented by the given input.",
+		description: "Returns the time representation after parsing the input string. \nIt takes 2 parameters, the first parameter is a string to be parsed and the second is the format identifier. Example, parsedatetime(2022-09-09, dt) \nreturns the date/time represented by the given input.",
 		block:       ParseDateTimeFunctionBlock{},
 	},
 	FunctionNameWorkingDirectory: {
@@ -271,28 +271,28 @@ var functionDefinitions = map[string]*FunctionDefinition{
 	},
 	FunctionNameConcatWithSeparator: {
 		aliases:     []string{"concatws", "concatwithseparator"},
-		description: "Takes variable number of parameter values and returns a string concatenated of all these values. This function uses the last parameter value as a separator.",
+		description: "Takes variable number of parameter values and returns a string concatenated of all these values. \nThis function uses the last parameter value as a separator.",
 		block:       ConcatWithSeparatorFunctionBlock{},
 	},
 	FunctionNameContains: {
 		aliases:     []string{"contains"},
-		description: "Returns true, if the second parameter value is present within the first. For example, contains(hello, lo) will return true.",
+		description: "Returns true, if the second parameter value is present within the first. \nFor example, contains(hello, lo) will return true.",
 		block:       ContainsFunctionBlock{},
 		tags:        map[string]bool{"where": true},
 	},
 	FunctionNameSubstring: {
 		aliases:     []string{"substr", "str"},
-		description: "Returns the substring from the main string. substr() takes 3 parameter values, first parameter value is the main string, second is the starting index (starting from 0) and the optional third parameter value is the end index(inclusive).",
+		description: "Returns the substring from the main string. \nsubstr() takes 3 parameter values, first parameter value is the main string, second is the starting index (starting from 0) and the optional third \nparameter value is the end index(inclusive).",
 		block:       SubstringFunctionBlock{},
 	},
 	FunctionNameReplace: {
 		aliases:     []string{"replace"},
-		description: "Replaces the first occurrence of an old string with the new string. For example, replace(name, test, best) will replace the first occurrence of the string 'test' with 'best' in the file name.",
+		description: "Replaces the first occurrence of an old string with the new string. \nFor example, replace(name, test, best) will replace the first occurrence of the string 'test' with 'best' in the file name.",
 		block:       ReplaceFunctionBlock{},
 	},
 	FunctionNameReplaceAll: {
 		aliases:     []string{"replaceall"},
-		description: "Replaces all the occurrences of an old string with the new string. For example, replaceall(name, test, best) will replace all the occurrences of the string 'test' with 'best' in the file name.",
+		description: "Replaces all the occurrences of an old string with the new string. \nFor example, replaceall(name, test, best) will replace all the occurrences of the string 'test' with 'best' in the file name.",
 		block:       ReplaceAllFunctionBlock{},
 	},
 	FunctionNameCount: {
@@ -303,31 +303,31 @@ var functionDefinitions = map[string]*FunctionDefinition{
 	},
 	FunctionNameCountDistinct: {
 		aliases:        []string{"countdistinct", "countd"},
-		description:    "countdistinct is an aggregate function that returns the distinct number of entries based on the parameter type. For example, countdistinct(ext) will return the count of the distinct file extensions in the source directory.",
+		description:    "countdistinct is an aggregate function that returns the distinct number of entries based on the parameter type. \nFor example, countdistinct(ext) will return the count of the distinct file extensions in the source directory.",
 		isAggregate:    true,
 		aggregateBlock: &CountDistinctFunctionBlock{},
 	},
 	FunctionNameSum: {
 		aliases:        []string{"summation", "sum"},
-		description:    "sum is an aggregate function that returns the sum of all the values corresponding to the provided parameter. sum(size) will return the total sum of file size.",
+		description:    "sum is an aggregate function that returns the sum of all the values corresponding to the provided parameter. \nFor example, sum(size) will return the total sum of file size.",
 		isAggregate:    true,
 		aggregateBlock: &SumFunctionBlock{},
 	},
 	FunctionNameAverage: {
 		aliases:        []string{"average", "avg"},
-		description:    "average is an aggregate function that returns the average of all the values corresponding to the provided parameter. avg(size) will return the average file size.",
+		description:    "average is an aggregate function that returns the average of all the values corresponding to the provided parameter. \nFor example, avg(size) will return the average file size.",
 		isAggregate:    true,
 		aggregateBlock: &AverageFunctionBlock{},
 	},
 	FunctionNameMin: {
 		aliases:        []string{"min"},
-		description:    "min is an aggregate function that returns the minimum of all the values corresponding to the provided parameter. min(size) will return the minimum file size.",
+		description:    "min is an aggregate function that returns the minimum of all the values corresponding to the provided parameter. \nFor example, min(size) will return the minimum file size.",
 		isAggregate:    true,
 		aggregateBlock: &MinFunctionBlock{},
 	},
 	FunctionNameMax: {
 		aliases:        []string{"max"},
-		description:    "max is an aggregate function that returns the maximum of all the values corresponding to the provided parameter. max(size) will return the maximum file size.",
+		description:    "max is an aggregate function that returns the maximum of all the values corresponding to the provided parameter. \nFor example, max(size) will return the maximum file size.",
 		isAggregate:    true,
 		aggregateBlock: &MaxFunctionBlock{},
 	},

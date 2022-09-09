@@ -48,7 +48,7 @@ var attributeDefinitions = map[string]*AttributeDefinition{
 	},
 	AttributeBaseName: {
 		aliases:     []string{"basename", "bname"},
-		description: "Returns the basename of the file. For example, basename for 'sample.log' is 'sample'.",
+		description: "Returns the basename of the file. \nFor example, basename for 'sample.log' is 'sample'.",
 	},
 	AttributePath: {
 		aliases:     []string{"filepath", "path", "fpath"},
@@ -80,7 +80,7 @@ var attributeDefinitions = map[string]*AttributeDefinition{
 	},
 	AttributeNameIsEmpty: {
 		aliases:     []string{"isempty"},
-		description: "Returns true if the file is empty, false otherwise. If the file is a directory, 'isempty' returns true if there are no entries, false otherwise.",
+		description: "Returns true if the file is empty, false otherwise. \nIf the file is a directory, 'isempty' returns true if there are no entries, false otherwise.",
 	},
 	AttributeNameIsSymbolicLink: {
 		aliases:     []string{"issymboliclink", "issymlink"},
@@ -100,7 +100,7 @@ var attributeDefinitions = map[string]*AttributeDefinition{
 	},
 	AttributeExtension: {
 		aliases:     []string{"extension", "ext"},
-		description: "Return the file extension. For example, extension of the file 'sample.log' is '.log'.",
+		description: "Return the file extension. \nFor example, extension of the file 'sample.log' is '.log'.",
 	},
 	AttributePermission: {
 		aliases:     []string{"permission", "perm"},
