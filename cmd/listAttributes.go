@@ -60,5 +60,5 @@ var listAttributesCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(listAttributesCmd)
-	listAttributesCmd.PersistentFlags().Bool("sorted", false, "display the attributes in sorted order. Use --sorted=true or --sorted=false")
+	listAttributesCmd.PersistentFlags().Bool("sorted", true, "display the attributes in sorted order. Use --sorted=true or --sorted=false")
 }
