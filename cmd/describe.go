@@ -16,10 +16,16 @@ var describeCmd = &cobra.Command{
 			fmt.Println(errorColor, "term is mandatory. please use --term=<attribute> or --term=<function>")
 			return
 		}
-		attributes := context.NewAttributes()
+		attributes, functions := context.NewAttributes(), context.NewFunctions()
 		if attributes.IsASupportedAttribute(lookFor) {
 			fmt.Println(attributes.DescriptionOf(lookFor))
+			return
 		}
+		if functions.IsASupportedFunction(lookFor) {
+			fmt.Println(functions.DescriptionOf(lookFor))
+			return
+		}
+		fmt.Println(errorColor, "unsupported attribute or function.")
 	},
 }
 

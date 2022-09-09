@@ -115,6 +115,7 @@ func (value Value) GetDateTime() (time.Time, error) {
 	if value.valueType != ValueTypeDateTime {
 		return time.Time{}, errors.New(fmt.Sprintf(messages.ErrorMessageIncorrectValueType, "time"))
 	}
+	//what if it is a string?
 	return value.timeValue, nil
 }
 

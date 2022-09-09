@@ -9,6 +9,7 @@ type FunctionDefinition struct {
 	aliases        []string
 	tags           map[string]bool
 	block          FunctionBlock
+	description    string
 	aggregateBlock AggregationFunctionBlock
 	isAggregate    bool
 }
@@ -83,199 +84,244 @@ const (
 
 var functionDefinitions = map[string]*FunctionDefinition{
 	FunctionNameIdentity: {
-		aliases: []string{"identity", "iden"},
-		block:   IdentityFunctionBlock{},
+		aliases:     []string{"identity", "iden"},
+		description: "Returns the provided parameter value as it is. For example, identity(demo) will return the string demo, identity(name) will return the file name.",
+		block:       IdentityFunctionBlock{},
 	},
 	FunctionNameAdd: {
-		aliases: []string{"add", "addition"},
-		block:   AddFunctionBlock{},
+		aliases:     []string{"add", "addition"},
+		description: "Takes variable number of numeric type parameter values and returns the addition of all the values. For example, add(1, 2) will return 3.00.",
+		block:       AddFunctionBlock{},
 	},
 	FunctionNameSubtract: {
-		aliases: []string{"sub", "subtract"},
-		block:   SubtractFunctionBlock{},
+		aliases:     []string{"sub", "subtract"},
+		description: "Takes 2 numeric type parameter values A and B and returns the result of A-B. For example, sub(4, 5) will return -1.00.",
+		block:       SubtractFunctionBlock{},
 	},
 	FunctionNameMultiply: {
-		aliases: []string{"mul", "multiply"},
-		block:   MultipleFunctionBlock{},
+		aliases:     []string{"mul", "multiply"},
+		description: "Takes variable number of numeric type parameter values and returns the product of all the values. For example, mul(3, 2) will return 6.00.",
+		block:       MultipleFunctionBlock{},
 	},
 	FunctionNameDivide: {
-		aliases: []string{"div", "divide"},
-		block:   DivideFunctionBlock{},
+		aliases:     []string{"div", "divide"},
+		description: "Takes 2 numeric type parameter values A and B and returns the result of A/B. For example, div(4, 5) will return 0.80.",
+		block:       DivideFunctionBlock{},
 	},
 	FunctionNameEqual: {
-		aliases: []string{"equal", "eq", "equals"},
-		block:   EqualFunctionBlock{},
-		tags:    map[string]bool{"where": true},
+		aliases:     []string{"equal", "eq", "equals"},
+		description: "Takes 2 parameter values A and B and returns true if A is equal to B, false otherwise.",
+		block:       EqualFunctionBlock{},
+		tags:        map[string]bool{"where": true},
 	},
 	FunctionNameNotEqual: {
-		aliases: []string{"notequal", "ne", "notequals"},
-		block:   NotEqualFunctionBlock{},
-		tags:    map[string]bool{"where": true},
+		aliases:     []string{"notequal", "ne", "notequals"},
+		description: "Takes 2 parameter values A and B and returns true if A is not equal to B, false otherwise.",
+		block:       NotEqualFunctionBlock{},
+		tags:        map[string]bool{"where": true},
 	},
 	FunctionNameLessThan: {
-		aliases: []string{"lt", "lessthan", "less"},
-		block:   LessThanFunctionBlock{},
-		tags:    map[string]bool{"where": true},
+		aliases:     []string{"lt", "lessthan", "less"},
+		description: "Takes 2 parameter values A and B and returns true if A is less than B, false otherwise.",
+		block:       LessThanFunctionBlock{},
+		tags:        map[string]bool{"where": true},
 	},
 	FunctionNameGreaterThan: {
-		aliases: []string{"gt", "greater", "greaterthan"},
-		block:   GreaterThanFunctionBlock{},
-		tags:    map[string]bool{"where": true},
+		aliases:     []string{"gt", "greater", "greaterthan"},
+		description: "Takes 2 parameter values A and B and returns true if A is greater than B, false otherwise.",
+		block:       GreaterThanFunctionBlock{},
+		tags:        map[string]bool{"where": true},
 	},
 	FunctionNameLessThanEqual: {
-		aliases: []string{"lte", "lessthanequal", "lessequal", "le"},
-		block:   LessThanEqualFunctionBlock{},
-		tags:    map[string]bool{"where": true},
+		aliases:     []string{"lte", "lessthanequal", "lessequal", "le"},
+		description: "Takes 2 parameter values A and B and returns true if A is less than or equal to B, false otherwise.",
+		block:       LessThanEqualFunctionBlock{},
+		tags:        map[string]bool{"where": true},
 	},
 	FunctionNameGreaterThanEqual: {
-		aliases: []string{"gte", "greaterthanequal", "greaterequal", "ge"},
-		block:   GreaterThanEqualFunctionBlock{},
-		tags:    map[string]bool{"where": true},
+		aliases:     []string{"gte", "greaterthanequal", "greaterequal", "ge"},
+		description: "Takes 2 parameter values A and B and returns true if A is greater than or equal to B, false otherwise.",
+		block:       GreaterThanEqualFunctionBlock{},
+		tags:        map[string]bool{"where": true},
 	},
 	FunctionNameOr: {
-		aliases: []string{"or"},
-		block:   OrFunctionBlock{},
-		tags:    map[string]bool{"where": true},
+		aliases:     []string{"or"},
+		description: "Takes variable number of boolean parameter values and returns true if any of them evaluates to true, false otherwise. For example, or(eq(add(1, 2), 3), false) will return true.",
+		block:       OrFunctionBlock{},
+		tags:        map[string]bool{"where": true},
 	},
 	FunctionNameAnd: {
-		aliases: []string{"and"},
-		block:   AndFunctionBlock{},
-		tags:    map[string]bool{"where": true},
+		aliases:     []string{"and"},
+		description: "Takes variable number of boolean parameter values and returns true if all of them evaluate to true, false otherwise. For example, or(eq(add(1, 2), 3), false) will return false.",
+		block:       AndFunctionBlock{},
+		tags:        map[string]bool{"where": true},
 	},
 	FunctionNameNot: {
-		aliases: []string{"not"},
-		block:   NotFunctionBlock{},
-		tags:    map[string]bool{"where": true},
+		aliases:     []string{"not"},
+		description: "Takes a single boolean parameter value and returns its negation.",
+		block:       NotFunctionBlock{},
+		tags:        map[string]bool{"where": true},
 	},
 	FunctionNameLike: {
-		aliases: []string{"like"},
-		block:   LikeFunctionBlock{},
-		tags:    map[string]bool{"where": true},
+		aliases:     []string{"like"},
+		description: "Takes 2 parameter values and returns true if the first parameter value matches the regular expression represented by the second parameter value, false otherwise.",
+		block:       LikeFunctionBlock{},
+		tags:        map[string]bool{"where": true},
 	},
 	FunctionNameLower: {
-		aliases: []string{"lower", "low"},
-		block:   LowerFunctionBlock{},
+		aliases:     []string{"lower", "low"},
+		description: "Takes a single parameter value and returns the value in lower case.",
+		block:       LowerFunctionBlock{},
 	},
 	FunctionNameUpper: {
-		aliases: []string{"upper", "up"},
-		block:   UpperFunctionBlock{},
+		aliases:     []string{"upper", "up"},
+		description: "Takes a single parameter value and returns the value in upper case.",
+		block:       UpperFunctionBlock{},
 	},
 	FunctionNameTitle: {
-		aliases: []string{"title"},
-		block:   TitleFunctionBlock{},
+		aliases:     []string{"title"},
+		description: "Takes a single parameter value and returns the value in title case.",
+		block:       TitleFunctionBlock{},
 	},
 	FunctionNameBase64: {
-		aliases: []string{"base64", "b64"},
-		block:   Base64FunctionBlock{},
+		aliases:     []string{"base64", "b64"},
+		description: "Takes a single parameter value and returns the base64 encoding of the value.",
+		block:       Base64FunctionBlock{},
 	},
 	FunctionNameLength: {
-		aliases: []string{"length", "len"},
-		block:   LengthFunctionBlock{},
+		aliases:     []string{"length", "len"},
+		description: "Takes a single parameter value and returns its length.",
+		block:       LengthFunctionBlock{},
 	},
 	FunctionNameTrim: {
-		aliases: []string{"trim"},
-		block:   TrimFunctionBlock{},
+		aliases:     []string{"trim"},
+		description: "Takes a single parameter value and returns its value after removing space character(s) from left and right.",
+		block:       TrimFunctionBlock{},
 	},
 	FunctionNameLeftTrim: {
-		aliases: []string{"ltrim", "lefttrim"},
-		block:   LeftTrimFunctionBlock{},
+		aliases:     []string{"ltrim", "lefttrim"},
+		description: "Takes a single parameter value and returns its value after removing space character(s) from left.",
+		block:       LeftTrimFunctionBlock{},
 	},
 	FunctionNameRightTrim: {
-		aliases: []string{"rtrim", "righttrim"},
-		block:   RightTrimFunctionBlock{},
+		aliases:     []string{"rtrim", "righttrim"},
+		description: "Takes a single parameter value and returns its value after removing space character(s) from right.",
+		block:       RightTrimFunctionBlock{},
 	},
 	FunctionNameNow: {
-		aliases: []string{"now"},
-		block:   NowFunctionBlock{},
+		aliases:     []string{"now"},
+		description: "Returns the current date/time.",
+		block:       NowFunctionBlock{},
 	},
 	FunctionNameCurrentDay: {
-		aliases: []string{"cday", "currentday"},
-		block:   CurrentDayFunctionBlock{},
+		aliases:     []string{"cday", "currentday"},
+		description: "Returns the current day. If today is 9th September 2022, cday() will return 9.",
+		block:       CurrentDayFunctionBlock{},
 	},
 	FunctionNameCurrentDate: {
-		aliases: []string{"cdate", "currentdate"},
-		block:   CurrentDateFunctionBlock{},
+		aliases:     []string{"cdate", "currentdate"},
+		description: "Returns the current date formatted as year-month-day. If today is 9th September 2022, cdate() will return 2022-September-09.",
+		block:       CurrentDateFunctionBlock{},
 	},
 	FunctionNameCurrentMonth: {
-		aliases: []string{"cmonth", "cmon", "currentmonth", "currentmon"},
-		block:   CurrentMonthFunctionBlock{},
+		aliases:     []string{"cmonth", "cmon", "currentmonth", "currentmon"},
+		description: "Returns the current month. If today is 9th September 2022, cmonth() will return September.",
+		block:       CurrentMonthFunctionBlock{},
 	},
 	FunctionNameCurrentYear: {
-		aliases: []string{"cyear", "cyr", "currentyear", "currentyr"},
-		block:   CurrentYearFunctionBlock{},
+		aliases:     []string{"cyear", "cyr", "currentyear", "currentyr"},
+		description: "Returns the current year. If today is 9th September 2022, cyr() will return 2022.",
+		block:       CurrentYearFunctionBlock{},
 	},
 	FunctionNameDayOfWeek: {
-		aliases: []string{"dayofweek", "dow"},
-		block:   DayOfWeekFunctionBlock{},
+		aliases:     []string{"dayofweek", "dow"},
+		description: "Returns the day of the week. If today is Friday, dow() will return Friday.",
+		block:       DayOfWeekFunctionBlock{},
 	},
 	FunctionNameExtract: {
-		aliases: []string{"extract"},
-		block:   ExtractFunctionBlock{},
+		aliases:     []string{"extract"},
+		description: "Returns the extracted component from date/time. extract allows the extraction of date, day, year, month and week from date/time. For example, extract(atime, month) will extract 'month' from the access time of a file.",
+		block:       ExtractFunctionBlock{},
 	},
 	FunctionNameHoursDifference: {
-		aliases: []string{"hoursdifference", "hourdifference", "hoursdiff", "hourdiff"},
-		block:   HoursDifferenceFunctionBlock{},
+		aliases:     []string{"hoursdifference", "hourdifference", "hoursdiff", "hourdiff"},
+		description: "Returns the difference between 2 date/times in hours.",
+		block:       HoursDifferenceFunctionBlock{},
 	},
 	FunctionNameDaysDifference: {
-		aliases: []string{"daysdifference", "daydifference", "daysdiff", "daydiff"},
-		block:   DaysDifferenceFunctionBlock{},
+		aliases:     []string{"daysdifference", "daydifference", "daysdiff", "daydiff"},
+		description: "Returns the difference between 2 date/times in days.",
+		block:       DaysDifferenceFunctionBlock{},
 	},
 	FunctionNameWorkingDirectory: {
-		aliases: []string{"cwd", "wd"},
-		block:   WorkingDirectoryFunctionBlock{},
+		aliases:     []string{"cwd", "wd"},
+		description: "Returns working directory.",
+		block:       WorkingDirectoryFunctionBlock{},
 	},
 	FunctionNameConcat: {
-		aliases: []string{"concat"},
-		block:   ConcatFunctionBlock{},
+		aliases:     []string{"concat"},
+		description: "Takes variable number of parameter values and returns a string concatenated of all these value.",
+		block:       ConcatFunctionBlock{},
 	},
 	FunctionNameConcatWithSeparator: {
-		aliases: []string{"concatws", "concatwithseparator"},
-		block:   ConcatWithSeparatorFunctionBlock{},
+		aliases:     []string{"concatws", "concatwithseparator"},
+		description: "Takes variable number of parameter values and returns a string concatenated of all these values. This function uses the last parameter value as a separator.",
+		block:       ConcatWithSeparatorFunctionBlock{},
 	},
 	FunctionNameContains: {
-		aliases: []string{"contains"},
-		block:   ContainsFunctionBlock{},
-		tags:    map[string]bool{"where": true},
+		aliases:     []string{"contains"},
+		description: "Returns true, if the second parameter value is present within the first. For example, contains(hello, lo) will return true.",
+		block:       ContainsFunctionBlock{},
+		tags:        map[string]bool{"where": true},
 	},
 	FunctionNameSubstring: {
-		aliases: []string{"substr", "str"},
-		block:   SubstringFunctionBlock{},
+		aliases:     []string{"substr", "str"},
+		description: "Returns the substring from the main string. substr() takes 3 parameter values, first parameter value is the main string, second is the starting index (starting from 0) and the optional third parameter value is the end index(inclusive).",
+		block:       SubstringFunctionBlock{},
 	},
 	FunctionNameReplace: {
-		aliases: []string{"replace"},
-		block:   ReplaceFunctionBlock{},
+		aliases:     []string{"replace"},
+		description: "Replaces the first occurrence of an old string with the new string. For example, replace(name, test, best) will replace the first occurrence of the string 'test' with 'best' in the file name.",
+		block:       ReplaceFunctionBlock{},
 	},
 	FunctionNameReplaceAll: {
-		aliases: []string{"replaceall"},
-		block:   ReplaceAllFunctionBlock{},
+		aliases:     []string{"replaceall"},
+		description: "Replaces all the occurrences of an old string with the new string. For example, replaceall(name, test, best) will replace all the occurrences of the string 'test' with 'best' in the file name.",
+		block:       ReplaceAllFunctionBlock{},
 	},
 	FunctionNameCount: {
 		aliases:        []string{"count"},
+		description:    "count is an aggregate function that returns the total number of entries. It does not take any parameter.",
 		isAggregate:    true,
 		aggregateBlock: &CountFunctionBlock{},
 	},
 	FunctionNameCountDistinct: {
 		aliases:        []string{"countdistinct", "countd"},
+		description:    "countdistinct is an aggregate function that returns the distinct number of entries based on the parameter type. For example, countdistinct(ext) will return the count of the distinct file extensions in the source directory.",
 		isAggregate:    true,
 		aggregateBlock: &CountDistinctFunctionBlock{},
 	},
 	FunctionNameSum: {
 		aliases:        []string{"summation", "sum"},
+		description:    "sum is an aggregate function that returns the sum of all the values corresponding to the provided parameter. sum(size) will return the total sum of file size.",
 		isAggregate:    true,
 		aggregateBlock: &SumFunctionBlock{},
 	},
 	FunctionNameAverage: {
 		aliases:        []string{"average", "avg"},
+		description:    "average is an aggregate function that returns the average of all the values corresponding to the provided parameter. avg(size) will return the average file size.",
 		isAggregate:    true,
 		aggregateBlock: &AverageFunctionBlock{},
 	},
 	FunctionNameMin: {
 		aliases:        []string{"min"},
+		description:    "min is an aggregate function that returns the minimum of all the values corresponding to the provided parameter. min(size) will return the minimum file size.",
 		isAggregate:    true,
 		aggregateBlock: &MinFunctionBlock{},
 	},
 	FunctionNameMax: {
 		aliases:        []string{"max"},
+		description:    "max is an aggregate function that returns the maximum of all the values corresponding to the provided parameter. max(size) will return the maximum file size.",
 		isAggregate:    true,
 		aggregateBlock: &MaxFunctionBlock{},
 	},
@@ -330,6 +376,14 @@ func (functions *AllFunctions) AllFunctionsWithAliasesHavingTag(tag string) map[
 		}
 	}
 	return aliasesByFunction
+}
+
+func (functions *AllFunctions) DescriptionOf(fn string) string {
+	definition, ok := functions.supportedFunctions[strings.ToLower(fn)]
+	if ok {
+		return definition.description
+	}
+	return ""
 }
 
 func (functions *AllFunctions) Execute(fn string, args ...Value) (Value, error) {
