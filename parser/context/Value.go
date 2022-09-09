@@ -115,7 +115,6 @@ func (value Value) GetDateTime() (time.Time, error) {
 	if value.valueType != ValueTypeDateTime {
 		return time.Time{}, errors.New(fmt.Sprintf(messages.ErrorMessageIncorrectValueType, "time"))
 	}
-	//what if it is a string?
 	return value.timeValue, nil
 }
 
@@ -344,7 +343,6 @@ func (value Value) attemptCommonType(other Value) (Value, Value, bool, error) {
 			}
 		}
 	}
-	//Handle time
 	return value, other, false, nil
 }
 
