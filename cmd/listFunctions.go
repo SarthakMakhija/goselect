@@ -1,9 +1,10 @@
 package cmd
 
 import (
-	"fmt"
+	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/spf13/cobra"
 	"goselect/parser/context"
+	"os"
 	"sort"
 	"strings"
 )
@@ -13,14 +14,19 @@ var listFunctionsCmd = &cobra.Command{
 	Short: "List all the functions supported by goselect",
 	Long:  `List all the functions along with their aliases supported by goselect`,
 	Run: func(cmd *cobra.Command, args []string) {
+		tableWriter := table.NewWriter()
+		tableWriter.SetOutputMirror(os.Stdout)
+		tableWriter.SetStyle(table.StyleColoredBlackOnCyanWhite)
+		tableWriter.Style().Options.SeparateColumns = true
+
 		asString := func(aliases []string) string {
 			return strings.Join(aliases, ", ")
 		}
 		printHeader := func() {
-			fmt.Printf("%v%-18v %-12v\n", headerColor, "Function", "Aliases")
+			tableWriter.AppendHeader(table.Row{"Function", "Aliases"})
 		}
 		printFunction := func(function string, aliases []string) {
-			fmt.Printf("%v%-18v %-18v\n", contentColor, function, asString(aliases))
+			tableWriter.AppendRow(table.Row{function, asString(aliases)})
 		}
 		printFunctions := func(aliasesByFunction map[string][]string) {
 			for function, aliases := range aliasesByFunction {
@@ -42,10 +48,12 @@ var listFunctionsCmd = &cobra.Command{
 
 		if !isSorted {
 			printFunctions(aliasesByFunction)
+			tableWriter.Render()
 		} else {
 			for _, function := range sortFunctions(aliasesByFunction) {
 				printFunction(function, aliasesByFunction[function])
 			}
+			tableWriter.Render()
 		}
 	},
 }
