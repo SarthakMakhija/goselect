@@ -24,7 +24,9 @@ func (tableFormatter TableFormatter) Format(projections *projection.Projections,
 		}
 		displayableRows = append(displayableRows, attributes)
 	}
-
+	if len(displayableRows) == 0 {
+		return "no records found\n"
+	}
 	return tableFormatter.renderContentTable(projections.DisplayableAttributes(), displayableRows) +
 		tableFormatter.renderFooterTable(displayableRows)
 }

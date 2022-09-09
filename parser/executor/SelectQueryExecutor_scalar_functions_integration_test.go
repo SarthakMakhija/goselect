@@ -542,7 +542,7 @@ func TestResultsWithProjectionsWithFormatSize(t *testing.T) {
 	}
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
-		{context.StringValue("testresultswithprojections_a.log"), context.StringValue("58 B")},
+		{context.StringValue("testresultswithprojections_a.log"), context.StringValue("71 B")},
 		{context.StringValue("testresultswithprojections_b.log"), context.StringValue("58 B")},
 		{context.StringValue("testresultswithprojections_c.txt"), context.StringValue("58 B")},
 		{context.StringValue("testresultswithprojections_d.txt"), context.StringValue("58 B")},

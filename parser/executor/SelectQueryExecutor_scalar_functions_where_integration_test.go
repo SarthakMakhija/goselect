@@ -303,3 +303,20 @@ func TestResultsWithAWhereClause16(t *testing.T) {
 	}
 	assertMatch(t, expected, queryResults)
 }
+
+func TestResultsWithAWhereClause17(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select lower(name) from ../resources/TestResultsWithProjections/multi where gte(mtime, parsedttime(2022-09-09, dt)) order by 1", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	expected := [][]context.Value{
+		{context.StringValue("testresultswithprojections_a.log")},
+	}
+	assertMatch(t, expected, queryResults)
+}
