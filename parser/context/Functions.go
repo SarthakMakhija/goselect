@@ -256,7 +256,7 @@ var functionDefinitions = map[string]*FunctionDefinition{
 	},
 	FunctionNameDateTimeParse: {
 		aliases:     []string{"parsedatetime", "parsedttime", "parsedttm", "parsedatetm"},
-		description: "Returns the time representation after parsing the input string",
+		description: "Returns the time representation after parsing the input string. It takes 2 parameters, the first parameter is a string to be parsed and the second is the format identifier. Example, parsedatetime(2022-09-09, dt) returns the date/time represented by the given input.",
 		block:       ParseDateTimeFunctionBlock{},
 	},
 	FunctionNameWorkingDirectory: {
