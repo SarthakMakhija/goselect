@@ -1,12 +1,14 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"github.com/spf13/cobra"
 	"goselect/parser"
 	"goselect/parser/context"
 	"goselect/parser/executor"
 	"goselect/parser/writer"
+	"strings"
 )
 
 var executeCmd = &cobra.Command{
@@ -26,6 +28,19 @@ var executeCmd = &cobra.Command{
 			}
 			options.DirectoriesToIgnoreTraversal(ignoreTraversal)
 			return options
+		}
+		formatter := func(cmd *cobra.Command) (writer.Formatter, error) {
+			exportFormat, _ := cmd.Flags().GetString("format")
+			switch strings.ToLower(exportFormat) {
+			case "json":
+				return writer.NewJsonFormatter(), nil
+			case "html":
+				return writer.NewHtmlFormatter(), nil
+			case "table":
+				return writer.NewTableFormatter(), nil
+			default:
+				return nil, errors.New("unsupported export format")
+			}
 		}
 
 		rawQuery, _ := cmd.Flags().GetString("query")
@@ -51,7 +66,12 @@ var executeCmd = &cobra.Command{
 			fmt.Println(errorColor, err)
 			return
 		}
-		res := writer.NewTableFormatter().Format(query.Projections, rows)
+		exportFormatter, err := formatter(cmd)
+		if err != nil {
+			fmt.Println(errorColor, err)
+			return
+		}
+		res := exportFormatter.Format(query.Projections, rows)
 		_ = writer.NewConsoleWriter().Write(res)
 	},
 }
@@ -75,5 +95,11 @@ func init() {
 		"i",
 		[]string{".git", ".github"},
 		"specify the directory names that should not be traversed. Use --ignoreTraversal=<directory> or -i=<directory>. Multiple directory names can be passed by using --ignoreTraversal=.git --ignoreTraversal=.github",
+	)
+	rootCmd.PersistentFlags().StringP(
+		"format",
+		"f",
+		"table",
+		"specify the export format. Supported values include: json, html and table. Use --format=<format>",
 	)
 }
