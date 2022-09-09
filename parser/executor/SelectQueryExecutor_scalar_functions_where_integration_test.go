@@ -3,6 +3,9 @@ package executor
 import (
 	"goselect/parser"
 	"goselect/parser/context"
+	"io/ioutil"
+	"os"
+	"path/filepath"
 	"testing"
 )
 
@@ -305,8 +308,13 @@ func TestResultsWithAWhereClause16(t *testing.T) {
 }
 
 func TestResultsWithAWhereClause17(t *testing.T) {
+	directoryName, _ := ioutil.TempDir(".", "ctime-test-dir")
+	file, _ := ioutil.TempFile(directoryName, "ctime-test-file")
+
+	defer os.RemoveAll(directoryName)
+
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name) from ../resources/TestResultsWithProjections/multi where gte(mtime, parsedttime(2022-09-09, dt)) order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(name) from "+directoryName+" where gte(ctime, parsedttime(2022-09-09, dt)) order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -316,7 +324,7 @@ func TestResultsWithAWhereClause17(t *testing.T) {
 	}
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
-		{context.StringValue("testresultswithprojections_a.log")},
+		{context.StringValue(filepath.Base(file.Name()))},
 	}
 	assertMatch(t, expected, queryResults)
 }
