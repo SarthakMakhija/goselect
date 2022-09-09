@@ -30,9 +30,10 @@ func (tableFormatter TableFormatter) Format(projections *projection.Projections,
 }
 
 func (tableFormatter TableFormatter) renderContentTable(attributes []string, displayableRows [][]string) string {
+	cellSize := 100 / len(attributes)
 	table := gotabulate.Create(displayableRows)
 	table.SetHeaders(attributes)
-	table.SetMaxCellSize(45)
+	table.SetMaxCellSize(cellSize)
 	table.SetWrapStrings(true)
 	table.SetAlign("left")
 
