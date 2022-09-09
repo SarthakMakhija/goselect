@@ -10,8 +10,8 @@ import (
 
 var listWhereClauseFunctionsCmd = &cobra.Command{
 	Use:   "listWhereClauseFunctions",
-	Short: "List all the function supported by goselect in 'where' clause",
-	Long:  `List all the function along with their aliases supported by goselect in 'where' clause`,
+	Short: "List all the functions supported by goselect in 'where' clause",
+	Long:  `List all the functions along with their aliases supported by goselect in 'where' clause`,
 	Run: func(cmd *cobra.Command, args []string) {
 		asString := func(aliases []string) string {
 			return strings.Join(aliases, ", ")

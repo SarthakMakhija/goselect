@@ -235,7 +235,7 @@ var functionDefinitions = map[string]*FunctionDefinition{
 	},
 	FunctionNameDayOfWeek: {
 		aliases:     []string{"dayofweek", "dow"},
-		description: "Returns the day of the week. If today is Friday, dow() will return Friday.",
+		description: "Returns the day of the week. If today is a Friday, dow() will return Friday.",
 		block:       DayOfWeekFunctionBlock{},
 	},
 	FunctionNameExtract: {

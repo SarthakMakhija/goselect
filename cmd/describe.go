@@ -25,7 +25,7 @@ var describeCmd = &cobra.Command{
 			fmt.Println(functions.DescriptionOf(lookFor))
 			return
 		}
-		fmt.Println(errorColor, "unsupported attribute or function.")
+		fmt.Println(errorColor, "unsupported attribute or function")
 	},
 }
 

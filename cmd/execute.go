@@ -13,12 +13,12 @@ import (
 
 var executeCmd = &cobra.Command{
 	Use:   "execute",
-	Short: "Execute Select SQL query",
-	Long:  `Select SQL Query syntax: select <columns> from <source directory> [where <condition>] [order by] [limit]`,
+	Short: "Execute a select query",
+	Long:  `Execute a select query. Select query syntax: select <columns> from <source directory> [where <condition>] [order by] [limit]`,
 	Run: func(cmd *cobra.Command, args []string) {
 		buildOptions := func() *executor.Options {
 			nestedTraversal, _ := cmd.Flags().GetBool("nestedTraversal")
-			ignoreTraversal, _ := cmd.Flags().GetStringSlice("ignoreTraversal")
+			ignoreTraversal, _ := cmd.Flags().GetStringSlice("skipDirectoryTraversal")
 
 			options := executor.NewDefaultOptions()
 			if nestedTraversal {
@@ -88,13 +88,13 @@ func init() {
 		"nestedTraversal",
 		"n",
 		true,
-		"specify the if nested directories should be traversed. Use --nestedTraversal=<true/false> or -n=<true/false>",
+		"specify if nested directories should be traversed. Use --nestedTraversal=<true/false> or -n=<true/false>",
 	)
 	rootCmd.PersistentFlags().StringSliceP(
-		"ignoreTraversal",
-		"i",
+		"skipDirectoryTraversal",
+		"s",
 		[]string{".git", ".github"},
-		"specify the directory names that should not be traversed. Use --ignoreTraversal=<directory> or -i=<directory>. Multiple directory names can be passed by using --ignoreTraversal=.git --ignoreTraversal=.github",
+		"specify the directory names that should not be traversed. Use --skipDirectoryTraversal=<directory> or -s=<directory>. Multiple directory names can be passed by using --skipDirectoryTraversal=.git --skipDirectoryTraversal=.github",
 	)
 	rootCmd.PersistentFlags().StringP(
 		"format",
