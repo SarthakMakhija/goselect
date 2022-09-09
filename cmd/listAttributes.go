@@ -1,9 +1,10 @@
 package cmd
 
 import (
-	"fmt"
+	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/spf13/cobra"
 	"goselect/parser/context"
+	"os"
 	"sort"
 	"strings"
 )
@@ -13,14 +14,19 @@ var listAttributesCmd = &cobra.Command{
 	Short: "List all the attributes supported by goselect",
 	Long:  `List all the attributes along with their aliases supported by goselect`,
 	Run: func(cmd *cobra.Command, args []string) {
+		tableWriter := table.NewWriter()
+		tableWriter.SetOutputMirror(os.Stdout)
+		tableWriter.SetStyle(table.StyleColoredBlackOnCyanWhite)
+		tableWriter.Style().Options.SeparateColumns = true
+
 		asString := func(aliases []string) string {
 			return strings.Join(aliases, ", ")
 		}
 		printHeader := func() {
-			fmt.Printf("%v%-14v %-12v\n", headerColor, "Attribute", "Aliases")
+			tableWriter.AppendHeader(table.Row{"Attribute", "Aliases"})
 		}
 		printAttribute := func(attribute string, aliases []string) {
-			fmt.Printf("%v%-14v %-18v\n", contentColor, attribute, asString(aliases))
+			tableWriter.AppendRow(table.Row{attribute, asString(aliases)})
 		}
 		printAttributes := func(aliasesByAttribute map[string][]string) {
 			for attribute, aliases := range aliasesByAttribute {
@@ -42,10 +48,12 @@ var listAttributesCmd = &cobra.Command{
 
 		if !isSorted {
 			printAttributes(aliasesByAttribute)
+			tableWriter.Render()
 		} else {
 			for _, attribute := range sortAttributes(aliasesByAttribute) {
 				printAttribute(attribute, aliasesByAttribute[attribute])
 			}
+			tableWriter.Render()
 		}
 	},
 }
