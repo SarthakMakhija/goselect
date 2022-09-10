@@ -339,7 +339,7 @@ func (c ConcatFunctionBlock) run(args ...Value) (Value, error) {
 }
 
 func (c ConcatWithSeparatorFunctionBlock) run(args ...Value) (Value, error) {
-	if err := ensureNParametersOrError(args, FunctionNameConcat, 3); err != nil {
+	if err := ensureNParametersOrError(args, FunctionNameConcatWithSeparator, 3); err != nil {
 		return EmptyValue, err
 	}
 
