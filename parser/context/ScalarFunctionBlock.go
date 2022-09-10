@@ -328,6 +328,9 @@ func (w WorkingDirectoryFunctionBlock) run(_ ...Value) (Value, error) {
 }
 
 func (c ConcatFunctionBlock) run(args ...Value) (Value, error) {
+	if err := ensureNParametersOrError(args, FunctionNameConcat, 2); err != nil {
+		return EmptyValue, err
+	}
 	var values []string
 	for _, value := range args {
 		values = append(values, value.GetAsString())
@@ -336,6 +339,10 @@ func (c ConcatFunctionBlock) run(args ...Value) (Value, error) {
 }
 
 func (c ConcatWithSeparatorFunctionBlock) run(args ...Value) (Value, error) {
+	if err := ensureNParametersOrError(args, FunctionNameConcat, 3); err != nil {
+		return EmptyValue, err
+	}
+
 	var values []string
 	for index := 0; index < len(args)-1; index++ {
 		values = append(values, args[index].GetAsString())
