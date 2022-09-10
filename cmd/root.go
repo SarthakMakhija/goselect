@@ -26,11 +26,6 @@ Features that are different from SQL:
 5. goselect's 'order by' clause supports only attribute positions. For example, a query like 'select name, size from /home/projects order by 1'`,
 }
 
-const (
-	headerColor  = "\033[34m"
-	contentColor = "\033[0m"
-)
-
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
@@ -41,12 +36,4 @@ func Execute() {
 }
 
 func init() {
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
-
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.goselect.yaml)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
 }
