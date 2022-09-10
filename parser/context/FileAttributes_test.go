@@ -1,7 +1,6 @@
 package context
 
 import (
-	"io/ioutil"
 	"os"
 	"reflect"
 	"testing"
@@ -136,8 +135,8 @@ func TestFileType4(t *testing.T) {
 }
 
 func TestFileType5(t *testing.T) {
-	directoryName, _ := ioutil.TempDir(".", "file-type-dir")
-	_, _ = ioutil.TempFile(directoryName, "file-type-file")
+	directoryName, _ := os.MkdirTemp(".", "file-type-dir")
+	_, _ = os.CreateTemp(directoryName, "file-type-file")
 
 	defer os.RemoveAll(directoryName)
 
@@ -155,7 +154,7 @@ func TestFileType5(t *testing.T) {
 }
 
 func TestFileType6(t *testing.T) {
-	directoryName, _ := ioutil.TempDir(".", "file-type-dir")
+	directoryName, _ := os.MkdirTemp(".", "file-type-dir")
 	defer os.RemoveAll(directoryName)
 
 	file, err := os.Stat(directoryName)

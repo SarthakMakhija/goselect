@@ -1,13 +1,12 @@
 package writer
 
 import (
-	"io/ioutil"
 	"os"
 	"testing"
 )
 
 func TestFileWriter(t *testing.T) {
-	directory, _ := ioutil.TempDir(".", "file-writer-dir")
+	directory, _ := os.MkdirTemp(".", "file-writer-dir")
 	filePath := directory + string(os.PathSeparator) + "results"
 	defer os.RemoveAll(directory)
 
