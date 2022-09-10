@@ -3,6 +3,7 @@ package executor
 import (
 	"goselect/parser"
 	"goselect/parser/context"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
@@ -307,8 +308,8 @@ func TestResultsWithAWhereClause16(t *testing.T) {
 }
 
 func TestResultsWithAWhereClause17(t *testing.T) {
-	directoryName, _ := os.MkdirTemp(".", "ctime-test-dir")
-	file, _ := os.CreateTemp(directoryName, "ctime-test-file")
+	directoryName, _ := ioutil.TempDir(".", "ctime-test-dir")
+	file, _ := ioutil.TempFile(directoryName, "ctime-test-file")
 
 	defer os.RemoveAll(directoryName)
 
