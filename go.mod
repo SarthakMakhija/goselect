@@ -6,6 +6,7 @@ require (
 	github.com/dustin/go-humanize v1.0.0
 	github.com/jedib0t/go-pretty/v6 v6.3.8
 	github.com/spf13/cobra v1.5.0
+	golang.org/x/text v0.3.7
 )
 
 require (

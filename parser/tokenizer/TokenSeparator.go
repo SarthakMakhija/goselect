@@ -1,10 +1,7 @@
 package tokenizer
 
 func isCharATokenSeparator(ch rune) bool {
-	if ch == ' ' {
-		return true
-	}
-	return false
+	return ch == ' '
 }
 
 func isCharAComparisonOperator(ch rune) bool {

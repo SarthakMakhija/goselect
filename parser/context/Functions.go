@@ -1,6 +1,8 @@
 package context
 
 import (
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 	"strings"
 	"time"
 )
@@ -182,7 +184,9 @@ var functionDefinitions = map[string]*FunctionDefinition{
 	FunctionNameTitle: {
 		aliases:     []string{"title"},
 		description: "Takes a single parameter value and returns the value in title case.",
-		block:       TitleFunctionBlock{},
+		block: TitleFunctionBlock{
+			caser: cases.Title(language.English),
+		},
 	},
 	FunctionNameBase64: {
 		aliases:     []string{"base64", "b64"},

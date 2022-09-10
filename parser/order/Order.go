@@ -58,7 +58,7 @@ func NewOrder(iterator *tokenizer.TokenIterator, projectionCount int) (*Order, e
 					return nil, errors.New(messages.ErrorMessageNonZeroPositivePositions)
 				}
 				if projectionPosition > projectionCount {
-					return nil, errors.New(fmt.Sprintf(messages.ErrorMessageOrderByPositionOutOfRange, 1, projectionCount))
+					return nil, fmt.Errorf(messages.ErrorMessageOrderByPositionOutOfRange, 1, projectionCount)
 				}
 				if projectionPosition <= projectionCount {
 					attributes = append(attributes, AttributeRef{ProjectionPosition: projectionPosition})

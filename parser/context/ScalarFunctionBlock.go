@@ -4,6 +4,7 @@ import (
 	b64 "encoding/base64"
 	"errors"
 	"fmt"
+	"golang.org/x/text/cases"
 	"goselect/parser/error/messages"
 	"os"
 	"regexp"
@@ -29,7 +30,7 @@ type NotFunctionBlock struct{}
 type LikeFunctionBlock struct{}
 type LowerFunctionBlock struct{}
 type UpperFunctionBlock struct{}
-type TitleFunctionBlock struct{}
+type TitleFunctionBlock struct{ caser cases.Caser }
 type Base64FunctionBlock struct{}
 type LengthFunctionBlock struct{}
 type TrimFunctionBlock struct{}
@@ -256,7 +257,7 @@ func (t TitleFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameTitle, 1); err != nil {
 		return EmptyValue, err
 	}
-	return StringValue(strings.Title(args[0].GetAsString())), nil
+	return StringValue(t.caser.String(args[0].GetAsString())), nil
 }
 
 func (b Base64FunctionBlock) run(args ...Value) (Value, error) {
@@ -447,7 +448,7 @@ func (e ExtractFunctionBlock) run(args ...Value) (Value, error) {
 	case "weekday":
 		return StringValue(aTime.Weekday().String()), nil
 	default:
-		return EmptyValue, errors.New(fmt.Sprintf(messages.ErrorMessageIncorrectExtractionKey, "date, day, year, month, weekday"))
+		return EmptyValue, fmt.Errorf(messages.ErrorMessageIncorrectExtractionKey, "date, day, year, month, weekday")
 	}
 }
 

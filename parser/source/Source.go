@@ -20,7 +20,7 @@ func NewSource(tokenIterator *tokenizer.TokenIterator) (*Source, error) {
 	} else {
 		if _, err := os.Stat(directory); err != nil {
 			if os.IsNotExist(err) {
-				return nil, errors.New(fmt.Sprintf(messages.ErrorMessageInaccessibleSource, directory))
+				return nil, fmt.Errorf(messages.ErrorMessageInaccessibleSource, directory)
 			} else {
 				return nil, err
 			}

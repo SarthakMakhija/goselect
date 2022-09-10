@@ -32,15 +32,9 @@ func (ordering Ordering) isOrdered(first, second []context.Value) bool {
 		}
 
 		if ordering.order.IsAscendingAt(index) {
-			if comparisonResult < 0 {
-				return true
-			}
-			return false
+			return comparisonResult < 0
 		} else {
-			if comparisonResult < 0 {
-				return false
-			}
-			return true
+			return comparisonResult >= 0
 		}
 	}
 	return false
