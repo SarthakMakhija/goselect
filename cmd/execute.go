@@ -7,7 +7,9 @@ import (
 	"goselect/parser"
 	"goselect/parser/context"
 	"goselect/parser/executor"
+	"goselect/parser/source"
 	"goselect/parser/writer"
+	"os"
 	"strings"
 )
 
@@ -16,6 +18,8 @@ var executeCmd = &cobra.Command{
 	Short: "Execute a select query",
 	Long:  `Execute a select query. Select query syntax: select <columns> from <source directory> [where <condition>] [order by] [limit]`,
 	Run: func(cmd *cobra.Command, args []string) {
+		errorColor := "\033[31m"
+
 		buildOptions := func() *executor.Options {
 			nestedTraversal, _ := cmd.Flags().GetBool("nestedTraversal")
 			ignoreTraversal, _ := cmd.Flags().GetStringSlice("skipDirectoryTraversal")
@@ -29,50 +33,92 @@ var executeCmd = &cobra.Command{
 			options.DirectoriesToIgnoreTraversal(ignoreTraversal)
 			return options
 		}
-		formatter := func(cmd *cobra.Command) (writer.Formatter, error) {
+		executeQuery := func(cmd *cobra.Command) (*executor.EvaluatingRows, *parser.SelectQuery, error) {
+			rawQuery, _ := cmd.Flags().GetString("query")
+			if len(rawQuery) == 0 {
+				return nil, nil, errors.New("select query is mandatory. please use --query to specify the query")
+			}
+			newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+			parser, err := parser.NewParser(rawQuery, newContext)
+			if err != nil {
+				return nil, nil, err
+			}
+			query, err := parser.Parse()
+			if err != nil {
+				return nil, nil, err
+			}
+			rows, err := executor.NewSelectQueryExecutor(query, newContext, buildOptions()).Execute()
+			if err != nil {
+				return nil, nil, err
+			}
+			return rows, query, nil
+		}
+		formatter := func(cmd *cobra.Command) (writer.Formatter, string, error) {
 			exportFormat, _ := cmd.Flags().GetString("format")
 			switch strings.ToLower(exportFormat) {
 			case "json":
-				return writer.NewJsonFormatter(), nil
+				return writer.NewJsonFormatter(), strings.ToLower(exportFormat), nil
 			case "html":
-				return writer.NewHtmlFormatter(), nil
+				return writer.NewHtmlFormatter(), strings.ToLower(exportFormat), nil
 			case "table":
-				return writer.NewTableFormatter(), nil
+				return writer.NewTableFormatter(), strings.ToLower(exportFormat), nil
 			default:
-				return nil, errors.New("unsupported export format")
+				return nil, "", errors.New("unsupported export format")
 			}
 		}
-
-		rawQuery, _ := cmd.Flags().GetString("query")
-		errorColor := "\033[31m"
-		if len(rawQuery) == 0 {
-			fmt.Println(errorColor, "select query is mandatory. please use --query to specify the query.")
-			return
+		writer := func(cmd *cobra.Command, format string) (writer.Writer, error) {
+			directoryPath, _ := cmd.Flags().GetString("path")
+			if len(directoryPath) == 0 {
+				return writer.NewConsoleWriter(), nil
+			}
+			if strings.EqualFold(format, "table") {
+				return nil, errors.New("table can not be exported to a file")
+			}
+			directoryPath, err := source.ExpandDirectoryPath(directoryPath)
+			if err != nil {
+				return nil, err
+			}
+			if filePath, err := os.Stat(directoryPath); err != nil {
+				return nil, err
+			} else {
+				if !filePath.IsDir() {
+					return nil, errors.New("expected file path to be a directory")
+				}
+				pathSeparator := string(os.PathSeparator)
+				filePath := directoryPath + pathSeparator + fmt.Sprintf("results.%v", format)
+				if strings.HasSuffix(directoryPath, pathSeparator) {
+					filePath = directoryPath + fmt.Sprintf("results.%v", format)
+				}
+				writer, err := writer.NewFileWriter(filePath)
+				if err != nil {
+					return nil, err
+				}
+				return writer, nil
+			}
 		}
-
-		newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-		parser, err := parser.NewParser(rawQuery, newContext)
-		if err != nil {
-			fmt.Println(errorColor, err)
-			return
+		run := func() {
+			rows, query, err := executeQuery(cmd)
+			if err != nil {
+				fmt.Println(errorColor, err)
+				return
+			}
+			exportFormatter, format, err := formatter(cmd)
+			if err != nil {
+				fmt.Println(errorColor, err)
+				return
+			}
+			writer, err := writer(cmd, format)
+			if err != nil {
+				fmt.Println(errorColor, err)
+				return
+			}
+			res := exportFormatter.Format(query.Projections, rows)
+			if err := writer.Write(res); err != nil {
+				fmt.Println(errorColor, err)
+				return
+			}
 		}
-		query, err := parser.Parse()
-		if err != nil {
-			fmt.Println(errorColor, err)
-			return
-		}
-		rows, err := executor.NewSelectQueryExecutor(query, newContext, buildOptions()).Execute()
-		if err != nil {
-			fmt.Println(errorColor, err)
-			return
-		}
-		exportFormatter, err := formatter(cmd)
-		if err != nil {
-			fmt.Println(errorColor, err)
-			return
-		}
-		res := exportFormatter.Format(query.Projections, rows)
-		_ = writer.NewConsoleWriter().Write(res)
+		run()
 	},
 }
 
@@ -101,5 +147,11 @@ func init() {
 		"f",
 		"table",
 		"specify the export format. Supported values include: json, html and table. Use --format=<format>",
+	)
+	rootCmd.PersistentFlags().StringP(
+		"path",
+		"p",
+		"",
+		"specify the directory path. Use --path=<directoryPath>",
 	)
 }

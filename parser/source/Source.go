@@ -6,8 +6,6 @@ import (
 	"goselect/parser/error/messages"
 	"goselect/parser/tokenizer"
 	"os"
-	"os/user"
-	"strings"
 )
 
 type Source struct {
@@ -36,15 +34,7 @@ func getDirectory(tokenIterator *tokenizer.TokenIterator) (string, error) {
 	if tokenIterator.HasNext() && !tokenIterator.Peek().Equals("where") {
 		token := tokenIterator.Next()
 		path := token.TokenValue
-		if strings.HasPrefix(path, "~") {
-			if currentUser, err := user.Current(); err != nil {
-				return "", err
-			} else {
-				directory := currentUser.HomeDir + path[1:]
-				return directory, nil
-			}
-		}
-		return path, nil
+		return ExpandDirectoryPath(path)
 	}
 	return "", errors.New(messages.ErrorMessageMissingSource)
 }
