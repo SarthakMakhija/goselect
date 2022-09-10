@@ -192,7 +192,7 @@ func (o OrFunctionBlock) run(args ...Value) (Value, error) {
 		if err != nil {
 			return EmptyValue, fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameOr, err)
 		}
-		if result == true {
+		if result {
 			return trueBooleanValue, nil
 		}
 	}
@@ -208,7 +208,7 @@ func (a AndFunctionBlock) run(args ...Value) (Value, error) {
 		if err != nil {
 			return EmptyValue, fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameAnd, err)
 		}
-		if result == false {
+		if !result {
 			return falseBooleanValue, nil
 		}
 	}
