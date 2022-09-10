@@ -23,7 +23,7 @@ func ToFileAttributes(directory string, file fs.FileInfo, ctx *ParsingApplicatio
 	fileAttributes.setName(file, ctx.allAttributes)
 	fileAttributes.setExtension(file, ctx.allAttributes)
 	fileAttributes.setSize(file, ctx.allAttributes)
-	fileAttributes.setFileType(file, ctx.allAttributes)
+	fileAttributes.setFileType(directory, file, ctx.allAttributes)
 	fileAttributes.setTimes(file, ctx.allAttributes)
 	fileAttributes.setPath(directory, file, ctx.allAttributes)
 	fileAttributes.setPermission(file, ctx.allAttributes)
@@ -49,12 +49,13 @@ func (fileAttributes *FileAttributes) setSize(file fs.FileInfo, attributes *AllA
 	fileAttributes.setAllAliasesForAttribute(AttributeFormattedSize, StringValue(formattedSize), attributes)
 }
 
-func (fileAttributes *FileAttributes) setFileType(file fs.FileInfo, attributes *AllAttributes) {
+func (fileAttributes *FileAttributes) setFileType(directory string, file fs.FileInfo, attributes *AllAttributes) {
 	fileAttributes.setAllAliasesForAttribute(AttributeNameIsDir, booleanValueUsing(file.IsDir()), attributes)
 	fileAttributes.setAllAliasesForAttribute(AttributeNameIsFile, booleanValueUsing(file.Mode().IsRegular()), attributes)
 	fileAttributes.setAllAliasesForAttribute(AttributeNameIsSymbolicLink, booleanValueUsing(file.Mode()&os.ModeSymlink == os.ModeSymlink), attributes)
 	if file.Mode().IsDir() {
-		files, _ := ioutil.ReadDir(file.Name())
+		newPath := fileAttributes.filePath(directory, file)
+		files, _ := ioutil.ReadDir(newPath)
 		fileAttributes.setAllAliasesForAttribute(AttributeNameIsEmpty, booleanValueUsing(len(files) == 0), attributes)
 	} else {
 		fileAttributes.setAllAliasesForAttribute(AttributeNameIsEmpty, booleanValueUsing(file.Size() == 0), attributes)
@@ -71,11 +72,7 @@ func (fileAttributes *FileAttributes) setTimes(file fs.FileInfo, attributes *All
 }
 
 func (fileAttributes *FileAttributes) setPath(directory string, file fs.FileInfo, attributes *AllAttributes) {
-	pathSeparator := string(os.PathSeparator)
-	newPath := directory + pathSeparator + file.Name()
-	if strings.HasSuffix(directory, pathSeparator) {
-		newPath = directory + file.Name()
-	}
+	newPath := fileAttributes.filePath(directory, file)
 	absolutePath, err := filepath.Abs(newPath)
 	if err == nil {
 		fileAttributes.setAllAliasesForAttribute(AttributeAbsolutePath, StringValue(absolutePath), attributes)
@@ -156,6 +153,15 @@ func (fileAttributes *FileAttributes) setGroupId(groupId string, attributes *All
 
 func (fileAttributes *FileAttributes) setGroupName(groupName string, attributes *AllAttributes) {
 	fileAttributes.setAllAliasesForAttribute(AttributeGroupName, StringValue(groupName), attributes)
+}
+
+func (fileAttributes *FileAttributes) filePath(directory string, file fs.FileInfo) string {
+	pathSeparator := string(os.PathSeparator)
+	newPath := directory + pathSeparator + file.Name()
+	if strings.HasSuffix(directory, pathSeparator) {
+		newPath = directory + file.Name()
+	}
+	return newPath
 }
 
 func (fileAttributes *FileAttributes) setAllAliasesForAttribute(

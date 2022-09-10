@@ -1,6 +1,7 @@
 package context
 
 import (
+	"io/ioutil"
 	"os"
 	"reflect"
 	"testing"
@@ -131,6 +132,42 @@ func TestFileType4(t *testing.T) {
 
 	if isEmpty != true {
 		t.Fatalf("Expected Empty.log to be empty but was not")
+	}
+}
+
+func TestFileType5(t *testing.T) {
+	directoryName, _ := ioutil.TempDir(".", "file-type-dir")
+	_, _ = ioutil.TempFile(directoryName, "file-type-file")
+
+	defer os.RemoveAll(directoryName)
+
+	file, err := os.Stat(directoryName)
+	if err != nil {
+		panic(err)
+	}
+	context := NewContext(nil, NewAttributes())
+	fileAttributes := ToFileAttributes(".", file, context)
+	isEmpty, _ := fileAttributes.Get(AttributeNameIsEmpty).GetBoolean()
+
+	if isEmpty != false {
+		t.Fatalf("Expected file-type-dir to be non-empty but was")
+	}
+}
+
+func TestFileType6(t *testing.T) {
+	directoryName, _ := ioutil.TempDir(".", "file-type-dir")
+	defer os.RemoveAll(directoryName)
+
+	file, err := os.Stat(directoryName)
+	if err != nil {
+		panic(err)
+	}
+	context := NewContext(nil, NewAttributes())
+	fileAttributes := ToFileAttributes(".", file, context)
+	isEmpty, _ := fileAttributes.Get(AttributeNameIsEmpty).GetBoolean()
+
+	if isEmpty != true {
+		t.Fatalf("Expected file-type-dir to be empty but was not")
 	}
 }
 
