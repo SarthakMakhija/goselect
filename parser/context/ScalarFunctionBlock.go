@@ -519,7 +519,7 @@ func ensureNParametersOrError(parameters []Value, fn string, n int) error {
 		return count
 	}
 	if len(parameters) < n || nonNilParameterCount() < n {
-		return errors.New(fmt.Sprintf(messages.ErrorMessageMissingParameterInScalarFunctions, n, fn))
+		return fmt.Errorf(messages.ErrorMessageMissingParameterInScalarFunctions, n, fn)
 	}
 	return nil
 }

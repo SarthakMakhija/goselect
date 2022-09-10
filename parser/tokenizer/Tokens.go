@@ -28,10 +28,7 @@ type TokenIterator struct {
 }
 
 func (tokenIterator *TokenIterator) HasNext() bool {
-	if tokenIterator.index < len(tokenIterator.tokens) {
-		return true
-	}
-	return false
+	return tokenIterator.index < len(tokenIterator.tokens)
 }
 
 func (tokenIterator *TokenIterator) Next() Token {
