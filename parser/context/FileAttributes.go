@@ -4,7 +4,6 @@ import (
 	"github.com/dustin/go-humanize"
 	"goselect/parser/context/platform"
 	"io/fs"
-	"io/ioutil"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -55,8 +54,8 @@ func (fileAttributes *FileAttributes) setFileType(directory string, file fs.File
 	fileAttributes.setAllAliasesForAttribute(AttributeNameIsSymbolicLink, booleanValueUsing(file.Mode()&os.ModeSymlink == os.ModeSymlink), attributes)
 	if file.Mode().IsDir() {
 		newPath := fileAttributes.filePath(directory, file)
-		files, _ := ioutil.ReadDir(newPath)
-		fileAttributes.setAllAliasesForAttribute(AttributeNameIsEmpty, booleanValueUsing(len(files) == 0), attributes)
+		entries, _ := os.ReadDir(newPath)
+		fileAttributes.setAllAliasesForAttribute(AttributeNameIsEmpty, booleanValueUsing(len(entries) == 0), attributes)
 	} else {
 		fileAttributes.setAllAliasesForAttribute(AttributeNameIsEmpty, booleanValueUsing(file.Size() == 0), attributes)
 	}

@@ -4,7 +4,6 @@ import (
 	"goselect/parser"
 	"goselect/parser/context"
 	"io/fs"
-	"io/ioutil"
 	"math"
 	"os"
 	"strings"
@@ -55,15 +54,19 @@ func (selectQueryExecutor SelectQueryExecutor) executeFrom(directory string, max
 
 	rows := emptyRows(selectQueryExecutor.context.AllFunctions(), maxLimit)
 	execute = func(directory string) error {
-		files, err := ioutil.ReadDir(directory)
+		entries, err := os.ReadDir(directory)
 		if err != nil {
 			return err
 		}
-		for _, file := range files {
+		for _, entry := range entries {
+			file, err := entry.Info()
+			if err != nil {
+				return err
+			}
 			if shouldTraverseDirectory(file) {
-				newPath := directory + pathSeparator + file.Name()
+				newPath := directory + pathSeparator + entry.Name()
 				if strings.HasSuffix(directory, pathSeparator) {
-					newPath = directory + file.Name()
+					newPath = directory + entry.Name()
 				}
 				if err := execute(newPath); err != nil {
 					return err
