@@ -13,6 +13,7 @@ func TestFileWriter(t *testing.T) {
 
 	writer, _ := NewFileWriter(filePath)
 	_ = writer.Write("some content")
+
 	file, _ := os.Open(filePath)
 	readBytes := make([]byte, len("some content"))
 	_, _ = file.Read(readBytes)
