@@ -24,13 +24,6 @@ type EvaluatingRow struct {
 	functions       *context.AllFunctions
 }
 
-type AttributeIterator struct {
-	currentIndex    int
-	attributeValues []context.Value
-	fullyEvaluated  []bool
-	expressions     []*expression.Expression
-}
-
 func emptyRows(functions *context.AllFunctions, limit uint32) *EvaluatingRows {
 	return &EvaluatingRows{functions: functions, limit: limit}
 }
