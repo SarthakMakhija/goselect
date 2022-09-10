@@ -66,5 +66,5 @@ func tokenFrom(token string) Token {
 }
 
 func (token Token) Equals(value string) bool {
-	return strings.ToLower(token.TokenValue) == strings.ToLower(value)
+	return strings.EqualFold(strings.ToLower(token.TokenValue), strings.ToLower(value))
 }
