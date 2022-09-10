@@ -111,7 +111,7 @@ func function(
 			switch {
 			case expectOpeningParentheses:
 				if !token.Equals("(") {
-					return nil, errors.New(fmt.Sprintf(messages.ErrorMessageOpeningParenthesesProjection, functionNameToken.TokenValue))
+					return nil, fmt.Errorf(messages.ErrorMessageOpeningParenthesesProjection, functionNameToken.TokenValue)
 				}
 				expectOpeningParentheses = false
 			case token.Equals(")"):

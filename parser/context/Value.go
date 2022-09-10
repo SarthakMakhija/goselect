@@ -99,21 +99,21 @@ func DateTimeValue(time time.Time) Value {
 
 func (value Value) GetString() (string, error) {
 	if value.valueType != ValueTypeString {
-		return "", errors.New(fmt.Sprintf(messages.ErrorMessageIncorrectValueType, "string"))
+		return "", fmt.Errorf(messages.ErrorMessageIncorrectValueType, "string")
 	}
 	return value.stringValue, nil
 }
 
 func (value Value) GetInt() (int, error) {
 	if value.valueType != ValueTypeInt {
-		return -1, errors.New(fmt.Sprintf(messages.ErrorMessageIncorrectValueType, "int"))
+		return -1, fmt.Errorf(messages.ErrorMessageIncorrectValueType, "int")
 	}
 	return value.intValue, nil
 }
 
 func (value Value) GetDateTime() (time.Time, error) {
 	if value.valueType != ValueTypeDateTime {
-		return time.Time{}, errors.New(fmt.Sprintf(messages.ErrorMessageIncorrectValueType, "time"))
+		return time.Time{}, fmt.Errorf(messages.ErrorMessageIncorrectValueType, "time")
 	}
 	return value.timeValue, nil
 }
@@ -130,7 +130,7 @@ func (value Value) GetBoolean() (bool, error) {
 	if value.valueType == ValueTypeBoolean {
 		return value.booleanValue, nil
 	}
-	return false, errors.New(fmt.Sprintf(messages.ErrorMessageIncorrectValueType, "boolean"))
+	return false, fmt.Errorf(messages.ErrorMessageIncorrectValueType, "boolean")
 }
 
 func (value Value) GetNumericAsFloat64() (float64, error) {
