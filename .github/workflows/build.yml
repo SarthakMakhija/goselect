@@ -18,7 +18,7 @@ jobs:
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3
         with:
-          working-directory: goselect
+          working-directory: ${GITHUB_WORKSPACE}
   build:
     runs-on: ubuntu-latest
     steps:
