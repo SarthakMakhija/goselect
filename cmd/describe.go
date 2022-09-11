@@ -21,7 +21,7 @@ var describeCmd = &cobra.Command{
 		errorColor := "\033[31m"
 
 		if len(lookFor) == 0 {
-			fmt.Println(errorColor, "term is mandatory. please use --term=<attribute> or --term=<function>")
+			fmt.Println(errorColor, ErrorMessageEmptyTerm)
 			return
 		}
 
@@ -40,7 +40,7 @@ var describeCmd = &cobra.Command{
 			tableWriter.Render()
 			return
 		}
-		fmt.Println(errorColor, "unsupported attribute or function")
+		fmt.Println(errorColor, ErrorMessageInvalidTerm)
 	},
 }
 

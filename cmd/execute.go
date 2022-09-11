@@ -36,7 +36,7 @@ var executeCmd = &cobra.Command{
 		executeQuery := func(cmd *cobra.Command) (*executor.EvaluatingRows, *parser.SelectQuery, error) {
 			rawQuery, _ := cmd.Flags().GetString("query")
 			if len(rawQuery) == 0 {
-				return nil, nil, errors.New("select query is mandatory. please use --query to specify the query")
+				return nil, nil, errors.New(ErrorMessageEmptyQuery)
 			}
 			newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
 			parser, err := parser.NewParser(rawQuery, newContext)
@@ -63,7 +63,7 @@ var executeCmd = &cobra.Command{
 			case "table":
 				return writer.NewTableFormatter(), strings.ToLower(exportFormat), nil
 			default:
-				return nil, "", errors.New("unsupported export format")
+				return nil, "", fmt.Errorf(ErrorMessageInvalidExportFormat, "json, html or table")
 			}
 		}
 		writer := func(cmd *cobra.Command, format string) (writer.Writer, error) {
@@ -72,7 +72,7 @@ var executeCmd = &cobra.Command{
 				return writer.NewConsoleWriter(), nil
 			}
 			if strings.EqualFold(format, "table") {
-				return nil, errors.New("table can not be exported to a file")
+				return nil, errors.New(ErrorMessageAttemptedToExportTableToFile)
 			}
 			directoryPath, err := source.ExpandDirectoryPath(directoryPath)
 			if err != nil {
@@ -82,7 +82,7 @@ var executeCmd = &cobra.Command{
 				return nil, err
 			} else {
 				if !filePath.IsDir() {
-					return nil, errors.New("expected file path to be a directory")
+					return nil, errors.New(ErrorMessageExpectedFilePathToBeADirectory)
 				}
 				pathSeparator := string(os.PathSeparator)
 				filePath := directoryPath + pathSeparator + fmt.Sprintf("results.%v", format)
