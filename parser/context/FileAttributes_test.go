@@ -1,9 +1,11 @@
 package context
 
 import (
+	"fmt"
 	"os"
 	"reflect"
 	"testing"
+	"time"
 )
 
 func TestFileName(t *testing.T) {
@@ -242,5 +244,71 @@ func TestFilePermissionForOthers(t *testing.T) {
 
 	if !reflect.DeepEqual(expected, received) {
 		t.Fatalf("Expected permissions for others to be %v, received %v", expected, received)
+	}
+}
+
+func TestAccessTime(t *testing.T) {
+	directoryName, _ := os.MkdirTemp(".", "access-time-dir")
+	newFile, _ := os.CreateTemp(directoryName, "access-time-file")
+
+	defer os.RemoveAll(directoryName)
+
+	file, err := os.Stat(fmt.Sprintf("%v", newFile.Name()))
+	if err != nil {
+		panic(err)
+	}
+	context := NewContext(nil, NewAttributes())
+	fileAttributes := ToFileAttributes(fmt.Sprintf("%v", directoryName), file, context)
+
+	accessTimeValue := fileAttributes.Get(AttributeAccessedTime)
+	expected := formatDate(time.Now()).GetAsString()
+	actual := formatDate(accessTimeValue.timeValue).GetAsString()
+
+	if expected != actual {
+		t.Fatalf("Expected access date/time to be %v, received %v", expected, actual)
+	}
+}
+
+func TestModifiedTime(t *testing.T) {
+	directoryName, _ := os.MkdirTemp(".", "modified-time-dir")
+	newFile, _ := os.CreateTemp(directoryName, "modified-time-file")
+
+	defer os.RemoveAll(directoryName)
+
+	file, err := os.Stat(fmt.Sprintf("%v", newFile.Name()))
+	if err != nil {
+		panic(err)
+	}
+	context := NewContext(nil, NewAttributes())
+	fileAttributes := ToFileAttributes(fmt.Sprintf("%v", directoryName), file, context)
+
+	modifiedTime := fileAttributes.Get(AttributeModifiedTime)
+	expected := formatDate(time.Now()).GetAsString()
+	actual := formatDate(modifiedTime.timeValue).GetAsString()
+
+	if expected != actual {
+		t.Fatalf("Expected modified date/time to be %v, received %v", expected, actual)
+	}
+}
+
+func TestCreatedTime(t *testing.T) {
+	directoryName, _ := os.MkdirTemp(".", "created-time-dir")
+	newFile, _ := os.CreateTemp(directoryName, "created-time-file")
+
+	defer os.RemoveAll(directoryName)
+
+	file, err := os.Stat(fmt.Sprintf("%v", newFile.Name()))
+	if err != nil {
+		panic(err)
+	}
+	context := NewContext(nil, NewAttributes())
+	fileAttributes := ToFileAttributes(fmt.Sprintf("%v", directoryName), file, context)
+
+	createdTime := fileAttributes.Get(AttributeCreatedTime)
+	expected := formatDate(time.Now()).GetAsString()
+	actual := formatDate(createdTime.timeValue).GetAsString()
+
+	if expected != actual {
+		t.Fatalf("Expected created date/time to be %v, received %v", expected, actual)
 	}
 }
