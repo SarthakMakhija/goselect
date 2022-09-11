@@ -29,6 +29,18 @@ Features that are different from SQL:
 5. `goselect`'s 'order by' clause supports only attribute positions. For example, a query like: select name, size from /home/projects order by 1 will order the results by first attribute
 6. `goselect` does not support single quote ['] and double quotes["]. For example, to match a file name, one could simply write a query: select * from . where eq(name, sample)
 
+# Supported platforms
+
+- `goselect` has been tested on **macOS Big Sur 11.4** and **Ubuntu 20.0.3**
+
+# Installation on macOS
+
+**Download the current release**
+- `wget -o - https://github.com/SarthakMakhija/goselect/releases/download/v0.0.1/goselect_0.0.1_Darwin_all.tar.gz`
+
+**Unzip the release in a directory**
+- `mkdir goselect && tar xvf goselect_0.0.1_Darwin_all.tar.gz -C goselect`
+
 # Screenshots
 - Limit clause
   ![Limit clause](images/any_10.png)
