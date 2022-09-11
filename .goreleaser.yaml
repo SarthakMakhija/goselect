@@ -12,6 +12,10 @@ builds:
     goos:
       - linux
       - darwin
+    goarch:
+      - arm64
+      - amd64
+      - 386
 archives:
   - replacements:
       darwin: Darwin
@@ -28,3 +32,5 @@ changelog:
     exclude:
       - '^docs:'
       - '^test:'
+universal_binaries:
+  - replace: true
