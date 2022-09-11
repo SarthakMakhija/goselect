@@ -41,6 +41,14 @@ Features that are different from SQL:
 **Unzip the release in a directory**
 - `mkdir goselect && tar xvf goselect_0.0.1_Darwin_all.tar.gz -C goselect`
 
+# Installation on Linux (amd64)
+
+**Download the current release**
+- `wget -o - https://github.com/SarthakMakhija/goselect/releases/download/v0.0.1/goselect_0.0.1_Linux_x86_64.tar.gz`
+
+**Unzip the release in a directory**
+- `mkdir goselect && tar xvf goselect_0.0.1_Linux_x86_64.tar.gz -C goselect`
+
 # Screenshots
 - Limit clause
   ![Limit clause](images/any_10.png)
