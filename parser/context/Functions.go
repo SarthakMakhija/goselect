@@ -88,7 +88,7 @@ const (
 var functionDefinitions = map[string]*FunctionDefinition{
 	FunctionNameIdentity: {
 		aliases:     []string{"identity", "iden"},
-		description: "Returns the provided parameter value as it is. \nFor example, identity(demo) will return the string demo, identity(name) will return the file name.",
+		description: "Returns the provided parameter value as it is, if the parameter value is not an attribute. \nFor example, identity(demo) will return the string demo, identity(name) will return the file name.",
 		block:       IdentityFunctionBlock{},
 	},
 	FunctionNameAdd: {
@@ -200,17 +200,17 @@ var functionDefinitions = map[string]*FunctionDefinition{
 	},
 	FunctionNameTrim: {
 		aliases:     []string{"trim"},
-		description: "Takes a single parameter value and returns its value after removing space character(s) from left and right.",
+		description: "Takes a single parameter value and returns its value after removing leading and trailing space character(s).",
 		block:       TrimFunctionBlock{},
 	},
 	FunctionNameLeftTrim: {
 		aliases:     []string{"ltrim", "lefttrim"},
-		description: "Takes a single parameter value and returns its value after removing space character(s) from left.",
+		description: "Takes a single parameter value and returns its value after removing leading space character(s).",
 		block:       LeftTrimFunctionBlock{},
 	},
 	FunctionNameRightTrim: {
 		aliases:     []string{"rtrim", "righttrim"},
-		description: "Takes a single parameter value and returns its value after removing space character(s) from right.",
+		description: "Takes a single parameter value and returns its value after removing trailing space character(s).",
 		block:       RightTrimFunctionBlock{},
 	},
 	FunctionNameNow: {
@@ -245,7 +245,7 @@ var functionDefinitions = map[string]*FunctionDefinition{
 	},
 	FunctionNameExtract: {
 		aliases:     []string{"extract"},
-		description: "Returns the extracted component from date/time. extract allows the extraction of date, day, year, month and week from date/time. \nFor example, extract(atime, month) will extract 'month' from the access time of a file.",
+		description: "Returns the extracted component from date/time. extract allows the extraction of date, day, year, month and weekday from date/time. \nFor example, extract(atime, month) will extract 'month' from the access time of a file.",
 		block:       ExtractFunctionBlock{},
 	},
 	FunctionNameHoursDifference: {
@@ -270,7 +270,7 @@ var functionDefinitions = map[string]*FunctionDefinition{
 	},
 	FunctionNameConcat: {
 		aliases:     []string{"concat"},
-		description: "Takes variable number of parameter values and returns a string concatenated of all these value.",
+		description: "Takes variable number of parameter values and returns a string concatenated of all these values.",
 		block:       ConcatFunctionBlock{},
 	},
 	FunctionNameConcatWithSeparator: {
@@ -286,7 +286,7 @@ var functionDefinitions = map[string]*FunctionDefinition{
 	},
 	FunctionNameSubstring: {
 		aliases:     []string{"substr", "str"},
-		description: "Returns the substring from the main string. \nsubstr() takes 3 parameter values, first parameter value is the main string, second is the starting index (starting from 0) and the optional third \nparameter value is the end index(inclusive).",
+		description: "Returns a substring from the main string. \nsubstr() takes 3 parameter values, first parameter value is the main string, second is the starting index (starting from 0) and the optional third \nparameter value is the end index(inclusive).",
 		block:       SubstringFunctionBlock{},
 	},
 	FunctionNameReplace: {
@@ -301,7 +301,7 @@ var functionDefinitions = map[string]*FunctionDefinition{
 	},
 	FunctionNameCount: {
 		aliases:        []string{"count"},
-		description:    "count is an aggregate function that returns the total number of entries. It does not take any parameter.",
+		description:    "count is an aggregate function that returns the total number of entries in the source directory. It does not take any parameter.",
 		isAggregate:    true,
 		aggregateBlock: &CountFunctionBlock{},
 	},
@@ -313,25 +313,25 @@ var functionDefinitions = map[string]*FunctionDefinition{
 	},
 	FunctionNameSum: {
 		aliases:        []string{"summation", "sum"},
-		description:    "sum is an aggregate function that returns the sum of all the values corresponding to the provided parameter. \nFor example, sum(size) will return the total sum of file size.",
+		description:    "sum is an aggregate function that returns the sum of all the values corresponding to the provided parameter. \nFor example, sum(size) will return the sum of size of all the files in the source directory.",
 		isAggregate:    true,
 		aggregateBlock: &SumFunctionBlock{},
 	},
 	FunctionNameAverage: {
 		aliases:        []string{"average", "avg"},
-		description:    "average is an aggregate function that returns the average of all the values corresponding to the provided parameter. \nFor example, avg(size) will return the average file size.",
+		description:    "average is an aggregate function that returns the average of all the values corresponding to the provided parameter. \nFor example, avg(size) will return the average file size in the source directory.",
 		isAggregate:    true,
 		aggregateBlock: &AverageFunctionBlock{},
 	},
 	FunctionNameMin: {
 		aliases:        []string{"min"},
-		description:    "min is an aggregate function that returns the minimum of all the values corresponding to the provided parameter. \nFor example, min(size) will return the minimum file size.",
+		description:    "min is an aggregate function that returns the minimum of all the values corresponding to the provided parameter. \nFor example, min(size) will return the minimum file size in the source directory.",
 		isAggregate:    true,
 		aggregateBlock: &MinFunctionBlock{},
 	},
 	FunctionNameMax: {
 		aliases:        []string{"max"},
-		description:    "max is an aggregate function that returns the maximum of all the values corresponding to the provided parameter. \nFor example, max(size) will return the maximum file size.",
+		description:    "max is an aggregate function that returns the maximum of all the values corresponding to the provided parameter. \nFor example, max(size) will return the maximum file size in the source directory.",
 		isAggregate:    true,
 		aggregateBlock: &MaxFunctionBlock{},
 	},
