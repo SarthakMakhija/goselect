@@ -9,11 +9,12 @@ import (
 )
 
 var describeCmd = &cobra.Command{
-	Use:   "describe",
-	Short: "Describe an attribute or a function",
+	Use:     "describe",
+	Aliases: []string{"desc"},
+	Short:   "Describe an attribute or a function",
 	Example: `
 1. goselect describe -t=fname
-2. goselect describe -t=lower
+2. goselect desc -t=lower
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		tableWriter := table.NewWriter()

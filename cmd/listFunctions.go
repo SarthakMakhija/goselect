@@ -10,11 +10,15 @@ import (
 )
 
 var listFunctionsCmd = &cobra.Command{
-	Use:   "listFunctions",
-	Short: "List all the functions supported by goselect",
-	Long:  `List all the functions along with their aliases supported by goselect`,
+	Use:     "listFunctions",
+	Aliases: []string{"functions", "func", "fns"},
+	Short:   "List all the functions supported by goselect",
+	Long:    `List all the functions along with their aliases supported by goselect`,
 	Example: `
 1. goselect listFunctions --sorted=true
+2. goselect functions --sorted=true
+3. goselect func --sorted=true
+4. goselect fns --sorted=true
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		tableWriter := table.NewWriter()

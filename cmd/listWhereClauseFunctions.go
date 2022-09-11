@@ -10,11 +10,15 @@ import (
 )
 
 var listWhereClauseFunctionsCmd = &cobra.Command{
-	Use:   "listWhereClauseFunctions",
-	Short: "List all the functions supported by goselect in 'where' clause",
-	Long:  `List all the functions along with their aliases supported by goselect in 'where' clause`,
+	Use:     "listWhereClauseFunctions",
+	Aliases: []string{"wherefunctions", "wherefunc", "wherefns"},
+	Short:   "List all the functions supported by goselect in 'where' clause",
+	Long:    `List all the functions along with their aliases supported by goselect in 'where' clause`,
 	Example: `
 1. goselect listWhereClauseFunctions --sorted=true
+2. goselect wherefunctions --sorted=true
+3. goselect wherefunc --sorted=true
+4. goselect wherefns --sorted=true
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		tableWriter := table.NewWriter()

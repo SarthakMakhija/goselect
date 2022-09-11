@@ -9,10 +9,13 @@ import (
 )
 
 var listTimeFormatsCmd = &cobra.Command{
-	Use:   "listTimeFormats",
-	Short: "List the date/time formats supported by goselect",
+	Use:     "listTimeFormats",
+	Aliases: []string{"formats", "fmts"},
+	Short:   "List the date/time formats supported by goselect",
 	Example: `
 1. goselect listTimeFormats --sorted=true
+2. goselect formats --sorted=true
+3. goselect fmts --sorted=true
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		tableWriter := table.NewWriter()

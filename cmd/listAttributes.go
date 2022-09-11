@@ -10,11 +10,15 @@ import (
 )
 
 var listAttributesCmd = &cobra.Command{
-	Use:   "listAttributes",
-	Short: "List all the attributes supported by goselect",
-	Long:  `List all the attributes along with their aliases supported by goselect`,
+	Use:     "listAttributes",
+	Aliases: []string{"attributes", "attr", "attrs"},
+	Short:   "List all the attributes supported by goselect",
+	Long:    `List all the attributes along with their aliases supported by goselect`,
 	Example: `
 1. goselect listAttributes --sorted=true
+2. goselect attributes --sorted=true
+3. goselect attr --sorted=true
+4. goselect attrs --sorted=true
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		tableWriter := table.NewWriter()
