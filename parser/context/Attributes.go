@@ -48,7 +48,7 @@ var attributeDefinitions = map[string]*AttributeDefinition{
 	},
 	AttributeBaseName: {
 		aliases:     []string{"basename", "bname"},
-		description: "Returns the basename of the file. \nFor example, basename for 'sample.log' is 'sample'.",
+		description: "Returns the basename of the file. \nFor example, basename of 'sample.log' is 'sample'.",
 	},
 	AttributePath: {
 		aliases:     []string{"filepath", "path", "fpath"},
@@ -56,7 +56,7 @@ var attributeDefinitions = map[string]*AttributeDefinition{
 	},
 	AttributeAbsolutePath: {
 		aliases:     []string{"absolutepath", "apath", "abspath"},
-		description: "Returns the absolute path of the file. ",
+		description: "Returns the absolute path of the file.",
 	},
 	AttributeSize: {
 		aliases:     []string{"filesize", "size", "fsize"},
