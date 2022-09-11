@@ -229,3 +229,9 @@ goselect wherefns
 - Support for exporting the formatted result
   - [X] Console
   - [X] File
+
+# Planned features
+- Support for checking if a (text) file contains a specific term
+- Shortcuts for common extensions. `select * from . where eq(fileType, image)`. Here, `fileType` is an attribute that can be `image`, `archive` or `text`  
+- Improving table formatter to handle the formatting for large number of columns
+- Caching the expression results. This is useful for cases like `select lower(name) from . where eq(lower(name), sample)`. In this example, `lower(name)` need not be evaluated twice for a row 
