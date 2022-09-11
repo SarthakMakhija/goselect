@@ -16,11 +16,15 @@ func NewSource(tokenIterator *tokenizer.TokenIterator) (*Source, error) {
 	if directory, err := getDirectory(tokenIterator); err != nil {
 		return nil, err
 	} else {
-		if _, err := os.Stat(directory); err != nil {
+		if file, err := os.Stat(directory); err != nil {
 			if os.IsNotExist(err) {
 				return nil, fmt.Errorf(messages.ErrorMessageInaccessibleSource, directory)
 			} else {
 				return nil, err
+			}
+		} else {
+			if !file.IsDir() {
+				return nil, errors.New(messages.ErrorMessageSourceNotADirectory)
 			}
 		}
 		return &Source{Directory: directory}, nil

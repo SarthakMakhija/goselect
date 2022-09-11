@@ -61,6 +61,16 @@ func TestThrowsAnErrorForInaccessiblePath(t *testing.T) {
 	}
 }
 
+func TestThrowsAnErrorForSourcePathIfItIsNotADirectory(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "./Source.go"))
+
+	_, err := NewSource(tokens.Iterator())
+	if err == nil {
+		t.Fatalf("Expected an error given source path as a file, not a directory, received no error")
+	}
+}
+
 func TestThrowsAnErrorWithoutAnyTokens(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	_, err := NewSource(tokens.Iterator())
