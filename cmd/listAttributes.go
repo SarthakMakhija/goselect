@@ -13,6 +13,9 @@ var listAttributesCmd = &cobra.Command{
 	Use:   "listAttributes",
 	Short: "List all the attributes supported by goselect",
 	Long:  `List all the attributes along with their aliases supported by goselect`,
+	Example: `
+1. goselect listAttributes --sorted=true
+`,
 	Run: func(cmd *cobra.Command, args []string) {
 		tableWriter := table.NewWriter()
 		tableWriter.SetOutputMirror(os.Stdout)

@@ -11,6 +11,9 @@ import (
 var listTimeFormatsCmd = &cobra.Command{
 	Use:   "listTimeFormats",
 	Short: "List the date/time formats supported by goselect",
+	Example: `
+1. goselect listTimeFormats --sorted=true
+`,
 	Run: func(cmd *cobra.Command, args []string) {
 		tableWriter := table.NewWriter()
 		tableWriter.SetOutputMirror(os.Stdout)
