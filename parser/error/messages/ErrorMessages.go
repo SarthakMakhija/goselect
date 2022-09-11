@@ -25,11 +25,11 @@ const (
 	ErrorMessageAggregateFunctionInsideWhere              = "invalid where clause, aggregate functions are not supported in the where clause"
 	ErrorMessageMissingParameterInScalarFunctions         = "expected %v parameter(s) in the function %v but did not receive the required parameter(s)"
 	ErrorMessageIncorrectValueType                        = "expected a %v value type but was not"
-	ErrorMessageIncorrectEndIndexInSubstring              = "expected the end index to be greater than the from index in substr"
+	ErrorMessageIncorrectEndIndexInSubstring              = "expected the end index to be greater than the from index in the function 'substr'"
 	ErrorMessageIllegalFromToIndexInSubstring             = "expected the from and to index to be positive integers"
 	ErrorMessageExpectedNumericArgument                   = "expected numeric type argument value"
 	ErrorMessageExpectedNonZeroInDivide                   = "expected a non zero denominator in divide operation"
 	ErrorMessageFunctionNamePrefixWithExistingError       = "[Function %v], %s"
-	ErrorMessageIncorrectExtractionKey                    = "expected either of %v to be passed to extract as an extraction key"
+	ErrorMessageIncorrectExtractionKey                    = "expected either of %v to be passed to 'extract' as an extraction key"
 	ErrorMessageUnsupportedDateTimeFormat                 = "expected a supported date/time format id. Use CLI to check the supported date/time format ids"
 )
