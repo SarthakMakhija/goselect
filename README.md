@@ -42,7 +42,7 @@ Features that are different from SQL:
 - Export as json to a file
   ![Json](images/json_as_file.png)
 
-#FAQs
+# FAQs
 
 1. **How do I get a list of all the supported attributes?**
 
