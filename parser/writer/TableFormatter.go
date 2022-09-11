@@ -11,7 +11,7 @@ import (
 
 const (
 	minWidth          = 10
-	maxAvailableWidth = 300
+	maxAvailableWidth = 150
 )
 
 type TableFormatter struct {
