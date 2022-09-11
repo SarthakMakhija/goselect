@@ -16,7 +16,7 @@ import (
 var executeCmd = &cobra.Command{
 	Use:   "execute",
 	Short: "Execute a select query",
-	Long:  `Execute a select query. Select query syntax: select <columns> from <source directory> [where <condition>] [order by] [limit]`,
+	Long:  `Execute a select query. Select query syntax: select <attributes> from <source directory> [where <condition>] [order by] [limit]`,
 	Run: func(cmd *cobra.Command, args []string) {
 		errorColor := "\033[31m"
 
@@ -152,6 +152,6 @@ func init() {
 		"path",
 		"p",
 		"",
-		"specify the directory path. Use --path=<directoryPath>",
+		"specify the directory path to export the results. Use --path=<directoryPath>",
 	)
 }
