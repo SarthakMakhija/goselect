@@ -1065,6 +1065,15 @@ func TestIsText3(t *testing.T) {
 	}
 }
 
+func TestIsText4(t *testing.T) {
+	value, _ := NewFunctions().Execute("istext")
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != false {
+		t.Fatalf("Expected istext to be %v, received %v", false, actualValue)
+	}
+}
+
 func TestIsImage1(t *testing.T) {
 	value, _ := NewFunctions().Execute("isimage", StringValue("image/png"))
 
@@ -1085,6 +1094,15 @@ func TestIsImage2(t *testing.T) {
 
 func TestIsImage3(t *testing.T) {
 	value, _ := NewFunctions().Execute("isimage", StringValue("text/plain"))
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != false {
+		t.Fatalf("Expected isimage to be %v, received %v", false, actualValue)
+	}
+}
+
+func TestIsImage4(t *testing.T) {
+	value, _ := NewFunctions().Execute("isimage")
 
 	actualValue, _ := value.GetBoolean()
 	if actualValue != false {
@@ -1119,6 +1137,15 @@ func TestIsAudio3(t *testing.T) {
 	}
 }
 
+func TestIsAudio4(t *testing.T) {
+	value, _ := NewFunctions().Execute("isaudio")
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != false {
+		t.Fatalf("Expected isaudio to be %v, received %v", false, actualValue)
+	}
+}
+
 func TestIsVideo1(t *testing.T) {
 	value, _ := NewFunctions().Execute("isvideo", StringValue("video/mpeg"))
 
@@ -1143,5 +1170,50 @@ func TestIsVideo3(t *testing.T) {
 	actualValue, _ := value.GetBoolean()
 	if actualValue != false {
 		t.Fatalf("Expected isvideo to be %v, received %v", false, actualValue)
+	}
+}
+
+func TestIsVideo4(t *testing.T) {
+	value, _ := NewFunctions().Execute("isvideo")
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != false {
+		t.Fatalf("Expected isvideo to be %v, received %v", false, actualValue)
+	}
+}
+
+func TestIsPdf1(t *testing.T) {
+	value, _ := NewFunctions().Execute("ispdf", StringValue("application/pdf"))
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != true {
+		t.Fatalf("Expected ispdf to be %v, received %v", true, actualValue)
+	}
+}
+
+func TestIsPdf2(t *testing.T) {
+	value, _ := NewFunctions().Execute("ispdf", StringValue("application/x-pdf"))
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != true {
+		t.Fatalf("Expected ispdf to be %v, received %v", true, actualValue)
+	}
+}
+
+func TestIsPdf3(t *testing.T) {
+	value, _ := NewFunctions().Execute("ispdf", StringValue("text/plain"))
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != false {
+		t.Fatalf("Expected ispdf to be %v, received %v", false, actualValue)
+	}
+}
+
+func TestIsPdf4(t *testing.T) {
+	value, _ := NewFunctions().Execute("ispdf")
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != false {
+		t.Fatalf("Expected ispdf to be %v, received %v", false, actualValue)
 	}
 }

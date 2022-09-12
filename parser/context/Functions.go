@@ -81,6 +81,7 @@ const (
 	FunctionNameIsFileTypeImage     = "isimage"
 	FunctionNameIsFileTypeAudio     = "isaudio"
 	FunctionNameIsFileTypeVideo     = "isvideo"
+	FunctionNameIsFileTypePdf       = "ispdf"
 	FunctionNameCount               = "count"
 	FunctionNameCountDistinct       = "countdistinct"
 	FunctionNameSum                 = "sum"
@@ -304,7 +305,7 @@ var functionDefinitions = map[string]*FunctionDefinition{
 		block:       ReplaceAllFunctionBlock{},
 	},
 	FunctionNameIsFileTypeText: {
-		aliases:     []string{"istext"},
+		aliases:     []string{"istext", "istxt"},
 		description: "Returns true if the mime type of the file is text/plain, false otherwise.",
 		block:       IsFileTypeTextFunctionBlock{},
 	},
@@ -322,6 +323,11 @@ var functionDefinitions = map[string]*FunctionDefinition{
 		aliases:     []string{"isvideo"},
 		description: "Returns true if the mime type of the file is video, false otherwise.",
 		block:       IsFileTypeVideoFunctionBlock{},
+	},
+	FunctionNameIsFileTypePdf: {
+		aliases:     []string{"ispdf"},
+		description: "Returns true if the mime type of the file is pdf, false otherwise.",
+		block:       IsFileTypePdfFunctionBlock{},
 	},
 	FunctionNameCount: {
 		aliases:        []string{"count"},
