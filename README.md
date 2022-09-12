@@ -62,6 +62,16 @@ Features that are different from SQL:
 - Export as json to a file
   ![Json](images/json_as_file.png)
 
+# Additions in Version 0.0.2
+
+1. Support for getting the **mime type** from a file
+2. Support for various functions like `isPdf`, `isVideo`, `isText`, `isAudio` and `isImage` that work on the **mime type**
+
+## Example Queries for mime type
+
+1. select name, size, fmtsize, mime from ~/Documents/ where eq(isImage(mime), true)  order by 2 desc limit 10
+2. select name, size, fmtsize, mime from ~/Documents/ where eq(isPdf(mime), true)  order by 2 desc limit 10
+
 # FAQs
 
 1. **How do I get a list of all the supported attributes?**
@@ -231,8 +241,6 @@ goselect wherefns
   - [X] File
 
 # Planned features
-- Support for checking if a (text) file contains a specific term
-- Support for mime type attribute
 - Shortcuts for common extensions. `select * from . where eq(fileType, image)`. Here, `fileType` is an attribute that can be `image`, `archive` or `text`  
 - Improving table formatter to handle the formatting for large number of columns
 - Caching the expression results. This is useful for cases like `select lower(name) from . where eq(lower(name), sample)`. In this example, `lower(name)` need not be evaluated twice for a row 
