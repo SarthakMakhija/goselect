@@ -1037,3 +1037,111 @@ func TestSubstringWithIllegalTo(t *testing.T) {
 		t.Fatalf("Expected an error on executing substring with illegal to")
 	}
 }
+
+func TestIsText1(t *testing.T) {
+	value, _ := NewFunctions().Execute("istext", StringValue("text/plain"))
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != true {
+		t.Fatalf("Expected istext to be %v, received %v", true, actualValue)
+	}
+}
+
+func TestIsText2(t *testing.T) {
+	value, _ := NewFunctions().Execute("istext", StringValue("text/plain; charset=utf-8"))
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != true {
+		t.Fatalf("Expected istext to be %v, received %v", true, actualValue)
+	}
+}
+
+func TestIsText3(t *testing.T) {
+	value, _ := NewFunctions().Execute("istext", StringValue("image/png"))
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != false {
+		t.Fatalf("Expected istext to be %v, received %v", false, actualValue)
+	}
+}
+
+func TestIsImage1(t *testing.T) {
+	value, _ := NewFunctions().Execute("isimage", StringValue("image/png"))
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != true {
+		t.Fatalf("Expected isimage to be %v, received %v", true, actualValue)
+	}
+}
+
+func TestIsImage2(t *testing.T) {
+	value, _ := NewFunctions().Execute("isimage", StringValue("image/jpeg"))
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != true {
+		t.Fatalf("Expected isimage to be %v, received %v", true, actualValue)
+	}
+}
+
+func TestIsImage3(t *testing.T) {
+	value, _ := NewFunctions().Execute("isimage", StringValue("text/plain"))
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != false {
+		t.Fatalf("Expected isimage to be %v, received %v", false, actualValue)
+	}
+}
+
+func TestIsAudio1(t *testing.T) {
+	value, _ := NewFunctions().Execute("isaudio", StringValue("audio/webm"))
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != true {
+		t.Fatalf("Expected isaudio to be %v, received %v", true, actualValue)
+	}
+}
+
+func TestIsAudio2(t *testing.T) {
+	value, _ := NewFunctions().Execute("isaudio", StringValue("audio/amr"))
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != true {
+		t.Fatalf("Expected isaudio to be %v, received %v", true, actualValue)
+	}
+}
+
+func TestIsAudio3(t *testing.T) {
+	value, _ := NewFunctions().Execute("isaudio", StringValue("text/plain"))
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != false {
+		t.Fatalf("Expected isaudio to be %v, received %v", false, actualValue)
+	}
+}
+
+func TestIsVideo1(t *testing.T) {
+	value, _ := NewFunctions().Execute("isvideo", StringValue("video/mpeg"))
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != true {
+		t.Fatalf("Expected isvideo to be %v, received %v", true, actualValue)
+	}
+}
+
+func TestIsVideo2(t *testing.T) {
+	value, _ := NewFunctions().Execute("isvideo", StringValue("video/3gpp"))
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != true {
+		t.Fatalf("Expected isvideo to be %v, received %v", true, actualValue)
+	}
+}
+
+func TestIsVideo3(t *testing.T) {
+	value, _ := NewFunctions().Execute("isvideo", StringValue("text/plain"))
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != false {
+		t.Fatalf("Expected isvideo to be %v, received %v", false, actualValue)
+	}
+}

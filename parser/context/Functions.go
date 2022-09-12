@@ -77,6 +77,10 @@ const (
 	FunctionNameSubstring           = "substr"
 	FunctionNameReplace             = "replace"
 	FunctionNameReplaceAll          = "replaceall"
+	FunctionNameIsFileTypeText      = "isfiletypetext"
+	FunctionNameIsFileTypeImage     = "isimage"
+	FunctionNameIsFileTypeAudio     = "isaudio"
+	FunctionNameIsFileTypeVideo     = "isvideo"
 	FunctionNameCount               = "count"
 	FunctionNameCountDistinct       = "countdistinct"
 	FunctionNameSum                 = "sum"
@@ -298,6 +302,26 @@ var functionDefinitions = map[string]*FunctionDefinition{
 		aliases:     []string{"replaceall"},
 		description: "Replaces all the occurrences of an old string with the new string. \nFor example, replaceall(name, test, best) will replace all the occurrences of the string 'test' with 'best' in the file name.",
 		block:       ReplaceAllFunctionBlock{},
+	},
+	FunctionNameIsFileTypeText: {
+		aliases:     []string{"istext"},
+		description: "Returns true if the mime type of the file is text/plain, false otherwise.",
+		block:       IsFileTypeTextFunctionBlock{},
+	},
+	FunctionNameIsFileTypeImage: {
+		aliases:     []string{"isimage", "isimg"},
+		description: "Returns true if the mime type of the file is an image, false otherwise.",
+		block:       IsFileTypeImageFunctionBlock{},
+	},
+	FunctionNameIsFileTypeAudio: {
+		aliases:     []string{"isaudio"},
+		description: "Returns true if the mime type of the file is an audio, false otherwise.",
+		block:       IsFileTypeAudioFunctionBlock{},
+	},
+	FunctionNameIsFileTypeVideo: {
+		aliases:     []string{"isvideo"},
+		description: "Returns true if the mime type of the file is video, false otherwise.",
+		block:       IsFileTypeVideoFunctionBlock{},
 	},
 	FunctionNameCount: {
 		aliases:        []string{"count"},
