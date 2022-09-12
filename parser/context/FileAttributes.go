@@ -16,6 +16,7 @@ type EvaluatingValue struct {
 	value           Value
 	filePath        string
 	isEvaluated     bool
+	aliases         []string
 	evaluationBlock AttributeLazyEvaluationBlock
 }
 
@@ -47,8 +48,10 @@ func (fileAttributes *FileAttributes) Get(attribute string) Value {
 			return evaluatingValue.value
 		}
 		if value, err := evaluatingValue.evaluationBlock.evaluate(evaluatingValue.filePath); err != nil {
+			fileAttributes.setAllAliasesForEvaluatedAttribute(value, evaluatingValue.aliases)
 			return EmptyValue
 		} else {
+			fileAttributes.setAllAliasesForEvaluatedAttribute(value, evaluatingValue.aliases)
 			return value
 		}
 	}
@@ -61,74 +64,74 @@ func newFileAttributes() *FileAttributes {
 
 func (fileAttributes *FileAttributes) setName(file fs.FileInfo, attributes *AllAttributes) {
 	baseName := strings.Replace(file.Name(), filepath.Ext(file.Name()), "", 1)
-	fileAttributes.setAllAliasesForEvaluatedAttribute(AttributeName, StringValue(file.Name()), attributes)
-	fileAttributes.setAllAliasesForEvaluatedAttribute(AttributeBaseName, StringValue(baseName), attributes)
+	fileAttributes.setAllAliasesForEvaluatedAttribute(StringValue(file.Name()), attributes.aliasesFor(AttributeName))
+	fileAttributes.setAllAliasesForEvaluatedAttribute(StringValue(baseName), attributes.aliasesFor(AttributeBaseName))
 }
 
 func (fileAttributes *FileAttributes) setSize(file fs.FileInfo, attributes *AllAttributes) {
 	formattedSize := humanize.Bytes(uint64(file.Size()))
-	fileAttributes.setAllAliasesForEvaluatedAttribute(AttributeSize, Int64Value(file.Size()), attributes)
-	fileAttributes.setAllAliasesForEvaluatedAttribute(AttributeFormattedSize, StringValue(formattedSize), attributes)
+	fileAttributes.setAllAliasesForEvaluatedAttribute(Int64Value(file.Size()), attributes.aliasesFor(AttributeSize))
+	fileAttributes.setAllAliasesForEvaluatedAttribute(StringValue(formattedSize), attributes.aliasesFor(AttributeFormattedSize))
 }
 
 func (fileAttributes *FileAttributes) setFileType(directory string, file fs.FileInfo, attributes *AllAttributes) {
-	fileAttributes.setAllAliasesForEvaluatedAttribute(AttributeNameIsDir, booleanValueUsing(file.IsDir()), attributes)
-	fileAttributes.setAllAliasesForEvaluatedAttribute(AttributeNameIsFile, booleanValueUsing(file.Mode().IsRegular()), attributes)
-	fileAttributes.setAllAliasesForEvaluatedAttribute(AttributeNameIsSymbolicLink, booleanValueUsing(file.Mode()&os.ModeSymlink == os.ModeSymlink), attributes)
+	fileAttributes.setAllAliasesForEvaluatedAttribute(booleanValueUsing(file.IsDir()), attributes.aliasesFor(AttributeNameIsDir))
+	fileAttributes.setAllAliasesForEvaluatedAttribute(booleanValueUsing(file.Mode().IsRegular()), attributes.aliasesFor(AttributeNameIsFile))
+	fileAttributes.setAllAliasesForEvaluatedAttribute(booleanValueUsing(file.Mode()&os.ModeSymlink == os.ModeSymlink), attributes.aliasesFor(AttributeNameIsSymbolicLink))
 	if file.Mode().IsDir() {
 		newPath := fileAttributes.filePath(directory, file)
 		entries, _ := os.ReadDir(newPath)
-		fileAttributes.setAllAliasesForEvaluatedAttribute(AttributeNameIsEmpty, booleanValueUsing(len(entries) == 0), attributes)
+		fileAttributes.setAllAliasesForEvaluatedAttribute(booleanValueUsing(len(entries) == 0), attributes.aliasesFor(AttributeNameIsEmpty))
 	} else {
-		fileAttributes.setAllAliasesForEvaluatedAttribute(AttributeNameIsEmpty, booleanValueUsing(file.Size() == 0), attributes)
+		fileAttributes.setAllAliasesForEvaluatedAttribute(booleanValueUsing(file.Size() == 0), attributes.aliasesFor(AttributeNameIsEmpty))
 	}
 	hiddenFile, _ := platform.IsHiddenFile(file.Name())
-	fileAttributes.setAllAliasesForEvaluatedAttribute(AttributeNameIsHidden, booleanValueUsing(hiddenFile), attributes)
+	fileAttributes.setAllAliasesForEvaluatedAttribute(booleanValueUsing(hiddenFile), attributes.aliasesFor(AttributeNameIsHidden))
 }
 
 func (fileAttributes *FileAttributes) setTimes(file fs.FileInfo, attributes *AllAttributes) {
 	created, modified, accessed := platform.FileTimes(file)
-	fileAttributes.setAllAliasesForEvaluatedAttribute(AttributeCreatedTime, DateTimeValue(created), attributes)
-	fileAttributes.setAllAliasesForEvaluatedAttribute(AttributeModifiedTime, DateTimeValue(modified), attributes)
-	fileAttributes.setAllAliasesForEvaluatedAttribute(AttributeAccessedTime, DateTimeValue(accessed), attributes)
+	fileAttributes.setAllAliasesForEvaluatedAttribute(DateTimeValue(created), attributes.aliasesFor(AttributeCreatedTime))
+	fileAttributes.setAllAliasesForEvaluatedAttribute(DateTimeValue(modified), attributes.aliasesFor(AttributeModifiedTime))
+	fileAttributes.setAllAliasesForEvaluatedAttribute(DateTimeValue(accessed), attributes.aliasesFor(AttributeAccessedTime))
 }
 
 func (fileAttributes *FileAttributes) setPath(directory string, file fs.FileInfo, attributes *AllAttributes) {
 	newPath := fileAttributes.filePath(directory, file)
 	absolutePath, err := filepath.Abs(newPath)
 	if err == nil {
-		fileAttributes.setAllAliasesForEvaluatedAttribute(AttributeAbsolutePath, StringValue(absolutePath), attributes)
+		fileAttributes.setAllAliasesForEvaluatedAttribute(StringValue(absolutePath), attributes.aliasesFor(AttributeAbsolutePath))
 	}
-	fileAttributes.setAllAliasesForEvaluatedAttribute(AttributePath, StringValue(newPath), attributes)
+	fileAttributes.setAllAliasesForEvaluatedAttribute(StringValue(newPath), attributes.aliasesFor(AttributePath))
 }
 
 func (fileAttributes *FileAttributes) setExtension(file fs.FileInfo, attributes *AllAttributes) {
-	fileAttributes.setAllAliasesForEvaluatedAttribute(AttributeExtension, StringValue(filepath.Ext(file.Name())), attributes)
+	fileAttributes.setAllAliasesForEvaluatedAttribute(StringValue(filepath.Ext(file.Name())), attributes.aliasesFor(AttributeExtension))
 }
 
 func (fileAttributes *FileAttributes) setPermission(file fs.FileInfo, attributes *AllAttributes) {
-	fileAttributes.setAllAliasesForEvaluatedAttribute(AttributePermission, StringValue(file.Mode().Perm().String()), attributes)
+	fileAttributes.setAllAliasesForEvaluatedAttribute(StringValue(file.Mode().Perm().String()), attributes.aliasesFor(AttributePermission))
 
 	perm := filePermission(file.Mode().Perm())
-	fileAttributes.setAllAliasesForEvaluatedAttribute(AttributeUserRead, booleanValueUsing(perm.userRead()), attributes)
-	fileAttributes.setAllAliasesForEvaluatedAttribute(AttributeUserWrite, booleanValueUsing(perm.userWrite()), attributes)
-	fileAttributes.setAllAliasesForEvaluatedAttribute(AttributeUserExecute, booleanValueUsing(perm.userExecute()), attributes)
-	fileAttributes.setAllAliasesForEvaluatedAttribute(AttributeGroupRead, booleanValueUsing(perm.groupRead()), attributes)
-	fileAttributes.setAllAliasesForEvaluatedAttribute(AttributeGroupWrite, booleanValueUsing(perm.groupWrite()), attributes)
-	fileAttributes.setAllAliasesForEvaluatedAttribute(AttributeGroupExecute, booleanValueUsing(perm.groupExecute()), attributes)
-	fileAttributes.setAllAliasesForEvaluatedAttribute(AttributeOthersRead, booleanValueUsing(perm.othersRead()), attributes)
-	fileAttributes.setAllAliasesForEvaluatedAttribute(AttributeOthersWrite, booleanValueUsing(perm.othersWrite()), attributes)
-	fileAttributes.setAllAliasesForEvaluatedAttribute(AttributeOthersExecute, booleanValueUsing(perm.othersExecute()), attributes)
+	fileAttributes.setAllAliasesForEvaluatedAttribute(booleanValueUsing(perm.userRead()), attributes.aliasesFor(AttributeUserRead))
+	fileAttributes.setAllAliasesForEvaluatedAttribute(booleanValueUsing(perm.userWrite()), attributes.aliasesFor(AttributeUserWrite))
+	fileAttributes.setAllAliasesForEvaluatedAttribute(booleanValueUsing(perm.userExecute()), attributes.aliasesFor(AttributeUserExecute))
+	fileAttributes.setAllAliasesForEvaluatedAttribute(booleanValueUsing(perm.groupRead()), attributes.aliasesFor(AttributeGroupRead))
+	fileAttributes.setAllAliasesForEvaluatedAttribute(booleanValueUsing(perm.groupWrite()), attributes.aliasesFor(AttributeGroupWrite))
+	fileAttributes.setAllAliasesForEvaluatedAttribute(booleanValueUsing(perm.groupExecute()), attributes.aliasesFor(AttributeGroupExecute))
+	fileAttributes.setAllAliasesForEvaluatedAttribute(booleanValueUsing(perm.othersRead()), attributes.aliasesFor(AttributeOthersRead))
+	fileAttributes.setAllAliasesForEvaluatedAttribute(booleanValueUsing(perm.othersWrite()), attributes.aliasesFor(AttributeOthersWrite))
+	fileAttributes.setAllAliasesForEvaluatedAttribute(booleanValueUsing(perm.othersExecute()), attributes.aliasesFor(AttributeOthersExecute))
 }
 
 func (fileAttributes *FileAttributes) setBlock(file fs.FileInfo, attributes *AllAttributes) {
 	stat := file.Sys().(*syscall.Stat_t)
 	if stat != nil {
-		fileAttributes.setAllAliasesForEvaluatedAttribute(AttributeBlockSize, Int64Value(int64(stat.Blksize)), attributes)
-		fileAttributes.setAllAliasesForEvaluatedAttribute(AttributeBlocks, Int64Value(stat.Blocks), attributes)
+		fileAttributes.setAllAliasesForEvaluatedAttribute(Int64Value(int64(stat.Blksize)), attributes.aliasesFor(AttributeBlockSize))
+		fileAttributes.setAllAliasesForEvaluatedAttribute(Int64Value(stat.Blocks), attributes.aliasesFor(AttributeBlocks))
 	} else {
-		fileAttributes.setAllAliasesForEvaluatedAttribute(AttributeBlockSize, StringValue("NA"), attributes)
-		fileAttributes.setAllAliasesForEvaluatedAttribute(AttributeBlocks, StringValue("NA"), attributes)
+		fileAttributes.setAllAliasesForEvaluatedAttribute(StringValue("NA"), attributes.aliasesFor(AttributeBlockSize))
+		fileAttributes.setAllAliasesForEvaluatedAttribute(StringValue("NA"), attributes.aliasesFor(AttributeBlocks))
 	}
 }
 
@@ -162,31 +165,27 @@ func (fileAttributes *FileAttributes) setBlankUserGroup(attributes *AllAttribute
 }
 
 func (fileAttributes *FileAttributes) setUserId(userId string, attributes *AllAttributes) {
-	fileAttributes.setAllAliasesForEvaluatedAttribute(AttributeUserId, StringValue(userId), attributes)
+	fileAttributes.setAllAliasesForEvaluatedAttribute(StringValue(userId), attributes.aliasesFor(AttributeUserId))
 }
 
 func (fileAttributes *FileAttributes) setUserName(userName string, attributes *AllAttributes) {
-	fileAttributes.setAllAliasesForEvaluatedAttribute(AttributeUserName, StringValue(userName), attributes)
+	fileAttributes.setAllAliasesForEvaluatedAttribute(StringValue(userName), attributes.aliasesFor(AttributeUserName))
 }
 
 func (fileAttributes *FileAttributes) setGroupId(groupId string, attributes *AllAttributes) {
-	fileAttributes.setAllAliasesForEvaluatedAttribute(AttributeGroupId, StringValue(groupId), attributes)
+	fileAttributes.setAllAliasesForEvaluatedAttribute(StringValue(groupId), attributes.aliasesFor(AttributeGroupId))
 }
 
 func (fileAttributes *FileAttributes) setGroupName(groupName string, attributes *AllAttributes) {
-	fileAttributes.setAllAliasesForEvaluatedAttribute(AttributeGroupName, StringValue(groupName), attributes)
+	fileAttributes.setAllAliasesForEvaluatedAttribute(StringValue(groupName), attributes.aliasesFor(AttributeGroupName))
 }
 
 func (fileAttributes *FileAttributes) setMimeType(directory string, file fs.FileInfo, attributes *AllAttributes) {
 	fileAttributes.setAllAliasesForUnevaluatedAttribute(AttributeMimeType, fileAttributes.filePath(directory, file), attributes)
 }
 
-func (fileAttributes *FileAttributes) setAllAliasesForEvaluatedAttribute(
-	attribute string,
-	value Value,
-	attributes *AllAttributes,
-) {
-	for _, alias := range attributes.aliasesFor(attribute) {
+func (fileAttributes *FileAttributes) setAllAliasesForEvaluatedAttribute(value Value, aliases []string) {
+	for _, alias := range aliases {
 		fileAttributes.attributes[alias] = EvaluatingValue{value: value, isEvaluated: true}
 	}
 }
@@ -196,13 +195,14 @@ func (fileAttributes *FileAttributes) setAllAliasesForUnevaluatedAttribute(
 	filePath string,
 	attributes *AllAttributes,
 ) {
-	aliasesFor := attributes.aliasesFor(attribute)
+	aliases := attributes.aliasesFor(attribute)
 	definition := attributes.attributeDefinitionFor(attribute)
 
-	for _, alias := range aliasesFor {
+	for _, alias := range aliases {
 		fileAttributes.attributes[alias] = EvaluatingValue{
 			isEvaluated:     false,
 			filePath:        filePath,
+			aliases:         aliases,
 			evaluationBlock: definition.lazyEvaluationBlock,
 		}
 	}

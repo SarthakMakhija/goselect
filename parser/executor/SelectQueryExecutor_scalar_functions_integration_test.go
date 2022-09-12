@@ -569,7 +569,7 @@ func TestResultsWithProjectionsWithMimeType1(t *testing.T) {
 
 func TestResultsWithProjectionsWithMimeType2(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name), mimetype from ../resources/images", newContext)
+	aParser, err := parser.NewParser("select lower(name), mimetype from ../resources/images where eq(mimetype, image/png)", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
