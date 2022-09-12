@@ -312,3 +312,33 @@ func TestCreatedTime(t *testing.T) {
 		t.Fatalf("Expected created date/time to be %v, received %v", expected, actual)
 	}
 }
+
+func TestMimeType1(t *testing.T) {
+	file, err := os.Stat("../resources/TestResultsWithProjections/empty/Empty.log")
+	if err != nil {
+		panic(err)
+	}
+	context := NewContext(nil, NewAttributes())
+	fileAttributes := ToFileAttributes("../resources/TestResultsWithProjections/empty/", file, context)
+	mimeType := fileAttributes.Get(AttributeMimeType).GetAsString()
+	expected := "text/plain"
+
+	if mimeType != expected {
+		t.Fatalf("Expected mime type to be %v, received %v", expected, mimeType)
+	}
+}
+
+func TestMimeType2(t *testing.T) {
+	file, err := os.Stat("../../images/any_10.png")
+	if err != nil {
+		panic(err)
+	}
+	context := NewContext(nil, NewAttributes())
+	fileAttributes := ToFileAttributes("../../images", file, context)
+	mimeType := fileAttributes.Get(AttributeMimeType).GetAsString()
+	expected := "image/png"
+
+	if mimeType != expected {
+		t.Fatalf("Expected mime type to be %v, received %v", expected, mimeType)
+	}
+}
