@@ -232,6 +232,11 @@ goselect wherefns
   - [X] substr
   - [X] replace
   - [X] replaceAll
+  - [X] isText
+  - [X] isImage
+  - [X] isPdf
+  - [X] isAudio
+  - [X] isVideo
 - Support for formatting the results
   - [X] Json formatter
   - [X] Html formatter
