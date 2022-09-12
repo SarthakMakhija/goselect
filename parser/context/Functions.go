@@ -77,7 +77,7 @@ const (
 	FunctionNameSubstring           = "substr"
 	FunctionNameReplace             = "replace"
 	FunctionNameReplaceAll          = "replaceall"
-	FunctionNameIsFileTypeText      = "isfiletypetext"
+	FunctionNameIsFileTypeText      = "istext"
 	FunctionNameIsFileTypeImage     = "isimage"
 	FunctionNameIsFileTypeAudio     = "isaudio"
 	FunctionNameIsFileTypeVideo     = "isvideo"
