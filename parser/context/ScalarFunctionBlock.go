@@ -53,6 +53,11 @@ type ContainsFunctionBlock struct{}
 type SubstringFunctionBlock struct{}
 type ReplaceFunctionBlock struct{}
 type ReplaceAllFunctionBlock struct{}
+type IsFileTypeTextFunctionBlock struct{}
+type IsFileTypeImageFunctionBlock struct{}
+type IsFileTypeAudioFunctionBlock struct{}
+type IsFileTypeVideoFunctionBlock struct{}
+type IsFileTypePdfFunctionBlock struct{}
 
 func (receiver IdentityFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameIdentity, 1); err != nil {
@@ -425,6 +430,36 @@ func (r ReplaceAllFunctionBlock) run(args ...Value) (Value, error) {
 		return EmptyValue, err
 	}
 	return StringValue(strings.ReplaceAll(args[0].GetAsString(), args[1].GetAsString(), args[2].GetAsString())), nil
+}
+
+func (i IsFileTypeTextFunctionBlock) run(args ...Value) (Value, error) {
+	return booleanValueUsing(mimeTypeMatches("text/plain", args...)), nil
+}
+
+func (i IsFileTypeImageFunctionBlock) run(args ...Value) (Value, error) {
+	return booleanValueUsing(mimeTypeMatches("image/", args...)), nil
+}
+
+func (i IsFileTypeAudioFunctionBlock) run(args ...Value) (Value, error) {
+	return booleanValueUsing(mimeTypeMatches("audio/", args...)), nil
+}
+
+func (i IsFileTypeVideoFunctionBlock) run(args ...Value) (Value, error) {
+	return booleanValueUsing(mimeTypeMatches("video/", args...)), nil
+}
+
+func (i IsFileTypePdfFunctionBlock) run(args ...Value) (Value, error) {
+	return booleanValueUsing(
+		mimeTypeMatches("application/pdf", args...) || mimeTypeMatches("application/x-pdf", args...),
+	), nil
+}
+
+func mimeTypeMatches(expectedMimeType string, args ...Value) bool {
+	mimeType := ""
+	if len(args) >= 1 {
+		mimeType = args[0].GetAsString()
+	}
+	return strings.Contains(mimeType, expectedMimeType)
 }
 
 func (e ExtractFunctionBlock) run(args ...Value) (Value, error) {

@@ -3,8 +3,9 @@ package context
 import "strings"
 
 type AttributeDefinition struct {
-	aliases     []string
-	description string
+	aliases             []string
+	description         string
+	lazyEvaluationBlock AttributeLazyEvaluationBlock
 }
 
 const (
@@ -39,6 +40,7 @@ const (
 	AttributeUserName           = "username"
 	AttributeGroupId            = "groupid"
 	AttributeGroupName          = "groupname"
+	AttributeMimeType           = "mimetype"
 )
 
 var attributeDefinitions = map[string]*AttributeDefinition{
@@ -166,6 +168,11 @@ var attributeDefinitions = map[string]*AttributeDefinition{
 		aliases:     []string{"groupname", "gname"},
 		description: "Returns the group name.",
 	},
+	AttributeMimeType: {
+		aliases:             []string{"mimetype", "mime"},
+		description:         "Returns the mime type of a file.",
+		lazyEvaluationBlock: MimeTypeAttributeEvaluationBlock{},
+	},
 }
 
 type AllAttributes struct {
@@ -209,6 +216,14 @@ func (attributes *AllAttributes) aliasesFor(attribute string) []string {
 		return definition.aliases
 	}
 	return []string{}
+}
+
+func (attributes *AllAttributes) attributeDefinitionFor(attribute string) *AttributeDefinition {
+	definition, ok := attributeDefinitions[strings.ToLower(attribute)]
+	if ok {
+		return definition
+	}
+	return nil
 }
 
 func IsAWildcardAttribute(attribute string) bool {
