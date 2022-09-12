@@ -609,6 +609,28 @@ func TestResultsWithProjectionsWithMimeType3(t *testing.T) {
 	assertMatch(t, expected, queryResults)
 }
 
+func TestResultsWithProjectionsWithMimeType4(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select isdir, lower(name), mime from ../resources/TestResultsWithProjections/ where eq(istext(mime), true) order by 1 desc, 2 asc", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	expected := [][]context.Value{
+		{context.BooleanValue(false), context.StringValue("empty.log"), context.StringValue("text/plain")},
+		{context.BooleanValue(false), context.StringValue("testresultswithprojections_a.log"), context.StringValue("text/plain; charset=utf-8")},
+		{context.BooleanValue(false), context.StringValue("testresultswithprojections_a.txt"), context.StringValue("text/plain; charset=utf-8")},
+		{context.BooleanValue(false), context.StringValue("testresultswithprojections_b.log"), context.StringValue("text/plain; charset=utf-8")},
+		{context.BooleanValue(false), context.StringValue("testresultswithprojections_c.txt"), context.StringValue("text/plain; charset=utf-8")},
+		{context.BooleanValue(false), context.StringValue("testresultswithprojections_d.txt"), context.StringValue("text/plain; charset=utf-8")},
+	}
+	assertMatch(t, expected, queryResults)
+}
+
 func TestResultsWithProjectionsWithoutProperParametersToAFunction(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
 	aParser, err := parser.NewParser("select name, lower() from ../resources/TestResultsWithProjections/single", newContext)

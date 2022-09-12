@@ -433,32 +433,44 @@ func (r ReplaceAllFunctionBlock) run(args ...Value) (Value, error) {
 }
 
 func (i IsFileTypeTextFunctionBlock) run(args ...Value) (Value, error) {
-	return booleanValueUsing(mimeTypeMatches("text/plain", args...)), nil
+	if err := ensureNParametersOrError(args, FunctionNameIsFileTypeText, 1); err != nil {
+		return EmptyValue, err
+	}
+	return booleanValueUsing(mimeTypeMatches("text/plain", args[0])), nil
 }
 
 func (i IsFileTypeImageFunctionBlock) run(args ...Value) (Value, error) {
-	return booleanValueUsing(mimeTypeMatches("image/", args...)), nil
+	if err := ensureNParametersOrError(args, FunctionNameIsFileTypeImage, 1); err != nil {
+		return EmptyValue, err
+	}
+	return booleanValueUsing(mimeTypeMatches("image/", args[0])), nil
 }
 
 func (i IsFileTypeAudioFunctionBlock) run(args ...Value) (Value, error) {
-	return booleanValueUsing(mimeTypeMatches("audio/", args...)), nil
+	if err := ensureNParametersOrError(args, FunctionNameIsFileTypeAudio, 1); err != nil {
+		return EmptyValue, err
+	}
+	return booleanValueUsing(mimeTypeMatches("audio/", args[0])), nil
 }
 
 func (i IsFileTypeVideoFunctionBlock) run(args ...Value) (Value, error) {
-	return booleanValueUsing(mimeTypeMatches("video/", args...)), nil
+	if err := ensureNParametersOrError(args, FunctionNameIsFileTypeVideo, 1); err != nil {
+		return EmptyValue, err
+	}
+	return booleanValueUsing(mimeTypeMatches("video/", args[0])), nil
 }
 
 func (i IsFileTypePdfFunctionBlock) run(args ...Value) (Value, error) {
+	if err := ensureNParametersOrError(args, FunctionNameIsFileTypePdf, 1); err != nil {
+		return EmptyValue, err
+	}
 	return booleanValueUsing(
-		mimeTypeMatches("application/pdf", args...) || mimeTypeMatches("application/x-pdf", args...),
+		mimeTypeMatches("application/pdf", args[0]) || mimeTypeMatches("application/x-pdf", args[0]),
 	), nil
 }
 
-func mimeTypeMatches(expectedMimeType string, args ...Value) bool {
-	mimeType := ""
-	if len(args) >= 1 {
-		mimeType = args[0].GetAsString()
-	}
+func mimeTypeMatches(expectedMimeType string, arg Value) bool {
+	mimeType := arg.GetAsString()
 	return strings.Contains(mimeType, expectedMimeType)
 }
 

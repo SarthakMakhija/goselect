@@ -306,27 +306,27 @@ var functionDefinitions = map[string]*FunctionDefinition{
 	},
 	FunctionNameIsFileTypeText: {
 		aliases:     []string{"istext", "istxt"},
-		description: "Returns true if the mime type of the file is text/plain, false otherwise.",
+		description: "Returns true if the mime type of a file is text/plain, false otherwise.  \nFor example, the common use of this function is with mime attribute, istext(mime).",
 		block:       IsFileTypeTextFunctionBlock{},
 	},
 	FunctionNameIsFileTypeImage: {
 		aliases:     []string{"isimage", "isimg"},
-		description: "Returns true if the mime type of the file is an image, false otherwise.",
+		description: "Returns true if the mime type of a file is an image, false otherwise.  \nFor example, the common use of this function is with mime attribute, isimage(mime).",
 		block:       IsFileTypeImageFunctionBlock{},
 	},
 	FunctionNameIsFileTypeAudio: {
 		aliases:     []string{"isaudio"},
-		description: "Returns true if the mime type of the file is an audio, false otherwise.",
+		description: "Returns true if the mime type of a file is an audio, false otherwise.  \nFor example, the common use of this function is with mime attribute, isaudio(mime).",
 		block:       IsFileTypeAudioFunctionBlock{},
 	},
 	FunctionNameIsFileTypeVideo: {
 		aliases:     []string{"isvideo"},
-		description: "Returns true if the mime type of the file is video, false otherwise.",
+		description: "Returns true if the mime type of a file is video, false otherwise.  \nFor example, the common use of this function is with mime attribute, isvideo(mime).",
 		block:       IsFileTypeVideoFunctionBlock{},
 	},
 	FunctionNameIsFileTypePdf: {
 		aliases:     []string{"ispdf"},
-		description: "Returns true if the mime type of the file is pdf, false otherwise.",
+		description: "Returns true if the mime type of a file is pdf, false otherwise.  \nFor example, the common use of this function is with mime attribute, ispdf(mime).",
 		block:       IsFileTypePdfFunctionBlock{},
 	},
 	FunctionNameCount: {
