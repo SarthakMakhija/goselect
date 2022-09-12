@@ -550,6 +550,40 @@ func TestResultsWithProjectionsWithFormatSize(t *testing.T) {
 	assertMatch(t, expected, queryResults)
 }
 
+func TestResultsWithProjectionsWithMimeType1(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select lower(name), mimetype from ../resources/TestResultsWithProjections/single", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	expected := [][]context.Value{
+		{context.StringValue("testresultswithprojections_a.txt"), context.StringValue("text/plain; charset=utf-8")},
+	}
+	assertMatch(t, expected, queryResults)
+}
+
+func TestResultsWithProjectionsWithMimeType2(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select lower(name), mimetype from ../resources/images", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	expected := [][]context.Value{
+		{context.StringValue("where.png"), context.StringValue("image/png")},
+	}
+	assertMatch(t, expected, queryResults)
+}
+
 func TestResultsWithProjectionsWithoutProperParametersToAFunction(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
 	aParser, err := parser.NewParser("select name, lower() from ../resources/TestResultsWithProjections/single", newContext)
