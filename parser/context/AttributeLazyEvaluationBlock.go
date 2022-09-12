@@ -13,7 +13,7 @@ type MimeTypeAttributeEvaluationBlock struct{}
 func (m MimeTypeAttributeEvaluationBlock) evaluate(filePath string) (Value, error) {
 	mime, err := mimetype.DetectFile(filePath)
 	if err != nil {
-		return EmptyValue, nil
+		return StringValue("NA"), nil
 	}
 	return StringValue(mime.String()), nil
 }
