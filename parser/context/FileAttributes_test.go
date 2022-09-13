@@ -115,7 +115,7 @@ func TestFileSize(t *testing.T) {
 	}
 	context := NewContext(nil, NewAttributes())
 	fileAttributes := ToFileAttributes("../resources/TestResultsWithProjections/single/", file, context)
-	size := fileAttributes.Get(AttributeFormattedSize).GetAsString()
+	size := fileAttributes.Get(AttributeHumanReadableSize).GetAsString()
 
 	if size != "58 B" {
 		t.Fatalf("Expected file baseName to be %v, received %v", "58 B", size)
