@@ -74,7 +74,7 @@ func (fileAttributes *FileAttributes) setName(file fs.FileInfo, hiddenFile bool,
 }
 
 func (fileAttributes *FileAttributes) setSize(file fs.FileInfo, attributes *AllAttributes) {
-	formattedSize := humanize.Bytes(uint64(file.Size()))
+	formattedSize := humanize.IBytes(uint64(file.Size()))
 	fileAttributes.setAllAliasesForEvaluatedAttribute(Int64Value(file.Size()), attributes.aliasesFor(AttributeSize))
 	fileAttributes.setAllAliasesForEvaluatedAttribute(StringValue(formattedSize), attributes.aliasesFor(AttributeFormattedSize))
 }

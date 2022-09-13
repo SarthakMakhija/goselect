@@ -1,6 +1,8 @@
 package context
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestCompareTo1(t *testing.T) {
 	value := IntValue(10)
