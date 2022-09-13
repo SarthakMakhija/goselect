@@ -82,6 +82,7 @@ const (
 	FunctionNameIsFileTypeAudio     = "isaudio"
 	FunctionNameIsFileTypeVideo     = "isvideo"
 	FunctionNameIsFileTypePdf       = "ispdf"
+	FunctionNameFormatSize          = "formatsize"
 	FunctionNameCount               = "count"
 	FunctionNameCountDistinct       = "countdistinct"
 	FunctionNameSum                 = "sum"
@@ -328,6 +329,11 @@ var functionDefinitions = map[string]*FunctionDefinition{
 		aliases:     []string{"ispdf"},
 		description: "Returns true if the mime type of a file is pdf, false otherwise.  \nFor example, the common use of this function is with mime attribute, ispdf(mime).",
 		block:       IsFileTypePdfFunctionBlock{},
+	},
+	FunctionNameFormatSize: {
+		aliases:     []string{"formatsize", "fmtsize"},
+		description: "Returns a human readable file size in IEC units.  \nThese include B, KiB, MiB, GiB, TiB, PiB, EiB. This function takes a single parameter.",
+		block:       FormatSizeFunctionBlock{},
 	},
 	FunctionNameCount: {
 		aliases:        []string{"count"},

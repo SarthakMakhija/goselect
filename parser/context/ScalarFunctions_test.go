@@ -1217,3 +1217,21 @@ func TestIsPdf4(t *testing.T) {
 		t.Fatalf("Expected ispdf to be %v, received %v", false, actualValue)
 	}
 }
+
+func TestFormatSize1(t *testing.T) {
+	value, _ := NewFunctions().Execute("fmtsize", IntValue(4096))
+
+	actualValue := value.GetAsString()
+	if actualValue != "4.0 KiB" {
+		t.Fatalf("Expected fmtsize to be %v, received %v", "4 Kib", actualValue)
+	}
+}
+
+func TestFormatSize2(t *testing.T) {
+	value, _ := NewFunctions().Execute("fmtsize", IntValue(98969))
+
+	actualValue := value.GetAsString()
+	if actualValue != "97 KiB" {
+		t.Fatalf("Expected fmtsize to be %v, received %v", "4 Kib", actualValue)
+	}
+}

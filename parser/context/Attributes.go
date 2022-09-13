@@ -66,7 +66,7 @@ var attributeDefinitions = map[string]*AttributeDefinition{
 	},
 	AttributeHumanReadableSize: {
 		aliases:     []string{"humanreadablesize", "hsize"},
-		description: "Returns the human readable file size.",
+		description: "Returns a human readable file size in IEC units.  \nThese include B, KiB, MiB, GiB, TiB, PiB, EiB.",
 	},
 	AttributeNameIsDir: {
 		aliases:     []string{"isdir", "isdirectory"},

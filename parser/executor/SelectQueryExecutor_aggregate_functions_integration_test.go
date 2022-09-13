@@ -43,6 +43,23 @@ func TestResultsWithProjectionsIncludingAverageFunctionWithLimitReturningTheAver
 	assertMatch(t, expected, queryResults)
 }
 
+func TestResultsWithProjectionsIncludingAverage(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select fmtsize(avg(size)) from ../resources/TestResultsWithProjections/multi", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	expected := [][]context.Value{
+		{context.StringValue("61 B")},
+	}
+	assertMatch(t, expected, queryResults)
+}
+
 func TestResultsWithProjectionsIncludingAggregateFunctionInsideAScalar(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
 	aParser, err := parser.NewParser("select lower(count()) from ../resources/TestResultsWithProjections/multi order by 1", newContext)

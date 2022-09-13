@@ -4,6 +4,7 @@ import (
 	b64 "encoding/base64"
 	"errors"
 	"fmt"
+	"github.com/dustin/go-humanize"
 	"golang.org/x/text/cases"
 	"goselect/parser/error/messages"
 	"os"
@@ -58,6 +59,7 @@ type IsFileTypeImageFunctionBlock struct{}
 type IsFileTypeAudioFunctionBlock struct{}
 type IsFileTypeVideoFunctionBlock struct{}
 type IsFileTypePdfFunctionBlock struct{}
+type FormatSizeFunctionBlock struct{}
 
 func (receiver IdentityFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameIdentity, 1); err != nil {
@@ -467,6 +469,17 @@ func (i IsFileTypePdfFunctionBlock) run(args ...Value) (Value, error) {
 	return booleanValueUsing(
 		mimeTypeMatches("application/pdf", args[0]) || mimeTypeMatches("application/x-pdf", args[0]),
 	), nil
+}
+
+func (f FormatSizeFunctionBlock) run(args ...Value) (Value, error) {
+	if err := ensureNParametersOrError(args, FunctionNameFormatSize, 1); err != nil {
+		return EmptyValue, err
+	}
+	asFloat64, err := args[0].GetNumericAsFloat64()
+	if err != nil {
+		return EmptyValue, fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameFormatSize, err)
+	}
+	return StringValue(humanize.IBytes(uint64(asFloat64))), nil
 }
 
 func mimeTypeMatches(expectedMimeType string, arg Value) bool {
