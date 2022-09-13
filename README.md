@@ -237,6 +237,7 @@ goselect wherefns
   - [X] isPdf
   - [X] isAudio
   - [X] isVideo
+  - [X] fmtSize
 - Support for formatting the results
   - [X] Json formatter
   - [X] Html formatter
@@ -244,6 +245,11 @@ goselect wherefns
 - Support for exporting the formatted result
   - [X] Console
   - [X] File
+
+# Issues to be closed in the next release
+- Adopt consistent file size units (IEC)
+- Provide `fmtsize` as function that can be used to format `average file size` or the `sum of all file sizes`. Drop `fmtsize` from attribute list
+- Handle the issue of `name` and `extension` for hidden files 
 
 # Planned features
 - Support for checking if a (text) file contains a specific term
