@@ -77,8 +77,10 @@ func TestResultsWithProjectionsInNestedDirectories(t *testing.T) {
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.BooleanValue(true), context.StringValue("empty"), context.StringValue("../resources/TestResultsWithProjections/empty")},
+		{context.BooleanValue(true), context.StringValue("hidden"), context.StringValue("../resources/TestResultsWithProjections/hidden")},
 		{context.BooleanValue(true), context.StringValue("multi"), context.StringValue("../resources/TestResultsWithProjections/multi")},
 		{context.BooleanValue(true), context.StringValue("single"), context.StringValue("../resources/TestResultsWithProjections/single")},
+		{context.BooleanValue(false), context.StringValue(".make"), context.StringValue("../resources/TestResultsWithProjections/hidden/.Make")},
 		{context.BooleanValue(false), context.StringValue("empty.log"), context.StringValue("../resources/TestResultsWithProjections/empty/Empty.log")},
 		{context.BooleanValue(false), context.StringValue("testresultswithprojections_a.log"), context.StringValue("../resources/TestResultsWithProjections/multi/TestResultsWithProjections_A.log")},
 		{context.BooleanValue(false), context.StringValue("testresultswithprojections_a.txt"), context.StringValue("../resources/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")},
@@ -102,6 +104,7 @@ func TestResultsWithProjectionsInNestedDirectoriesWithOptionToTraverseNestedDire
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions().DisableNestedTraversal()).Execute()
 	expected := [][]context.Value{
 		{context.BooleanValue(true), context.StringValue("empty"), context.StringValue("../resources/TestResultsWithProjections/empty")},
+		{context.BooleanValue(true), context.StringValue("hidden"), context.StringValue("../resources/TestResultsWithProjections/hidden")},
 		{context.BooleanValue(true), context.StringValue("multi"), context.StringValue("../resources/TestResultsWithProjections/multi")},
 		{context.BooleanValue(true), context.StringValue("single"), context.StringValue("../resources/TestResultsWithProjections/single")},
 	}
@@ -122,8 +125,10 @@ func TestResultsWithProjectionsInNestedDirectoriesWithOptionToIgnoreTraversalOfD
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions().EnableNestedTraversal().DirectoriesToIgnoreTraversal([]string{"multi", "empty"})).Execute()
 	expected := [][]context.Value{
 		{context.BooleanValue(true), context.StringValue("empty"), context.StringValue("../resources/TestResultsWithProjections/empty")},
+		{context.BooleanValue(true), context.StringValue("hidden"), context.StringValue("../resources/TestResultsWithProjections/hidden")},
 		{context.BooleanValue(true), context.StringValue("multi"), context.StringValue("../resources/TestResultsWithProjections/multi")},
 		{context.BooleanValue(true), context.StringValue("single"), context.StringValue("../resources/TestResultsWithProjections/single")},
+		{context.BooleanValue(false), context.StringValue(".make"), context.StringValue("../resources/TestResultsWithProjections/hidden/.Make")},
 		{context.BooleanValue(false), context.StringValue("testresultswithprojections_a.txt"), context.StringValue("../resources/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")},
 	}
 	assertMatch(t, expected, queryResults)
@@ -597,8 +602,10 @@ func TestResultsWithProjectionsWithMimeType3(t *testing.T) {
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.BooleanValue(true), context.StringValue("empty"), context.StringValue("NA")},
+		{context.BooleanValue(true), context.StringValue("hidden"), context.StringValue("NA")},
 		{context.BooleanValue(true), context.StringValue("multi"), context.StringValue("NA")},
 		{context.BooleanValue(true), context.StringValue("single"), context.StringValue("NA")},
+		{context.BooleanValue(false), context.StringValue(".make"), context.StringValue("text/plain")},
 		{context.BooleanValue(false), context.StringValue("empty.log"), context.StringValue("text/plain")},
 		{context.BooleanValue(false), context.StringValue("testresultswithprojections_a.log"), context.StringValue("text/plain; charset=utf-8")},
 		{context.BooleanValue(false), context.StringValue("testresultswithprojections_a.txt"), context.StringValue("text/plain; charset=utf-8")},
@@ -621,6 +628,7 @@ func TestResultsWithProjectionsWithMimeType4(t *testing.T) {
 	}
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
+		{context.BooleanValue(false), context.StringValue(".make"), context.StringValue("text/plain")},
 		{context.BooleanValue(false), context.StringValue("empty.log"), context.StringValue("text/plain")},
 		{context.BooleanValue(false), context.StringValue("testresultswithprojections_a.log"), context.StringValue("text/plain; charset=utf-8")},
 		{context.BooleanValue(false), context.StringValue("testresultswithprojections_a.txt"), context.StringValue("text/plain; charset=utf-8")},

@@ -22,6 +22,20 @@ func TestFileName(t *testing.T) {
 	}
 }
 
+func TestFileNameForHiddenFile(t *testing.T) {
+	file, err := os.Stat("../resources/TestResultsWithProjections/hidden/.Make")
+	if err != nil {
+		panic(err)
+	}
+	context := NewContext(nil, NewAttributes())
+	fileAttributes := ToFileAttributes("../resources/TestResultsWithProjections/hidden/", file, context)
+	name := fileAttributes.Get(AttributeName).GetAsString()
+
+	if name != ".Make" {
+		t.Fatalf("Expected file name to be %v, received %v", ".Make", name)
+	}
+}
+
 func TestFileExtension(t *testing.T) {
 	file, err := os.Stat("../resources/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")
 	if err != nil {
@@ -36,6 +50,20 @@ func TestFileExtension(t *testing.T) {
 	}
 }
 
+func TestFileExtensionForHiddenFile(t *testing.T) {
+	file, err := os.Stat("../resources/TestResultsWithProjections/hidden/.Make")
+	if err != nil {
+		panic(err)
+	}
+	context := NewContext(nil, NewAttributes())
+	fileAttributes := ToFileAttributes("../resources/TestResultsWithProjections/hidden/.Make", file, context)
+	extension := fileAttributes.Get(AttributeExtension).GetAsString()
+
+	if extension != "" {
+		t.Fatalf("Expected file extension to be %v, received %v", "", extension)
+	}
+}
+
 func TestFileBaseName(t *testing.T) {
 	file, err := os.Stat("../resources/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")
 	if err != nil {
@@ -47,6 +75,20 @@ func TestFileBaseName(t *testing.T) {
 
 	if baseName != "TestResultsWithProjections_A" {
 		t.Fatalf("Expected file baseName to be %v, received %v", "TestResultsWithProjections_A", baseName)
+	}
+}
+
+func TestFileBaseNameForHiddenFile(t *testing.T) {
+	file, err := os.Stat("../resources/TestResultsWithProjections/hidden/.Make")
+	if err != nil {
+		panic(err)
+	}
+	context := NewContext(nil, NewAttributes())
+	fileAttributes := ToFileAttributes("../resources/TestResultsWithProjections/hidden/", file, context)
+	baseName := fileAttributes.Get(AttributeBaseName).GetAsString()
+
+	if baseName != ".Make" {
+		t.Fatalf("Expected file baseName to be %v, received %v", ".Make", baseName)
 	}
 }
 

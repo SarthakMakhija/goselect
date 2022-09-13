@@ -26,9 +26,10 @@ type FileAttributes struct {
 
 func ToFileAttributes(directory string, file fs.FileInfo, ctx *ParsingApplicationContext) *FileAttributes {
 	fileAttributes := newFileAttributes()
+	hiddenFile, _ := platform.IsHiddenFile(file.Name())
 
-	fileAttributes.setName(file, ctx.allAttributes)
-	fileAttributes.setExtension(file, ctx.allAttributes)
+	fileAttributes.setName(file, hiddenFile, ctx.allAttributes)
+	fileAttributes.setExtension(file, hiddenFile, ctx.allAttributes)
 	fileAttributes.setSize(file, ctx.allAttributes)
 	fileAttributes.setFileType(directory, file, ctx.allAttributes)
 	fileAttributes.setTimes(file, ctx.allAttributes)
@@ -62,10 +63,14 @@ func newFileAttributes() *FileAttributes {
 	return &FileAttributes{attributes: make(map[string]EvaluatingValue)}
 }
 
-func (fileAttributes *FileAttributes) setName(file fs.FileInfo, attributes *AllAttributes) {
-	baseName := strings.Replace(file.Name(), filepath.Ext(file.Name()), "", 1)
+func (fileAttributes *FileAttributes) setName(file fs.FileInfo, hiddenFile bool, attributes *AllAttributes) {
 	fileAttributes.setAllAliasesForEvaluatedAttribute(StringValue(file.Name()), attributes.aliasesFor(AttributeName))
-	fileAttributes.setAllAliasesForEvaluatedAttribute(StringValue(baseName), attributes.aliasesFor(AttributeBaseName))
+	if hiddenFile {
+		fileAttributes.setAllAliasesForEvaluatedAttribute(StringValue(file.Name()), attributes.aliasesFor(AttributeBaseName))
+	} else {
+		baseName := strings.Replace(file.Name(), filepath.Ext(file.Name()), "", 1)
+		fileAttributes.setAllAliasesForEvaluatedAttribute(StringValue(baseName), attributes.aliasesFor(AttributeBaseName))
+	}
 }
 
 func (fileAttributes *FileAttributes) setSize(file fs.FileInfo, attributes *AllAttributes) {
@@ -105,8 +110,12 @@ func (fileAttributes *FileAttributes) setPath(directory string, file fs.FileInfo
 	fileAttributes.setAllAliasesForEvaluatedAttribute(StringValue(newPath), attributes.aliasesFor(AttributePath))
 }
 
-func (fileAttributes *FileAttributes) setExtension(file fs.FileInfo, attributes *AllAttributes) {
-	fileAttributes.setAllAliasesForEvaluatedAttribute(StringValue(filepath.Ext(file.Name())), attributes.aliasesFor(AttributeExtension))
+func (fileAttributes *FileAttributes) setExtension(file fs.FileInfo, hiddenFile bool, attributes *AllAttributes) {
+	if hiddenFile {
+		fileAttributes.setAllAliasesForEvaluatedAttribute(StringValue(""), attributes.aliasesFor(AttributeExtension))
+	} else {
+		fileAttributes.setAllAliasesForEvaluatedAttribute(StringValue(filepath.Ext(file.Name())), attributes.aliasesFor(AttributeExtension))
+	}
 }
 
 func (fileAttributes *FileAttributes) setPermission(file fs.FileInfo, attributes *AllAttributes) {

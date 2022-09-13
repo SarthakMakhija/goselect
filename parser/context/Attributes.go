@@ -231,5 +231,5 @@ func IsAWildcardAttribute(attribute string) bool {
 }
 
 func AttributesOnWildcard() []string {
-	return []string{AttributeBaseName, AttributeExtension, AttributeFormattedSize, AttributeAbsolutePath}
+	return []string{AttributeName, AttributeExtension, AttributeFormattedSize, AttributeAbsolutePath}
 }
