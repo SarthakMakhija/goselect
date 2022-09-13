@@ -1,7 +1,6 @@
 package context
 
 import (
-	"github.com/dustin/go-humanize"
 	"goselect/parser/context/platform"
 	"io/fs"
 	"os"
@@ -74,9 +73,7 @@ func (fileAttributes *FileAttributes) setName(file fs.FileInfo, hiddenFile bool,
 }
 
 func (fileAttributes *FileAttributes) setSize(file fs.FileInfo, attributes *AllAttributes) {
-	formattedSize := humanize.IBytes(uint64(file.Size()))
 	fileAttributes.setAllAliasesForEvaluatedAttribute(Int64Value(file.Size()), attributes.aliasesFor(AttributeSize))
-	fileAttributes.setAllAliasesForEvaluatedAttribute(StringValue(formattedSize), attributes.aliasesFor(AttributeHumanReadableSize))
 }
 
 func (fileAttributes *FileAttributes) setFileType(directory string, file fs.FileInfo, attributes *AllAttributes) {

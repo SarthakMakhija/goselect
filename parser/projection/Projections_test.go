@@ -74,7 +74,7 @@ func TestAllAttributes3(t *testing.T) {
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "*"))
 
 	projections, _ := NewProjections(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
-	expected := []string{context.AttributeName, context.AttributeExtension, context.AttributeHumanReadableSize, context.AttributeAbsolutePath}
+	expected := []string{context.AttributeName, context.AttributeExtension, context.AttributeSize, context.AttributeAbsolutePath}
 
 	if !reflect.DeepEqual(expected, projections.DisplayableAttributes()) {
 		t.Fatalf("Expected attributes to be %v, received %v", expected, projections.DisplayableAttributes())
@@ -88,7 +88,7 @@ func TestAllAttributes4(t *testing.T) {
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "name"))
 
 	projections, _ := NewProjections(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
-	expected := []string{context.AttributeName, context.AttributeExtension, context.AttributeHumanReadableSize, context.AttributeAbsolutePath, "name"}
+	expected := []string{context.AttributeName, context.AttributeExtension, context.AttributeSize, context.AttributeAbsolutePath, "name"}
 
 	if !reflect.DeepEqual(expected, projections.DisplayableAttributes()) {
 		t.Fatalf("Expected attributes to be %v, received %v", expected, projections.DisplayableAttributes())

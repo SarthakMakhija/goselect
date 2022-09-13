@@ -14,7 +14,6 @@ const (
 	AttributePath               = "path"
 	AttributeAbsolutePath       = "absolutepath"
 	AttributeSize               = "size"
-	AttributeHumanReadableSize  = "humanreadablesize"
 	AttributeNameIsDir          = "isdirectory"
 	AttributeNameIsFile         = "isfile"
 	AttributeNameIsHidden       = "ishidden"
@@ -63,10 +62,6 @@ var attributeDefinitions = map[string]*AttributeDefinition{
 	AttributeSize: {
 		aliases:     []string{"filesize", "size", "fsize"},
 		description: "Returns the file size in bytes.",
-	},
-	AttributeHumanReadableSize: {
-		aliases:     []string{"humanreadablesize", "hsize"},
-		description: "Returns a human readable file size in IEC units.  \nThese include B, KiB, MiB, GiB, TiB, PiB, EiB.",
 	},
 	AttributeNameIsDir: {
 		aliases:     []string{"isdir", "isdirectory"},
@@ -231,5 +226,5 @@ func IsAWildcardAttribute(attribute string) bool {
 }
 
 func AttributesOnWildcard() []string {
-	return []string{AttributeName, AttributeExtension, AttributeHumanReadableSize, AttributeAbsolutePath}
+	return []string{AttributeName, AttributeExtension, AttributeSize, AttributeAbsolutePath}
 }
