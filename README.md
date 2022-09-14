@@ -247,10 +247,10 @@ goselect wherefns
   - [X] File
 
 # Issues to be closed in the next release
-- Adopt consistent file size units (IEC)
-- Provide `fmtsize` as function that can be used to format `average file size` or the `sum of all file sizes`. Drop `fmtsize` from attribute list
-- Handle the issue of `name` and `extension` for hidden files
-- Change the attributes that are returned on `*` projection
+- [X] Adopt consistent file size units (IEC)
+- [X] Provide `fmtsize` as function that can be used to format `average file size` or the `sum of all file sizes`. Drop `fmtsize` from attribute list
+- [X] Handle the issue of `name` and `extension` for hidden files
+- [X] Change the attributes that are returned on `*` projection
 
 # Planned features
 - Support for checking if a (text) file contains a specific term
