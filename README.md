@@ -2,6 +2,8 @@
 `goselect` provides SQL like 'select' interface for file systems.
 
 # Examples 
+
+```SQL
 - select * from .
 - select * from . limit 10
 - select name, size from . where gt(size, 1024)
@@ -9,6 +11,8 @@
 - select name, size from . where gt(size, 1024) order by 2 
 - select name, size from . where gt(size, 1024) order by 2 limit 10
 - select name, size from . where or(like(name, result.*), eq(isdir, true)) order by 2 limit 10
+```
+
 
 # Feature overview 
 
@@ -69,8 +73,10 @@ Features that are different from SQL:
 
 ## Example Queries for mime type
 
+```SQL
 1. select name, size, hsize, mime from ~/Documents/ where eq(isImage(mime), true)  order by 2 desc limit 10
 2. select name, size, hsize, mime from ~/Documents/ where eq(isPdf(mime), true)  order by 2 desc limit 10
+```
 
 # FAQs
 
@@ -167,10 +173,12 @@ goselect wherefns
 # All the supported features
 
 - Support for `where` clause
+  ```SQL
   - [X] select * from /home/apps where eq(add(2,3), 5)
   - [X] select * from /home/apps where eq(lower(ext), .log)
   - [X] select * from /home/apps where ne(lower(ext), .log)
   - [X] `where` clause supports functions for comparison like `eq`, `le`, `lt`, `ge`, `gt`, `ne`, `contains`, `or`, `and` and `not`
+  ```
 - Support for projections
   - [X] projections with attribute name: `name`, `size`
   - [X] projections with alias in attribute name: `fName` instead of `name`
