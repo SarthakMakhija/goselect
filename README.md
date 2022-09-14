@@ -40,18 +40,18 @@ Features that are different from SQL:
 # Installation on macOS
 
 **Download the current release**
-- `wget -o - https://github.com/SarthakMakhija/goselect/releases/download/v0.0.2/goselect_0.0.2_Darwin_all.tar.gz`
+- `wget -o - https://github.com/SarthakMakhija/goselect/releases/download/v0.0.3/goselect_0.0.3_Darwin_all.tar.gz`
 
 **Unzip the release in a directory**
-- `mkdir goselect && tar xvf goselect_0.0.2_Darwin_all.tar.gz -C goselect`
+- `mkdir goselect && tar xvf goselect_0.0.3_Darwin_all.tar.gz -C goselect`
 
 # Installation on Linux (amd64)
 
 **Download the current release**
-- `wget -o - https://github.com/SarthakMakhija/goselect/releases/download/v0.0.2/goselect_0.0.2_Linux_x86_64.tar.gz`
+- `wget -o - https://github.com/SarthakMakhija/goselect/releases/download/v0.0.3/goselect_0.0.3_Linux_x86_64.tar.gz`
 
 **Unzip the release in a directory**
-- `mkdir goselect && tar xvf goselect_0.0.2_Linux_x86_64.tar.gz -C goselect`
+- `mkdir goselect && tar xvf goselect_0.0.3_Linux_x86_64.tar.gz -C goselect`
 
 # Screenshots
 - Limit clause
