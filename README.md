@@ -66,7 +66,16 @@ Features that are different from SQL:
 - Export as json to a file
   ![Json](images/json_as_file.png)
 
-# Additions in Version 0.0.2
+
+# Changes in Version 0.0.3
+
+1. Adoption of consistent file size units. File size is now reported in IEC units: (B, KiB, MiB, GiB, TiB, PiB, EiB) 
+2. No extension is reported for hidden files
+3. `*` projection now returns `name`, `extension`, `size` and `absolute path`
+4. `fmtsize` is provided as a function that can be used to format the file size
+5. `hsize` (or human-readable size) is dropped from attribute list in favor of the function `fmtsize`. Use `fmtsize(size)` to get the formatted size 
+
+# Changes in Version 0.0.2
 
 1. Support for getting the **mime type** from a file
 2. Support for various functions like `isPdf`, `isVideo`, `isText`, `isAudio` and `isImage` that work on the **mime type**
@@ -253,13 +262,7 @@ goselect wherefns
 - Support for exporting the formatted result
   - [X] Console
   - [X] File
-
-# Issues to be closed in the next release
-- [X] Adopt consistent file size units (IEC)
-- [X] Provide `fmtsize` as function that can be used to format `average file size` or the `sum of all file sizes`. Drop `fmtsize` from attribute list
-- [X] Handle the issue of `name` and `extension` for hidden files
-- [X] Change the attributes that are returned on `*` projection
-
+  
 # Planned features
 - Support for matching file size with units. For example, `select * from . where gt(size, parsesize(15 Mb))` Or `select * from . where gt(size, parsesize(15 Mib))`
 - Support for inferring the input data type. For example, at this point `lt(-0.12, -0.11)` does not work. The expressions `-0.12` and `-0.11` are treated as strings. This features aims to infer the data types of expressions during parsing
