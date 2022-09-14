@@ -69,8 +69,8 @@ Features that are different from SQL:
 
 ## Example Queries for mime type
 
-1. select name, size, fmtsize, mime from ~/Documents/ where eq(isImage(mime), true)  order by 2 desc limit 10
-2. select name, size, fmtsize, mime from ~/Documents/ where eq(isPdf(mime), true)  order by 2 desc limit 10
+1. select name, size, hsize, mime from ~/Documents/ where eq(isImage(mime), true)  order by 2 desc limit 10
+2. select name, size, hsize, mime from ~/Documents/ where eq(isPdf(mime), true)  order by 2 desc limit 10
 
 # FAQs
 
@@ -253,6 +253,7 @@ goselect wherefns
 - [X] Change the attributes that are returned on `*` projection
 
 # Planned features
+- Support for matching file size with units. For example, `select * from . where gt(size, parsesize(15 Mb))` Or `select * from . where gt(size, parsesize(15 Mib))`
 - Support for checking if a (text) file contains a specific term
 - Improving table formatter to handle the formatting for large number of columns
 - Caching the expression results. This is useful for cases like `select lower(name) from . where eq(lower(name), sample)`. In this example, `lower(name)` need not be evaluated twice for a row 
