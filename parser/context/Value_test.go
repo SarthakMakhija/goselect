@@ -129,3 +129,66 @@ func TestCompareTo14(t *testing.T) {
 		t.Fatalf("Expected boolean and string values to not match but they did")
 	}
 }
+
+func TestCompareTo15(t *testing.T) {
+	value := Float64Value(10.1)
+	other := IntValue(10)
+
+	if value.CompareTo(other) == 0 {
+		t.Fatalf("Expected int and float64 values to not match but they did")
+	}
+}
+
+func TestCompareTo16(t *testing.T) {
+	value := Float64Value(10)
+	other := IntValue(10)
+
+	if value.CompareTo(other) != 0 {
+		t.Fatalf("Expected int and float64 values to match but they did not")
+	}
+}
+
+func TestCompareTo17(t *testing.T) {
+	other := Int64Value(10)
+	value := Uint32Value(10)
+
+	if value.CompareTo(other) != 0 {
+		t.Fatalf("Expected int64 and uint32 values to match but they did not")
+	}
+}
+
+func TestCompareTo18(t *testing.T) {
+	value := Float64Value(3.27)
+	other := StringValue("3.27")
+
+	if value.CompareTo(other) != 0 {
+		t.Fatalf("Expected string and float64 values to match but they did not")
+	}
+}
+
+func TestCompareTo19(t *testing.T) {
+	value := Int64Value(3)
+	other := StringValue("3")
+
+	if value.CompareTo(other) != 0 {
+		t.Fatalf("Expected string and int64 values to match but they did not")
+	}
+}
+
+func TestCompareTo20(t *testing.T) {
+	value := Uint32Value(3)
+	other := StringValue("3")
+
+	if value.CompareTo(other) != 0 {
+		t.Fatalf("Expected string and uint32 values to match but they did not")
+	}
+}
+
+func TestCompareTo21(t *testing.T) {
+	value := Float64Value(3.0)
+	other := Int64Value(3)
+
+	if value.CompareTo(other) != 0 {
+		t.Fatalf("Expected float64 and int64 values to match but they did not")
+	}
+}
