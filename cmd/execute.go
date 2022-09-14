@@ -20,8 +20,8 @@ var executeCmd = &cobra.Command{
 	Long:    `Execute a select query. Select query syntax: select <attributes> from <source directory> [where <condition>] [order by] [limit]`,
 	Example: `
 1. goselect execute -q='select filename, absolutepath from .'
-2. goselect ex -q='select name, size, fmtsize from . where like(name, results.*) order by 2'
-3. goselect ex -q='select name, size, fmtsize from . where or(like(name, results.*), gt(size, 2048)) order by 2 limit 5'
+2. goselect ex -q='select name, size, extension from . where like(name, results.*) order by 2'
+3. goselect ex -q='select name, size, extension from . where or(like(name, results.*), gt(size, 2048)) order by 2 limit 5'
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		errorColor := "\033[31m"

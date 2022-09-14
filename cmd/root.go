@@ -11,8 +11,8 @@ var rootCmd = &cobra.Command{
 	Short: "SQL like select interface for file system",
 	Example: `
 1. goselect execute -q='select filename, absolutepath from .'
-2. goselect ex -q='select name, size, fmtsize from . where like(name, results.*) order by 2'
-3. goselect ex -q='select name, size, fmtsize from . where or(like(name, results.*), gt(size, 2048)) order by 2 limit 5'
+2. goselect ex -q='select name, size, extension from . where like(name, results.*) order by 2'
+3. goselect ex -q='select name, size, extension from . where or(like(name, results.*), gt(size, 2048)) order by 2 limit 5'
 `,
 	Long: `goselect provides SQL like 'select' interface for file systems. 
 The syntax for select query is: select <attributes> from <directory> [where condition] [order by] [limit].
