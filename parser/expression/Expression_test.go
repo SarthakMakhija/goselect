@@ -6,11 +6,71 @@ import (
 	"testing"
 )
 
+func TestExpressionsWithAttributes(t *testing.T) {
+	expressions := ExpressionsWithAttributes([]string{"name", "size"})
+	attributes := Expressions{Expressions: expressions}.DisplayableAttributes()
+	expected := []string{"name", "size"}
+
+	if !reflect.DeepEqual(expected, attributes) {
+		t.Fatalf("Expected attributes to be %v, received %v", expected, attributes)
+	}
+}
+
+func TestExpressionsWithFunction(t *testing.T) {
+	expression := ExpressionWithFunctionInstance(FunctionInstanceWith(
+		"lower",
+		[]*Expression{ExpressionWithValue("content")},
+		nil,
+		false,
+	))
+	attributes := Expressions{Expressions: []*Expression{expression}}.DisplayableAttributes()
+	expected := []string{"lower(content)"}
+
+	if !reflect.DeepEqual(expected, attributes) {
+		t.Fatalf("Expected attributes to be %v, received %v", expected, attributes)
+	}
+}
+
 func TestExpressionsDisplayableAttributesWithAttributeName(t *testing.T) {
 	expressions := Expressions{Expressions: []*Expression{ExpressionWithAttribute("name")}}
 	attributes := expressions.DisplayableAttributes()
 	expected := []string{"name"}
 
+	if !reflect.DeepEqual(expected, attributes) {
+		t.Fatalf("Expected attributes to be %v, received %v", expected, attributes)
+	}
+}
+
+func TestExpressionsDisplayableAttributesWithValue(t *testing.T) {
+	expressions := Expressions{Expressions: []*Expression{ExpressionWithValue("2")}}
+	attributes := expressions.DisplayableAttributes()
+	expected := []string{"2"}
+
+	if !reflect.DeepEqual(expected, attributes) {
+		t.Fatalf("Expected attributes to be %v, received %v", expected, attributes)
+	}
+}
+
+func TestExpressionsDisplayableAttributesFunctionContainingAValue(t *testing.T) {
+	fun := &FunctionInstance{
+		name: "lower",
+		args: []*Expression{ExpressionWithValue("2")},
+	}
+	expressions := Expressions{Expressions: []*Expression{ExpressionWithFunctionInstance(fun)}}
+	attributes := expressions.DisplayableAttributes()
+	expected := []string{"lower(2)"}
+	if !reflect.DeepEqual(expected, attributes) {
+		t.Fatalf("Expected attributes to be %v, received %v", expected, attributes)
+	}
+}
+
+func TestExpressionsDisplayableAttributesFunctionWithoutAnyParamaterValues(t *testing.T) {
+	fun := &FunctionInstance{
+		name: "now",
+	}
+	expressions := Expressions{Expressions: []*Expression{ExpressionWithFunctionInstance(fun)}}
+	attributes := expressions.DisplayableAttributes()
+	expected := []string{"now()"}
 	if !reflect.DeepEqual(expected, attributes) {
 		t.Fatalf("Expected attributes to be %v, received %v", expected, attributes)
 	}
@@ -180,6 +240,97 @@ func TestExpressionEvaluate5(t *testing.T) {
 	}
 }
 
+func TestExpressionEvaluate6(t *testing.T) {
+	expression := ExpressionWithFunctionInstance(&FunctionInstance{
+		name: "concat",
+		args: []*Expression{
+			ExpressionWithFunctionInstance(&FunctionInstance{
+				name: "lower",
+				args: []*Expression{
+					ExpressionWithValue("CONTENT"),
+				},
+			}),
+			ExpressionWithValue("##"),
+			ExpressionWithFunctionInstance(&FunctionInstance{
+				name: "upper",
+				args: []*Expression{
+					ExpressionWithValue("value"),
+				},
+			}),
+		},
+	})
+	expressions := Expressions{Expressions: []*Expression{expression, ExpressionWithValue("content")}}
+	functions := context.NewFunctions()
+
+	values, _, _, _ := expressions.EvaluateWith(nil, functions)
+	expected := "content##VALUE"
+
+	actual := values[0].GetAsString()
+	if actual != expected {
+		t.Fatalf("Expected function evaluation to return %v, received %v", expected, actual)
+	}
+
+	expected = "content"
+	actual = values[1].GetAsString()
+	if actual != expected {
+		t.Fatalf("Expected function evaluation to return %v, received %v", expected, actual)
+	}
+}
+
+func TestExpressionEvaluate7(t *testing.T) {
+	expression := ExpressionWithFunctionInstance(&FunctionInstance{
+		name: "concat",
+	})
+	expressions := Expressions{Expressions: []*Expression{expression}}
+	functions := context.NewFunctions()
+
+	_, _, _, err := expressions.EvaluateWith(nil, functions)
+	if err == nil {
+		t.Fatalf("Expected an error while evaluating the expression but received none")
+	}
+}
+
+func TestExpressionEvaluate8(t *testing.T) {
+	expression := ExpressionWithFunctionInstance(&FunctionInstance{
+		name: "concat",
+	})
+	functions := context.NewFunctions()
+
+	_, err, _ := expression.Evaluate(nil, functions)
+	if err == nil {
+		t.Fatalf("Expected an error while evaluating the expression but received none")
+	}
+}
+
+func TestExpressionEvaluate9(t *testing.T) {
+	expression := ExpressionWithFunctionInstance(&FunctionInstance{
+		name: "min",
+		args: []*Expression{
+			ExpressionWithFunctionInstance(&FunctionInstance{
+				name: "lower",
+			}),
+		},
+	})
+	functions := context.NewFunctions()
+
+	_, err, _ := expression.Evaluate(nil, functions)
+	if err == nil {
+		t.Fatalf("Expected an error while evaluating the expression but received none")
+	}
+}
+
+func TestExpressionEvaluate10(t *testing.T) {
+	expression := ExpressionWithFunctionInstance(&FunctionInstance{
+		name: "min",
+	})
+	functions := context.NewFunctions()
+
+	_, err, _ := expression.Evaluate(nil, functions)
+	if err == nil {
+		t.Fatalf("Expected an error while evaluating the expression but received none")
+	}
+}
+
 func TestExpressionFullyEvaluate(t *testing.T) {
 	functions := context.NewFunctions()
 	expression := ExpressionWithFunctionInstance(&FunctionInstance{
@@ -299,11 +450,19 @@ func TestExpressionEvaluateWithNestingOfAverage(t *testing.T) {
 	}
 }
 
-func TestExpressionHasAnAggregateFalse(t *testing.T) {
+func TestExpressionHasAnAggregateFalse1(t *testing.T) {
 	expression := ExpressionWithFunctionInstance(&FunctionInstance{
 		name: "lower",
 		args: []*Expression{},
 	})
+	hasAnAggregate := expression.HasAnAggregate()
+	if hasAnAggregate != false {
+		t.Fatalf("Expected hasAnAggregate to be false, received true")
+	}
+}
+
+func TestExpressionHasAnAggregateFalse2(t *testing.T) {
+	expression := ExpressionWithAttribute("name")
 	hasAnAggregate := expression.HasAnAggregate()
 	if hasAnAggregate != false {
 		t.Fatalf("Expected hasAnAggregate to be false, received true")
@@ -413,6 +572,84 @@ func TestAggregationCount3(t *testing.T) {
 	aggregationCount := expressions.AggregationCount()
 	if aggregationCount != 2 {
 		t.Fatalf("Expected aggregation count to be %v, received %v", 2, aggregationCount)
+	}
+}
+
+func TestCountOfExpression1(t *testing.T) {
+	fun := &FunctionInstance{
+		name: "now",
+	}
+	expressions := Expressions{Expressions: []*Expression{ExpressionWithFunctionInstance(fun)}}
+	count := expressions.Count()
+
+	if count != 1 {
+		t.Fatalf("Expected expression count to be %v, received %v", 1, count)
+	}
+}
+
+func TestCountOfExpression2(t *testing.T) {
+	expressions := Expressions{Expressions: []*Expression{
+		ExpressionWithFunctionInstance(&FunctionInstance{
+			name: "lower",
+			args: []*Expression{
+				ExpressionWithValue("CONTENT"),
+			},
+		}),
+		ExpressionWithFunctionInstance(&FunctionInstance{
+			name: "lower",
+			args: []*Expression{
+				ExpressionWithValue("CONTENT"),
+			},
+		}),
+	}}
+	count := expressions.Count()
+
+	if count != 2 {
+		t.Fatalf("Expected expression count to be %v, received %v", 2, count)
+	}
+}
+
+func TestExpressionAtAValidIndex(t *testing.T) {
+	expressions := Expressions{Expressions: []*Expression{
+		ExpressionWithFunctionInstance(&FunctionInstance{
+			name: "lower",
+			args: []*Expression{
+				ExpressionWithValue("CONTENT"),
+			},
+		}),
+		ExpressionWithFunctionInstance(&FunctionInstance{
+			name: "upper",
+			args: []*Expression{
+				ExpressionWithValue("CONTENT"),
+			},
+		}),
+	}}
+	expression := expressions.ExpressionAt(0)
+	attribute := Expressions{Expressions: []*Expression{expression}}.DisplayableAttributes()[0]
+
+	if attribute != "lower(CONTENT)" {
+		t.Fatalf("Expected expression at index 0 to be %v, received %v", "lower(CONTENT)", attribute)
+	}
+}
+
+func TestExpressionAtAnInvalidIndex(t *testing.T) {
+	expressions := Expressions{Expressions: []*Expression{
+		ExpressionWithFunctionInstance(&FunctionInstance{
+			name: "lower",
+			args: []*Expression{
+				ExpressionWithValue("CONTENT"),
+			},
+		}),
+		ExpressionWithFunctionInstance(&FunctionInstance{
+			name: "upper",
+			args: []*Expression{
+				ExpressionWithValue("CONTENT"),
+			},
+		}),
+	}}
+	expression := expressions.ExpressionAt(2)
+	if expression != nil {
+		t.Fatalf("Expected expression to be nil, but was not")
 	}
 }
 

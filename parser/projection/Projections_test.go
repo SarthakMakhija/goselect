@@ -330,6 +330,18 @@ func TestProjectionHasAllAggregates2(t *testing.T) {
 	}
 }
 
+func TestProjectionHasAllAggregates3(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "name"))
+
+	projections, _ := NewProjections(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	hasAllAggregates := projections.HasAllAggregates()
+
+	if hasAllAggregates != false {
+		t.Fatalf("Expected hasAllAggregates to be %v, received %v", false, hasAllAggregates)
+	}
+}
+
 func TestProjectionEvaluation1(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "upper"))
