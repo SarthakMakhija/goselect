@@ -1,7 +1,6 @@
 package where
 
 import (
-	"fmt"
 	"goselect/parser/context"
 	"goselect/parser/tokenizer"
 	"testing"
@@ -252,7 +251,7 @@ func TestWhereWithMultipleExpressionsAfterWhere(t *testing.T) {
 	}
 }
 
-func TestWhereWithAFunctionWithoutOpeningParentheses(t *testing.T) {
+func TestWhereWithAFunctionWithInvalidWhereClause(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "where"))
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "contains"))
@@ -260,7 +259,20 @@ func TestWhereWithAFunctionWithoutOpeningParentheses(t *testing.T) {
 	functions := context.NewFunctions()
 	_, err := NewWhere(tokens.Iterator(), context.NewContext(functions, context.NewAttributes()))
 
-	fmt.Println(err)
+	if err == nil {
+		t.Fatalf("Expected an error clause given invalid where clause")
+	}
+}
+
+func TestWhereWithAFunctionWithoutOpeningParentheses(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "where"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "contains"))
+	tokens.Add(tokenizer.NewToken(tokenizer.Comma, ","))
+
+	functions := context.NewFunctions()
+	_, err := NewWhere(tokens.Iterator(), context.NewContext(functions, context.NewAttributes()))
+
 	if err == nil {
 		t.Fatalf("Expected an error clause given where clause with improperly closed function")
 	}
