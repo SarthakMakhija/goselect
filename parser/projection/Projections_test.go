@@ -31,13 +31,49 @@ func TestThrowsAnErrorWithInvalidProjection(t *testing.T) {
 
 func TestThrowsAnErrorWithMissingParenthesesAfterAFunction(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
-	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "date"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "cdate"))
 	tokens.Add(tokenizer.NewToken(tokenizer.Comma, ","))
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "2"))
 
 	_, err := NewProjections(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
 	if err == nil {
 		t.Fatalf("Expected an error given no parentheses after the function name but received none")
+	}
+}
+
+func TestThrowsAnErrorWithMissingParenthesesAfterANestedFunction(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "lower"))
+	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "lower"))
+	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
+
+	_, err := NewProjections(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	if err == nil {
+		t.Fatalf("Expected an error given no parentheses after the function name but received none")
+	}
+}
+
+func TestThrowsAnErrorGivenInvalidProjection1(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "date"))
+	tokens.Add(tokenizer.NewToken(tokenizer.Comma, ","))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "2"))
+
+	_, err := NewProjections(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	if err == nil {
+		t.Fatalf("Expected an error invalid projection")
+	}
+}
+
+func TestThrowsAnErrorGivenInvalidProjection2(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "lower"))
+	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
+
+	_, err := NewProjections(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	if err == nil {
+		t.Fatalf("Expected an error invalid projection")
 	}
 }
 
@@ -291,5 +327,68 @@ func TestProjectionHasAllAggregates2(t *testing.T) {
 
 	if hasAllAggregates != true {
 		t.Fatalf("Expected hasAllAggregates to be %v, received %v", true, hasAllAggregates)
+	}
+}
+
+func TestProjectionEvaluation1(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "upper"))
+	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "content"))
+	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
+
+	projections, _ := NewProjections(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	values, _, _, _ := projections.EvaluateWith(nil, context.NewFunctions())
+	expected := "CONTENT"
+
+	if values[0].GetAsString() != expected {
+		t.Fatalf("Expected projection evaluation to be %v, received %v", expected, values[0].GetAsString())
+	}
+}
+
+func TestProjectionEvaluation2(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "substr"))
+	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, ".log"))
+	tokens.Add(tokenizer.NewToken(tokenizer.Comma, ","))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "1"))
+	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
+
+	projections, _ := NewProjections(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	values, _, _, _ := projections.EvaluateWith(nil, context.NewFunctions())
+	expected := "log"
+
+	if values[0].GetAsString() != expected {
+		t.Fatalf("Expected projection evaluation to be %v, received %v", expected, values[0].GetAsString())
+	}
+}
+
+func TestProjectionEvaluation3(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "count"))
+	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
+	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
+
+	projections, _ := NewProjections(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	values, _, _, _ := projections.EvaluateWith(nil, context.NewFunctions())
+	expected := "1"
+
+	if values[0].GetAsString() != expected {
+		t.Fatalf("Expected projection evaluation to be %v, received %v", expected, values[0].GetAsString())
+	}
+}
+
+func TestProjectionEvaluation4(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "count"))
+	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
+	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
+
+	projections, _ := NewProjections(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	_, fullyEvaluated, _, _ := projections.EvaluateWith(nil, context.NewFunctions())
+
+	if fullyEvaluated[0] != false {
+		t.Fatalf("Expected fullyEvaluated to be %v, received %v", fullyEvaluated, fullyEvaluated[0])
 	}
 }
