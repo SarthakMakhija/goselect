@@ -27,6 +27,17 @@ func TestCreatesANewSourceFromCurrentDirectory2(t *testing.T) {
 	}
 }
 
+func TestCreatesANewSourceFromCurrentDirectory3(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.From, "from"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "."))
+
+	source, _ := NewSource(tokens.Iterator())
+	if source.Directory != "." {
+		t.Fatalf("Expected Directory path to be %v, received %v", ".", source.Directory)
+	}
+}
+
 func TestCreatesANewSourceWithHomeDirectorySymbol1(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "~"))
