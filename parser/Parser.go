@@ -25,10 +25,6 @@ func (selectQuery *SelectQuery) IsLimitDefined() bool {
 	return selectQuery.Limit != nil
 }
 
-func (selectQuery *SelectQuery) IsWhereDefined() bool {
-	return selectQuery.Where != nil
-}
-
 func (selectQuery *SelectQuery) IsOrderDefined() bool {
 	return selectQuery.Order != nil
 }

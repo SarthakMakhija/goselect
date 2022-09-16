@@ -100,14 +100,11 @@ func (selectQueryExecutor SelectQueryExecutor) executeFrom(directory string, max
 }
 
 func (selectQueryExecutor SelectQueryExecutor) shouldChoose(fileAttributes *context.FileAttributes) (bool, error) {
-	if selectQueryExecutor.query.IsWhereDefined() {
-		if passesWhere, err := selectQueryExecutor.query.Where.EvaluateWith(fileAttributes, selectQueryExecutor.context.AllFunctions()); err != nil {
-			return false, err
-		} else if passesWhere {
-			return true, nil
-		} else {
-			return false, nil
-		}
+	if passesWhere, err := selectQueryExecutor.query.Where.EvaluateWith(fileAttributes, selectQueryExecutor.context.AllFunctions()); err != nil {
+		return false, err
+	} else if passesWhere {
+		return true, nil
+	} else {
+		return false, nil
 	}
-	return true, nil
 }

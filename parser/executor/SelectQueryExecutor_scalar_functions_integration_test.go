@@ -9,6 +9,38 @@ import (
 	"testing"
 )
 
+func TestWithAnErrorWhileRunningAProjection(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select lower() from .", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	_, err = NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	if err == nil {
+		t.Fatalf("Expected an error while executing a query with lower function without any parameter values but did not receive any error")
+	}
+}
+
+func TestWithAnErrorWhileRunningWhere(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select lower(name) from . where eq(lower(), test)", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	_, err = NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	if err == nil {
+		t.Fatalf("Expected an error while executing a query with lower function without any parameter values but did not receive any error")
+	}
+}
+
 func TestResultsWithProjections1(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
 	aParser, err := parser.NewParser("select name, now() from ../resources/TestResultsWithProjections/single", newContext)

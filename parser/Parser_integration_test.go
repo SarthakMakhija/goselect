@@ -104,6 +104,16 @@ func TestParsesAQueryIntoAnASTWithMultipleProjections(t *testing.T) {
 	}
 }
 
+func TestParsesAQueryIntoAnASTWithoutAWhereClause(t *testing.T) {
+	parser, _ := NewParser("SELECT name, lower(name) from ~", context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	selectStatement, _ := parser.Parse()
+
+	where := selectStatement.Where
+	if where.Display() != "" {
+		t.Fatalf("Expected where clause to be blank, received %v", where.Display())
+	}
+}
+
 func TestParsesAQueryIntoAnASTWithWhereClause(t *testing.T) {
 	parser, _ := NewParser("SELECT name, lower(name) from ~ where contains(lower(name), log)", context.NewContext(context.NewFunctions(), context.NewAttributes()))
 	selectStatement, _ := parser.Parse()
