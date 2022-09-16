@@ -19,9 +19,15 @@
 `goselect` provides various features including:
 1. Support for attribute aliases. For example, **filename** is same as **fname**
 2. Support for function aliases. For example, **lower** is same as **low**
-3. Support for various scalar functions like lower, upper, now, concat etc
-4. Support for various aggregate functions like count, countdistinct, average etc
-5. Support for exporting the results in **table**, **json** and **html** format
+3. Support for various string scalar functions like `lower`, `upper`, `concat`, `substr` etc
+4. Support for various comparison scalar functions `eq`, `le`, `lt`, `ge`, `gt` etc
+5. Support for various date based scalar functions `now`, `extract`, `parsedatetime`, `daysdifference` etc
+6. Support for various composite scalar functions `or`, `and`, `not` etc
+7. Support for various mime type scalar functions `isText`, `isPdf`, `isImage` etc
+8. Support for various aggregate functions like `count`, `countdistinct`, `average` etc
+9. Support for exporting the results in **table**, **json** and **html** format
+10. Support for performing select in nested directories
+11. Support for skipping directories like `.git` & `.github`
 
 # Differences between SQL select and goselect's select 
 
