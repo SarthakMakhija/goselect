@@ -23,3 +23,11 @@ func TestFileWriter(t *testing.T) {
 		t.Fatalf("Expected file content to be %v, received %v", expected, string(readBytes))
 	}
 }
+
+func TestFileWriterWithAnError(t *testing.T) {
+	_, err := NewFileWriter("/non-existing-dir/results.log")
+
+	if err == nil {
+		t.Fatalf("Expected an error while creating a file writer but received none")
+	}
+}
