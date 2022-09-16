@@ -56,6 +56,15 @@ func TestFunctionDoesNotContainATag(t *testing.T) {
 	}
 }
 
+func TestCanNotDetermineTagForAnUnsupportedFunction(t *testing.T) {
+	context := NewContext(NewFunctions(), nil)
+	containsATag := context.FunctionContainsATag("unknown", "where")
+
+	if containsATag != false {
+		t.Fatalf("Expected containsATag to be false but did it contained the tag")
+	}
+}
+
 func TestIsAnAggregateFunction(t *testing.T) {
 	context := NewContext(NewFunctions(), nil)
 	isAnAggregateFunction := context.IsAnAggregateFunction(FunctionNameMin)
@@ -74,12 +83,30 @@ func TestIsNotAnAggregateFunction(t *testing.T) {
 	}
 }
 
-func TestInitialStateOfAFunction(t *testing.T) {
+func TestIsNotAnAggregateFunctionForAnUnsupportedFunction(t *testing.T) {
+	context := NewContext(NewFunctions(), nil)
+	isAnAggregateFunction := context.IsAnAggregateFunction("unknown")
+
+	if isAnAggregateFunction != false {
+		t.Fatalf("Expected unknown to be not be an aggregate function but was")
+	}
+}
+
+func TestInitialStateOfAnAggregateFunction(t *testing.T) {
 	context := NewContext(NewFunctions(), nil)
 	initialState := context.InitialState(FunctionNameMin)
 
 	if initialState == nil {
 		t.Fatalf("Expected FunctionNameMin to have an initial state but it did not")
+	}
+}
+
+func TestInitialStateOfANonAggregareFunction(t *testing.T) {
+	context := NewContext(NewFunctions(), nil)
+	initialState := context.InitialState(FunctionNameLower)
+
+	if initialState != nil {
+		t.Fatalf("Expected FunctionNameLower to not have an initial state but it did")
 	}
 }
 
