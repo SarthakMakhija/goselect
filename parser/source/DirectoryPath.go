@@ -7,7 +7,7 @@ import (
 
 func ExpandDirectoryPath(path string) (string, error) {
 	if strings.HasPrefix(path, "~") {
-		if currentUser, err := user.Current(); err != nil {
+		if currentUser, err := currentUser(); err != nil {
 			return "", err
 		} else {
 			directory := currentUser.HomeDir + path[1:]
@@ -15,4 +15,18 @@ func ExpandDirectoryPath(path string) (string, error) {
 		}
 	}
 	return path, nil
+}
+
+var currentUserFunc = func() (*user.User, error) {
+	return user.Current()
+}
+
+func currentUser() (*user.User, error) {
+	return currentUserFunc()
+}
+
+func resetCurrentUser() {
+	currentUserFunc = func() (*user.User, error) {
+		return user.Current()
+	}
 }
