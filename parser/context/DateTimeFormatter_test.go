@@ -47,3 +47,10 @@ func TestParseDateTime5(t *testing.T) {
 		t.Fatalf("Expected an error while parsing a date/time in an unsupported Format")
 	}
 }
+
+func TestDateTimeSupportedFormats(t *testing.T) {
+	supportedFormats := SupportedFormats()
+	if len(supportedFormats) == 0 {
+		t.Fatalf("Expected length of supported formats to be greater than zero but was zer")
+	}
+}

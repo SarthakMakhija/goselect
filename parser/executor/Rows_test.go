@@ -4,6 +4,7 @@ import (
 	"goselect/parser/context"
 	"goselect/parser/expression"
 	"reflect"
+	"strings"
 	"testing"
 )
 
@@ -17,6 +18,17 @@ func TestEvaluatingRowAllAttributesThatAreFullyEvaluated(t *testing.T) {
 
 	if !reflect.DeepEqual(expected, attributes) {
 		t.Fatalf("Expected attributes to be %v, received %v", expected, attributes)
+	}
+}
+
+func TestEvaluatingRowAtAnIndexGreaterThanTotalNumberOfRows(t *testing.T) {
+	_ = context.NewContext(context.NewFunctions(), context.NewAttributes())
+	rows := emptyRows(context.NewFunctions(), 1)
+	rows.addRow([]context.Value{context.StringValue("someValue")}, []bool{true}, []*expression.Expression{})
+
+	row := rows.atIndex(1)
+	if len(row.attributeValues) != 0 {
+		t.Fatalf("Expected no attributes given row is accessed at an index beyond the total number of rows")
 	}
 }
 
@@ -102,5 +114,36 @@ func TestEvaluatingRowTotalAttributes(t *testing.T) {
 	totalAttributes := rows.RowIterator().Next().TotalAttributes()
 	if totalAttributes != 1 {
 		t.Fatalf("Expected total attrobutes to be %v, received %v", 1, totalAttributes)
+	}
+}
+
+func TestEvaluatingRowFullyEvaluationOfAnAttribute(t *testing.T) {
+	_ = context.NewContext(context.NewFunctions(), context.NewAttributes())
+	rows := emptyRows(context.NewFunctions(), 1)
+	rows.addRow(
+		[]context.Value{context.StringValue("someValue"), context.StringValue("test")},
+		[]bool{true, false},
+		[]*expression.Expression{
+			expression.ExpressionWithValue("someValue"),
+			expression.ExpressionWithFunctionInstance(expression.FunctionInstanceWith(
+				"min",
+				nil,
+				&context.FunctionState{Initial: context.StringValue("test")},
+				true,
+			)),
+		},
+	)
+
+	values := rows.RowIterator().Next().AllAttributes()
+	if values[0].GetAsString() != "someValue" {
+		t.Fatalf("Expected value after full evaluation to be %v, received %v", "someValue", values[0].GetAsString())
+	}
+
+	if !strings.Contains(values[1].GetAsString(), "expected 1 parameter(s) in the function min") {
+		t.Fatalf(
+			"Expected error string %v to contained in the values[1] but was not, received %v",
+			"expected 1 parameter(s) in the function min",
+			values[1].GetAsString(),
+		)
 	}
 }
