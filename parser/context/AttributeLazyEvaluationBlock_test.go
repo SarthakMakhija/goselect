@@ -1,6 +1,8 @@
 package context
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestMimeTypeAsText(t *testing.T) {
 	block := MimeTypeAttributeEvaluationBlock{}
@@ -19,5 +21,14 @@ func TestMimeTypeAsImage(t *testing.T) {
 
 	if value.GetAsString() != expected {
 		t.Fatalf("Expected mime type to be %v, received %v", expected, value.GetAsString())
+	}
+}
+
+func TestMimeTypeForANonExistingFile(t *testing.T) {
+	block := MimeTypeAttributeEvaluationBlock{}
+	value, _ := block.evaluate("non-existent")
+
+	if value.GetAsString() != "NA" {
+		t.Fatalf("Expected %v while determining the mime type of a non-existent file, received %v", "NA", value.GetAsString())
 	}
 }
