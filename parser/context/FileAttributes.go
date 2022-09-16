@@ -47,13 +47,9 @@ func (fileAttributes *FileAttributes) Get(attribute string) Value {
 		if evaluatingValue.isEvaluated {
 			return evaluatingValue.value
 		}
-		if value, err := evaluatingValue.evaluationBlock.evaluate(evaluatingValue.filePath); err != nil {
-			fileAttributes.setAllAliasesForEvaluatedAttribute(value, evaluatingValue.aliases)
-			return EmptyValue
-		} else {
-			fileAttributes.setAllAliasesForEvaluatedAttribute(value, evaluatingValue.aliases)
-			return value
-		}
+		value := evaluatingValue.evaluationBlock.evaluate(evaluatingValue.filePath)
+		fileAttributes.setAllAliasesForEvaluatedAttribute(value, evaluatingValue.aliases)
+		return value
 	}
 	return EmptyValue
 }

@@ -5,15 +5,15 @@ import (
 )
 
 type AttributeLazyEvaluationBlock interface {
-	evaluate(filePath string) (Value, error)
+	evaluate(filePath string) Value
 }
 
 type MimeTypeAttributeEvaluationBlock struct{}
 
-func (m MimeTypeAttributeEvaluationBlock) evaluate(filePath string) (Value, error) {
+func (m MimeTypeAttributeEvaluationBlock) evaluate(filePath string) Value {
 	mime, err := mimetype.DetectFile(filePath)
 	if err != nil {
-		return StringValue("NA"), nil
+		return StringValue("NA")
 	}
-	return StringValue(mime.String()), nil
+	return StringValue(mime.String())
 }

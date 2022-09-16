@@ -8,6 +8,20 @@ import (
 	"time"
 )
 
+func TestUnsupportedAttribute(t *testing.T) {
+	file, err := os.Stat("../resources/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")
+	if err != nil {
+		panic(err)
+	}
+	context := NewContext(nil, NewAttributes())
+	fileAttributes := ToFileAttributes("../resources/TestResultsWithProjections/single/", file, context)
+	value := fileAttributes.Get("unknown").GetAsString()
+
+	if value != "" {
+		t.Fatalf("Expected value for the unknown attribute to be blank, received %v", value)
+	}
+}
+
 func TestFileName(t *testing.T) {
 	file, err := os.Stat("../resources/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")
 	if err != nil {

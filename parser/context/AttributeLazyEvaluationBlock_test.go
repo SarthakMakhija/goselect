@@ -6,7 +6,7 @@ import (
 
 func TestMimeTypeAsText(t *testing.T) {
 	block := MimeTypeAttributeEvaluationBlock{}
-	value, _ := block.evaluate("./Value.go")
+	value := block.evaluate("./Value.go")
 	expected := "text/plain; charset=utf-8"
 
 	if value.GetAsString() != expected {
@@ -16,7 +16,7 @@ func TestMimeTypeAsText(t *testing.T) {
 
 func TestMimeTypeAsImage(t *testing.T) {
 	block := MimeTypeAttributeEvaluationBlock{}
-	value, _ := block.evaluate("../../images/any_10.png")
+	value := block.evaluate("../../images/any_10.png")
 	expected := "image/png"
 
 	if value.GetAsString() != expected {
@@ -26,7 +26,7 @@ func TestMimeTypeAsImage(t *testing.T) {
 
 func TestMimeTypeForANonExistingFile(t *testing.T) {
 	block := MimeTypeAttributeEvaluationBlock{}
-	value, _ := block.evaluate("non-existent")
+	value := block.evaluate("non-existent")
 
 	if value.GetAsString() != "NA" {
 		t.Fatalf("Expected %v while determining the mime type of a non-existent file, received %v", "NA", value.GetAsString())
