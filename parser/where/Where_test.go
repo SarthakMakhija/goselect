@@ -1,6 +1,7 @@
 package where
 
 import (
+	"fmt"
 	"goselect/parser/context"
 	"goselect/parser/tokenizer"
 	"testing"
@@ -190,7 +191,7 @@ func TestEvaluatesWhereClauseWithAnErrorGivenAFunctionOtherThanWhereClauseSuppor
 	_, err := NewWhere(tokens.Iterator(), context.NewContext(functions, context.NewAttributes()))
 
 	if err == nil {
-		t.Fatalf("Expected an error clause given an supported function in where clause")
+		t.Fatalf("Expected an error clause given an unsupported function in where clause")
 	}
 }
 
@@ -210,6 +211,85 @@ func TestEvaluatesWhereClauseWithAnErrorGivenAFunctionOtherThanWhereClauseSuppor
 	_, err := NewWhere(tokens.Iterator(), context.NewContext(functions, context.NewAttributes()))
 
 	if err == nil {
-		t.Fatalf("Expected an error clause given an supported function in where clause")
+		t.Fatalf("Expected an error clause given an unsupported function in where clause")
+	}
+}
+
+func TestWhereWithoutAnyExpressionAfterWhere(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "where"))
+
+	functions := context.NewFunctions()
+	_, err := NewWhere(tokens.Iterator(), context.NewContext(functions, context.NewAttributes()))
+
+	if err == nil {
+		t.Fatalf("Expected an error clause given where clause without any expression")
+	}
+}
+
+func TestWhereWithMultipleExpressionsAfterWhere(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "where"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "contains"))
+	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "\"Dummylog\""))
+	tokens.Add(tokenizer.NewToken(tokenizer.Comma, ","))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "log"))
+	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
+	tokens.Add(tokenizer.NewToken(tokenizer.Comma, ","))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "eq"))
+	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "1"))
+	tokens.Add(tokenizer.NewToken(tokenizer.Comma, ","))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "1"))
+	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
+
+	functions := context.NewFunctions()
+	_, err := NewWhere(tokens.Iterator(), context.NewContext(functions, context.NewAttributes()))
+
+	if err == nil {
+		t.Fatalf("Expected an error clause given where clause with multiple expressions")
+	}
+}
+
+func TestWhereWithAFunctionWithoutOpeningParentheses(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "where"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "contains"))
+
+	functions := context.NewFunctions()
+	_, err := NewWhere(tokens.Iterator(), context.NewContext(functions, context.NewAttributes()))
+
+	fmt.Println(err)
+	if err == nil {
+		t.Fatalf("Expected an error clause given where clause with improperly closed function")
+	}
+}
+
+func TestEvaluatesWhereWithAFunctionContainingInsufficientParameters(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "where"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "contains"))
+	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
+	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
+
+	functions := context.NewFunctions()
+	where, _ := NewWhere(tokens.Iterator(), context.NewContext(functions, context.NewAttributes()))
+	_, err := where.EvaluateWith(nil, functions)
+
+	if err == nil {
+		t.Fatalf("Expected an error clause given where clause with insufficient parameter values")
+	}
+}
+
+func TestEvaluatesWhereWithoutAnyCondition(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+
+	functions := context.NewFunctions()
+	where, _ := NewWhere(tokens.Iterator(), context.NewContext(functions, context.NewAttributes()))
+	value, _ := where.EvaluateWith(nil, functions)
+
+	if value != true {
+		t.Fatalf("Expected where clause to evaluate to true but it did not")
 	}
 }

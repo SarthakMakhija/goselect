@@ -23,9 +23,6 @@ func NewWhere(
 		if isWhereSpecified && expressions.Count() == 0 {
 			return nil, errors.New(messages.ErrorMessageExpectedExpressionInWhere)
 		}
-		if isWhereSpecified && expressions.Count() > 1 {
-			return nil, errors.New(messages.ErrorMessageExpectedSingleExpressionInWhere)
-		}
 		return &Where{expressions: expressions}, nil
 	}
 }
@@ -69,7 +66,7 @@ func all(
 	if tokenIterator.HasNext() && tokenIterator.Peek().Equals("where") {
 		tokenIterator.Next()
 	}
-	if tokenIterator.HasNext() && !tokenIterator.Peek().Equals("order") {
+	for tokenIterator.HasNext() && !tokenIterator.Peek().Equals("order") {
 		token := tokenIterator.Next()
 		switch {
 		case ctx.IsASupportedFunction(token.TokenValue) && ctx.FunctionContainsATag(token.TokenValue, "where"):
