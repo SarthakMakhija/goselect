@@ -23,6 +23,51 @@ func TestParsesANonSelectQueryWithAnError(t *testing.T) {
 	}
 }
 
+func TestParsesASelectQueryWithAnErrorInProjection(t *testing.T) {
+	parser, _ := NewParser("select from .", context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	_, err := parser.Parse()
+
+	if err == nil {
+		t.Fatalf("Expected an error while parsing a select with an error in projection")
+	}
+}
+
+func TestParsesASelectQueryWithAnErrorInSource(t *testing.T) {
+	parser, _ := NewParser("select name from ", context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	_, err := parser.Parse()
+
+	if err == nil {
+		t.Fatalf("Expected an error while parsing a select with an error in source")
+	}
+}
+
+func TestParsesASelectQueryWithAnErrorInWhere(t *testing.T) {
+	parser, _ := NewParser("select name from . where", context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	_, err := parser.Parse()
+
+	if err == nil {
+		t.Fatalf("Expected an error while parsing a select with an error in where")
+	}
+}
+
+func TestParsesASelectQueryWithAnErrorInOrderBy(t *testing.T) {
+	parser, _ := NewParser("select name from . where eq(1,1) order", context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	_, err := parser.Parse()
+
+	if err == nil {
+		t.Fatalf("Expected an error while parsing a select with an error in order")
+	}
+}
+
+func TestParsesASelectQueryWithAnErrorInLimit(t *testing.T) {
+	parser, _ := NewParser("select name from . where eq(1,1) order by 1 limit", context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	_, err := parser.Parse()
+
+	if err == nil {
+		t.Fatalf("Expected an error while parsing a select with an error in limit")
+	}
+}
+
 func TestParsesAQueryIntoAnASTWithASingleProjection(t *testing.T) {
 	parser, _ := NewParser("SELECT name from ~", context.NewContext(context.NewFunctions(), context.NewAttributes()))
 	selectStatement, _ := parser.Parse()
