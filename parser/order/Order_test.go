@@ -6,7 +6,72 @@ import (
 	"testing"
 )
 
-func TestOrderByAAttributeInAscending(t *testing.T) {
+func TestOrderWithoutAnyOrderByClause(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+
+	order, _ := NewOrder(tokens.Iterator(), 1)
+	if order != nil {
+		t.Fatalf("Expected order to be nil but was not")
+	}
+}
+
+func TestOrderWithAKeywordOtherThanOrder(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "unknown"))
+
+	order, _ := NewOrder(tokens.Iterator(), 1)
+	if order != nil {
+		t.Fatalf("Expected order to be nil but was not")
+	}
+}
+
+func TestOrderByWithMissingBy(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.Order, "order"))
+
+	_, err := NewOrder(tokens.Iterator(), 1)
+	if err == nil {
+		t.Fatalf("Expected an error given order keyword without by")
+	}
+}
+
+func TestOrderByWithUnknownKeywordAfterOrder(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.Order, "order"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "unknown"))
+
+	_, err := NewOrder(tokens.Iterator(), 1)
+	if err == nil {
+		t.Fatalf("Expected an error given order keyword without by")
+	}
+}
+
+func TestOrderByWithMissingComma(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.Order, "order"))
+	tokens.Add(tokenizer.NewToken(tokenizer.By, "by"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "1"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "2"))
+
+	_, err := NewOrder(tokens.Iterator(), 1)
+	if err == nil {
+		t.Fatalf("Expected an error given order keyword with missing comma")
+	}
+}
+
+func TestOrderByWithNonNumericOrderByPosition(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.Order, "order"))
+	tokens.Add(tokenizer.NewToken(tokenizer.By, "by"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "a"))
+
+	_, err := NewOrder(tokens.Iterator(), 1)
+	if err == nil {
+		t.Fatalf("Expected an error given order keyword with non-numeric order by position")
+	}
+}
+
+func TestOrderByAttributeInAscending(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.Order, "order"))
 	tokens.Add(tokenizer.NewToken(tokenizer.By, "by"))
@@ -187,5 +252,56 @@ func TestOrderBy2AttributesWithOneAsTheProjectionPosition(t *testing.T) {
 
 	if !reflect.DeepEqual(expectedOrder, *order) {
 		t.Fatalf("Expected Order to be %v, received %v", expectedOrder, order)
+	}
+}
+
+func TestIsAscendingAtAnIndex(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.Order, "order"))
+	tokens.Add(tokenizer.NewToken(tokenizer.By, "by"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "1"))
+	tokens.Add(tokenizer.NewToken(tokenizer.DescendingOrder, "desc"))
+	tokens.Add(tokenizer.NewToken(tokenizer.Comma, ","))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "2"))
+
+	order, _ := NewOrder(tokens.Iterator(), 2)
+	isAscendingAt := order.IsAscendingAt(0)
+
+	if isAscendingAt {
+		t.Fatalf("Expected descending order at index 0 but received ascending")
+	}
+}
+
+func TestIsDescendingAtAnIndex(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.Order, "order"))
+	tokens.Add(tokenizer.NewToken(tokenizer.By, "by"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "1"))
+	tokens.Add(tokenizer.NewToken(tokenizer.DescendingOrder, "desc"))
+	tokens.Add(tokenizer.NewToken(tokenizer.Comma, ","))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "2"))
+
+	order, _ := NewOrder(tokens.Iterator(), 2)
+	isAscendingAt := order.IsAscendingAt(1)
+
+	if !isAscendingAt {
+		t.Fatalf("Expected ascending order at index 1 but received descending")
+	}
+}
+
+func TestIsAscendingAtAnIllegalIndex(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.Order, "order"))
+	tokens.Add(tokenizer.NewToken(tokenizer.By, "by"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "1"))
+	tokens.Add(tokenizer.NewToken(tokenizer.DescendingOrder, "desc"))
+	tokens.Add(tokenizer.NewToken(tokenizer.Comma, ","))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "2"))
+
+	order, _ := NewOrder(tokens.Iterator(), 2)
+	isAscendingAt := order.IsAscendingAt(3)
+
+	if isAscendingAt {
+		t.Fatalf("Expected descending order at index 3 but received ascending")
 	}
 }

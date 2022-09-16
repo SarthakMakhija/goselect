@@ -10,17 +10,17 @@ func TestLimitWithoutLimitClause(t *testing.T) {
 
 	limit, _ := NewLimit(tokens.Iterator())
 	if limit != nil {
-		t.Fatalf("Expected limit to be nil")
+		t.Fatalf("Expected limit to be nil but was not")
 	}
 }
 
-func TestLimitWithKeywordOtherThanLimit(t *testing.T) {
+func TestLimitWithWordOtherThanLimit(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "unknown"))
 
 	limit, _ := NewLimit(tokens.Iterator())
 	if limit != nil {
-		t.Fatalf("Expected limit to be nil")
+		t.Fatalf("Expected limit to be nil but was not")
 	}
 }
 

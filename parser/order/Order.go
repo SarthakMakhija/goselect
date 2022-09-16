@@ -30,7 +30,9 @@ func NewOrder(iterator *tokenizer.TokenIterator, projectionCount int) (*Order, e
 		return nil, nil
 	}
 	iterator.Next()
-
+	if !iterator.HasNext() {
+		return nil, errors.New(messages.ErrorMessageMissingBy)
+	}
 	if iterator.HasNext() && !iterator.Peek().Equals("by") {
 		return nil, errors.New(messages.ErrorMessageMissingBy)
 	}
