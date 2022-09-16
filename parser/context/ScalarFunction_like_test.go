@@ -4,6 +4,22 @@ import (
 	"testing"
 )
 
+func TestLikeWithMissingParameterValue(t *testing.T) {
+	_, err := NewFunctions().Execute("like")
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing like with no parameter value")
+	}
+}
+
+func TestLikeWithInvalidRegex(t *testing.T) {
+	_, err := NewFunctions().Execute("like", StringValue("name"), StringValue("*"))
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing like with invalid regex")
+	}
+}
+
 func TestLike1(t *testing.T) {
 	value, _ := NewFunctions().Execute("like", StringValue("sample.log"), StringValue(".*log"))
 

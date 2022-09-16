@@ -17,6 +17,30 @@ func TestIdentity(t *testing.T) {
 	}
 }
 
+func TestIdentityWithMissingParameterValue(t *testing.T) {
+	_, err := NewFunctions().Execute("identity")
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing identify with no parameter value")
+	}
+}
+
+func TestAddWithMissingParameterValue(t *testing.T) {
+	_, err := NewFunctions().Execute("add")
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing add with no parameter value")
+	}
+}
+
+func TestAddWithNonNumericParameterValue(t *testing.T) {
+	_, err := NewFunctions().Execute("add", StringValue("1"), StringValue("a"))
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing add with non-numeric parameter value")
+	}
+}
+
 func TestAdd(t *testing.T) {
 	value, _ := NewFunctions().Execute("add", StringValue("1"), IntValue(2), IntValue(4))
 	var expected float64 = 7
@@ -24,6 +48,30 @@ func TestAdd(t *testing.T) {
 	actualValue, _ := value.GetNumericAsFloat64()
 	if actualValue != expected {
 		t.Fatalf("Expected addition to be %v, received %v", expected, actualValue)
+	}
+}
+
+func TestSubtractWithMissingParameterValue(t *testing.T) {
+	_, err := NewFunctions().Execute("sub")
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing sub with no parameter value")
+	}
+}
+
+func TestSubtractWithNonNumericParameterValue1(t *testing.T) {
+	_, err := NewFunctions().Execute("sub", StringValue("a"), StringValue("1"))
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing sub with non-numeric parameter value")
+	}
+}
+
+func TestSubtractWithNonNumericParameterValue2(t *testing.T) {
+	_, err := NewFunctions().Execute("sub", StringValue("1"), StringValue("a"))
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing sub with non-numeric parameter value")
 	}
 }
 
@@ -37,6 +85,22 @@ func TestSubtract(t *testing.T) {
 	}
 }
 
+func TestMultiplyWithMissingParameterValue(t *testing.T) {
+	_, err := NewFunctions().Execute("mul")
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing mul with no parameter value")
+	}
+}
+
+func TestMultiplyWithNonNumericParameterValue(t *testing.T) {
+	_, err := NewFunctions().Execute("mul", StringValue(""), StringValue("a"))
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing mul with non-numeric parameter value")
+	}
+}
+
 func TestMultiply(t *testing.T) {
 	value, _ := NewFunctions().Execute("mul", StringValue("6"), IntValue(8))
 	var expected float64 = 48
@@ -44,6 +108,30 @@ func TestMultiply(t *testing.T) {
 	actualValue, _ := value.GetNumericAsFloat64()
 	if actualValue != expected {
 		t.Fatalf("Expected multiplication to be %v, received %v", expected, actualValue)
+	}
+}
+
+func TestDivisionWithMissingParameterValue(t *testing.T) {
+	_, err := NewFunctions().Execute("div")
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing div with no parameter value")
+	}
+}
+
+func TestDivisionWithNonNumericParameterValue1(t *testing.T) {
+	_, err := NewFunctions().Execute("div", StringValue("a"), StringValue("1"))
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing div with non-numeric parameter value")
+	}
+}
+
+func TestDivisionWithNonNumericParameterValue2(t *testing.T) {
+	_, err := NewFunctions().Execute("div", StringValue("1"), StringValue("a"))
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing div with non-numeric parameter value")
 	}
 }
 
@@ -75,6 +163,14 @@ func TestDivisionWithNegative(t *testing.T) {
 	}
 }
 
+func TestEqualsWithMissingParameterValue(t *testing.T) {
+	_, err := NewFunctions().Execute("eq")
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing eq with no parameter value")
+	}
+}
+
 func TestEqualsReturningTrue(t *testing.T) {
 	value, _ := NewFunctions().Execute("eq", StringValue("one"), StringValue("one"))
 
@@ -93,6 +189,14 @@ func TestEqualsReturningFalse(t *testing.T) {
 	}
 }
 
+func TestNotEqualWithMissingParameterValue(t *testing.T) {
+	_, err := NewFunctions().Execute("ne")
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing ne with no parameter value")
+	}
+}
+
 func TestNotEqualReturningTrue(t *testing.T) {
 	value, _ := NewFunctions().Execute("ne", StringValue("one"), StringValue("two"))
 
@@ -108,6 +212,14 @@ func TestNotEqualReturningFalse(t *testing.T) {
 	actualValue, _ := value.GetBoolean()
 	if actualValue != false {
 		t.Fatalf("Expected not equal to be %v, received %v", false, actualValue)
+	}
+}
+
+func TestLessThanWithMissingParameterValue(t *testing.T) {
+	_, err := NewFunctions().Execute("lt")
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing less than with no parameter value")
 	}
 }
 
@@ -138,6 +250,14 @@ func TestLessThanReturningFalse(t *testing.T) {
 	}
 }
 
+func TestGreaterThanWithMissingParameterValue(t *testing.T) {
+	_, err := NewFunctions().Execute("gt")
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing gt with no parameter value")
+	}
+}
+
 func TestGreaterThanReturningTrue1(t *testing.T) {
 	value, _ := NewFunctions().Execute("gt", StringValue("two"), StringValue("one"))
 
@@ -162,6 +282,14 @@ func TestGreaterThanReturningFalse(t *testing.T) {
 	actualValue, _ := value.GetBoolean()
 	if actualValue != false {
 		t.Fatalf("Expected greater than to be %v, received %v", false, actualValue)
+	}
+}
+
+func TestLessThanEqualWithMissingParameterValue(t *testing.T) {
+	_, err := NewFunctions().Execute("lte")
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing lte with no parameter value")
 	}
 }
 
@@ -192,6 +320,14 @@ func TestLessThanEqualReturningFalse(t *testing.T) {
 	}
 }
 
+func TestGreaterThanEqualWithMissingParameterValue(t *testing.T) {
+	_, err := NewFunctions().Execute("gte")
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing gte with no parameter value")
+	}
+}
+
 func TestGreaterThanEqualReturningTrue1(t *testing.T) {
 	value, _ := NewFunctions().Execute("gte", StringValue("two"), StringValue("one"))
 
@@ -219,6 +355,22 @@ func TestGreaterThanEqualReturningFalse(t *testing.T) {
 	}
 }
 
+func TestOrWithMissingParameterValue(t *testing.T) {
+	_, err := NewFunctions().Execute("or")
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing or with no parameter value")
+	}
+}
+
+func TestOrWithIllegalParameterValue(t *testing.T) {
+	_, err := NewFunctions().Execute("or", BooleanValue(false), IntValue(5))
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing or with illegal parameter value")
+	}
+}
+
 func TestOrReturningTrue(t *testing.T) {
 	value, _ := NewFunctions().Execute("or", falseBooleanValue, StringValue("n"), trueBooleanValue)
 
@@ -237,6 +389,22 @@ func TestOrReturningFalse(t *testing.T) {
 	}
 }
 
+func TestAndWithMissingParameterValue(t *testing.T) {
+	_, err := NewFunctions().Execute("and")
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing and with no parameter value")
+	}
+}
+
+func TestAndWithIllegalParameterValue(t *testing.T) {
+	_, err := NewFunctions().Execute("and", BooleanValue(true), IntValue(5))
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing and with illegal parameter value")
+	}
+}
+
 func TestAndReturningTrue(t *testing.T) {
 	value, _ := NewFunctions().Execute("and", trueBooleanValue, StringValue("y"), trueBooleanValue)
 
@@ -247,11 +415,27 @@ func TestAndReturningTrue(t *testing.T) {
 }
 
 func TestAndReturningFalse(t *testing.T) {
-	value, _ := NewFunctions().Execute("and", StringValue("ok"), StringValue("y"), falseBooleanValue)
+	value, _ := NewFunctions().Execute("and", StringValue("y"), falseBooleanValue)
 
 	actualValue, _ := value.GetBoolean()
 	if actualValue != false {
 		t.Fatalf("Expected and to be %v, received %v", false, actualValue)
+	}
+}
+
+func TestNotWithMissingParameterValue(t *testing.T) {
+	_, err := NewFunctions().Execute("not")
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing not with no parameter value")
+	}
+}
+
+func TestNotWithIllegalParameterValue(t *testing.T) {
+	_, err := NewFunctions().Execute("not", IntValue(5))
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing not with illegal parameter value")
 	}
 }
 
@@ -477,6 +661,20 @@ func TestTrimWithoutAnyParameter(t *testing.T) {
 	}
 }
 
+func TestNow(t *testing.T) {
+	nowFunc = func() time.Time {
+		return time.Date(2022, 8, 22, 15, 8, 00, 0, time.UTC)
+	}
+	// after finish with the test, reset the time implementation
+	defer resetClock()
+	value, _ := NewFunctions().Execute("now")
+	expected := nowFunc()
+
+	if !value.timeValue.Equal(expected) {
+		t.Fatalf("Expected now to return %v, received %v", expected, value.timeValue)
+	}
+}
+
 func TestDay(t *testing.T) {
 	nowFunc = func() time.Time {
 		return time.Date(2022, 8, 22, 15, 8, 00, 0, time.UTC)
@@ -605,6 +803,30 @@ func TestDayOfWeek2(t *testing.T) {
 	}
 }
 
+func TestExtractWithMissingParameterValue(t *testing.T) {
+	_, err := NewFunctions().Execute("extract")
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing extract with no parameter value")
+	}
+}
+
+func TestExtractWithIllegalParameterValue(t *testing.T) {
+	_, err := NewFunctions().Execute("extract", BooleanValue(false), IntValue(5))
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing extract with illegal parameter value")
+	}
+}
+
+func TestExtractWithInvalidExtractionKey(t *testing.T) {
+	_, err := NewFunctions().Execute("extract", DateTimeValue(now()), StringValue("unknown"))
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing extract with invalid extraction key")
+	}
+}
+
 func TestExtractDay(t *testing.T) {
 	nowFunc = func() time.Time {
 		return time.Date(2022, 8, 28, 15, 8, 00, 0, time.UTC)
@@ -715,6 +937,30 @@ func TestFormatDate2(t *testing.T) {
 	}
 }
 
+func TestHoursDifferenceWithMissingParameterValue(t *testing.T) {
+	_, err := NewFunctions().Execute("hoursdiff")
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing hoursdiff with no parameter value")
+	}
+}
+
+func TestHoursDifferenceWithIllegalParameterValue1(t *testing.T) {
+	_, err := NewFunctions().Execute("hoursdiff", BooleanValue(false), IntValue(5))
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing hoursdiff with illegal parameter value")
+	}
+}
+
+func TestHoursDifferenceWithIllegalParameterValue2(t *testing.T) {
+	_, err := NewFunctions().Execute("hoursdiff", DateTimeValue(now()), IntValue(5))
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing hoursdiff with illegal parameter value")
+	}
+}
+
 func TestHoursDifference1(t *testing.T) {
 	nowFunc = func() time.Time {
 		return time.Date(2022, 8, 28, 15, 8, 00, 0, time.UTC)
@@ -758,6 +1004,30 @@ func TestHoursDifference2(t *testing.T) {
 	actualValue, _ := value.GetNumericAsFloat64()
 	if actualValue != expected {
 		t.Fatalf("Expected hours difference to be %v, received %v", expected, actualValue)
+	}
+}
+
+func TestDaysDifferenceWithMissingParameterValue(t *testing.T) {
+	_, err := NewFunctions().Execute("daysdiff")
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing daysdiff with no parameter value")
+	}
+}
+
+func TestDaysDifferenceWithIllegalParameterValue1(t *testing.T) {
+	_, err := NewFunctions().Execute("daysdiff", BooleanValue(false), IntValue(5))
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing daysdiff with illegal parameter value")
+	}
+}
+
+func TestDaysDifferenceWithIllegalParameterValue2(t *testing.T) {
+	_, err := NewFunctions().Execute("daysdiff", DateTimeValue(now()), IntValue(5))
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing daysdiff with illegal parameter value")
 	}
 }
 
@@ -818,6 +1088,14 @@ func TestDaysDifference3(t *testing.T) {
 	}
 }
 
+func TestDateTimeParseWithMissingParameterValue(t *testing.T) {
+	_, err := NewFunctions().Execute("parsedttm")
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing parsedttm with missing parameter value")
+	}
+}
+
 func TestDateTimeParse1(t *testing.T) {
 	value, _ := NewFunctions().Execute("parsedatetime", StringValue("2022-09-28"), StringValue("dt"))
 	expected := "2022-September-28"
@@ -856,6 +1134,14 @@ func TestCurrentWorkingDirectory2(t *testing.T) {
 	}
 }
 
+func TestConcatWithMissingParameterValue(t *testing.T) {
+	_, err := NewFunctions().Execute("concat")
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing concat with no parameter value")
+	}
+}
+
 func TestConcat(t *testing.T) {
 	value, _ := NewFunctions().Execute("concat", StringValue("a"), StringValue("b"))
 	expected := "ab"
@@ -863,6 +1149,14 @@ func TestConcat(t *testing.T) {
 	actualValue, _ := value.GetString()
 	if actualValue != expected {
 		t.Fatalf("Expected concat  to be %v, received %v", expected, actualValue)
+	}
+}
+
+func TestConcatWithSeparatorWithMissingParameterValue(t *testing.T) {
+	_, err := NewFunctions().Execute("concatws")
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing concatws with no parameter value")
 	}
 }
 
@@ -1215,6 +1509,22 @@ func TestIsPdf4(t *testing.T) {
 	actualValue, _ := value.GetBoolean()
 	if actualValue != false {
 		t.Fatalf("Expected ispdf to be %v, received %v", false, actualValue)
+	}
+}
+
+func TestFormatSizeWithMissingParameterValue(t *testing.T) {
+	_, err := NewFunctions().Execute("fmtsize")
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing fmtsize with no parameter value")
+	}
+}
+
+func TestFormatSizeWithIllegalValue(t *testing.T) {
+	_, err := NewFunctions().Execute("fmtsize", BooleanValue(false))
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing fmtsize with illegal parameter value")
 	}
 }
 

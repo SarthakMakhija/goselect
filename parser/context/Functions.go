@@ -110,7 +110,7 @@ var functionDefinitions = map[string]*FunctionDefinition{
 	FunctionNameMultiply: {
 		aliases:     []string{"mul", "multiply"},
 		description: "Takes variable number of numeric type parameter values and returns the product of all the values. \nFor example, mul(3, 2) will return 6.00.",
-		block:       MultipleFunctionBlock{},
+		block:       MultiplyFunctionBlock{},
 	},
 	FunctionNameDivide: {
 		aliases:     []string{"div", "divide"},

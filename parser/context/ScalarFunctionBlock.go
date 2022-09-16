@@ -17,7 +17,7 @@ import (
 type IdentityFunctionBlock struct{}
 type AddFunctionBlock struct{}
 type SubtractFunctionBlock struct{}
-type MultipleFunctionBlock struct{}
+type MultiplyFunctionBlock struct{}
 type DivideFunctionBlock struct{}
 type EqualFunctionBlock struct{}
 type NotEqualFunctionBlock struct{}
@@ -98,7 +98,7 @@ func (s SubtractFunctionBlock) run(args ...Value) (Value, error) {
 	return Float64Value(oneFloat64 - otherFloat64), nil
 }
 
-func (m MultipleFunctionBlock) run(args ...Value) (Value, error) {
+func (m MultiplyFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameMultiply, 2); err != nil {
 		return EmptyValue, err
 	}
