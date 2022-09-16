@@ -5,6 +5,25 @@ import (
 	"testing"
 )
 
+func TestLimitWithoutLimitClause(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+
+	limit, _ := NewLimit(tokens.Iterator())
+	if limit != nil {
+		t.Fatalf("Expected limit to be nil")
+	}
+}
+
+func TestLimitWithKeywordOtherThanLimit(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "unknown"))
+
+	limit, _ := NewLimit(tokens.Iterator())
+	if limit != nil {
+		t.Fatalf("Expected limit to be nil")
+	}
+}
+
 func TestLimitWithoutAnyLimitDefined(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.Limit, "limit"))
