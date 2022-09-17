@@ -331,6 +331,45 @@ func TestExpressionEvaluate10(t *testing.T) {
 	}
 }
 
+func TestExpressionFullyEvaluateWithError(t *testing.T) {
+	functions := context.NewFunctions()
+	expression := ExpressionWithFunctionInstance(&FunctionInstance{
+		name: "lower",
+		args: []*Expression{
+			ExpressionWithFunctionInstance(&FunctionInstance{
+				name:  "min",
+				state: functions.InitialState("min"),
+			}),
+		},
+	})
+	expressions := Expressions{Expressions: []*Expression{expression}}
+	_, err := expressions.Expressions[0].FullyEvaluate(functions)
+
+	if err == nil {
+		t.Fatalf("Expected an error while fully evaluating min without any parameter value")
+	}
+}
+
+func TestExpressionFullyEvaluateWithAnAggregateFunctionHavingAValue(t *testing.T) {
+	functions := context.NewFunctions()
+	expression := ExpressionWithFunctionInstance(&FunctionInstance{
+		name: "upper",
+		args: []*Expression{
+			ExpressionWithFunctionInstance(&FunctionInstance{
+				name:  "min",
+				args:  []*Expression{ExpressionWithValue("someValue")},
+				state: functions.InitialState("min"),
+			}),
+		},
+	})
+	expressions := Expressions{Expressions: []*Expression{expression}}
+	value, _ := expressions.Expressions[0].FullyEvaluate(functions)
+
+	if value.GetAsString() != "SOMEVALUE" {
+		t.Fatalf("Expected final fully evaluate to return %v, received %v", "SOMEVALUE", value.GetAsString())
+	}
+}
+
 func TestExpressionFullyEvaluate(t *testing.T) {
 	functions := context.NewFunctions()
 	expression := ExpressionWithFunctionInstance(&FunctionInstance{
