@@ -53,25 +53,23 @@ func NewOrder(iterator *tokenizer.TokenIterator, projectionCount int) (*Order, e
 			}
 			expectComma = false
 		default:
-			if projectionPosition, err := strconv.Atoi(token.TokenValue); err != nil {
+			projectionPosition, err := strconv.Atoi(token.TokenValue)
+			if err != nil {
 				return nil, fmt.Errorf(messages.ErrorMessageNonZeroPositivePositionsWithExistingError, err)
-			} else {
-				if projectionPosition <= 0 {
-					return nil, errors.New(messages.ErrorMessageNonZeroPositivePositions)
-				}
-				if projectionPosition > projectionCount {
-					return nil, fmt.Errorf(messages.ErrorMessageOrderByPositionOutOfRange, 1, projectionCount)
-				}
-				if projectionPosition <= projectionCount {
-					attributes = append(attributes, AttributeRef{ProjectionPosition: projectionPosition})
-					if sortingDirection(iterator) == sortingDirectionDescending {
-						directions = append(directions, false)
-					} else {
-						directions = append(directions, true)
-					}
-					expectComma = true
-				}
 			}
+			if projectionPosition <= 0 {
+				return nil, errors.New(messages.ErrorMessageNonZeroPositivePositions)
+			}
+			if projectionPosition > projectionCount {
+				return nil, fmt.Errorf(messages.ErrorMessageOrderByPositionOutOfRange, 1, projectionCount)
+			}
+			attributes = append(attributes, AttributeRef{ProjectionPosition: projectionPosition})
+			if sortingDirection(iterator) == sortingDirectionDescending {
+				directions = append(directions, false)
+			} else {
+				directions = append(directions, true)
+			}
+			expectComma = true
 		}
 	}
 	if len(attributes) == 0 {
@@ -84,12 +82,11 @@ func sortingDirection(iterator *tokenizer.TokenIterator) int {
 	if iterator.HasNext() && iterator.Peek().Equals("desc") {
 		iterator.Next()
 		return sortingDirectionDescending
-	} else {
-		if iterator.HasNext() && iterator.Peek().Equals("asc") {
-			iterator.Next()
-		}
-		return sortingDirectionAscending
 	}
+	if iterator.HasNext() && iterator.Peek().Equals("asc") {
+		iterator.Next()
+	}
+	return sortingDirectionAscending
 }
 
 func (order Order) IsAscendingAt(index int) bool {
