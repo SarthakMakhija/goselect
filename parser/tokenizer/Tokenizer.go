@@ -21,12 +21,6 @@ func (tokenizer *Tokenizer) Tokenize() *Tokens {
 		case ch == '\'':
 			tokens.Add(tokenFrom(token.String()))
 			token.Reset()
-		case isCharAComparisonOperator(ch):
-			if !isAComparisonOperator(token.String()) {
-				tokens.Add(tokenFrom(token.String()))
-				token.Reset()
-			}
-			token.WriteRune(ch)
 		case ch == ',':
 			tokens.Add(tokenFrom(token.String()))
 			tokens.Add(NewToken(Comma, string(ch)))
