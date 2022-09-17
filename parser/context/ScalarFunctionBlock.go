@@ -28,7 +28,7 @@ type GreaterThanEqualFunctionBlock struct{}
 type OrFunctionBlock struct{}
 type AndFunctionBlock struct{}
 type NotFunctionBlock struct{}
-type LikeFunctionBlock struct{}
+type LikeFunctionBlock struct{ executionCache *FunctionExecutionCache }
 type LowerFunctionBlock struct{}
 type UpperFunctionBlock struct{}
 type TitleFunctionBlock struct{ caser cases.Caser }
@@ -239,11 +239,18 @@ func (l LikeFunctionBlock) run(args ...Value) (Value, error) {
 		return EmptyValue, err
 	}
 	toMatch := args[0].GetAsString()
-	if compiled, err := regexp.Compile(args[1].GetAsString()); err != nil {
-		return EmptyValue, err
-	} else {
-		return booleanValueUsing(compiled.MatchString(toMatch)), nil
+	pattern := args[1]
+	cached, ok := l.executionCache.Get(pattern)
+
+	if !ok {
+		if compiled, err := regexp.Compile(pattern.GetAsString()); err != nil {
+			return EmptyValue, err
+		} else {
+			l.executionCache.Put(pattern, compiled)
+			return booleanValueUsing(compiled.MatchString(toMatch)), nil
+		}
 	}
+	return booleanValueUsing(cached.(*regexp.Regexp).MatchString(toMatch)), nil
 }
 
 func (l LowerFunctionBlock) run(args ...Value) (Value, error) {

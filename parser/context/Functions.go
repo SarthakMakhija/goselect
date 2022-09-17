@@ -91,6 +91,8 @@ const (
 	FunctionNameMax                 = "max"
 )
 
+var executionCache = NewFunctionExecutionCache()
+
 var functionDefinitions = map[string]*FunctionDefinition{
 	FunctionNameIdentity: {
 		aliases:     []string{"identity", "iden"},
@@ -174,7 +176,7 @@ var functionDefinitions = map[string]*FunctionDefinition{
 	FunctionNameLike: {
 		aliases:     []string{"like"},
 		description: "Takes 2 parameter values and returns true if the first parameter value matches the regular expression represented by the second parameter value, false otherwise.",
-		block:       LikeFunctionBlock{},
+		block:       LikeFunctionBlock{executionCache: executionCache},
 		tags:        map[string]bool{"where": true},
 	},
 	FunctionNameLower: {
