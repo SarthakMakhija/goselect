@@ -97,13 +97,6 @@ func DateTimeValue(time time.Time) Value {
 	}
 }
 
-func (value Value) GetString() (string, error) {
-	if value.valueType != ValueTypeString {
-		return "", fmt.Errorf(messages.ErrorMessageIncorrectValueType, "string")
-	}
-	return value.stringValue, nil
-}
-
 func (value Value) GetInt() (int, error) {
 	if value.valueType != ValueTypeInt {
 		return -1, fmt.Errorf(messages.ErrorMessageIncorrectValueType, "int")
@@ -167,12 +160,10 @@ func (value Value) GetAsString() string {
 func (value Value) CompareTo(other Value) int {
 	receiver, arg := value, other
 	if value.valueType != other.valueType {
-		if rec, ar, possible, err := value.attemptCommonType(other); err != nil {
+		if rec, ar, err := value.attemptCommonType(other); err != nil {
 			return CompareToNotPossible
-		} else if possible {
-			receiver, arg = rec, ar
 		} else {
-			return CompareToNotPossible
+			receiver, arg = rec, ar
 		}
 	}
 	switch receiver.valueType {
@@ -254,10 +245,10 @@ func booleanValueUsing(value bool) Value {
 	return falseBooleanValue
 }
 
-func (value Value) attemptCommonType(other Value) (Value, Value, bool, error) {
+func (value Value) attemptCommonType(other Value) (Value, Value, error) {
 	aValue, bValue, err := getCommonType(value, other, TypePair{value.valueType, other.valueType})
 	if err != nil {
-		return value, other, false, err
+		return value, other, err
 	}
-	return aValue, bValue, true, nil
+	return aValue, bValue, nil
 }

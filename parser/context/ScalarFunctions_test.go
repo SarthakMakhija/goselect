@@ -461,7 +461,7 @@ func TestLower1(t *testing.T) {
 	value, _ := NewFunctions().Execute("lower", StringValue("ABC"))
 	expected := "abc"
 
-	actualValue, _ := value.GetString()
+	actualValue := value.GetAsString()
 	if actualValue != expected {
 		t.Fatalf("Expected lower to be %v, received %v", expected, actualValue)
 	}
@@ -471,7 +471,7 @@ func TestLower2(t *testing.T) {
 	value, _ := NewFunctions().Execute("low", StringValue("ABC"))
 	expected := "abc"
 
-	actualValue, _ := value.GetString()
+	actualValue := value.GetAsString()
 	if actualValue != expected {
 		t.Fatalf("Expected lower to be %v, received %v", expected, actualValue)
 	}
@@ -489,7 +489,7 @@ func TestUpper1(t *testing.T) {
 	value, _ := NewFunctions().Execute("upper", StringValue("abc"))
 	expected := "ABC"
 
-	actualValue, _ := value.GetString()
+	actualValue := value.GetAsString()
 	if actualValue != expected {
 		t.Fatalf("Expected upper to be %v, received %v", expected, actualValue)
 	}
@@ -499,7 +499,7 @@ func TestUpper2(t *testing.T) {
 	value, _ := NewFunctions().Execute("up", StringValue("abc"))
 	expected := "ABC"
 
-	actualValue, _ := value.GetString()
+	actualValue := value.GetAsString()
 	if actualValue != expected {
 		t.Fatalf("Expected upper to be %v, received %v", expected, actualValue)
 	}
@@ -517,7 +517,7 @@ func TestTitle(t *testing.T) {
 	value, _ := NewFunctions().Execute("title", StringValue("Sample content"))
 	expected := "Sample Content"
 
-	actualValue, _ := value.GetString()
+	actualValue := value.GetAsString()
 	if actualValue != expected {
 		t.Fatalf("Expected title to be %v, received %v", expected, actualValue)
 	}
@@ -535,7 +535,7 @@ func TestBase641(t *testing.T) {
 	value, _ := NewFunctions().Execute("base64", StringValue("a"))
 	expected := "YQ=="
 
-	actualValue, _ := value.GetString()
+	actualValue := value.GetAsString()
 	if actualValue != expected {
 		t.Fatalf("Expected base64 to be %v, received %v", expected, actualValue)
 	}
@@ -545,7 +545,7 @@ func TestBase642(t *testing.T) {
 	value, _ := NewFunctions().Execute("b64", StringValue("a"))
 	expected := "YQ=="
 
-	actualValue, _ := value.GetString()
+	actualValue := value.GetAsString()
 	if actualValue != expected {
 		t.Fatalf("Expected base64 to be %v, received %v", expected, actualValue)
 	}
@@ -591,7 +591,7 @@ func TestLeftTrim1(t *testing.T) {
 	value, _ := NewFunctions().Execute("ltrim", StringValue("  sample"))
 	expected := "sample"
 
-	actualValue, _ := value.GetString()
+	actualValue := value.GetAsString()
 	if actualValue != expected {
 		t.Fatalf("Expected leftTrim to be %v, received %v", expected, actualValue)
 	}
@@ -601,7 +601,7 @@ func TestLeftTrim2(t *testing.T) {
 	value, _ := NewFunctions().Execute("lTrim", StringValue("  sample"))
 	expected := "sample"
 
-	actualValue, _ := value.GetString()
+	actualValue := value.GetAsString()
 	if actualValue != expected {
 		t.Fatalf("Expected leftTrim to be %v, received %v", expected, actualValue)
 	}
@@ -619,7 +619,7 @@ func TestRightTrim1(t *testing.T) {
 	value, _ := NewFunctions().Execute("rtrim", StringValue("sample  "))
 	expected := "sample"
 
-	actualValue, _ := value.GetString()
+	actualValue := value.GetAsString()
 	if actualValue != expected {
 		t.Fatalf("Expected rightTrim to be %v, received %v", expected, actualValue)
 	}
@@ -629,7 +629,7 @@ func TestRightTrim2(t *testing.T) {
 	value, _ := NewFunctions().Execute("rTrim", StringValue("sample  "))
 	expected := "sample"
 
-	actualValue, _ := value.GetString()
+	actualValue := value.GetAsString()
 	if actualValue != expected {
 		t.Fatalf("Expected rightTrim to be %v, received %v", expected, actualValue)
 	}
@@ -647,7 +647,7 @@ func TestTrim1(t *testing.T) {
 	value, _ := NewFunctions().Execute("trim", StringValue("  sample  "))
 	expected := "sample"
 
-	actualValue, _ := value.GetString()
+	actualValue := value.GetAsString()
 	if actualValue != expected {
 		t.Fatalf("Expected trim to be %v, received %v", expected, actualValue)
 	}
@@ -672,6 +672,20 @@ func TestNow(t *testing.T) {
 
 	if !value.timeValue.Equal(expected) {
 		t.Fatalf("Expected now to return %v, received %v", expected, value.timeValue)
+	}
+}
+
+func TestNowAsString(t *testing.T) {
+	nowFunc = func() time.Time {
+		return time.Date(2022, 8, 22, 15, 8, 00, 0, time.UTC)
+	}
+	// after finish with the test, reset the time implementation
+	defer resetClock()
+	value, _ := NewFunctions().Execute("now")
+	expected := "2022-08-22 15:08:00 +0000 UTC"
+
+	if value.GetAsString() != expected {
+		t.Fatalf("Expected now to return %v, received %v", expected, value.GetAsString())
 	}
 }
 
@@ -701,7 +715,7 @@ func TestDate(t *testing.T) {
 	value, _ := NewFunctions().Execute("cdate")
 	expected := "2022-August-22"
 
-	actualValue, _ := value.GetString()
+	actualValue := value.GetAsString()
 	if actualValue != expected {
 		t.Fatalf("Expected date to be %v, received %v", expected, actualValue)
 	}
@@ -717,7 +731,7 @@ func TestMonth1(t *testing.T) {
 	value, _ := NewFunctions().Execute("cmonth")
 	expected := "August"
 
-	actualValue, _ := value.GetString()
+	actualValue := value.GetAsString()
 	if actualValue != expected {
 		t.Fatalf("Expected month to be %v, received %v", expected, actualValue)
 	}
@@ -733,7 +747,7 @@ func TestMonth2(t *testing.T) {
 	value, _ := NewFunctions().Execute("cmon")
 	expected := "August"
 
-	actualValue, _ := value.GetString()
+	actualValue := value.GetAsString()
 	if actualValue != expected {
 		t.Fatalf("Expected month to be %v, received %v", expected, actualValue)
 	}
@@ -781,7 +795,7 @@ func TestDayOfWeek1(t *testing.T) {
 	value, _ := NewFunctions().Execute("dayOfWeek")
 	expected := "Sunday"
 
-	actualValue, _ := value.GetString()
+	actualValue := value.GetAsString()
 	if actualValue != expected {
 		t.Fatalf("Expected day of week to be %v, received %v", expected, actualValue)
 	}
@@ -797,7 +811,7 @@ func TestDayOfWeek2(t *testing.T) {
 	value, _ := NewFunctions().Execute("dayofweek")
 	expected := "Sunday"
 
-	actualValue, _ := value.GetString()
+	actualValue := value.GetAsString()
 	if actualValue != expected {
 		t.Fatalf("Expected day of week to be %v, received %v", expected, actualValue)
 	}
@@ -1118,7 +1132,7 @@ func TestCurrentWorkingDirectory1(t *testing.T) {
 	value, _ := NewFunctions().Execute("cwd")
 	expected, _ := os.Getwd()
 
-	actualValue, _ := value.GetString()
+	actualValue := value.GetAsString()
 	if actualValue != expected {
 		t.Fatalf("Expected current working directory to be %v, received %v", expected, actualValue)
 	}
@@ -1128,7 +1142,7 @@ func TestCurrentWorkingDirectory2(t *testing.T) {
 	value, _ := NewFunctions().Execute("wd")
 	expected, _ := os.Getwd()
 
-	actualValue, _ := value.GetString()
+	actualValue := value.GetAsString()
 	if actualValue != expected {
 		t.Fatalf("Expected current working directory to be %v, received %v", expected, actualValue)
 	}
@@ -1146,7 +1160,7 @@ func TestConcat(t *testing.T) {
 	value, _ := NewFunctions().Execute("concat", StringValue("a"), StringValue("b"))
 	expected := "ab"
 
-	actualValue, _ := value.GetString()
+	actualValue := value.GetAsString()
 	if actualValue != expected {
 		t.Fatalf("Expected concat  to be %v, received %v", expected, actualValue)
 	}
@@ -1164,7 +1178,7 @@ func TestConcatWithSeparator(t *testing.T) {
 	value, _ := NewFunctions().Execute("concatws", StringValue("a"), StringValue("b"), StringValue("@"))
 	expected := "a@b"
 
-	actualValue, _ := value.GetString()
+	actualValue := value.GetAsString()
 	if actualValue != expected {
 		t.Fatalf("Expected concat  to be %v, received %v", expected, actualValue)
 	}
@@ -1190,7 +1204,7 @@ func TestContainsWithInsufficientParameters(t *testing.T) {
 func TestReplace1(t *testing.T) {
 	value, _ := NewFunctions().Execute("replace", StringValue("sample.log"), StringValue("log"), StringValue("txt"))
 
-	actualValue, _ := value.GetString()
+	actualValue := value.GetAsString()
 	if actualValue != "sample.txt" {
 		t.Fatalf("Expected replace to be %v, received %v", "sample.txt", actualValue)
 	}
@@ -1199,7 +1213,7 @@ func TestReplace1(t *testing.T) {
 func TestReplace2(t *testing.T) {
 	value, _ := NewFunctions().Execute("replace", StringValue("sample.log.log"), StringValue("log"), StringValue("txt"))
 
-	actualValue, _ := value.GetString()
+	actualValue := value.GetAsString()
 	if actualValue != "sample.txt.log" {
 		t.Fatalf("Expected replace to be %v, received %v", "sample.txt.log", actualValue)
 	}
@@ -1208,7 +1222,7 @@ func TestReplace2(t *testing.T) {
 func TestReplace3(t *testing.T) {
 	value, _ := NewFunctions().Execute("replace", StringValue("sample.log.log"), StringValue("log"), StringValue("12.39"))
 
-	actualValue, _ := value.GetString()
+	actualValue := value.GetAsString()
 	if actualValue != "sample.12.39.log" {
 		t.Fatalf("Expected replace to be %v, received %v", "sample.12.39.log", actualValue)
 	}
@@ -1225,7 +1239,7 @@ func TestReplace4(t *testing.T) {
 func TestReplaceAll1(t *testing.T) {
 	value, _ := NewFunctions().Execute("replaceall", StringValue("sample.log.log"), StringValue("log"), StringValue("txt"))
 
-	actualValue, _ := value.GetString()
+	actualValue := value.GetAsString()
 	if actualValue != "sample.txt.txt" {
 		t.Fatalf("Expected replace all to be %v, received %v", "sample.txt.txt", actualValue)
 	}
@@ -1234,7 +1248,7 @@ func TestReplaceAll1(t *testing.T) {
 func TestReplaceAll2(t *testing.T) {
 	value, _ := NewFunctions().Execute("replaceall", StringValue("sample.log.log"), StringValue("log"), StringValue("12.39"))
 
-	actualValue, _ := value.GetString()
+	actualValue := value.GetAsString()
 	if actualValue != "sample.12.39.12.39" {
 		t.Fatalf("Expected replace all to be %v, received %v", "sample.12.39.12.39", actualValue)
 	}
@@ -1251,7 +1265,7 @@ func TestReplaceAll3(t *testing.T) {
 func TestSubstringWithBeginIndexOnly(t *testing.T) {
 	value, _ := NewFunctions().Execute("substr", StringValue("abcdef"), StringValue("2"))
 
-	actualValue, _ := value.GetString()
+	actualValue := value.GetAsString()
 	if actualValue != "cdef" {
 		t.Fatalf("Expected substring to be %v, received %v", "cdef", actualValue)
 	}
@@ -1260,7 +1274,7 @@ func TestSubstringWithBeginIndexOnly(t *testing.T) {
 func TestSubstringWithBeginAndEndIndex(t *testing.T) {
 	value, _ := NewFunctions().Execute("substr", StringValue("abcdef"), StringValue("2"), StringValue("4"))
 
-	actualValue, _ := value.GetString()
+	actualValue := value.GetAsString()
 	if actualValue != "cde" {
 		t.Fatalf("Expected substring to be %v, received %v", "cde", actualValue)
 	}
@@ -1269,7 +1283,7 @@ func TestSubstringWithBeginAndEndIndex(t *testing.T) {
 func TestSubstringWithEndIndexGreaterThanLength(t *testing.T) {
 	value, _ := NewFunctions().Execute("substr", StringValue("abcdef"), StringValue("2"), StringValue("100"))
 
-	actualValue, _ := value.GetString()
+	actualValue := value.GetAsString()
 	if actualValue != "cdef" {
 		t.Fatalf("Expected substring to be %v, received %v", "cdef", actualValue)
 	}
@@ -1278,7 +1292,7 @@ func TestSubstringWithEndIndexGreaterThanLength(t *testing.T) {
 func TestSubstringWithBeginIndexGreaterThanLength(t *testing.T) {
 	value, _ := NewFunctions().Execute("substr", StringValue("abcdef"), StringValue("100"), StringValue("6"))
 
-	actualValue, _ := value.GetString()
+	actualValue := value.GetAsString()
 	if actualValue != "abcdef" {
 		t.Fatalf("Expected substring to be %v, received %v", "abcdef", actualValue)
 	}
