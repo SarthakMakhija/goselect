@@ -1,6 +1,7 @@
 package limit
 
 import (
+	"fmt"
 	"goselect/parser/tokenizer"
 	"testing"
 )
@@ -40,6 +41,7 @@ func TestLimitWithAFloatingValue(t *testing.T) {
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "10.12"))
 
 	_, err := NewLimit(tokens.Iterator())
+	fmt.Println(err)
 	if err == nil {
 		t.Fatalf("Expected an error with floating point limit")
 	}
