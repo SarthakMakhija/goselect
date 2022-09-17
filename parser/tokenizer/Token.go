@@ -11,14 +11,11 @@ const (
 	OpeningParentheses     = 5
 	ClosingParentheses     = 6
 	ArithmeticOperator     = 7
-	And                    = 8
-	Or                     = 9
-	Not                    = 10
-	Order                  = 11
-	By                     = 12
-	AscendingOrder         = 13
-	DescendingOrder        = 14
-	Limit                  = 15
+	Order                  = 8
+	By                     = 9
+	AscendingOrder         = 10
+	DescendingOrder        = 11
+	Limit                  = 12
 )
 
 type Token struct {
@@ -40,12 +37,6 @@ func tokenFrom(token string) Token {
 		return NewToken(From, token)
 	case token == "where":
 		return NewToken(Where, token)
-	case token == "or":
-		return NewToken(Or, token)
-	case token == "and":
-		return NewToken(And, token)
-	case token == "not":
-		return NewToken(Not, token)
 	case token == "order":
 		return NewToken(Order, token)
 	case token == "by":
