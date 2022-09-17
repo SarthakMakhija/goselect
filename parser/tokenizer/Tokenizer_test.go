@@ -152,11 +152,11 @@ func TestTokenizerWithAllTokens8(t *testing.T) {
 }
 
 func TestTokenizerWithAllTokens9(t *testing.T) {
-	tokenizer := NewTokenizer("select size from /home/apps where name='*.txt' order by modified")
+	tokenizer := NewTokenizer("select size from /home/apps where name='*.txt' order by 1")
 	tokens := tokenizer.Tokenize()
 
 	iterator := tokens.Iterator()
-	expectedTokens := []string{"select", "size", "from", "/home/apps", "where", "name=", "*.txt", "order", "by", "modified"}
+	expectedTokens := []string{"select", "size", "from", "/home/apps", "where", "name=", "*.txt", "order", "by", "1"}
 
 	for count := 1; count <= len(expectedTokens); count++ {
 		actualToken := iterator.Next()
@@ -168,6 +168,38 @@ func TestTokenizerWithAllTokens9(t *testing.T) {
 }
 
 func TestTokenizerWithAllTokens10(t *testing.T) {
+	tokenizer := NewTokenizer("select size from /home/apps where name='*.txt' order by 1 asc")
+	tokens := tokenizer.Tokenize()
+
+	iterator := tokens.Iterator()
+	expectedTokens := []string{"select", "size", "from", "/home/apps", "where", "name=", "*.txt", "order", "by", "1", "asc"}
+
+	for count := 1; count <= len(expectedTokens); count++ {
+		actualToken := iterator.Next()
+		expectedToken := expectedTokens[count-1]
+		if expectedToken != actualToken.TokenValue {
+			t.Fatalf("Expected token to be %v, received %v", expectedToken, actualToken)
+		}
+	}
+}
+
+func TestTokenizerWithAllTokens11(t *testing.T) {
+	tokenizer := NewTokenizer("select size from /home/apps where name='*.txt' order by 1 desc")
+	tokens := tokenizer.Tokenize()
+
+	iterator := tokens.Iterator()
+	expectedTokens := []string{"select", "size", "from", "/home/apps", "where", "name=", "*.txt", "order", "by", "1", "desc"}
+
+	for count := 1; count <= len(expectedTokens); count++ {
+		actualToken := iterator.Next()
+		expectedToken := expectedTokens[count-1]
+		if expectedToken != actualToken.TokenValue {
+			t.Fatalf("Expected token to be %v, received %v", expectedToken, actualToken)
+		}
+	}
+}
+
+func TestTokenizerWithAllTokens12(t *testing.T) {
 	tokenizer := NewTokenizer("select 1 * 2, name from /home/apps where size>1000")
 	tokens := tokenizer.Tokenize()
 
@@ -180,5 +212,32 @@ func TestTokenizerWithAllTokens10(t *testing.T) {
 		if expectedToken != actualToken.TokenValue {
 			t.Fatalf("Expected token to be %v, received %v", expectedToken, actualToken)
 		}
+	}
+}
+
+func TestTokenEquality1(t *testing.T) {
+	nameToken := NewToken(RawString, "name")
+	equals := nameToken.Equals("NAME")
+
+	if equals != true {
+		t.Fatalf("Expected token equality to be true but was not")
+	}
+}
+
+func TestTokenEquality2(t *testing.T) {
+	nameToken := NewToken(RawString, "NAME")
+	equals := nameToken.Equals("NAME")
+
+	if equals != true {
+		t.Fatalf("Expected token equality to be true but was not")
+	}
+}
+
+func TestTokenEquality3(t *testing.T) {
+	nameToken := NewToken(RawString, "SIZE")
+	equals := nameToken.Equals("NAME")
+
+	if equals != false {
+		t.Fatalf("Expected token equality to be false but was true")
 	}
 }
