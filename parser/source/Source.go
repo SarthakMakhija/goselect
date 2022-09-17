@@ -13,22 +13,21 @@ type Source struct {
 }
 
 func NewSource(tokenIterator *tokenizer.TokenIterator) (*Source, error) {
-	if directory, err := getDirectory(tokenIterator); err != nil {
+	directory, err := getDirectory(tokenIterator)
+	if err != nil {
 		return nil, err
-	} else {
-		if file, err := os.Stat(directory); err != nil {
-			if os.IsNotExist(err) {
-				return nil, fmt.Errorf(messages.ErrorMessageInaccessibleSource, directory)
-			} else {
-				return nil, err
-			}
-		} else {
-			if !file.IsDir() {
-				return nil, errors.New(messages.ErrorMessageSourceNotADirectory)
-			}
-		}
-		return &Source{Directory: directory}, nil
 	}
+	file, err := os.Stat(directory)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return nil, fmt.Errorf(messages.ErrorMessageInaccessibleSource, directory)
+		}
+		return nil, err
+	}
+	if !file.IsDir() {
+		return nil, errors.New(messages.ErrorMessageSourceNotADirectory)
+	}
+	return &Source{Directory: directory}, nil
 }
 
 func getDirectory(tokenIterator *tokenizer.TokenIterator) (string, error) {
