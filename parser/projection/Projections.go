@@ -17,14 +17,15 @@ func NewProjections(
 	tokenIterator *tokenizer.TokenIterator,
 	context *context.ParsingApplicationContext,
 ) (*Projections, error) {
-	if expressions, err := all(tokenIterator, context); err != nil {
+
+	expressions, err := all(tokenIterator, context)
+	if err != nil {
 		return nil, err
-	} else {
-		if expressions.Count() == 0 {
-			return nil, errors.New(messages.ErrorMessageExpectedExpressionInProjection)
-		}
-		return &Projections{expressions: expressions}, nil
 	}
+	if expressions.Count() == 0 {
+		return nil, errors.New(messages.ErrorMessageExpectedExpressionInProjection)
+	}
+	return &Projections{expressions: expressions}, nil
 }
 
 func (projections Projections) Count() int {
@@ -60,6 +61,7 @@ func all(
 	tokenIterator *tokenizer.TokenIterator,
 	ctx *context.ParsingApplicationContext,
 ) (expression.Expressions, error) {
+
 	var expressions []*expression.Expression
 	var expectComma bool
 
@@ -78,11 +80,11 @@ func all(
 			expressions = append(expressions, expression.ExpressionWithAttribute(token.TokenValue))
 			expectComma = true
 		case ctx.IsASupportedFunction(token.TokenValue):
-			if function, err := function(token, tokenIterator, ctx); err != nil {
+			function, err := function(token, tokenIterator, ctx)
+			if err != nil {
 				return expression.Expressions{}, err
-			} else {
-				expressions = append(expressions, expression.ExpressionWithFunctionInstance(function))
 			}
+			expressions = append(expressions, expression.ExpressionWithFunctionInstance(function))
 			expectComma = true
 		}
 	}
@@ -94,6 +96,7 @@ func function(
 	tokenIterator *tokenizer.TokenIterator,
 	ctx *context.ParsingApplicationContext,
 ) (*expression.FunctionInstance, error) {
+
 	var parseFunction func(functionNameToken tokenizer.Token) (*expression.FunctionInstance, error)
 
 	aggregateFunctionStateOrNil := func(fn string) *context.FunctionState {
@@ -144,12 +147,12 @@ func function(
 		}
 		return nil, nil
 	}
-
-	if fn, err := parseFunction(functionNameToken); err != nil {
+	fn, err := parseFunction(functionNameToken)
+	if err != nil {
 		return nil, err
-	} else if fn == nil {
-		return nil, errors.New(messages.ErrorMessageInvalidProjection)
-	} else {
-		return fn, nil
 	}
+	if fn == nil {
+		return nil, errors.New(messages.ErrorMessageInvalidProjection)
+	}
+	return fn, nil
 }
