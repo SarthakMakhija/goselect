@@ -67,6 +67,12 @@
       "resultCount": 0
     },
     {
+      "name": "invalid where clause, using operator < in a function",
+      "query": "SELECT NAME, SIZE FROM ../resources/test/ WHERE lt(1<2)",
+      "isErrorExpected": true,
+      "resultCount": 0
+    },
+    {
       "name": "select lower(name), sum(size), fmtsize(sum(size)) from resources",
       "query": "SELECT lower(NAME), sum(SIZE), fmtsize(sum(size)) FROM ../resources/test/",
       "isErrorExpected": false,
@@ -125,6 +131,18 @@
       "query": "SELECT lower(NAME), size FROM ../resources/test/ order by 2 desc limit 3",
       "isErrorExpected": false,
       "resultCount": 3
+    },
+    {
+      "name": "select name, path from resources where name contains an underscore",
+      "query": "SELECT lower(NAME), path FROM ../resources/test/ where contains(name, _)",
+      "isErrorExpected": false,
+      "resultCount": 5
+    },
+    {
+      "name": "select name, path from resources where resources is a file and its name starts with test",
+      "query": "SELECT lower(NAME), path FROM ../resources/test/ where and(eq(isfile, true), like(lower(name), test.*))",
+      "isErrorExpected": false,
+      "resultCount": 5
     }
   ]
 }
