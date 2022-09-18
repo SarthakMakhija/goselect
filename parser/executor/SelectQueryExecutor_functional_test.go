@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"goselect/parser"
 	"goselect/parser/context"
-	"io/ioutil"
 	"os"
 	"testing"
 )
@@ -57,14 +56,8 @@ func TestSelectQueries(t *testing.T) {
 }
 
 func readAllQueries() Queries {
-	queryFile, err := os.Open("./FunctionalQueries.json")
-	defer queryFile.Close()
-	if err != nil {
-		panic(err)
-	}
-
 	var queries Queries
-	fileContent, _ := ioutil.ReadAll(queryFile)
+	fileContent, _ := os.ReadFile("./FunctionalQueries.json")
 	_ = json.Unmarshal(fileContent, &queries)
 
 	return queries
