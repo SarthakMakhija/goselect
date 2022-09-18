@@ -9,12 +9,12 @@ import (
 )
 
 func TestUnsupportedAttribute(t *testing.T) {
-	file, err := os.Stat("../resources/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")
+	file, err := os.Stat("../resources/test/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")
 	if err != nil {
 		panic(err)
 	}
 	context := NewContext(nil, NewAttributes())
-	fileAttributes := ToFileAttributes("../resources/TestResultsWithProjections/single/", file, context)
+	fileAttributes := ToFileAttributes("../resources/test/TestResultsWithProjections/single/", file, context)
 	value := fileAttributes.Get("unknown").GetAsString()
 
 	if value != "" {
@@ -23,12 +23,12 @@ func TestUnsupportedAttribute(t *testing.T) {
 }
 
 func TestFileName(t *testing.T) {
-	file, err := os.Stat("../resources/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")
+	file, err := os.Stat("../resources/test/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")
 	if err != nil {
 		panic(err)
 	}
 	context := NewContext(nil, NewAttributes())
-	fileAttributes := ToFileAttributes("../resources/TestResultsWithProjections/single/", file, context)
+	fileAttributes := ToFileAttributes("../resources/test/TestResultsWithProjections/single/", file, context)
 	name := fileAttributes.Get(AttributeName).GetAsString()
 
 	if name != "TestResultsWithProjections_A.txt" {
@@ -37,12 +37,12 @@ func TestFileName(t *testing.T) {
 }
 
 func TestFileNameForHiddenFile(t *testing.T) {
-	file, err := os.Stat("../resources/TestResultsWithProjections/hidden/.Make")
+	file, err := os.Stat("../resources/test/TestResultsWithProjections/hidden/.Make")
 	if err != nil {
 		panic(err)
 	}
 	context := NewContext(nil, NewAttributes())
-	fileAttributes := ToFileAttributes("../resources/TestResultsWithProjections/hidden/", file, context)
+	fileAttributes := ToFileAttributes("../resources/test/TestResultsWithProjections/hidden/", file, context)
 	name := fileAttributes.Get(AttributeName).GetAsString()
 
 	if name != ".Make" {
@@ -51,12 +51,12 @@ func TestFileNameForHiddenFile(t *testing.T) {
 }
 
 func TestFileExtension(t *testing.T) {
-	file, err := os.Stat("../resources/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")
+	file, err := os.Stat("../resources/test/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")
 	if err != nil {
 		panic(err)
 	}
 	context := NewContext(nil, NewAttributes())
-	fileAttributes := ToFileAttributes("../resources/TestResultsWithProjections/single/", file, context)
+	fileAttributes := ToFileAttributes("../resources/test/TestResultsWithProjections/single/", file, context)
 	extension := fileAttributes.Get(AttributeExtension).GetAsString()
 
 	if extension != ".txt" {
@@ -65,12 +65,12 @@ func TestFileExtension(t *testing.T) {
 }
 
 func TestFileExtensionForHiddenFile(t *testing.T) {
-	file, err := os.Stat("../resources/TestResultsWithProjections/hidden/.Make")
+	file, err := os.Stat("../resources/test/TestResultsWithProjections/hidden/.Make")
 	if err != nil {
 		panic(err)
 	}
 	context := NewContext(nil, NewAttributes())
-	fileAttributes := ToFileAttributes("../resources/TestResultsWithProjections/hidden/.Make", file, context)
+	fileAttributes := ToFileAttributes("../resources/test/TestResultsWithProjections/hidden/.Make", file, context)
 	extension := fileAttributes.Get(AttributeExtension).GetAsString()
 
 	if extension != "" {
@@ -79,12 +79,12 @@ func TestFileExtensionForHiddenFile(t *testing.T) {
 }
 
 func TestFileBaseName(t *testing.T) {
-	file, err := os.Stat("../resources/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")
+	file, err := os.Stat("../resources/test/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")
 	if err != nil {
 		panic(err)
 	}
 	context := NewContext(nil, NewAttributes())
-	fileAttributes := ToFileAttributes("../resources/TestResultsWithProjections/single/", file, context)
+	fileAttributes := ToFileAttributes("../resources/test/TestResultsWithProjections/single/", file, context)
 	baseName := fileAttributes.Get(AttributeBaseName).GetAsString()
 
 	if baseName != "TestResultsWithProjections_A" {
@@ -93,12 +93,12 @@ func TestFileBaseName(t *testing.T) {
 }
 
 func TestFileBaseNameForHiddenFile(t *testing.T) {
-	file, err := os.Stat("../resources/TestResultsWithProjections/hidden/.Make")
+	file, err := os.Stat("../resources/test/TestResultsWithProjections/hidden/.Make")
 	if err != nil {
 		panic(err)
 	}
 	context := NewContext(nil, NewAttributes())
-	fileAttributes := ToFileAttributes("../resources/TestResultsWithProjections/hidden/", file, context)
+	fileAttributes := ToFileAttributes("../resources/test/TestResultsWithProjections/hidden/", file, context)
 	baseName := fileAttributes.Get(AttributeBaseName).GetAsString()
 
 	if baseName != ".Make" {
@@ -107,15 +107,15 @@ func TestFileBaseNameForHiddenFile(t *testing.T) {
 }
 
 func TestFilePath(t *testing.T) {
-	file, err := os.Stat("../resources/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")
+	file, err := os.Stat("../resources/test/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")
 	if err != nil {
 		panic(err)
 	}
 	context := NewContext(nil, NewAttributes())
-	fileAttributes := ToFileAttributes("../resources/TestResultsWithProjections/single/", file, context)
+	fileAttributes := ToFileAttributes("../resources/test/TestResultsWithProjections/single/", file, context)
 
 	path := fileAttributes.Get(AttributePath).GetAsString()
-	expected := "../resources/TestResultsWithProjections/single/TestResultsWithProjections_A.txt"
+	expected := "../resources/test/TestResultsWithProjections/single/TestResultsWithProjections_A.txt"
 
 	if path != expected {
 		t.Fatalf("Expected file path to be %v, received %v", expected, path)
@@ -123,12 +123,12 @@ func TestFilePath(t *testing.T) {
 }
 
 func TestFileSize(t *testing.T) {
-	file, err := os.Stat("../resources/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")
+	file, err := os.Stat("../resources/test/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")
 	if err != nil {
 		panic(err)
 	}
 	context := NewContext(nil, NewAttributes())
-	fileAttributes := ToFileAttributes("../resources/TestResultsWithProjections/single/", file, context)
+	fileAttributes := ToFileAttributes("../resources/test/TestResultsWithProjections/single/", file, context)
 	size := fileAttributes.Get(AttributeSize).GetAsString()
 
 	if size != "58" {
@@ -137,12 +137,12 @@ func TestFileSize(t *testing.T) {
 }
 
 func TestFileType1(t *testing.T) {
-	file, err := os.Stat("../resources/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")
+	file, err := os.Stat("../resources/test/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")
 	if err != nil {
 		panic(err)
 	}
 	context := NewContext(nil, NewAttributes())
-	fileAttributes := ToFileAttributes("../resources/TestResultsWithProjections/single/", file, context)
+	fileAttributes := ToFileAttributes("../resources/test/TestResultsWithProjections/single/", file, context)
 	isFile, _ := fileAttributes.Get(AttributeNameIsFile).GetBoolean()
 
 	if isFile != true {
@@ -151,12 +151,12 @@ func TestFileType1(t *testing.T) {
 }
 
 func TestFileType2(t *testing.T) {
-	file, err := os.Stat("../resources/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")
+	file, err := os.Stat("../resources/test/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")
 	if err != nil {
 		panic(err)
 	}
 	context := NewContext(nil, NewAttributes())
-	fileAttributes := ToFileAttributes("../resources/TestResultsWithProjections/single/", file, context)
+	fileAttributes := ToFileAttributes("../resources/test/TestResultsWithProjections/single/", file, context)
 	isDirectory, _ := fileAttributes.Get(AttributeNameIsDir).GetBoolean()
 
 	if isDirectory != false {
@@ -165,12 +165,12 @@ func TestFileType2(t *testing.T) {
 }
 
 func TestFileType3(t *testing.T) {
-	file, err := os.Stat("../resources/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")
+	file, err := os.Stat("../resources/test/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")
 	if err != nil {
 		panic(err)
 	}
 	context := NewContext(nil, NewAttributes())
-	fileAttributes := ToFileAttributes("../resources/TestResultsWithProjections/single/", file, context)
+	fileAttributes := ToFileAttributes("../resources/test/TestResultsWithProjections/single/", file, context)
 	isHidden, _ := fileAttributes.Get(AttributeNameIsHidden).GetBoolean()
 
 	if isHidden != false {
@@ -179,12 +179,12 @@ func TestFileType3(t *testing.T) {
 }
 
 func TestFileType4(t *testing.T) {
-	file, err := os.Stat("../resources/TestResultsWithProjections/empty/Empty.log")
+	file, err := os.Stat("../resources/test/TestResultsWithProjections/empty/Empty.log")
 	if err != nil {
 		panic(err)
 	}
 	context := NewContext(nil, NewAttributes())
-	fileAttributes := ToFileAttributes("../resources/TestResultsWithProjections/empty/", file, context)
+	fileAttributes := ToFileAttributes("../resources/test/TestResultsWithProjections/empty/", file, context)
 	isEmpty, _ := fileAttributes.Get(AttributeNameIsEmpty).GetBoolean()
 
 	if isEmpty != true {
@@ -229,12 +229,12 @@ func TestFileType6(t *testing.T) {
 }
 
 func TestFilePermission(t *testing.T) {
-	file, err := os.Stat("../resources/TestResultsWithProjections/empty/Empty.log")
+	file, err := os.Stat("../resources/test/TestResultsWithProjections/empty/Empty.log")
 	if err != nil {
 		panic(err)
 	}
 	context := NewContext(nil, NewAttributes())
-	fileAttributes := ToFileAttributes("../resources/TestResultsWithProjections/empty/", file, context)
+	fileAttributes := ToFileAttributes("../resources/test/TestResultsWithProjections/empty/", file, context)
 	permission := fileAttributes.Get(AttributePermission).GetAsString()
 	expected := "-rw-r--r--"
 
@@ -244,12 +244,12 @@ func TestFilePermission(t *testing.T) {
 }
 
 func TestFilePermissionForUsers(t *testing.T) {
-	file, err := os.Stat("../resources/TestResultsWithProjections/empty/Empty.log")
+	file, err := os.Stat("../resources/test/TestResultsWithProjections/empty/Empty.log")
 	if err != nil {
 		panic(err)
 	}
 	context := NewContext(nil, NewAttributes())
-	fileAttributes := ToFileAttributes("../resources/TestResultsWithProjections/empty/", file, context)
+	fileAttributes := ToFileAttributes("../resources/test/TestResultsWithProjections/empty/", file, context)
 
 	userRead, _ := fileAttributes.Get(AttributeUserRead).GetBoolean()
 	userWrite, _ := fileAttributes.Get(AttributeUserWrite).GetBoolean()
@@ -264,12 +264,12 @@ func TestFilePermissionForUsers(t *testing.T) {
 }
 
 func TestFilePermissionForGroup(t *testing.T) {
-	file, err := os.Stat("../resources/TestResultsWithProjections/empty/Empty.log")
+	file, err := os.Stat("../resources/test/TestResultsWithProjections/empty/Empty.log")
 	if err != nil {
 		panic(err)
 	}
 	context := NewContext(nil, NewAttributes())
-	fileAttributes := ToFileAttributes("../resources/TestResultsWithProjections/empty/", file, context)
+	fileAttributes := ToFileAttributes("../resources/test/TestResultsWithProjections/empty/", file, context)
 
 	groupRead, _ := fileAttributes.Get(AttributeGroupRead).GetBoolean()
 	groupWrite, _ := fileAttributes.Get(AttributeGroupWrite).GetBoolean()
@@ -284,12 +284,12 @@ func TestFilePermissionForGroup(t *testing.T) {
 }
 
 func TestFilePermissionForOthers(t *testing.T) {
-	file, err := os.Stat("../resources/TestResultsWithProjections/empty/Empty.log")
+	file, err := os.Stat("../resources/test/TestResultsWithProjections/empty/Empty.log")
 	if err != nil {
 		panic(err)
 	}
 	context := NewContext(nil, NewAttributes())
-	fileAttributes := ToFileAttributes("../resources/TestResultsWithProjections/empty/", file, context)
+	fileAttributes := ToFileAttributes("../resources/test/TestResultsWithProjections/empty/", file, context)
 
 	othersRead, _ := fileAttributes.Get(AttributeOthersRead).GetBoolean()
 	othersWrite, _ := fileAttributes.Get(AttributeOthersWrite).GetBoolean()
@@ -370,12 +370,12 @@ func TestCreatedTime(t *testing.T) {
 }
 
 func TestMimeType1(t *testing.T) {
-	file, err := os.Stat("../resources/TestResultsWithProjections/empty/Empty.log")
+	file, err := os.Stat("../resources/test/TestResultsWithProjections/empty/Empty.log")
 	if err != nil {
 		panic(err)
 	}
 	context := NewContext(nil, NewAttributes())
-	fileAttributes := ToFileAttributes("../resources/TestResultsWithProjections/empty/", file, context)
+	fileAttributes := ToFileAttributes("../resources/test/TestResultsWithProjections/empty/", file, context)
 	mimeType := fileAttributes.Get(AttributeMimeType).GetAsString()
 	expected := "text/plain"
 
@@ -385,12 +385,12 @@ func TestMimeType1(t *testing.T) {
 }
 
 func TestMimeType2(t *testing.T) {
-	file, err := os.Stat("../resources/images/where.png")
+	file, err := os.Stat("../resources/test/images/where.png")
 	if err != nil {
 		panic(err)
 	}
 	context := NewContext(nil, NewAttributes())
-	fileAttributes := ToFileAttributes("../resources/images", file, context)
+	fileAttributes := ToFileAttributes("../resources/test/images", file, context)
 	mimeType := fileAttributes.Get(AttributeMimeType).GetAsString()
 	expected := "image/png"
 

@@ -43,7 +43,7 @@ func TestWithAnErrorWhileRunningWhere(t *testing.T) {
 
 func TestResultsWithProjections1(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select name, now() from ../resources/TestResultsWithProjections/single", newContext)
+	aParser, err := parser.NewParser("select name, now() from ../resources/test/TestResultsWithProjections/single", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -60,7 +60,7 @@ func TestResultsWithProjections1(t *testing.T) {
 
 func TestResultsWithProjections2(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name), base64(name) from ../resources/TestResultsWithProjections/single", newContext)
+	aParser, err := parser.NewParser("select lower(name), base64(name) from ../resources/test/TestResultsWithProjections/single", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -77,7 +77,7 @@ func TestResultsWithProjections2(t *testing.T) {
 
 func TestResultsWithProjections4(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name), replace(name, txt, log), replaceall(name, i, u) from ../resources/TestResultsWithProjections/single", newContext)
+	aParser, err := parser.NewParser("select lower(name), replace(name, txt, log), replaceall(name, i, u) from ../resources/test/TestResultsWithProjections/single", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -98,7 +98,7 @@ func TestResultsWithProjections4(t *testing.T) {
 
 func TestResultsWithProjectionsInNestedDirectories(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select isdir, lower(name), path from ../resources/TestResultsWithProjections/ order by 1 desc, 2 asc", newContext)
+	aParser, err := parser.NewParser("select isdir, lower(name), path from ../resources/test/TestResultsWithProjections/ order by 1 desc, 2 asc", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -108,24 +108,24 @@ func TestResultsWithProjectionsInNestedDirectories(t *testing.T) {
 	}
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
-		{context.BooleanValue(true), context.StringValue("empty"), context.StringValue("../resources/TestResultsWithProjections/empty")},
-		{context.BooleanValue(true), context.StringValue("hidden"), context.StringValue("../resources/TestResultsWithProjections/hidden")},
-		{context.BooleanValue(true), context.StringValue("multi"), context.StringValue("../resources/TestResultsWithProjections/multi")},
-		{context.BooleanValue(true), context.StringValue("single"), context.StringValue("../resources/TestResultsWithProjections/single")},
-		{context.BooleanValue(false), context.StringValue(".make"), context.StringValue("../resources/TestResultsWithProjections/hidden/.Make")},
-		{context.BooleanValue(false), context.StringValue("empty.log"), context.StringValue("../resources/TestResultsWithProjections/empty/Empty.log")},
-		{context.BooleanValue(false), context.StringValue("testresultswithprojections_a.log"), context.StringValue("../resources/TestResultsWithProjections/multi/TestResultsWithProjections_A.log")},
-		{context.BooleanValue(false), context.StringValue("testresultswithprojections_a.txt"), context.StringValue("../resources/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")},
-		{context.BooleanValue(false), context.StringValue("testresultswithprojections_b.log"), context.StringValue("../resources/TestResultsWithProjections/multi/TestResultsWithProjections_B.log")},
-		{context.BooleanValue(false), context.StringValue("testresultswithprojections_c.txt"), context.StringValue("../resources/TestResultsWithProjections/multi/TestResultsWithProjections_C.txt")},
-		{context.BooleanValue(false), context.StringValue("testresultswithprojections_d.txt"), context.StringValue("../resources/TestResultsWithProjections/multi/TestResultsWithProjections_D.txt")},
+		{context.BooleanValue(true), context.StringValue("empty"), context.StringValue("../resources/test/TestResultsWithProjections/empty")},
+		{context.BooleanValue(true), context.StringValue("hidden"), context.StringValue("../resources/test/TestResultsWithProjections/hidden")},
+		{context.BooleanValue(true), context.StringValue("multi"), context.StringValue("../resources/test/TestResultsWithProjections/multi")},
+		{context.BooleanValue(true), context.StringValue("single"), context.StringValue("../resources/test/TestResultsWithProjections/single")},
+		{context.BooleanValue(false), context.StringValue(".make"), context.StringValue("../resources/test/TestResultsWithProjections/hidden/.Make")},
+		{context.BooleanValue(false), context.StringValue("empty.log"), context.StringValue("../resources/test/TestResultsWithProjections/empty/Empty.log")},
+		{context.BooleanValue(false), context.StringValue("testresultswithprojections_a.log"), context.StringValue("../resources/test/TestResultsWithProjections/multi/TestResultsWithProjections_A.log")},
+		{context.BooleanValue(false), context.StringValue("testresultswithprojections_a.txt"), context.StringValue("../resources/test/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")},
+		{context.BooleanValue(false), context.StringValue("testresultswithprojections_b.log"), context.StringValue("../resources/test/TestResultsWithProjections/multi/TestResultsWithProjections_B.log")},
+		{context.BooleanValue(false), context.StringValue("testresultswithprojections_c.txt"), context.StringValue("../resources/test/TestResultsWithProjections/multi/TestResultsWithProjections_C.txt")},
+		{context.BooleanValue(false), context.StringValue("testresultswithprojections_d.txt"), context.StringValue("../resources/test/TestResultsWithProjections/multi/TestResultsWithProjections_D.txt")},
 	}
 	assertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsInNestedDirectoriesWithOptionToTraverseNestedDirectoriesAsFalse(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select isdir, lower(name), path from ../resources/TestResultsWithProjections/ order by 1 desc, 2 asc", newContext)
+	aParser, err := parser.NewParser("select isdir, lower(name), path from ../resources/test/TestResultsWithProjections/ order by 1 desc, 2 asc", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -135,17 +135,17 @@ func TestResultsWithProjectionsInNestedDirectoriesWithOptionToTraverseNestedDire
 	}
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions().DisableNestedTraversal()).Execute()
 	expected := [][]context.Value{
-		{context.BooleanValue(true), context.StringValue("empty"), context.StringValue("../resources/TestResultsWithProjections/empty")},
-		{context.BooleanValue(true), context.StringValue("hidden"), context.StringValue("../resources/TestResultsWithProjections/hidden")},
-		{context.BooleanValue(true), context.StringValue("multi"), context.StringValue("../resources/TestResultsWithProjections/multi")},
-		{context.BooleanValue(true), context.StringValue("single"), context.StringValue("../resources/TestResultsWithProjections/single")},
+		{context.BooleanValue(true), context.StringValue("empty"), context.StringValue("../resources/test/TestResultsWithProjections/empty")},
+		{context.BooleanValue(true), context.StringValue("hidden"), context.StringValue("../resources/test/TestResultsWithProjections/hidden")},
+		{context.BooleanValue(true), context.StringValue("multi"), context.StringValue("../resources/test/TestResultsWithProjections/multi")},
+		{context.BooleanValue(true), context.StringValue("single"), context.StringValue("../resources/test/TestResultsWithProjections/single")},
 	}
 	assertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsInNestedDirectoriesWithOptionToIgnoreTraversalOfDirectories(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select isdir, lower(name), path from ../resources/TestResultsWithProjections/ order by 1 desc, 2 asc", newContext)
+	aParser, err := parser.NewParser("select isdir, lower(name), path from ../resources/test/TestResultsWithProjections/ order by 1 desc, 2 asc", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -156,19 +156,19 @@ func TestResultsWithProjectionsInNestedDirectoriesWithOptionToIgnoreTraversalOfD
 
 	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions().EnableNestedTraversal().DirectoriesToIgnoreTraversal([]string{"multi", "empty"})).Execute()
 	expected := [][]context.Value{
-		{context.BooleanValue(true), context.StringValue("empty"), context.StringValue("../resources/TestResultsWithProjections/empty")},
-		{context.BooleanValue(true), context.StringValue("hidden"), context.StringValue("../resources/TestResultsWithProjections/hidden")},
-		{context.BooleanValue(true), context.StringValue("multi"), context.StringValue("../resources/TestResultsWithProjections/multi")},
-		{context.BooleanValue(true), context.StringValue("single"), context.StringValue("../resources/TestResultsWithProjections/single")},
-		{context.BooleanValue(false), context.StringValue(".make"), context.StringValue("../resources/TestResultsWithProjections/hidden/.Make")},
-		{context.BooleanValue(false), context.StringValue("testresultswithprojections_a.txt"), context.StringValue("../resources/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")},
+		{context.BooleanValue(true), context.StringValue("empty"), context.StringValue("../resources/test/TestResultsWithProjections/empty")},
+		{context.BooleanValue(true), context.StringValue("hidden"), context.StringValue("../resources/test/TestResultsWithProjections/hidden")},
+		{context.BooleanValue(true), context.StringValue("multi"), context.StringValue("../resources/test/TestResultsWithProjections/multi")},
+		{context.BooleanValue(true), context.StringValue("single"), context.StringValue("../resources/test/TestResultsWithProjections/single")},
+		{context.BooleanValue(false), context.StringValue(".make"), context.StringValue("../resources/test/TestResultsWithProjections/hidden/.Make")},
+		{context.BooleanValue(false), context.StringValue("testresultswithprojections_a.txt"), context.StringValue("../resources/test/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")},
 	}
 	assertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsInCaseInsensitiveManner(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("SELECT LOWER(NAME), BASE64(NAME) FROM ../resources/TestResultsWithProjections/single", newContext)
+	aParser, err := parser.NewParser("SELECT LOWER(NAME), BASE64(NAME) FROM ../resources/test/TestResultsWithProjections/single", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -185,7 +185,7 @@ func TestResultsWithProjectionsInCaseInsensitiveManner(t *testing.T) {
 
 func TestResultsWithProjections3(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name), ext from ../resources/TestResultsWithProjections/single", newContext)
+	aParser, err := parser.NewParser("select lower(name), ext from ../resources/test/TestResultsWithProjections/single", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -202,7 +202,7 @@ func TestResultsWithProjections3(t *testing.T) {
 
 func TestResultsWithProjectionsWithConcatWsFunction(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name), concatWs(lower(name), uid, gid, '#') from ../resources/TestResultsWithProjections/single", newContext)
+	aParser, err := parser.NewParser("select lower(name), concatWs(lower(name), uid, gid, '#') from ../resources/test/TestResultsWithProjections/single", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -221,7 +221,7 @@ func TestResultsWithProjectionsWithConcatWsFunction(t *testing.T) {
 
 func TestResultsWithProjectionsWithSubstringFunction(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name), substr(lower(name), 15) from ../resources/TestResultsWithProjections/single", newContext)
+	aParser, err := parser.NewParser("select lower(name), substr(lower(name), 15) from ../resources/test/TestResultsWithProjections/single", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -239,7 +239,7 @@ func TestResultsWithProjectionsWithSubstringFunction(t *testing.T) {
 
 func TestResultsWithProjectionsWithDayDifference(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select daydiff(now(), now()) from ../resources/TestResultsWithProjections/single", newContext)
+	aParser, err := parser.NewParser("select daydiff(now(), now()) from ../resources/test/TestResultsWithProjections/single", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -259,7 +259,7 @@ func TestResultsWithProjectionsWithDayDifference(t *testing.T) {
 
 func TestResultsWithProjectionsWithHourDifference(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select hourdiff(now(), now()) from ../resources/TestResultsWithProjections/single", newContext)
+	aParser, err := parser.NewParser("select hourdiff(now(), now()) from ../resources/test/TestResultsWithProjections/single", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -279,7 +279,7 @@ func TestResultsWithProjectionsWithHourDifference(t *testing.T) {
 
 func TestResultsWithProjectionsAndLimit1(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name), ext from ../resources/TestResultsWithProjections/multi limit 3", newContext)
+	aParser, err := parser.NewParser("select lower(name), ext from ../resources/test/TestResultsWithProjections/multi limit 3", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -295,7 +295,7 @@ func TestResultsWithProjectionsAndLimit1(t *testing.T) {
 
 func TestResultsWithProjectionsAndLimit2(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name), ext from ../resources/TestResultsWithProjections/multi limit 0", newContext)
+	aParser, err := parser.NewParser("select lower(name), ext from ../resources/test/TestResultsWithProjections/multi limit 0", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -311,7 +311,7 @@ func TestResultsWithProjectionsAndLimit2(t *testing.T) {
 
 func TestResultsWithProjectionsAndLimit3(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name) from ../resources/TestResultsWithProjections/multi order by 1 limit 2", newContext)
+	aParser, err := parser.NewParser("select lower(name) from ../resources/test/TestResultsWithProjections/multi order by 1 limit 2", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -329,7 +329,7 @@ func TestResultsWithProjectionsAndLimit3(t *testing.T) {
 
 func TestResultsWithProjectionsOrderBy1(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select upper(lower(name)), ext from ../resources/TestResultsWithProjections/multi order by 1 desc", newContext)
+	aParser, err := parser.NewParser("select upper(lower(name)), ext from ../resources/test/TestResultsWithProjections/multi order by 1 desc", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -349,7 +349,7 @@ func TestResultsWithProjectionsOrderBy1(t *testing.T) {
 
 func TestResultsWithProjectionsOrderBy2(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name), ext from ../resources/TestResultsWithProjections/multi order by 2, 1", newContext)
+	aParser, err := parser.NewParser("select lower(name), ext from ../resources/test/TestResultsWithProjections/multi order by 2, 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -369,7 +369,7 @@ func TestResultsWithProjectionsOrderBy2(t *testing.T) {
 
 func TestResultsWithProjectionsIncludingConcatFunction(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name), concat(lower(name), '-FILE') from ../resources/TestResultsWithProjections/multi order by 2, 1", newContext)
+	aParser, err := parser.NewParser("select lower(name), concat(lower(name), '-FILE') from ../resources/test/TestResultsWithProjections/multi order by 2, 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -389,7 +389,7 @@ func TestResultsWithProjectionsIncludingConcatFunction(t *testing.T) {
 
 func TestResultsWithProjectionsIncludingConcatWsFunction(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name), concatws(lower(name), 'FILE', '@') from ../resources/TestResultsWithProjections/multi order by 2, 1", newContext)
+	aParser, err := parser.NewParser("select lower(name), concatws(lower(name), 'FILE', '@') from ../resources/test/TestResultsWithProjections/multi order by 2, 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -409,7 +409,7 @@ func TestResultsWithProjectionsIncludingConcatWsFunction(t *testing.T) {
 
 func TestResultsWithProjectionsIncludingContainsFunction(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name), contains(lower(name), 'log') from ../resources/TestResultsWithProjections/multi order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(name), contains(lower(name), 'log') from ../resources/test/TestResultsWithProjections/multi order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -429,7 +429,7 @@ func TestResultsWithProjectionsIncludingContainsFunction(t *testing.T) {
 
 func TestResultsWithProjectionsIncludingAddFunction(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name), add(len(name), 4) from ../resources/TestResultsWithProjections/multi order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(name), add(len(name), 4) from ../resources/test/TestResultsWithProjections/multi order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -449,7 +449,7 @@ func TestResultsWithProjectionsIncludingAddFunction(t *testing.T) {
 
 func TestResultsWithProjectionsIncludingSubtractFunction(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name), sub(len(name), 2) from ../resources/TestResultsWithProjections/multi order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(name), sub(len(name), 2) from ../resources/test/TestResultsWithProjections/multi order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -469,7 +469,7 @@ func TestResultsWithProjectionsIncludingSubtractFunction(t *testing.T) {
 
 func TestResultsWithProjectionsIncludingMultiplyFunction(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name), mul(len(name), 2) from ../resources/TestResultsWithProjections/multi order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(name), mul(len(name), 2) from ../resources/test/TestResultsWithProjections/multi order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -489,7 +489,7 @@ func TestResultsWithProjectionsIncludingMultiplyFunction(t *testing.T) {
 
 func TestResultsWithProjectionsIncludingDivideFunction(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name), div(len(name), 2) from ../resources/TestResultsWithProjections/multi order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(name), div(len(name), 2) from ../resources/test/TestResultsWithProjections/multi order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -509,7 +509,7 @@ func TestResultsWithProjectionsIncludingDivideFunction(t *testing.T) {
 
 func TestResultsWithProjectionsIncludingNegativeValueInAddSubMulDivFunction(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select add(len(name), -2), sub(len(name), -2), mul(len(name), -2), div(len(name), -2) from ../resources/TestResultsWithProjections/multi order by 1", newContext)
+	aParser, err := parser.NewParser("select add(len(name), -2), sub(len(name), -2), mul(len(name), -2), div(len(name), -2) from ../resources/test/TestResultsWithProjections/multi order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -529,7 +529,7 @@ func TestResultsWithProjectionsIncludingNegativeValueInAddSubMulDivFunction(t *t
 
 func TestResultsWithProjectionsWithIdentity(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name), identity(add(1,2)) from ../resources/TestResultsWithProjections/multi order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(name), identity(add(1,2)) from ../resources/test/TestResultsWithProjections/multi order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -549,7 +549,7 @@ func TestResultsWithProjectionsWithIdentity(t *testing.T) {
 
 func TestResultsWithProjectionsWithBaseName(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name), lower(basename) from ../resources/TestResultsWithProjections/multi order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(name), lower(basename) from ../resources/test/TestResultsWithProjections/multi order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -569,7 +569,7 @@ func TestResultsWithProjectionsWithBaseName(t *testing.T) {
 
 func TestResultsWithProjectionsWithFormatSize(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name), fmtsize(size) from ../resources/TestResultsWithProjections/multi order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(name), fmtsize(size) from ../resources/test/TestResultsWithProjections/multi order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -589,7 +589,7 @@ func TestResultsWithProjectionsWithFormatSize(t *testing.T) {
 
 func TestResultsWithProjectionsWithMimeType1(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name), mimetype from ../resources/TestResultsWithProjections/single", newContext)
+	aParser, err := parser.NewParser("select lower(name), mimetype from ../resources/test/TestResultsWithProjections/single", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -606,7 +606,7 @@ func TestResultsWithProjectionsWithMimeType1(t *testing.T) {
 
 func TestResultsWithProjectionsWithMimeType2(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name), mimetype from ../resources/images where eq(mimetype, image/png)", newContext)
+	aParser, err := parser.NewParser("select lower(name), mimetype from ../resources/test/images where eq(mimetype, image/png)", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -623,7 +623,7 @@ func TestResultsWithProjectionsWithMimeType2(t *testing.T) {
 
 func TestResultsWithProjectionsWithMimeType3(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select isdir, lower(name), mime from ../resources/TestResultsWithProjections/ order by 1 desc, 2 asc", newContext)
+	aParser, err := parser.NewParser("select isdir, lower(name), mime from ../resources/test/TestResultsWithProjections/ order by 1 desc, 2 asc", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -650,7 +650,7 @@ func TestResultsWithProjectionsWithMimeType3(t *testing.T) {
 
 func TestResultsWithProjectionsWithMimeType4(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select isdir, lower(name), mime from ../resources/TestResultsWithProjections/ where eq(istext(mime), true) order by 1 desc, 2 asc", newContext)
+	aParser, err := parser.NewParser("select isdir, lower(name), mime from ../resources/test/TestResultsWithProjections/ where eq(istext(mime), true) order by 1 desc, 2 asc", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -673,7 +673,7 @@ func TestResultsWithProjectionsWithMimeType4(t *testing.T) {
 
 func TestResultsWithProjectionsWithoutProperParametersToAFunction(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select name, lower() from ../resources/TestResultsWithProjections/single", newContext)
+	aParser, err := parser.NewParser("select name, lower() from ../resources/test/TestResultsWithProjections/single", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}

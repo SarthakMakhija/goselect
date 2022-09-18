@@ -10,7 +10,7 @@ import (
 
 func TestTableFormatter(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name) from ../resources/TestResultsWithProjections/multi order by 1 limit 2", newContext)
+	aParser, err := parser.NewParser("select lower(name) from ../resources/test/TestResultsWithProjections/multi order by 1 limit 2", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
