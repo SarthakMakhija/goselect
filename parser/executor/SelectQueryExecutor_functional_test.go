@@ -1,3 +1,6 @@
+//go:build functional
+// +build functional
+
 package executor
 
 import (
