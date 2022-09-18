@@ -385,12 +385,12 @@ func TestMimeType1(t *testing.T) {
 }
 
 func TestMimeType2(t *testing.T) {
-	file, err := os.Stat("../../images/any_10.png")
+	file, err := os.Stat("../resources/images/where.png")
 	if err != nil {
 		panic(err)
 	}
 	context := NewContext(nil, NewAttributes())
-	fileAttributes := ToFileAttributes("../../images", file, context)
+	fileAttributes := ToFileAttributes("../resources/images", file, context)
 	mimeType := fileAttributes.Get(AttributeMimeType).GetAsString()
 	expected := "image/png"
 
