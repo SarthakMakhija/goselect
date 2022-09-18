@@ -143,6 +143,18 @@
       "query": "SELECT lower(NAME), path FROM ../resources/test/ where and(eq(isfile, true), like(lower(name), test.*))",
       "isErrorExpected": false,
       "resultCount": 5
+    },
+    {
+      "name": "missing source",
+      "query": "SELECT lower(NAME) from where and(eq(ext, .log), eq(isempty, true)) order by 1",
+      "isErrorExpected": true,
+      "resultCount": 0
+    },
+    {
+      "name": "missing source, no from keyword",
+      "query": "SELECT lower(NAME), size",
+      "isErrorExpected": true,
+      "resultCount": 0
     }
   ]
 }
