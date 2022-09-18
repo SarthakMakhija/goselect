@@ -1,0 +1,130 @@
+{
+  "queries": [
+    {
+      "name": "select name, size",
+      "query": "select name, size from ../resources/test/images",
+      "isErrorExpected": false,
+      "resultCount": 1
+    },
+    {
+      "name": "select name, size where isImage is true",
+      "query": "select name, size from ../resources/test/images where eq(isImage(mime), true)",
+      "isErrorExpected": false,
+      "resultCount": 1
+    },
+    {
+      "name": "select name, size where isImage is true in upper case",
+      "query": "SELECT NAME, SIZE FROM ../resources/test/images WHERE EQ(ISIMAGE(MIME), TRUE)",
+      "isErrorExpected": false,
+      "resultCount": 1
+    },
+    {
+      "name": "select name, size for empty file",
+      "query": "SELECT NAME, SIZE FROM ../resources/test/ WHERE EQ(isEmpty, TRUE)",
+      "isErrorExpected": false,
+      "resultCount": 2
+    },
+    {
+      "name": "invalid projection, no supported attribute",
+      "query": "SELECT ok, 1 FROM ../resources/test/",
+      "isErrorExpected": true,
+      "resultCount": 0
+    },
+    {
+      "name": "invalid projection, with unsupported arithmetic and relational operators (1)",
+      "query": "SELECT 1+2, 1*2, 1>2, 5>6 FROM ../resources/test/",
+      "isErrorExpected": true,
+      "resultCount": 0
+    },
+    {
+      "name": "invalid projection, with unsupported arithmetic and relational operators(2)",
+      "query": "SELECT 1 + 2, 1 * 2, 1 > 2, 5 > 6 FROM ../resources/test/",
+      "isErrorExpected": true,
+      "resultCount": 0
+    },
+    {
+      "name": "invalid where clause, no where supported function is used",
+      "query": "SELECT NAME, SIZE FROM ../resources/test/ WHERE 2=3",
+      "isErrorExpected": true,
+      "resultCount": 0
+    },
+    {
+      "name": "invalid where clause, no where clause after where keyword",
+      "query": "SELECT NAME, SIZE FROM ../resources/test/ WHERE ",
+      "isErrorExpected": true,
+      "resultCount": 0
+    },
+    {
+      "name": "invalid where clause, an aggregate function is used",
+      "query": "SELECT NAME, SIZE FROM ../resources/test/ WHERE gt(avg(size), 10)",
+      "isErrorExpected": true,
+      "resultCount": 0
+    },
+    {
+      "name": "invalid where clause, insufficient parameter values in where clause function",
+      "query": "SELECT NAME, SIZE FROM ../resources/test/ WHERE gt(size)",
+      "isErrorExpected": true,
+      "resultCount": 0
+    },
+    {
+      "name": "select lower(name), sum(size), fmtsize(sum(size)) from resources",
+      "query": "SELECT lower(NAME), sum(SIZE), fmtsize(sum(size)) FROM ../resources/test/",
+      "isErrorExpected": false,
+      "resultCount": 14
+    },
+    {
+      "name": "select lower(name) from resources where extension is log",
+      "query": "SELECT lower(NAME) FROM ../resources/test/ where eq(ext, .log)",
+      "isErrorExpected": false,
+      "resultCount": 3
+    },
+    {
+      "name": "select lower(name) from resources where extension is log and file size is 0",
+      "query": "SELECT lower(NAME) FROM ../resources/test/ where and(eq(ext, .log), eq(isempty, true))",
+      "isErrorExpected": false,
+      "resultCount": 1
+    },
+    {
+      "name": "select lower(name) from resources where extension is log and file size is 0",
+      "query": "SELECT lower(NAME) FROM ../resources/test/ where and(eq(ext, .log), eq(isempty, true))",
+      "isErrorExpected": false,
+      "resultCount": 1
+    },
+    {
+      "name": "invalid order by, illegal order by position",
+      "query": "SELECT lower(NAME) FROM ../resources/test/ where and(eq(ext, .log), eq(isempty, true)) order by 2",
+      "isErrorExpected": true,
+      "resultCount": 0
+    },
+    {
+      "name": "invalid order by, no position provided",
+      "query": "SELECT lower(NAME) FROM ../resources/test/ where and(eq(ext, .log), eq(isempty, true)) order by ",
+      "isErrorExpected": true,
+      "resultCount": 0
+    },
+    {
+      "name": "invalid order by, illegal order by position value",
+      "query": "SELECT lower(NAME) FROM ../resources/test/ where and(eq(ext, .log), eq(isempty, true)) order by -1",
+      "isErrorExpected": true,
+      "resultCount": 0
+    },
+    {
+      "name": "invalid order by, no limit value",
+      "query": "SELECT lower(NAME) FROM ../resources/test/ where and(eq(ext, .log), eq(isempty, true)) order by 1 limit",
+      "isErrorExpected": true,
+      "resultCount": 0
+    },
+    {
+      "name": "invalid order by, illegal limit value",
+      "query": "SELECT lower(NAME) FROM ../resources/test/ where and(eq(ext, .log), eq(isempty, true)) order by 1 limit -9",
+      "isErrorExpected": true,
+      "resultCount": 0
+    },
+    {
+      "name": "select name, size ordered by size in descending order and pick top 3",
+      "query": "SELECT lower(NAME), size FROM ../resources/test/ order by 2 desc limit 3",
+      "isErrorExpected": false,
+      "resultCount": 3
+    }
+  ]
+}

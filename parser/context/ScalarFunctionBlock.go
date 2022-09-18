@@ -162,7 +162,7 @@ func (l LessThanFunctionBlock) run(args ...Value) (Value, error) {
 }
 
 func (g GreaterThanFunctionBlock) run(args ...Value) (Value, error) {
-	if err := ensureNParametersOrError(args, FunctionNameLessThan, 2); err != nil {
+	if err := ensureNParametersOrError(args, FunctionNameGreaterThan, 2); err != nil {
 		return EmptyValue, err
 	}
 	if args[0].CompareTo(args[1]) == CompareToGreaterThan {
