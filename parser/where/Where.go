@@ -122,7 +122,11 @@ func function(
 				expectOpeningParentheses = false
 			default:
 				if !token.Equals(",") {
-					functionArgs = append(functionArgs, expression.WithValue(context.StringValue(token.TokenValue)))
+					stringValue, err := context.ToValue(token)
+					if err != nil {
+						return nil, err
+					}
+					functionArgs = append(functionArgs, expression.WithValue(stringValue))
 				}
 			}
 		}

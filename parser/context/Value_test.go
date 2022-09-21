@@ -4,6 +4,7 @@
 package context
 
 import (
+	"goselect/parser/tokenizer"
 	"testing"
 	"time"
 )
@@ -507,5 +508,95 @@ func TestCompareToUndefinedValues(t *testing.T) {
 
 	if value.CompareTo(other) != CompareToNotPossible {
 		t.Fatalf("Expected comparison not possible between empty values but was possible")
+	}
+}
+
+func TestTokenToInt64Value(t *testing.T) {
+	token := tokenizer.NewToken(tokenizer.Numeric, "12")
+	value, _ := ToValue(token)
+
+	if value.CompareTo(Int64Value(12)) != CompareToEqual {
+		t.Fatalf("Expected token %v to be converted to a value %v, but received %v", "12", Int64Value(12), value)
+	}
+}
+
+func TestTokenToInt64ValueWithError(t *testing.T) {
+	token := tokenizer.NewToken(tokenizer.Numeric, "non-numeric")
+	_, err := ToValue(token)
+
+	if err == nil {
+		t.Fatalf("Expected an error while converting %v to int64 but received none", "non-numeric")
+	}
+}
+
+func TestTokenToFloat64Value(t *testing.T) {
+	token := tokenizer.NewToken(tokenizer.FloatingPoint, "12.78")
+	value, _ := ToValue(token)
+
+	if value.CompareTo(Float64Value(12.78)) != CompareToEqual {
+		t.Fatalf("Expected token %v to be converted to a value %v, but received %v", "12.78", Float64Value(12.78), value)
+	}
+}
+
+func TestTokenToFloat64ValueWithError(t *testing.T) {
+	token := tokenizer.NewToken(tokenizer.FloatingPoint, "non-numeric")
+	_, err := ToValue(token)
+
+	if err == nil {
+		t.Fatalf("Expected an error while converting %v to float64 but received none", "non-numeric")
+	}
+}
+
+func TestTokenToBooleanAsTrue1(t *testing.T) {
+	token := tokenizer.NewToken(tokenizer.Boolean, "true")
+	value, _ := ToValue(token)
+
+	if value.CompareTo(booleanValueUsing(true)) != CompareToEqual {
+		t.Fatalf("Expected token %v to be converted to a value %v, but received %v", "true", booleanValueUsing(true), value)
+	}
+}
+
+func TestTokenToBooleanAsTrue2(t *testing.T) {
+	token := tokenizer.NewToken(tokenizer.Boolean, "y")
+	value, _ := ToValue(token)
+
+	if value.CompareTo(booleanValueUsing(true)) != CompareToEqual {
+		t.Fatalf("Expected token %v to be converted to a value %v, but received %v", "y", booleanValueUsing(true), value)
+	}
+}
+
+func TestTokenToBooleanAsFalse1(t *testing.T) {
+	token := tokenizer.NewToken(tokenizer.Boolean, "false")
+	value, _ := ToValue(token)
+
+	if value.CompareTo(booleanValueUsing(false)) != CompareToEqual {
+		t.Fatalf("Expected token %v to be converted to a value %v, but received %v", "false", booleanValueUsing(false), value)
+	}
+}
+
+func TestTokenToBooleanAsFalse2(t *testing.T) {
+	token := tokenizer.NewToken(tokenizer.Boolean, "n")
+	value, _ := ToValue(token)
+
+	if value.CompareTo(booleanValueUsing(false)) != CompareToEqual {
+		t.Fatalf("Expected token %v to be converted to a value %v, but received %v", "n", booleanValueUsing(false), value)
+	}
+}
+
+func TestTokenToString1(t *testing.T) {
+	token := tokenizer.NewToken(tokenizer.Boolean, "non-boolean")
+	value, _ := ToValue(token)
+
+	if value.CompareTo(StringValue("non-boolean")) != CompareToEqual {
+		t.Fatalf("Expected token %v to be converted to a value %v, but received %v", "non-boolean", StringValue("non-boolean"), value)
+	}
+}
+
+func TestTokenToString2(t *testing.T) {
+	token := tokenizer.NewToken(tokenizer.RawString, "string")
+	value, _ := ToValue(token)
+
+	if value.CompareTo(StringValue("string")) != CompareToEqual {
+		t.Fatalf("Expected token %v to be converted to a value %v, but received %v", "string", StringValue("string"), value)
 	}
 }

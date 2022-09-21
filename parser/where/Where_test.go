@@ -66,6 +66,23 @@ func TestThrowsAnErrorWithInvalidParentheses(t *testing.T) {
 	}
 }
 
+func TestWhereWithIncorrectTokenInterpretation(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "where"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "eq"))
+	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
+	tokens.Add(tokenizer.NewToken(tokenizer.Numeric, "something"))
+	tokens.Add(tokenizer.NewToken(tokenizer.Comma, ","))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "value"))
+	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
+
+	_, err := NewWhere(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
+
+	if err == nil {
+		t.Fatalf("Expected an error given token was incorrectly inferred as numeric but received none")
+	}
+}
+
 func TestEvaluatesWhereClauseWithContains(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "where"))

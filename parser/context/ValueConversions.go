@@ -3,6 +3,7 @@ package context
 import (
 	"fmt"
 	"goselect/parser/error/messages"
+	"goselect/parser/tokenizer"
 	"strconv"
 	"strings"
 )
@@ -128,6 +129,33 @@ var toTargetConversions = map[TypePair]toCommonTypeValueFunction{
 		}
 		return aValue, Float64Value(v), nil
 	},
+}
+
+func ToValue(token tokenizer.Token) (Value, error) {
+	switch token.TokenType {
+	case tokenizer.Numeric:
+		v, err := strconv.ParseInt(token.TokenValue, 10, 64)
+		if err != nil {
+			return EmptyValue, err
+		}
+		return Int64Value(v), nil
+	case tokenizer.FloatingPoint:
+		v, err := strconv.ParseFloat(token.TokenValue, 64)
+		if err != nil {
+			return EmptyValue, err
+		}
+		return Float64Value(v), nil
+	case tokenizer.Boolean:
+		if strings.ToLower(token.TokenValue) == "true" || strings.ToLower(token.TokenValue) == "y" {
+			return trueBooleanValue, nil
+		}
+		if strings.ToLower(token.TokenValue) == "false" || strings.ToLower(token.TokenValue) == "n" {
+			return falseBooleanValue, nil
+		}
+		return StringValue(token.TokenValue), nil
+	default:
+		return StringValue(token.TokenValue), nil
+	}
 }
 
 func getCommonType(value Value, other Value, typePair TypePair) (Value, Value, error) {
