@@ -18,7 +18,7 @@ const (
 
 type Expression struct {
 	eType     expressionType
-	value     string
+	value     context.Value
 	attribute string
 	function  *FunctionInstance
 }
@@ -53,7 +53,7 @@ func WithFunctionInstance(fn *FunctionInstance) *Expression {
 	}
 }
 
-func WithValue(value string) *Expression {
+func WithValue(value context.Value) *Expression {
 	return &Expression{
 		eType: TypeValue,
 		value: value,
@@ -86,7 +86,7 @@ func (expressions Expressions) DisplayableAttributes() []string {
 			if expression.eType == TypeAttribute {
 				return expression.attribute
 			}
-			return expression.value
+			return expression.value.GetAsString()
 		}
 		var result = expression.function.name + "("
 		for _, arg := range expression.function.args {
@@ -105,7 +105,7 @@ func (expressions Expressions) DisplayableAttributes() []string {
 		if expression.eType == TypeAttribute {
 			attributes = append(attributes, expression.attribute)
 		} else if expression.eType == TypeValue {
-			attributes = append(attributes, expression.value)
+			attributes = append(attributes, expression.value.GetAsString())
 		} else {
 			attributes = append(attributes, functionAsString(expression))
 		}
@@ -207,7 +207,7 @@ func (expression *Expression) FullyEvaluate(functions *context.AllFunctions) (co
 				values = append(values, v)
 			} else {
 				if arg.eType == TypeValue {
-					values = append(values, context.StringValue(arg.value))
+					values = append(values, arg.value)
 				}
 			}
 		}
@@ -242,5 +242,5 @@ func (expression Expression) getNonFunctionValue(fileAttributes *context.FileAtt
 	if expression.eType == TypeAttribute {
 		return fileAttributes.Get(expression.attribute)
 	}
-	return context.StringValue(expression.value)
+	return expression.value
 }

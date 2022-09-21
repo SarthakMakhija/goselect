@@ -127,7 +127,7 @@ func TestEvaluatingRowFullyEvaluationOfAnAttribute(t *testing.T) {
 		[]context.Value{context.StringValue("someValue"), context.StringValue("test")},
 		[]bool{true, false},
 		[]*expression.Expression{
-			expression.WithValue("someValue"),
+			expression.WithValue(context.StringValue("someValue")),
 			expression.WithFunctionInstance(expression.FunctionInstanceWith(
 				"min",
 				nil,

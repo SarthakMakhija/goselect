@@ -141,7 +141,7 @@ func function(
 				expectOpeningParentheses = false
 			default:
 				if !token.Equals(",") {
-					functionArgs = append(functionArgs, expression.WithValue(token.TokenValue))
+					functionArgs = append(functionArgs, expression.WithValue(context.StringValue(token.TokenValue)))
 				}
 			}
 		}
