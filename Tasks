@@ -1,30 +1,5 @@
-1. Parse where condition
-2. Support for expressions of the form 2+3 in projection
-    - done, provided functions for these expressions
-3. Handle error conditions in each type of parsing - projection, where, order by etc
-4. Create an AST
-    - done
-5. Execute the AST
-    - done
-6. Building a finite list of supported columns
-    - done
-7. Building a finite list of supported functions
-    - done
-8. Decide on executing aggregation function Vs normal function
-    - done
-9. What if normal function is wrapped inside an aggregate function
-    - done
-10. What if an aggregate function is wrapped inside a normal function
-    - done
-11. Returning the results
-    - done
-12. Support for date/time in where condition
-13. Support for date/time in projections
-14. Handler lower case at one place for the incoming query
-15. Handle nonNilParameterCount() in functions.go
-16. (Important), ensure following with aggregate functions + handle " & ' in string functions. Because tokeniser will return "CONTENT"
-    - add(count(), 7)
-    - min(substr(name), 1, 6)
-    - substr(min(name), 1, 6)
-    - if possible, have checks to ensure: scalar function inside a scalar (with an attribute) + aggregate fn is not permitted
-        - add(count(), len(name)) is not allowed
+Version 0.0.4 Release
+
+1. Infer input values
+2. Make isImage, isText, isPdf, isAudio, isVideo functions a part of where clause
+3. Improve performance of like
