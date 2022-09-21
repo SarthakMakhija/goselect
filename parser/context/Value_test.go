@@ -511,6 +511,46 @@ func TestCompareToUndefinedValues(t *testing.T) {
 	}
 }
 
+func TestGetBooleanAsTrue1(t *testing.T) {
+	value, _ := booleanValueUsing(true).GetBoolean()
+
+	if value != true {
+		t.Fatalf("Expected value to be true but was not")
+	}
+}
+
+func TestGetBooleanAsTrue2(t *testing.T) {
+	value, _ := StringValue("true").GetBoolean()
+
+	if value != true {
+		t.Fatalf("Expected value to be true but was not")
+	}
+}
+
+func TestGetBooleanAsFalse1(t *testing.T) {
+	value, _ := booleanValueUsing(false).GetBoolean()
+
+	if value != false {
+		t.Fatalf("Expected value to be false but was not")
+	}
+}
+
+func TestGetBooleanAsFalse2(t *testing.T) {
+	value, _ := StringValue("false").GetBoolean()
+
+	if value != false {
+		t.Fatalf("Expected value to be false but was not")
+	}
+}
+
+func TestGetBoolean(t *testing.T) {
+	_, err := StringValue("nothing").GetBoolean()
+
+	if err == nil {
+		t.Fatalf("Expected an error while trying to get boolean value for nothing but received none")
+	}
+}
+
 func TestTokenToInt64Value(t *testing.T) {
 	token := tokenizer.NewToken(tokenizer.Numeric, "12")
 	value, _ := ToValue(token)
