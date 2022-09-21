@@ -134,25 +134,15 @@ var toTargetConversions = map[TypePair]toCommonTypeValueFunction{
 func ToValue(token tokenizer.Token) (Value, error) {
 	switch token.TokenType {
 	case tokenizer.Numeric:
-		v, err := strconv.ParseInt(token.TokenValue, 10, 64)
-		if err != nil {
-			return EmptyValue, err
-		}
-		return Int64Value(v), nil
+		return stringToInt64(token.TokenValue)
 	case tokenizer.FloatingPoint:
-		v, err := strconv.ParseFloat(token.TokenValue, 64)
-		if err != nil {
-			return EmptyValue, err
-		}
-		return Float64Value(v), nil
+		return stringToFloat64(token.TokenValue)
 	case tokenizer.Boolean:
-		if strings.ToLower(token.TokenValue) == "true" || strings.ToLower(token.TokenValue) == "y" {
-			return trueBooleanValue, nil
+		value, _ := stringToBoolean(token.TokenValue)
+		if value == EmptyValue {
+			return StringValue(token.TokenValue), nil
 		}
-		if strings.ToLower(token.TokenValue) == "false" || strings.ToLower(token.TokenValue) == "n" {
-			return falseBooleanValue, nil
-		}
-		return StringValue(token.TokenValue), nil
+		return value, nil
 	default:
 		return StringValue(token.TokenValue), nil
 	}
@@ -177,4 +167,31 @@ func toFloat64(value Value) (Value, error) {
 		return EmptyValue, err
 	}
 	return asFloat64Value, nil
+}
+
+func stringToInt64(str string) (Value, error) {
+	v, err := strconv.ParseInt(str, 10, 64)
+	if err != nil {
+		return EmptyValue, err
+	}
+	return Int64Value(v), nil
+}
+
+func stringToFloat64(str string) (Value, error) {
+	v, err := strconv.ParseFloat(str, 64)
+	if err != nil {
+		return EmptyValue, err
+	}
+	return Float64Value(v), nil
+}
+
+func stringToBoolean(str string) (Value, error) {
+	lowerCased := strings.ToLower(str)
+	if lowerCased == "true" || lowerCased == "y" {
+		return trueBooleanValue, nil
+	}
+	if lowerCased == "false" || lowerCased == "n" {
+		return falseBooleanValue, nil
+	}
+	return EmptyValue, nil
 }
