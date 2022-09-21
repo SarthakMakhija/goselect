@@ -218,6 +218,69 @@ func TestTokenizerWithAllTokens12(t *testing.T) {
 	}
 }
 
+func TestTokenizerWithAllTokens13(t *testing.T) {
+	tokenizer := NewTokenizer("select fName from /HOME/APPS")
+	tokens := tokenizer.Tokenize()
+
+	iterator := tokens.Iterator()
+	expectedTokens := []string{"select", "fName", "from", "/HOME/APPS"}
+
+	for count := 1; count <= len(expectedTokens); count++ {
+		actualToken := iterator.Next()
+		expectedToken := expectedTokens[count-1]
+
+		if expectedToken != actualToken.TokenValue {
+			t.Fatalf("Expected token to be %v, received %v", expectedToken, actualToken)
+		}
+	}
+}
+
+func TestTokenizerWithAllTokens14(t *testing.T) {
+	tokenizer := NewTokenizer("select fName from /HOME/APPS where eq(12, 13.5)")
+	tokens := tokenizer.Tokenize()
+
+	iterator := tokens.Iterator()
+	expectedTokens := []string{
+		"select",
+		"fName",
+		"from",
+		"/HOME/APPS",
+		"where",
+		"eq",
+		"(",
+		"12",
+		",",
+		"13.5",
+		")",
+	}
+	expectedTokenTypes := []int{
+		RawString,
+		RawString,
+		From,
+		RawString,
+		Where,
+		RawString,
+		OpeningParentheses,
+		Numeric,
+		Comma,
+		FloatingPoint,
+		ClosingParentheses,
+	}
+
+	for count := 1; count <= len(expectedTokens); count++ {
+		actualToken := iterator.Next()
+		expectedToken := expectedTokens[count-1]
+		expectedTokenType := expectedTokenTypes[count-1]
+
+		if expectedToken != actualToken.TokenValue {
+			t.Fatalf("Expected token to be %v, received %v", expectedToken, actualToken)
+		}
+		if expectedTokenType != actualToken.TokenType {
+			t.Fatalf("Expected token type to be %v, received %v", expectedTokenType, actualToken.TokenType)
+		}
+	}
+}
+
 func TestTokenEquality1(t *testing.T) {
 	nameToken := NewToken(RawString, "name")
 	equals := nameToken.Equals("NAME")

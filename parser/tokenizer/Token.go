@@ -1,6 +1,9 @@
 package tokenizer
 
-import "strings"
+import (
+	"regexp"
+	"strings"
+)
 
 const (
 	RawString          int = iota
@@ -14,7 +17,14 @@ const (
 	AscendingOrder         = 8
 	DescendingOrder        = 9
 	Limit                  = 10
+	Numeric                = 11
+	FloatingPoint          = 12
+	Boolean                = 13
 )
+
+var numericRegexp, _ = regexp.Compile("^[-+]?(?:0|[1-9][0-9]*)$")
+var floatingNumbersRegexp, _ = regexp.Compile("^(?:[-+]?[0-9]+)?(?:\\.[0-9]*)?(?:[eE][+\\-]?[0-9]+)?$")
+var booleanRegexp, _ = regexp.Compile("^true|false|y|n$")
 
 type Token struct {
 	TokenType  int
@@ -30,24 +40,38 @@ func NewToken(tokenType int, tokenValue string) Token {
 }
 
 func tokenFrom(token string) Token {
+	casedToken := strings.ToLower(token)
 	switch {
-	case token == "from":
+	case casedToken == "from":
 		return NewToken(From, token)
-	case token == "where":
+	case casedToken == "where":
 		return NewToken(Where, token)
-	case token == "order":
+	case casedToken == "order":
 		return NewToken(Order, token)
-	case token == "by":
+	case casedToken == "by":
 		return NewToken(By, token)
-	case token == "asc":
+	case casedToken == "asc":
 		return NewToken(AscendingOrder, token)
-	case token == "desc":
+	case casedToken == "desc":
 		return NewToken(DescendingOrder, token)
-	case token == "limit":
+	case casedToken == "limit":
 		return NewToken(Limit, token)
 	default:
-		return NewToken(RawString, token)
+		return NewToken(determineTokenType(casedToken), token)
 	}
+}
+
+func determineTokenType(token string) int {
+	if numericRegexp.MatchString(token) {
+		return Numeric
+	}
+	if floatingNumbersRegexp.MatchString(token) {
+		return FloatingPoint
+	}
+	if booleanRegexp.MatchString(token) {
+		return Boolean
+	}
+	return RawString
 }
 
 func (token Token) Equals(value string) bool {
