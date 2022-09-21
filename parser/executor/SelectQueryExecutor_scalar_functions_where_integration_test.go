@@ -382,3 +382,43 @@ func TestResultsWithAWhereClause20(t *testing.T) {
 
 	assertMatch(t, expected, queryResults)
 }
+
+func TestResultsWithAWhereClause21(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select lower(name) from ../resources/test/TestResultsWithProjections/multi where istext(mimetype) order by 1", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	expected := [][]context.Value{{context.StringValue("testresultswithprojections_a.log")},
+		{context.StringValue("testresultswithprojections_b.log")},
+		{context.StringValue("testresultswithprojections_c.txt")},
+		{context.StringValue("testresultswithprojections_d.txt")},
+	}
+
+	assertMatch(t, expected, queryResults)
+}
+
+func TestResultsWithAWhereClause22(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select lower(name) from ../resources/test/TestResultsWithProjections/multi where lt(-0.12, +0.15) order by 1", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	expected := [][]context.Value{{context.StringValue("testresultswithprojections_a.log")},
+		{context.StringValue("testresultswithprojections_b.log")},
+		{context.StringValue("testresultswithprojections_c.txt")},
+		{context.StringValue("testresultswithprojections_d.txt")},
+	}
+
+	assertMatch(t, expected, queryResults)
+}

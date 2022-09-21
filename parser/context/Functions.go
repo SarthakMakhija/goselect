@@ -311,26 +311,31 @@ var functionDefinitions = map[string]*FunctionDefinition{
 		aliases:     []string{"istext", "istxt"},
 		description: "Returns true if the mime type of a file is text/plain, false otherwise.  \nFor example, the common use of this function is with mime attribute, istext(mime).",
 		block:       IsFileTypeTextFunctionBlock{},
+		tags:        map[string]bool{"where": true},
 	},
 	FunctionNameIsFileTypeImage: {
 		aliases:     []string{"isimage", "isimg"},
 		description: "Returns true if the mime type of a file is an image, false otherwise.  \nFor example, the common use of this function is with mime attribute, isimage(mime).",
 		block:       IsFileTypeImageFunctionBlock{},
+		tags:        map[string]bool{"where": true},
 	},
 	FunctionNameIsFileTypeAudio: {
 		aliases:     []string{"isaudio"},
 		description: "Returns true if the mime type of a file is an audio, false otherwise.  \nFor example, the common use of this function is with mime attribute, isaudio(mime).",
 		block:       IsFileTypeAudioFunctionBlock{},
+		tags:        map[string]bool{"where": true},
 	},
 	FunctionNameIsFileTypeVideo: {
 		aliases:     []string{"isvideo"},
 		description: "Returns true if the mime type of a file is video, false otherwise.  \nFor example, the common use of this function is with mime attribute, isvideo(mime).",
 		block:       IsFileTypeVideoFunctionBlock{},
+		tags:        map[string]bool{"where": true},
 	},
 	FunctionNameIsFileTypePdf: {
 		aliases:     []string{"ispdf"},
 		description: "Returns true if the mime type of a file is pdf, false otherwise.  \nFor example, the common use of this function is with mime attribute, ispdf(mime).",
 		block:       IsFileTypePdfFunctionBlock{},
+		tags:        map[string]bool{"where": true},
 	},
 	FunctionNameFormatSize: {
 		aliases:     []string{"formatsize", "fmtsize"},

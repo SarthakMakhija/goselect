@@ -13,6 +13,18 @@
       "resultCount": 1
     },
     {
+      "name": "select name, size where isImage is true using isImage without eq",
+      "query": "select name, size from ../resources/test/images where isImage(mime)",
+      "isErrorExpected": false,
+      "resultCount": 1
+    },
+    {
+      "name": "select name, size where isText is true",
+      "query": "select name, size from ../resources/test/ where isText(mime)",
+      "isErrorExpected": false,
+      "resultCount": 7
+    },
+    {
       "name": "select name, size where isImage is true in upper case",
       "query": "SELECT NAME, SIZE FROM ../resources/test/images WHERE EQ(ISIMAGE(MIME), TRUE)",
       "isErrorExpected": false,
@@ -86,13 +98,7 @@
     },
     {
       "name": "select lower(name) from resources where extension is log and file size is 0",
-      "query": "SELECT lower(NAME) FROM ../resources/test/ where and(eq(ext, .log), eq(isempty, true))",
-      "isErrorExpected": false,
-      "resultCount": 1
-    },
-    {
-      "name": "select lower(name) from resources where extension is log and file size is 0",
-      "query": "SELECT lower(NAME) FROM ../resources/test/ where and(eq(ext, .log), eq(isempty, true))",
+      "query": "SELECT lower(NAME) FROM ../resources/test/ where and(eq(ext, .log), isEmpty)",
       "isErrorExpected": false,
       "resultCount": 1
     },
