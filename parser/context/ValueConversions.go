@@ -56,22 +56,18 @@ var toTargetConversions = map[TypePair]toCommonTypeValueFunction{
 		return Float64Value(float64(aValue.int64Value)), Float64Value(float64(bValue.uint32Value)), nil
 	},
 	TypePair{aType: ValueTypeString, bType: ValueTypeBoolean}: func(aValue Value, bValue Value) (Value, Value, error) {
-		if strings.ToLower(aValue.stringValue) == "true" || strings.ToLower(aValue.stringValue) == "y" {
-			return trueBooleanValue, bValue, nil
+		v, _ := stringToBoolean(aValue.stringValue)
+		if v == EmptyValue {
+			return aValue, bValue, fmt.Errorf(messages.ErrorMessageCannotConvertToBoolean, aValue.stringValue)
 		}
-		if strings.ToLower(aValue.stringValue) == "false" || strings.ToLower(aValue.stringValue) == "n" {
-			return falseBooleanValue, bValue, nil
-		}
-		return aValue, bValue, fmt.Errorf(messages.ErrorMessageCannotConvertToBoolean, aValue.stringValue)
+		return v, bValue, nil
 	},
 	TypePair{aType: ValueTypeBoolean, bType: ValueTypeString}: func(aValue Value, bValue Value) (Value, Value, error) {
-		if strings.ToLower(bValue.stringValue) == "true" || strings.ToLower(bValue.stringValue) == "y" {
-			return aValue, trueBooleanValue, nil
+		v, _ := stringToBoolean(bValue.stringValue)
+		if v == EmptyValue {
+			return aValue, bValue, fmt.Errorf(messages.ErrorMessageCannotConvertToBoolean, bValue.stringValue)
 		}
-		if strings.ToLower(bValue.stringValue) == "false" || strings.ToLower(bValue.stringValue) == "n" {
-			return aValue, falseBooleanValue, nil
-		}
-		return aValue, bValue, fmt.Errorf(messages.ErrorMessageCannotConvertToBoolean, bValue.stringValue)
+		return aValue, v, nil
 	},
 	TypePair{aType: ValueTypeString, bType: ValueTypeInt}: func(aValue Value, bValue Value) (Value, Value, error) {
 		v, err := strconv.Atoi(aValue.stringValue)
@@ -88,18 +84,18 @@ var toTargetConversions = map[TypePair]toCommonTypeValueFunction{
 		return aValue, IntValue(v), nil
 	},
 	TypePair{aType: ValueTypeString, bType: ValueTypeInt64}: func(aValue Value, bValue Value) (Value, Value, error) {
-		v, err := strconv.ParseInt(aValue.stringValue, 10, 64)
+		v, err := stringToInt64(aValue.stringValue)
 		if err != nil {
 			return aValue, bValue, err
 		}
-		return Int64Value(v), bValue, nil
+		return v, bValue, nil
 	},
 	TypePair{aType: ValueTypeInt64, bType: ValueTypeString}: func(aValue Value, bValue Value) (Value, Value, error) {
-		v, err := strconv.ParseInt(bValue.stringValue, 10, 64)
+		v, err := stringToInt64(bValue.stringValue)
 		if err != nil {
 			return aValue, bValue, err
 		}
-		return aValue, Int64Value(v), nil
+		return aValue, v, nil
 	},
 	TypePair{aType: ValueTypeString, bType: ValueTypeUint32}: func(aValue Value, bValue Value) (Value, Value, error) {
 		v, err := strconv.ParseUint(aValue.stringValue, 10, 32)
@@ -116,18 +112,18 @@ var toTargetConversions = map[TypePair]toCommonTypeValueFunction{
 		return aValue, Uint32Value(uint32(v)), nil
 	},
 	TypePair{aType: ValueTypeString, bType: ValueTypeFloat64}: func(aValue Value, bValue Value) (Value, Value, error) {
-		v, err := strconv.ParseFloat(aValue.stringValue, 64)
+		v, err := stringToFloat64(aValue.stringValue)
 		if err != nil {
 			return aValue, bValue, err
 		}
-		return Float64Value(v), bValue, nil
+		return v, bValue, nil
 	},
 	TypePair{aType: ValueTypeFloat64, bType: ValueTypeString}: func(aValue Value, bValue Value) (Value, Value, error) {
-		v, err := strconv.ParseFloat(bValue.stringValue, 64)
+		v, err := stringToFloat64(bValue.stringValue)
 		if err != nil {
 			return aValue, bValue, err
 		}
-		return aValue, Float64Value(v), nil
+		return aValue, v, nil
 	},
 }
 
