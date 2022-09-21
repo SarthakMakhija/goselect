@@ -74,17 +74,17 @@ func all(
 			}
 			expectComma = false
 		case context.IsAWildcardAttribute(token.TokenValue):
-			expressions = append(expressions, expression.ExpressionsWithAttributes(context.AttributesOnWildcard())...)
+			expressions = append(expressions, expression.WithAttributes(context.AttributesOnWildcard())...)
 			expectComma = true
 		case ctx.IsASupportedAttribute(token.TokenValue):
-			expressions = append(expressions, expression.ExpressionWithAttribute(token.TokenValue))
+			expressions = append(expressions, expression.WithAttribute(token.TokenValue))
 			expectComma = true
 		case ctx.IsASupportedFunction(token.TokenValue):
 			function, err := function(token, tokenIterator, ctx)
 			if err != nil {
 				return expression.Expressions{}, err
 			}
-			expressions = append(expressions, expression.ExpressionWithFunctionInstance(function))
+			expressions = append(expressions, expression.WithFunctionInstance(function))
 			expectComma = true
 		}
 	}
@@ -135,13 +135,13 @@ func function(
 				if err != nil {
 					return nil, err
 				}
-				functionArgs = append(functionArgs, expression.ExpressionWithFunctionInstance(fn))
+				functionArgs = append(functionArgs, expression.WithFunctionInstance(fn))
 			case ctx.IsASupportedAttribute(token.TokenValue):
-				functionArgs = append(functionArgs, expression.ExpressionWithAttribute(token.TokenValue))
+				functionArgs = append(functionArgs, expression.WithAttribute(token.TokenValue))
 				expectOpeningParentheses = false
 			default:
 				if !token.Equals(",") {
-					functionArgs = append(functionArgs, expression.ExpressionWithValue(token.TokenValue))
+					functionArgs = append(functionArgs, expression.WithValue(token.TokenValue))
 				}
 			}
 		}

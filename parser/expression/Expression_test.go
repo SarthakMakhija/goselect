@@ -10,7 +10,7 @@ import (
 )
 
 func TestExpressionsWithAttributes(t *testing.T) {
-	expressions := ExpressionsWithAttributes([]string{"name", "size"})
+	expressions := WithAttributes([]string{"name", "size"})
 	attributes := Expressions{Expressions: expressions}.DisplayableAttributes()
 	expected := []string{"name", "size"}
 
@@ -20,9 +20,9 @@ func TestExpressionsWithAttributes(t *testing.T) {
 }
 
 func TestExpressionsWithFunction(t *testing.T) {
-	expression := ExpressionWithFunctionInstance(FunctionInstanceWith(
+	expression := WithFunctionInstance(FunctionInstanceWith(
 		"lower",
-		[]*Expression{ExpressionWithValue("content")},
+		[]*Expression{WithValue("content")},
 		nil,
 		false,
 	))
@@ -35,7 +35,7 @@ func TestExpressionsWithFunction(t *testing.T) {
 }
 
 func TestExpressionsDisplayableAttributesWithAttributeName(t *testing.T) {
-	expressions := Expressions{Expressions: []*Expression{ExpressionWithAttribute("name")}}
+	expressions := Expressions{Expressions: []*Expression{WithAttribute("name")}}
 	attributes := expressions.DisplayableAttributes()
 	expected := []string{"name"}
 
@@ -45,7 +45,7 @@ func TestExpressionsDisplayableAttributesWithAttributeName(t *testing.T) {
 }
 
 func TestExpressionsDisplayableAttributesWithValue(t *testing.T) {
-	expressions := Expressions{Expressions: []*Expression{ExpressionWithValue("2")}}
+	expressions := Expressions{Expressions: []*Expression{WithValue("2")}}
 	attributes := expressions.DisplayableAttributes()
 	expected := []string{"2"}
 
@@ -57,9 +57,9 @@ func TestExpressionsDisplayableAttributesWithValue(t *testing.T) {
 func TestExpressionsDisplayableAttributesFunctionContainingAValue(t *testing.T) {
 	fun := &FunctionInstance{
 		name: "lower",
-		args: []*Expression{ExpressionWithValue("2")},
+		args: []*Expression{WithValue("2")},
 	}
-	expressions := Expressions{Expressions: []*Expression{ExpressionWithFunctionInstance(fun)}}
+	expressions := Expressions{Expressions: []*Expression{WithFunctionInstance(fun)}}
 	attributes := expressions.DisplayableAttributes()
 	expected := []string{"lower(2)"}
 	if !reflect.DeepEqual(expected, attributes) {
@@ -71,7 +71,7 @@ func TestExpressionsDisplayableAttributesFunctionWithoutAnyParamaterValues(t *te
 	fun := &FunctionInstance{
 		name: "now",
 	}
-	expressions := Expressions{Expressions: []*Expression{ExpressionWithFunctionInstance(fun)}}
+	expressions := Expressions{Expressions: []*Expression{WithFunctionInstance(fun)}}
 	attributes := expressions.DisplayableAttributes()
 	expected := []string{"now()"}
 	if !reflect.DeepEqual(expected, attributes) {
@@ -86,12 +86,12 @@ func TestExpressionsDisplayableAttributesWithFunction(t *testing.T) {
 			{
 				function: &FunctionInstance{
 					name: "upper",
-					args: []*Expression{ExpressionWithAttribute("uid")},
+					args: []*Expression{WithAttribute("uid")},
 				},
 			},
 		},
 	}
-	expressions := Expressions{Expressions: []*Expression{ExpressionWithFunctionInstance(fun)}}
+	expressions := Expressions{Expressions: []*Expression{WithFunctionInstance(fun)}}
 	attributes := expressions.DisplayableAttributes()
 	expected := []string{"lower(upper(uid))"}
 
@@ -124,10 +124,10 @@ func TestExpressionIsNotFunction(t *testing.T) {
 }
 
 func TestExpressionEvaluate1(t *testing.T) {
-	expression := ExpressionWithFunctionInstance(&FunctionInstance{
+	expression := WithFunctionInstance(&FunctionInstance{
 		name: "lower",
 		args: []*Expression{
-			ExpressionWithValue("CONTENT"),
+			WithValue("CONTENT"),
 		},
 	})
 	expressions := Expressions{Expressions: []*Expression{expression}}
@@ -143,20 +143,20 @@ func TestExpressionEvaluate1(t *testing.T) {
 }
 
 func TestExpressionEvaluate2(t *testing.T) {
-	expression := ExpressionWithFunctionInstance(&FunctionInstance{
+	expression := WithFunctionInstance(&FunctionInstance{
 		name: "concat",
 		args: []*Expression{
-			ExpressionWithFunctionInstance(&FunctionInstance{
+			WithFunctionInstance(&FunctionInstance{
 				name: "lower",
 				args: []*Expression{
-					ExpressionWithValue("CONTENT"),
+					WithValue("CONTENT"),
 				},
 			}),
-			ExpressionWithValue("##"),
-			ExpressionWithFunctionInstance(&FunctionInstance{
+			WithValue("##"),
+			WithFunctionInstance(&FunctionInstance{
 				name: "upper",
 				args: []*Expression{
-					ExpressionWithValue("value"),
+					WithValue("value"),
 				},
 			}),
 		},
@@ -175,7 +175,7 @@ func TestExpressionEvaluate2(t *testing.T) {
 
 func TestExpressionEvaluate3(t *testing.T) {
 	functions := context.NewFunctions()
-	expression := ExpressionWithFunctionInstance(&FunctionInstance{
+	expression := WithFunctionInstance(&FunctionInstance{
 		name:  "Count",
 		args:  []*Expression{},
 		state: functions.InitialState("Count"),
@@ -196,13 +196,13 @@ func TestExpressionEvaluate3(t *testing.T) {
 
 func TestExpressionEvaluate4(t *testing.T) {
 	functions := context.NewFunctions()
-	expression := ExpressionWithFunctionInstance(&FunctionInstance{
+	expression := WithFunctionInstance(&FunctionInstance{
 		name: "Count",
 		args: []*Expression{
-			ExpressionWithFunctionInstance(&FunctionInstance{
+			WithFunctionInstance(&FunctionInstance{
 				name: "lower",
 				args: []*Expression{
-					ExpressionWithValue("CONTENT"),
+					WithValue("CONTENT"),
 				},
 			}),
 		},
@@ -224,10 +224,10 @@ func TestExpressionEvaluate4(t *testing.T) {
 
 func TestExpressionEvaluate5(t *testing.T) {
 	functions := context.NewFunctions()
-	expression := ExpressionWithFunctionInstance(&FunctionInstance{
+	expression := WithFunctionInstance(&FunctionInstance{
 		name: "lower",
 		args: []*Expression{
-			ExpressionWithFunctionInstance(&FunctionInstance{
+			WithFunctionInstance(&FunctionInstance{
 				name:  "Count",
 				args:  []*Expression{},
 				state: functions.InitialState("Count"),
@@ -244,25 +244,25 @@ func TestExpressionEvaluate5(t *testing.T) {
 }
 
 func TestExpressionEvaluate6(t *testing.T) {
-	expression := ExpressionWithFunctionInstance(&FunctionInstance{
+	expression := WithFunctionInstance(&FunctionInstance{
 		name: "concat",
 		args: []*Expression{
-			ExpressionWithFunctionInstance(&FunctionInstance{
+			WithFunctionInstance(&FunctionInstance{
 				name: "lower",
 				args: []*Expression{
-					ExpressionWithValue("CONTENT"),
+					WithValue("CONTENT"),
 				},
 			}),
-			ExpressionWithValue("##"),
-			ExpressionWithFunctionInstance(&FunctionInstance{
+			WithValue("##"),
+			WithFunctionInstance(&FunctionInstance{
 				name: "upper",
 				args: []*Expression{
-					ExpressionWithValue("value"),
+					WithValue("value"),
 				},
 			}),
 		},
 	})
-	expressions := Expressions{Expressions: []*Expression{expression, ExpressionWithValue("content")}}
+	expressions := Expressions{Expressions: []*Expression{expression, WithValue("content")}}
 	functions := context.NewFunctions()
 
 	values, _, _, _ := expressions.EvaluateWith(nil, functions)
@@ -281,7 +281,7 @@ func TestExpressionEvaluate6(t *testing.T) {
 }
 
 func TestExpressionEvaluate7(t *testing.T) {
-	expression := ExpressionWithFunctionInstance(&FunctionInstance{
+	expression := WithFunctionInstance(&FunctionInstance{
 		name: "concat",
 	})
 	expressions := Expressions{Expressions: []*Expression{expression}}
@@ -294,7 +294,7 @@ func TestExpressionEvaluate7(t *testing.T) {
 }
 
 func TestExpressionEvaluate8(t *testing.T) {
-	expression := ExpressionWithFunctionInstance(&FunctionInstance{
+	expression := WithFunctionInstance(&FunctionInstance{
 		name: "concat",
 	})
 	functions := context.NewFunctions()
@@ -306,10 +306,10 @@ func TestExpressionEvaluate8(t *testing.T) {
 }
 
 func TestExpressionEvaluate9(t *testing.T) {
-	expression := ExpressionWithFunctionInstance(&FunctionInstance{
+	expression := WithFunctionInstance(&FunctionInstance{
 		name: "min",
 		args: []*Expression{
-			ExpressionWithFunctionInstance(&FunctionInstance{
+			WithFunctionInstance(&FunctionInstance{
 				name: "lower",
 			}),
 		},
@@ -323,7 +323,7 @@ func TestExpressionEvaluate9(t *testing.T) {
 }
 
 func TestExpressionEvaluate10(t *testing.T) {
-	expression := ExpressionWithFunctionInstance(&FunctionInstance{
+	expression := WithFunctionInstance(&FunctionInstance{
 		name: "min",
 	})
 	functions := context.NewFunctions()
@@ -336,10 +336,10 @@ func TestExpressionEvaluate10(t *testing.T) {
 
 func TestExpressionFullyEvaluateWithError(t *testing.T) {
 	functions := context.NewFunctions()
-	expression := ExpressionWithFunctionInstance(&FunctionInstance{
+	expression := WithFunctionInstance(&FunctionInstance{
 		name: "lower",
 		args: []*Expression{
-			ExpressionWithFunctionInstance(&FunctionInstance{
+			WithFunctionInstance(&FunctionInstance{
 				name:  "min",
 				state: functions.InitialState("min"),
 			}),
@@ -355,12 +355,12 @@ func TestExpressionFullyEvaluateWithError(t *testing.T) {
 
 func TestExpressionFullyEvaluateWithAnAggregateFunctionHavingAValue(t *testing.T) {
 	functions := context.NewFunctions()
-	expression := ExpressionWithFunctionInstance(&FunctionInstance{
+	expression := WithFunctionInstance(&FunctionInstance{
 		name: "upper",
 		args: []*Expression{
-			ExpressionWithFunctionInstance(&FunctionInstance{
+			WithFunctionInstance(&FunctionInstance{
 				name:  "min",
-				args:  []*Expression{ExpressionWithValue("someValue")},
+				args:  []*Expression{WithValue("someValue")},
 				state: functions.InitialState("min"),
 			}),
 		},
@@ -375,10 +375,10 @@ func TestExpressionFullyEvaluateWithAnAggregateFunctionHavingAValue(t *testing.T
 
 func TestExpressionFullyEvaluate(t *testing.T) {
 	functions := context.NewFunctions()
-	expression := ExpressionWithFunctionInstance(&FunctionInstance{
+	expression := WithFunctionInstance(&FunctionInstance{
 		name: "lower",
 		args: []*Expression{
-			ExpressionWithFunctionInstance(&FunctionInstance{
+			WithFunctionInstance(&FunctionInstance{
 				name:  "Count",
 				args:  []*Expression{},
 				state: functions.InitialState("Count"),
@@ -400,13 +400,13 @@ func TestExpressionFullyEvaluate(t *testing.T) {
 
 func TestExpressionEvaluateWithNestingOfCount(t *testing.T) {
 	functions := context.NewFunctions()
-	expression := ExpressionWithFunctionInstance(&FunctionInstance{
+	expression := WithFunctionInstance(&FunctionInstance{
 		name: "lower",
 		args: []*Expression{
-			ExpressionWithFunctionInstance(&FunctionInstance{
+			WithFunctionInstance(&FunctionInstance{
 				name: "Count",
 				args: []*Expression{
-					ExpressionWithFunctionInstance(&FunctionInstance{
+					WithFunctionInstance(&FunctionInstance{
 						name:  "Count",
 						args:  []*Expression{},
 						state: functions.InitialState("Count"),
@@ -432,13 +432,13 @@ func TestExpressionEvaluateWithNestingOfCount(t *testing.T) {
 
 func TestExpressionEvaluateWithLowerFunctionInsideCount(t *testing.T) {
 	functions := context.NewFunctions()
-	expression := ExpressionWithFunctionInstance(&FunctionInstance{
+	expression := WithFunctionInstance(&FunctionInstance{
 		name: "Count",
 		args: []*Expression{
-			ExpressionWithFunctionInstance(&FunctionInstance{
+			WithFunctionInstance(&FunctionInstance{
 				name: "lower",
 				args: []*Expression{
-					ExpressionWithValue("NAME"),
+					WithValue("NAME"),
 				},
 			}),
 		},
@@ -460,16 +460,16 @@ func TestExpressionEvaluateWithLowerFunctionInsideCount(t *testing.T) {
 
 func TestExpressionEvaluateWithNestingOfAverage(t *testing.T) {
 	functions := context.NewFunctions()
-	expression := ExpressionWithFunctionInstance(&FunctionInstance{
+	expression := WithFunctionInstance(&FunctionInstance{
 		name: "avg",
 		args: []*Expression{
-			ExpressionWithFunctionInstance(&FunctionInstance{
+			WithFunctionInstance(&FunctionInstance{
 				name: "avg",
 				args: []*Expression{
-					ExpressionWithFunctionInstance(&FunctionInstance{
+					WithFunctionInstance(&FunctionInstance{
 						name: "len",
 						args: []*Expression{
-							ExpressionWithValue("CONTENT"),
+							WithValue("CONTENT"),
 						},
 					}),
 				},
@@ -493,7 +493,7 @@ func TestExpressionEvaluateWithNestingOfAverage(t *testing.T) {
 }
 
 func TestExpressionHasAnAggregateFalse1(t *testing.T) {
-	expression := ExpressionWithFunctionInstance(&FunctionInstance{
+	expression := WithFunctionInstance(&FunctionInstance{
 		name: "lower",
 		args: []*Expression{},
 	})
@@ -504,7 +504,7 @@ func TestExpressionHasAnAggregateFalse1(t *testing.T) {
 }
 
 func TestExpressionHasAnAggregateFalse2(t *testing.T) {
-	expression := ExpressionWithAttribute("name")
+	expression := WithAttribute("name")
 	hasAnAggregate := expression.HasAnAggregate()
 	if hasAnAggregate != false {
 		t.Fatalf("Expected hasAnAggregate to be false, received true")
@@ -513,13 +513,13 @@ func TestExpressionHasAnAggregateFalse2(t *testing.T) {
 
 func TestExpressionHasAnAggregateTrue(t *testing.T) {
 	functions := context.NewFunctions()
-	expression := ExpressionWithFunctionInstance(&FunctionInstance{
+	expression := WithFunctionInstance(&FunctionInstance{
 		name: "lower",
 		args: []*Expression{
-			ExpressionWithValue("CONTENT"),
-			ExpressionWithFunctionInstance(&FunctionInstance{
+			WithValue("CONTENT"),
+			WithFunctionInstance(&FunctionInstance{
 				name:        "min",
-				args:        []*Expression{ExpressionWithValue("45")},
+				args:        []*Expression{WithValue("45")},
 				state:       functions.InitialState("min"),
 				isAggregate: true,
 			}),
@@ -534,22 +534,22 @@ func TestExpressionHasAnAggregateTrue(t *testing.T) {
 func TestAggregationCount1(t *testing.T) {
 	functions := context.NewFunctions()
 	expressions := Expressions{Expressions: []*Expression{
-		ExpressionWithFunctionInstance(&FunctionInstance{
+		WithFunctionInstance(&FunctionInstance{
 			name: "lower",
 			args: []*Expression{
-				ExpressionWithValue("CONTENT"),
-				ExpressionWithFunctionInstance(&FunctionInstance{
+				WithValue("CONTENT"),
+				WithFunctionInstance(&FunctionInstance{
 					name:        "min",
-					args:        []*Expression{ExpressionWithValue("45")},
+					args:        []*Expression{WithValue("45")},
 					state:       functions.InitialState("min"),
 					isAggregate: true,
 				}),
 			},
 		}),
-		ExpressionWithFunctionInstance(&FunctionInstance{
+		WithFunctionInstance(&FunctionInstance{
 			name: "lower",
 			args: []*Expression{
-				ExpressionWithValue("CONTENT"),
+				WithValue("CONTENT"),
 			},
 		}),
 	}}
@@ -562,16 +562,16 @@ func TestAggregationCount1(t *testing.T) {
 
 func TestAggregationCount2(t *testing.T) {
 	expressions := Expressions{Expressions: []*Expression{
-		ExpressionWithFunctionInstance(&FunctionInstance{
+		WithFunctionInstance(&FunctionInstance{
 			name: "lower",
 			args: []*Expression{
-				ExpressionWithValue("CONTENT"),
+				WithValue("CONTENT"),
 			},
 		}),
-		ExpressionWithFunctionInstance(&FunctionInstance{
+		WithFunctionInstance(&FunctionInstance{
 			name: "lower",
 			args: []*Expression{
-				ExpressionWithValue("CONTENT"),
+				WithValue("CONTENT"),
 			},
 		}),
 	}}
@@ -585,25 +585,25 @@ func TestAggregationCount2(t *testing.T) {
 func TestAggregationCount3(t *testing.T) {
 	functions := context.NewFunctions()
 	expressions := Expressions{Expressions: []*Expression{
-		ExpressionWithFunctionInstance(&FunctionInstance{
+		WithFunctionInstance(&FunctionInstance{
 			name: "lower",
 			args: []*Expression{
-				ExpressionWithValue("CONTENT"),
-				ExpressionWithFunctionInstance(&FunctionInstance{
+				WithValue("CONTENT"),
+				WithFunctionInstance(&FunctionInstance{
 					name:        "min",
-					args:        []*Expression{ExpressionWithValue("45")},
+					args:        []*Expression{WithValue("45")},
 					state:       functions.InitialState("min"),
 					isAggregate: true,
 				}),
 			},
 		}),
-		ExpressionWithFunctionInstance(&FunctionInstance{
+		WithFunctionInstance(&FunctionInstance{
 			name: "lower",
 			args: []*Expression{
-				ExpressionWithValue("CONTENT"),
-				ExpressionWithFunctionInstance(&FunctionInstance{
+				WithValue("CONTENT"),
+				WithFunctionInstance(&FunctionInstance{
 					name:        "min",
-					args:        []*Expression{ExpressionWithValue("45")},
+					args:        []*Expression{WithValue("45")},
 					state:       functions.InitialState("min"),
 					isAggregate: true,
 				}),
@@ -621,7 +621,7 @@ func TestCountOfExpression1(t *testing.T) {
 	fun := &FunctionInstance{
 		name: "now",
 	}
-	expressions := Expressions{Expressions: []*Expression{ExpressionWithFunctionInstance(fun)}}
+	expressions := Expressions{Expressions: []*Expression{WithFunctionInstance(fun)}}
 	count := expressions.Count()
 
 	if count != 1 {
@@ -631,16 +631,16 @@ func TestCountOfExpression1(t *testing.T) {
 
 func TestCountOfExpression2(t *testing.T) {
 	expressions := Expressions{Expressions: []*Expression{
-		ExpressionWithFunctionInstance(&FunctionInstance{
+		WithFunctionInstance(&FunctionInstance{
 			name: "lower",
 			args: []*Expression{
-				ExpressionWithValue("CONTENT"),
+				WithValue("CONTENT"),
 			},
 		}),
-		ExpressionWithFunctionInstance(&FunctionInstance{
+		WithFunctionInstance(&FunctionInstance{
 			name: "lower",
 			args: []*Expression{
-				ExpressionWithValue("CONTENT"),
+				WithValue("CONTENT"),
 			},
 		}),
 	}}
@@ -653,16 +653,16 @@ func TestCountOfExpression2(t *testing.T) {
 
 func TestExpressionAtAValidIndex(t *testing.T) {
 	expressions := Expressions{Expressions: []*Expression{
-		ExpressionWithFunctionInstance(&FunctionInstance{
+		WithFunctionInstance(&FunctionInstance{
 			name: "lower",
 			args: []*Expression{
-				ExpressionWithValue("CONTENT"),
+				WithValue("CONTENT"),
 			},
 		}),
-		ExpressionWithFunctionInstance(&FunctionInstance{
+		WithFunctionInstance(&FunctionInstance{
 			name: "upper",
 			args: []*Expression{
-				ExpressionWithValue("CONTENT"),
+				WithValue("CONTENT"),
 			},
 		}),
 	}}
@@ -676,16 +676,16 @@ func TestExpressionAtAValidIndex(t *testing.T) {
 
 func TestExpressionAtAnInvalidIndex(t *testing.T) {
 	expressions := Expressions{Expressions: []*Expression{
-		ExpressionWithFunctionInstance(&FunctionInstance{
+		WithFunctionInstance(&FunctionInstance{
 			name: "lower",
 			args: []*Expression{
-				ExpressionWithValue("CONTENT"),
+				WithValue("CONTENT"),
 			},
 		}),
-		ExpressionWithFunctionInstance(&FunctionInstance{
+		WithFunctionInstance(&FunctionInstance{
 			name: "upper",
 			args: []*Expression{
-				ExpressionWithValue("CONTENT"),
+				WithValue("CONTENT"),
 			},
 		}),
 	}}

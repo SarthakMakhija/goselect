@@ -39,33 +39,33 @@ func FunctionInstanceWith(name string, args []*Expression, state *context.Functi
 	}
 }
 
-func ExpressionWithAttribute(attribute string) *Expression {
+func WithAttribute(attribute string) *Expression {
 	return &Expression{
 		eType:     TypeAttribute,
 		attribute: attribute,
 	}
 }
 
-func ExpressionsWithAttributes(attributes []string) []*Expression {
-	var expressions = make([]*Expression, len(attributes))
-	for index, attribute := range attributes {
-		expressions[index] = ExpressionWithAttribute(attribute)
-	}
-	return expressions
-}
-
-func ExpressionWithFunctionInstance(fn *FunctionInstance) *Expression {
+func WithFunctionInstance(fn *FunctionInstance) *Expression {
 	return &Expression{
 		eType:    TypeFunction,
 		function: fn,
 	}
 }
 
-func ExpressionWithValue(value string) *Expression {
+func WithValue(value string) *Expression {
 	return &Expression{
 		eType: TypeValue,
 		value: value,
 	}
+}
+
+func WithAttributes(attributes []string) []*Expression {
+	var expressions = make([]*Expression, len(attributes))
+	for index, attribute := range attributes {
+		expressions[index] = WithAttribute(attribute)
+	}
+	return expressions
 }
 
 func (expressions Expressions) Count() int {
