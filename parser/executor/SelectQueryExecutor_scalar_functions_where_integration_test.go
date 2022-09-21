@@ -350,6 +350,23 @@ func TestResultsWithAWhereClause18(t *testing.T) {
 
 func TestResultsWithAWhereClause19(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select lower(name) from ../resources/test/images/ where eq(isimg(mimetype), Y) order by 1", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	expected := [][]context.Value{
+		{context.StringValue("where.png")},
+	}
+	assertMatch(t, expected, queryResults)
+}
+
+func TestResultsWithAWhereClause20(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
 	aParser, err := parser.NewParser("select lower(name) from ../resources/test/images/ where eq(istext(mimetype), true) order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
@@ -363,7 +380,7 @@ func TestResultsWithAWhereClause19(t *testing.T) {
 	assertMatch(t, expected, queryResults)
 }
 
-func TestResultsWithAWhereClause20(t *testing.T) {
+func TestResultsWithAWhereClause21(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
 	aParser, err := parser.NewParser("select lower(name) from ../resources/test/TestResultsWithProjections/multi where eq(istext(mimetype), true) order by 1", newContext)
 	if err != nil {
@@ -383,7 +400,7 @@ func TestResultsWithAWhereClause20(t *testing.T) {
 	assertMatch(t, expected, queryResults)
 }
 
-func TestResultsWithAWhereClause21(t *testing.T) {
+func TestResultsWithAWhereClause22(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
 	aParser, err := parser.NewParser("select lower(name) from ../resources/test/TestResultsWithProjections/multi where istext(mimetype) order by 1", newContext)
 	if err != nil {
@@ -403,7 +420,7 @@ func TestResultsWithAWhereClause21(t *testing.T) {
 	assertMatch(t, expected, queryResults)
 }
 
-func TestResultsWithAWhereClause22(t *testing.T) {
+func TestResultsWithAWhereClause23(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
 	aParser, err := parser.NewParser("select lower(name) from ../resources/test/TestResultsWithProjections/multi where lt(-0.12, +0.15) order by 1", newContext)
 	if err != nil {
