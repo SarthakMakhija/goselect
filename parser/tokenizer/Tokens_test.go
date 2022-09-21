@@ -223,3 +223,111 @@ func TestTokenTypeAsBoolean(t *testing.T) {
 		})
 	}
 }
+
+func TestTokenTypeIsNumeric(t *testing.T) {
+	numericTests := map[string]struct {
+		token     Token
+		isNumeric bool
+	}{
+		"12 is numeric": {
+			token:     NewToken(Numeric, "12"),
+			isNumeric: true,
+		},
+		"-12 is numeric": {
+			token:     NewToken(Numeric, "-12"),
+			isNumeric: true,
+		},
+		"+12 is numeric": {
+			token:     NewToken(Numeric, "+12"),
+			isNumeric: true,
+		},
+		"999999999 is numeric": {
+			token:     NewToken(Numeric, "999999999"),
+			isNumeric: true,
+		},
+		"test is not numeric": {
+			token:     NewToken(RawString, "test"),
+			isNumeric: false,
+		},
+	}
+
+	for testName, input := range numericTests {
+		t.Run(testName, func(t *testing.T) {
+			if input.token.isNumeric() != input.isNumeric {
+				t.Fatalf("Expected isBoolean for input %v to be %v", input.token.TokenValue, input.isNumeric)
+			}
+		})
+	}
+}
+
+func TestTokenTypeIsFloatingPoint(t *testing.T) {
+	numericTests := map[string]struct {
+		token           Token
+		isFloatingPoint bool
+	}{
+		"12.12 is float": {
+			token:           NewToken(FloatingPoint, "12.12"),
+			isFloatingPoint: true,
+		},
+		"-12.90 is float": {
+			token:           NewToken(FloatingPoint, "-12.90"),
+			isFloatingPoint: true,
+		},
+		"+12.89 is float": {
+			token:           NewToken(FloatingPoint, "+12.89"),
+			isFloatingPoint: true,
+		},
+		"0.12 is float": {
+			token:           NewToken(FloatingPoint, "0.12"),
+			isFloatingPoint: true,
+		},
+		"test is not float": {
+			token:           NewToken(RawString, "test"),
+			isFloatingPoint: false,
+		},
+	}
+
+	for testName, input := range numericTests {
+		t.Run(testName, func(t *testing.T) {
+			if input.token.isFloatingPoint() != input.isFloatingPoint {
+				t.Fatalf("Expected isBoolean for input %v to be %v", input.token.TokenValue, input.isFloatingPoint)
+			}
+		})
+	}
+}
+
+func TestTokenTypeIsBoolean(t *testing.T) {
+	numericTests := map[string]struct {
+		token     Token
+		isBoolean bool
+	}{
+		"true is boolean": {
+			token:     NewToken(Boolean, "true"),
+			isBoolean: true,
+		},
+		"false is boolean": {
+			token:     NewToken(Boolean, "false"),
+			isBoolean: true,
+		},
+		"y is boolean": {
+			token:     NewToken(Boolean, "y"),
+			isBoolean: true,
+		},
+		"n is boolean": {
+			token:     NewToken(Boolean, "n"),
+			isBoolean: true,
+		},
+		"test is not boolean": {
+			token:     NewToken(RawString, "test"),
+			isBoolean: false,
+		},
+	}
+
+	for testName, input := range numericTests {
+		t.Run(testName, func(t *testing.T) {
+			if input.token.isBoolean() != input.isBoolean {
+				t.Fatalf("Expected isBoolean for input %v to be %v", input.token.TokenValue, input.isBoolean)
+			}
+		})
+	}
+}

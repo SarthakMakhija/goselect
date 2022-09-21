@@ -77,3 +77,15 @@ func determineTokenType(token string) int {
 func (token Token) Equals(value string) bool {
 	return strings.EqualFold(strings.ToLower(token.TokenValue), strings.ToLower(value))
 }
+
+func (token Token) isNumeric() bool {
+	return token.TokenType == Numeric
+}
+
+func (token Token) isFloatingPoint() bool {
+	return token.TokenType == FloatingPoint
+}
+
+func (token Token) isBoolean() bool {
+	return token.TokenType == Boolean
+}
