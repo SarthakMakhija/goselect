@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"goselect/parser/error/messages"
 	"strconv"
-	"strings"
 	"time"
 )
 
@@ -113,12 +112,11 @@ func (value Value) GetDateTime() (time.Time, error) {
 
 func (value Value) GetBoolean() (bool, error) {
 	if value.valueType == ValueTypeString {
-		if strings.ToLower(value.stringValue) == "true" || strings.ToLower(value.stringValue) == "y" {
-			return true, nil
+		v, _ := stringToBoolean(value.stringValue)
+		if v == EmptyValue {
+			return false, fmt.Errorf(messages.ErrorMessageIncorrectValueType, "boolean")
 		}
-		if strings.ToLower(value.stringValue) == "false" || strings.ToLower(value.stringValue) == "n" {
-			return false, nil
-		}
+		return v.booleanValue, nil
 	}
 	if value.valueType == ValueTypeBoolean {
 		return value.booleanValue, nil
