@@ -1,5 +1,5 @@
 # goselect [![Actions Status](https://github.com/SarthakMakhija/goselect/workflows/GoSelectCI/badge.svg)](https://github.com/SarthakMakhija/goselect/actions)  [![codecov](https://codecov.io/gh/SarthakMakhija/goselect/branch/main/graph/badge.svg?token=CCCAQTE2A3)](https://codecov.io/gh/SarthakMakhija/goselect)
-`goselect` provides SQL like 'select' interface for file systems.
+*goselect* provides SQL like 'select' interface for file systems.
 
 # Examples 
 
@@ -15,7 +15,7 @@
 
 # Feature overview 
 
-`goselect` provides various features including:
+*goselect* provides various features including:
 1. Support for attribute aliases. For example, **filename** is same as **fname**
 2. Support for function aliases. For example, **lower** is same as **low**
 3. Support for various string scalar functions like `lower`, `upper`, `concat`, `substr` etc
@@ -31,16 +31,29 @@
 # Differences between SQL select and goselect's select 
 
 Features that are different from SQL:
-1. `goselect` does not support 'group by'. All the aggregating functions return results that repeat for each row
-2. `goselect` does not support expressions like 1+2 or 1*2. Instead, `goselect` gives functions like 'add' and 'mul' etc to write such expressions
-3. `goselect` does not support expressions like name=sample.log in 'where' clause. Instead, various functions are given to represent such expressions. These functions include: 'eq', 'ne', 'lt' etc
-4. `goselect` has a weak grammar. For example, a query like: select 1+2, name from /home/projects will ignore 1+2 and return file names
-5. `goselect`'s 'order by' clause supports only attribute positions. For example, a query like: select name, size from /home/projects order by 1 will order the results by first attribute
-6. `goselect` does not support single quote ['] and double quotes["]. For example, to match a file name, one could simply write a query: select * from . where eq(name, sample)
+1. *goselect* does not support 'group by'. All the aggregating functions return results that repeat for each row
+2. *goselect* does not support expressions like `1+2` or `1*2`. Instead, *goselect* gives functions like 'add' and 'mul' etc to write such expressions
+3. *goselect* does not support expressions like `name=sample.log` in 'where' clause. Instead, various functions are given to represent such expressions. These functions include: `eq`, `ne`, `lt`, `ge` etc
+4. *goselect* has a weak grammar. For example, a query like: 
+```SQL 
+select 1+2, name from /home/projects
+``` 
+will ignore `1+2` and return file names
+
+5. *goselect's* 'order by' clause supports only attribute positions. For example, a query like: 
+```SQL
+select name, size from /home/projects order by 1
+```
+will order the results by the first attribute `name`
+
+6. *goselect* does not support single quote ['] and double quotes["]. For example, to match a file name, one could simply write a query: 
+```SQL
+select * from . where eq(name, sample)
+```
 
 # Supported platforms
 
-- `goselect` has been tested on **macOS Big Sur 11.4** and **Ubuntu 20.0.3**
+- *goselect* has been tested on **macOS Big Sur 11.4** and **Ubuntu 20.0.3**
 
 # Installation on macOS
 
@@ -129,7 +142,7 @@ goselect desc --term=lower
 
 4. **Are there any functions to parse an input in date/time type?**
 
-Yes, `goselect` supports a function `parsedatetime` to parse an input string in `time` type. It takes 2 parameters, the first parameter is a string to be parsed and the second is the format identifier.
+Yes, *goselect* supports a function `parsedatetime` to parse an input string in `time` type. It takes 2 parameters, the first parameter is a string to be parsed and the second is the format identifier.
 
 5. **How do I get the supported date/time formats and their identifiers?**
 
@@ -147,7 +160,7 @@ No, the select queries are case-insensitive.
 
 7. **Are all the functions supported in where clause?**
 
-No, `goselect` supports a set of functions that can be used in `where` clause. Use `goselect listWhereClauseFunctions` to get a list of all the functions that can be used in `where` clause.
+No, *goselect* supports a set of functions that can be used in `where` clause. Use `goselect listWhereClauseFunctions` to get a list of all the functions that can be used in `where` clause.
 
 **Usage**
 ```shell
@@ -192,7 +205,7 @@ goselect wherefns
   - [X] select * from /home/apps where eq(add(2,3), 5)
   - [X] select * from /home/apps where eq(lower(ext), .log)
   - [X] select * from /home/apps where ne(lower(ext), .log)
-  - [X] `where` clause supports functions for comparison like `eq`, `le`, `lt`, `ge`, `gt`, `ne`, `contains`, `or`, `and` and `not`
+  - [X] `where` clause supports functions for comparison like `eq`, `le`, `lt`, `ge`, `gt`, `ne`, `contains`, `or`, `and`, `not` etc
   ```
 - Support for projections
   - [X] projections with attribute name: `name`, `size`
