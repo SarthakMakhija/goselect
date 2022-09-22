@@ -161,6 +161,12 @@
       "query": "SELECT lower(NAME), size",
       "isErrorExpected": true,
       "resultCount": 0
+    },
+    {
+      "name": "select name, path from resources where resources is a file and its name starts with test using StartsWith function",
+      "query": "SELECT lower(NAME), path FROM ../resources/test/ where startsWith(name , Test) limit 4",
+      "isErrorExpected": false,
+      "resultCount": 4
     }
   ]
 }

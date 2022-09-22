@@ -1,6 +1,3 @@
-//go:build unit
-// +build unit
-
 package context
 
 import (
@@ -1598,5 +1595,49 @@ func TestIfBlankWithMissingParameterValue(t *testing.T) {
 
 	if err == nil {
 		t.Fatalf("Expected an error while executing ifBlank with no parameter value")
+	}
+}
+
+func TestStartsWith1(t *testing.T) {
+	value, _ := NewFunctions().Execute("startsWith", StringValue("TestFile.log"), StringValue("Test"))
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != true {
+		t.Fatalf("Expected startsWith to be %v, received %v", true, actualValue)
+	}
+}
+
+func TestStartsWith2(t *testing.T) {
+	value, _ := NewFunctions().Execute("startsWith", StringValue("TestFile.log"), StringValue("File"))
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != false {
+		t.Fatalf("Expected startsWith to be %v, received %v", false, actualValue)
+	}
+}
+
+func TestStartsWith3(t *testing.T) {
+	value, _ := NewFunctions().Execute("startsWith", StringValue(" TestFile.log"), StringValue(" "))
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != true {
+		t.Fatalf("Expected startsWith to be %v, received %v", true, actualValue)
+	}
+}
+
+func TestStartsWith4(t *testing.T) {
+	value, _ := NewFunctions().Execute("startsWith", StringValue(" TestFile.log"), StringValue("file"))
+
+	actualValue, _ := value.GetBoolean()
+	if actualValue != false {
+		t.Fatalf("Expected startsWith to be %v, received %v", false, actualValue)
+	}
+}
+
+func TestStartsWithMissingParameterValue(t *testing.T) {
+	_, err := NewFunctions().Execute("startsWith")
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing startsWith with no parameter value")
 	}
 }

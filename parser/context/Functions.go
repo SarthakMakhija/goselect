@@ -61,6 +61,7 @@ const (
 	FunctionNameLeftTrim            = "ltrim"
 	FunctionNameRightTrim           = "rtrim"
 	FunctionNameIfBlank             = "ifblank"
+	FunctionNameStartsWith          = "startswith"
 	FunctionNameNow                 = "now"
 	FunctionNameCurrentDay          = "cday"
 	FunctionNameCurrentDate         = "cdate"
@@ -226,6 +227,12 @@ var functionDefinitions = map[string]*FunctionDefinition{
 		aliases:     []string{"ifblank"},
 		description: "Takes two parameter values and returns the first one if it is not empty \nand doesn't consist solely of whitespace characters, \nelse returns the second parameter value.",
 		block:       IfBlankFunctionBlock{},
+	},
+	FunctionNameStartsWith: {
+		aliases:     []string{"startswith"},
+		description: "Takes two parameter values and returns true if the first parameter value starts with the second one.",
+		block:       StartsWithFunctionBlock{},
+		tags:        map[string]bool{"where": true},
 	},
 	FunctionNameNow: {
 		aliases:     []string{"now"},

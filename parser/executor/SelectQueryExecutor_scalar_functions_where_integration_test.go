@@ -439,3 +439,24 @@ func TestResultsWithAWhereClause23(t *testing.T) {
 
 	assertMatch(t, expected, queryResults)
 }
+
+func TestResultsWithAWhereClause24(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select name from ../resources/test/TestResultsWithProjections/ where startsWith(name, Test) order by 1", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	expected := [][]context.Value{
+		{context.StringValue("TestResultsWithProjections_A.log")},
+		{context.StringValue("TestResultsWithProjections_A.txt")},
+		{context.StringValue("TestResultsWithProjections_B.log")},
+		{context.StringValue("TestResultsWithProjections_C.txt")},
+		{context.StringValue("TestResultsWithProjections_D.txt")},
+	}
+	assertMatch(t, expected, queryResults)
+}
