@@ -182,13 +182,14 @@ func TestAttributeWithIncorrectTokenInterpretation(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "lower"))
 	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
-	tokens.Add(tokenizer.NewToken(tokenizer.Numeric, "something"))
+	tokens.Add(tokenizer.NewToken(tokenizer.FloatingPoint, "."))
 	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
 
-	_, err := NewProjections(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	projections, _ := NewProjections(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	expected := "lower(.)"
 
-	if err == nil {
-		t.Fatalf("Expected an error given token was incorrectly inferred as numeric but received none")
+	if projections.DisplayableAttributes()[0] != expected {
+		t.Fatalf("Expected attributes to be %v, received %v", expected, projections.DisplayableAttributes()[0])
 	}
 }
 

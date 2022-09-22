@@ -66,7 +66,11 @@ func all(
 	if tokenIterator.HasNext() && tokenIterator.Peek().Equals("where") {
 		tokenIterator.Next()
 	}
-	for tokenIterator.HasNext() && !tokenIterator.Peek().Equals("order") {
+	for tokenIterator.HasNext() &&
+		!tokenIterator.Peek().Equals("order") &&
+		!tokenIterator.Peek().Equals("by") &&
+		!tokenIterator.Peek().Equals("limit") {
+
 		token := tokenIterator.Next()
 		switch {
 		case ctx.IsASupportedFunction(token.TokenValue) && ctx.FunctionContainsATag(token.TokenValue, "where"):
@@ -122,11 +126,11 @@ func function(
 				expectOpeningParentheses = false
 			default:
 				if !token.Equals(",") {
-					stringValue, err := context.ToValue(token)
+					value, err := context.ToValue(token)
 					if err != nil {
-						return nil, err
+						value = context.StringValue(token.TokenValue)
 					}
-					functionArgs = append(functionArgs, expression.WithValue(stringValue))
+					functionArgs = append(functionArgs, expression.WithValue(value))
 				}
 			}
 		}

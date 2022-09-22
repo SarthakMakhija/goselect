@@ -71,15 +71,17 @@ func TestWhereWithIncorrectTokenInterpretation(t *testing.T) {
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "where"))
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "eq"))
 	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
-	tokens.Add(tokenizer.NewToken(tokenizer.Numeric, "something"))
+	tokens.Add(tokenizer.NewToken(tokenizer.FloatingPoint, "."))
 	tokens.Add(tokenizer.NewToken(tokenizer.Comma, ","))
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "value"))
 	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
 
-	_, err := NewWhere(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	where, _ := NewWhere(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	display := where.Display()
+	expected := "eq(.,value)"
 
-	if err == nil {
-		t.Fatalf("Expected an error given token was incorrectly inferred as numeric but received none")
+	if display != expected {
+		t.Fatalf("Expected where to be %v, received %v", expected, display)
 	}
 }
 
