@@ -68,7 +68,6 @@ func all(
 	}
 	for tokenIterator.HasNext() &&
 		!tokenIterator.Peek().Equals("order") &&
-		!tokenIterator.Peek().Equals("by") &&
 		!tokenIterator.Peek().Equals("limit") {
 
 		token := tokenIterator.Next()

@@ -33,6 +33,80 @@ func TestWhereWithoutAnyWhereClause2(t *testing.T) {
 	}
 }
 
+func TestWhereWithIllegalKeywordAfterWhere1(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "where"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "eq"))
+	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "1"))
+	tokens.Add(tokenizer.NewToken(tokenizer.Comma, ","))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "1"))
+	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "ok"))
+
+	_, err := NewWhere(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
+
+	if err == nil {
+		t.Fatalf("Expected an error for invalid where clause but received none")
+	}
+}
+
+func TestWhereWithIllegalKeywordAfterWhere2(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "where"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "eq"))
+	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "1"))
+	tokens.Add(tokenizer.NewToken(tokenizer.Comma, ","))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "1"))
+	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "by"))
+
+	_, err := NewWhere(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
+
+	if err == nil {
+		t.Fatalf("Expected an error for invalid where clause but received none")
+	}
+}
+
+func TestWhereWithOrderKeywordAfterWhere(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "where"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "eq"))
+	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "1"))
+	tokens.Add(tokenizer.NewToken(tokenizer.Comma, ","))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "1"))
+	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "order"))
+
+	where, _ := NewWhere(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	expected := "eq(1,1)"
+
+	if expected != where.Display() {
+		t.Fatalf("Expected where clause to be %v, received %v", expected, where.Display())
+	}
+}
+
+func TestWhereWithLimitKeywordAfterWhere(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "where"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "eq"))
+	tokens.Add(tokenizer.NewToken(tokenizer.OpeningParentheses, "("))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "1"))
+	tokens.Add(tokenizer.NewToken(tokenizer.Comma, ","))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "1"))
+	tokens.Add(tokenizer.NewToken(tokenizer.ClosingParentheses, ")"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "limit"))
+
+	where, _ := NewWhere(tokens.Iterator(), context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	expected := "eq(1,1)"
+
+	if expected != where.Display() {
+		t.Fatalf("Expected where clause to be %v, received %v", expected, where.Display())
+	}
+}
+
 func TestWhere(t *testing.T) {
 	tokens := tokenizer.NewEmptyTokens()
 	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "where"))
