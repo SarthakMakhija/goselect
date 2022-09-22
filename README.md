@@ -208,7 +208,7 @@ goselect wherefns
 - Support for `limit` clause
   - [X] limit clause with a value: `limit 10`
 - Support for various functions
-  ![Scalar functions](images/functions.png)
+  ![Functions](images/functions.png)
 - Support for formatting the results
   - [X] Json formatter
   - [X] Html formatter
