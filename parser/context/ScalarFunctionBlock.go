@@ -37,6 +37,7 @@ type LengthFunctionBlock struct{}
 type TrimFunctionBlock struct{}
 type LeftTrimFunctionBlock struct{}
 type RightTrimFunctionBlock struct{}
+type IfBlankFunctionBlock struct{}
 type NowFunctionBlock struct{}
 type CurrentDayFunctionBlock struct{}
 type CurrentDateFunctionBlock struct{}
@@ -308,6 +309,16 @@ func (r RightTrimFunctionBlock) run(args ...Value) (Value, error) {
 		return EmptyValue, err
 	}
 	return StringValue(strings.TrimRight(args[0].GetAsString(), " ")), nil
+}
+
+func (i IfBlankFunctionBlock) run(args ...Value) (Value, error) {
+	if err := ensureNParametersOrError(args, FunctionNameIfBlank, 2); err != nil {
+		return EmptyValue, err
+	}
+	if len(strings.TrimSpace(args[0].GetAsString())) == 0 {
+		return args[1], nil
+	}
+	return args[0], nil
 }
 
 func (n NowFunctionBlock) run(_ ...Value) (Value, error) {

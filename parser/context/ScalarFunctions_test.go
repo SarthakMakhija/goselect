@@ -1562,3 +1562,41 @@ func TestFormatSize2(t *testing.T) {
 		t.Fatalf("Expected fmtsize to be %v, received %v", "4 Kib", actualValue)
 	}
 }
+
+func TestIfBlank1(t *testing.T) {
+	value, _ := NewFunctions().Execute("ifBlank", StringValue("   "), StringValue("NA"))
+	expected := "NA"
+
+	actualValue := value.GetAsString()
+	if actualValue != expected {
+		t.Fatalf("Expected ifBlank to be %v, received %v", expected, actualValue)
+	}
+}
+
+func TestIfBlank2(t *testing.T) {
+	value, _ := NewFunctions().Execute("ifBlank", StringValue(" content "), StringValue("NA"))
+	expected := " content "
+
+	actualValue := value.GetAsString()
+	if actualValue != expected {
+		t.Fatalf("Expected ifBlank to be %v, received %v", expected, actualValue)
+	}
+}
+
+func TestIfBlank3(t *testing.T) {
+	value, _ := NewFunctions().Execute("ifBlank", StringValue("  "), StringValue("   "))
+	expected := "   "
+
+	actualValue := value.GetAsString()
+	if actualValue != expected {
+		t.Fatalf("Expected ifBlank to be %v, received %v", expected, actualValue)
+	}
+}
+
+func TestIfBlankWithMissingParameterValue(t *testing.T) {
+	_, err := NewFunctions().Execute("ifBlank")
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing ifBlank with no parameter value")
+	}
+}

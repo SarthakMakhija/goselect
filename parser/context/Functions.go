@@ -60,6 +60,7 @@ const (
 	FunctionNameTrim                = "trim"
 	FunctionNameLeftTrim            = "ltrim"
 	FunctionNameRightTrim           = "rtrim"
+	FunctionNameIfBlank             = "ifblank"
 	FunctionNameNow                 = "now"
 	FunctionNameCurrentDay          = "cday"
 	FunctionNameCurrentDate         = "cdate"
@@ -220,6 +221,11 @@ var functionDefinitions = map[string]*FunctionDefinition{
 		aliases:     []string{"rtrim", "righttrim"},
 		description: "Takes a single parameter value and returns its value after removing trailing space character(s).",
 		block:       RightTrimFunctionBlock{},
+	},
+	FunctionNameIfBlank: {
+		aliases:     []string{"ifblank"},
+		description: "Takes two parameter values and returns the first one if it is not empty and doesn't consist solely of whitespace characters, else returns the second parameter value.",
+		block:       IfBlankFunctionBlock{},
 	},
 	FunctionNameNow: {
 		aliases:     []string{"now"},
