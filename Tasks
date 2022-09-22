@@ -1,5 +1,9 @@
 Version 0.0.4 Release
 
-1. Infer input values
-2. Make isImage, isText, isPdf, isAudio, isVideo functions a part of where clause
-3. Improve performance of like
+1. Infer input values - done
+2. Make isImage, isText, isPdf, isAudio, isVideo functions a part of where clause  - done
+3. Improve performance of like  - done
+4. Add functions:
+    - startsWith - done
+    - endsWith   - done
+    - ifBlank    - done
