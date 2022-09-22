@@ -224,7 +224,7 @@ var functionDefinitions = map[string]*FunctionDefinition{
 	},
 	FunctionNameIfBlank: {
 		aliases:     []string{"ifblank"},
-		description: "Takes two parameter values and returns the first one if it is not empty and doesn't consist solely of whitespace characters, else returns the second parameter value.",
+		description: "Takes two parameter values and returns the first one if it is not empty \nand doesn't consist solely of whitespace characters, \nelse returns the second parameter value.",
 		block:       IfBlankFunctionBlock{},
 	},
 	FunctionNameNow: {
