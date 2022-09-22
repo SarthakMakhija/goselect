@@ -13,7 +13,6 @@
 - select name, size from . where or(like(name, result.*), eq(isdir, true)) order by 2 limit 10
 ```
 
-
 # Feature overview 
 
 `goselect` provides various features including:
@@ -72,8 +71,9 @@ Features that are different from SQL:
 - Export as json to a file
   ![Json](images/json_as_file.png)
 
+# Changelog
 
-# Changes in Version 0.0.3
+#### Changes in Version 0.0.3
 
 1. Adoption of consistent file size units. File size is now reported in IEC units: (B, KiB, MiB, GiB, TiB, PiB, EiB) 
 2. No extension is reported for hidden files
@@ -81,12 +81,12 @@ Features that are different from SQL:
 4. `fmtsize` is provided as a function that can be used to format the file size
 5. `hsize` (or human-readable size) is dropped from attribute list in favor of the function `fmtsize`. Use `fmtsize(size)` to get the formatted size 
 
-# Changes in Version 0.0.2
+#### Changes in Version 0.0.2
 
 1. Support for getting the **mime type** from a file
 2. Support for various functions like `isPdf`, `isVideo`, `isText`, `isAudio` and `isImage` that work on the **mime type**
 
-## Example Queries for mime type
+*Example Queries for mime type*
 
 ```SQL
 1. select name, size, hsize, mime from ~/Documents/ where eq(isImage(mime), true)  order by 2 desc limit 10
