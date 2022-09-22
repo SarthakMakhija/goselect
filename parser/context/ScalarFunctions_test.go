@@ -1689,3 +1689,11 @@ func TestEndsWith5(t *testing.T) {
 		t.Fatalf("Expected endsWith to be %v, received %v", true, actualValue)
 	}
 }
+
+func TestEndsWithMissingParameterValue(t *testing.T) {
+	_, err := NewFunctions().Execute("endsWith")
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing endsWith with no parameter value")
+	}
+}
