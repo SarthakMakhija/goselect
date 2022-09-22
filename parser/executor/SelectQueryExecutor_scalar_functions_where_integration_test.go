@@ -460,3 +460,22 @@ func TestResultsWithAWhereClause24(t *testing.T) {
 	}
 	assertMatch(t, expected, queryResults)
 }
+
+func TestResultsWithAWhereClause25(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select name from ../resources/test/TestResultsWithProjections/ where endsWith(name, log) order by 1", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	expected := [][]context.Value{
+		{context.StringValue("Empty.log")},
+		{context.StringValue("TestResultsWithProjections_A.log")},
+		{context.StringValue("TestResultsWithProjections_B.log")},
+	}
+	assertMatch(t, expected, queryResults)
+}

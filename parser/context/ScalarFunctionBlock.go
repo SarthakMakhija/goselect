@@ -39,6 +39,7 @@ type LeftTrimFunctionBlock struct{}
 type RightTrimFunctionBlock struct{}
 type IfBlankFunctionBlock struct{}
 type StartsWithFunctionBlock struct{}
+type EndsWithFunctionBlock struct{}
 type NowFunctionBlock struct{}
 type CurrentDayFunctionBlock struct{}
 type CurrentDateFunctionBlock struct{}
@@ -327,6 +328,13 @@ func (s StartsWithFunctionBlock) run(args ...Value) (Value, error) {
 		return EmptyValue, err
 	}
 	return booleanValueUsing(strings.HasPrefix(args[0].GetAsString(), args[1].GetAsString())), nil
+}
+
+func (e EndsWithFunctionBlock) run(args ...Value) (Value, error) {
+	if err := ensureNParametersOrError(args, FunctionNameEndsWith, 2); err != nil {
+		return EmptyValue, err
+	}
+	return booleanValueUsing(strings.HasSuffix(args[0].GetAsString(), args[1].GetAsString())), nil
 }
 
 func (n NowFunctionBlock) run(_ ...Value) (Value, error) {

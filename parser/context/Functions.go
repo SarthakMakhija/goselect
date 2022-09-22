@@ -62,6 +62,7 @@ const (
 	FunctionNameRightTrim           = "rtrim"
 	FunctionNameIfBlank             = "ifblank"
 	FunctionNameStartsWith          = "startswith"
+	FunctionNameEndsWith            = "endswith"
 	FunctionNameNow                 = "now"
 	FunctionNameCurrentDay          = "cday"
 	FunctionNameCurrentDate         = "cdate"
@@ -232,6 +233,12 @@ var functionDefinitions = map[string]*FunctionDefinition{
 		aliases:     []string{"startswith"},
 		description: "Takes two parameter values and returns true if the first parameter value starts with the second one.",
 		block:       StartsWithFunctionBlock{},
+		tags:        map[string]bool{"where": true},
+	},
+	FunctionNameEndsWith: {
+		aliases:     []string{"endswith"},
+		description: "Takes two parameter values and returns true if the first parameter value ends with the second one.",
+		block:       EndsWithFunctionBlock{},
 		tags:        map[string]bool{"where": true},
 	},
 	FunctionNameNow: {

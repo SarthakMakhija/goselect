@@ -163,10 +163,16 @@
       "resultCount": 0
     },
     {
-      "name": "select name, path from resources where resources is a file and its name starts with test using StartsWith function",
+      "name": "select name, path from resources where the name starts with . using startsWith function",
       "query": "SELECT lower(NAME), path FROM ../resources/test/ where startsWith(name , .) limit 4",
       "isErrorExpected": false,
       "resultCount": 1
+    },
+    {
+      "name": "select name, path from resources where the name ends with .log using endsWith function",
+      "query": "SELECT lower(NAME), path FROM ../resources/test/ where endsWith(name , .log) limit 4",
+      "isErrorExpected": false,
+      "resultCount": 3
     }
   ]
 }
