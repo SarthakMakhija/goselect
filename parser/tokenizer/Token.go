@@ -23,7 +23,7 @@ const (
 )
 
 var numericRegexp, _ = regexp.Compile("^[-+]?(?:0|[1-9][0-9]*)$")
-var floatingNumbersRegexp, _ = regexp.Compile("^(?:[-+]?[0-9]+)?(?:\\.[0-9]*)?(?:[eE][+\\-]?[0-9]+)?$")
+var floatingNumbersRegexp, _ = regexp.Compile("^(?:[-+]?[0-9]+)?(?:\\.[0-9]+)?(?:[eE][+\\-]?[0-9]+)?$")
 var booleanRegexp, _ = regexp.Compile("^true|false|y|n$")
 
 type Token struct {

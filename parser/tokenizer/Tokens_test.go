@@ -162,6 +162,14 @@ func TestTokenTypeAsFloatingPoint(t *testing.T) {
 			input:           "-.123",
 			isFloatingPoint: false,
 		},
+		".9 is float": {
+			input:           ".9",
+			isFloatingPoint: true,
+		},
+		". is not float": {
+			input:           ".",
+			isFloatingPoint: false,
+		},
 		"+0.123 is float": {
 			input:           "+0.123",
 			isFloatingPoint: true,
@@ -178,6 +186,10 @@ func TestTokenTypeAsFloatingPoint(t *testing.T) {
 			if input.isFloatingPoint {
 				if token.TokenType != FloatingPoint {
 					t.Fatalf("Expected %v to be floating point but was %v", input.input, token.TokenType)
+				}
+			} else {
+				if token.TokenType == FloatingPoint {
+					t.Fatalf("Expected %v to not be floating point but was %v", input.input, token.TokenType)
 				}
 			}
 		})
@@ -221,6 +233,10 @@ func TestTokenTypeAsBoolean(t *testing.T) {
 			if input.isBoolean {
 				if token.TokenType != Boolean {
 					t.Fatalf("Expected %v to be boolean but was %v", input.input, token.TokenType)
+				}
+			} else {
+				if token.TokenType == Boolean {
+					t.Fatalf("Expected %v to not be boolean but was %v", input.input, token.TokenType)
 				}
 			}
 		})
