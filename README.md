@@ -207,10 +207,8 @@ goselect wherefns
   - [X] order by in optional ascending order: `order by 1 asc`
 - Support for `limit` clause
   - [X] limit clause with a value: `limit 10`
-- Support for various `scalar functions`
-  ![Scalar functions](images/scalar_functions.png)
-- Support for `aggregation functions`
-  ![Aggregate functions](images/aggregate_functions.png)
+- Support for various function
+  ![Scalar functions](images/functions.png)
 - Support for formatting the results
   - [X] Json formatter
   - [X] Html formatter
