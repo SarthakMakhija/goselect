@@ -594,7 +594,7 @@ func (p ParseDateTimeFunctionBlock) run(args ...Value) (Value, error) {
 	formatId := args[1].GetAsString()
 	parsed, err := parse(timeAsStr, formatId)
 	if err != nil {
-		return EmptyValue, err
+		return EmptyValue, fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameDateTimeParse, err)
 	}
 	return DateTimeValue(parsed), nil
 }

@@ -1,7 +1,6 @@
 package context
 
 import (
-	"errors"
 	"fmt"
 	"goselect/parser/error/messages"
 	"strconv"
@@ -98,14 +97,14 @@ func DateTimeValue(time time.Time) Value {
 
 func (value Value) GetInt() (int, error) {
 	if value.valueType != ValueTypeInt {
-		return -1, fmt.Errorf(messages.ErrorMessageIncorrectValueType, "int")
+		return -1, fmt.Errorf(messages.ErrorMessageIncorrectValueType, "int", value.GetAsString())
 	}
 	return value.intValue, nil
 }
 
 func (value Value) GetDateTime() (time.Time, error) {
 	if value.valueType != ValueTypeDateTime {
-		return time.Time{}, fmt.Errorf(messages.ErrorMessageIncorrectValueType, "time")
+		return time.Time{}, fmt.Errorf(messages.ErrorMessageIncorrectValueType, "time", value.GetAsString())
 	}
 	return value.timeValue, nil
 }
@@ -114,19 +113,19 @@ func (value Value) GetBoolean() (bool, error) {
 	if value.valueType == ValueTypeString {
 		v, _ := stringToBoolean(value.stringValue)
 		if v == EmptyValue {
-			return false, fmt.Errorf(messages.ErrorMessageIncorrectValueType, "boolean")
+			return false, fmt.Errorf(messages.ErrorMessageIncorrectValueType, "boolean", value.GetAsString())
 		}
 		return v.booleanValue, nil
 	}
 	if value.valueType == ValueTypeBoolean {
 		return value.booleanValue, nil
 	}
-	return false, fmt.Errorf(messages.ErrorMessageIncorrectValueType, "boolean")
+	return false, fmt.Errorf(messages.ErrorMessageIncorrectValueType, "boolean", value.GetAsString())
 }
 
 func (value Value) GetNumericAsFloat64() (float64, error) {
 	if v, err := toFloat64(value); err != nil {
-		return -1, errors.New(messages.ErrorMessageExpectedNumericArgument)
+		return -1, fmt.Errorf(messages.ErrorMessageExpectedNumericArgument, value.GetAsString())
 	} else {
 		return v.float64Value, nil
 	}
