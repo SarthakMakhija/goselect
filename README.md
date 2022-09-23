@@ -11,25 +11,25 @@ The project *goselect* was created to understand the following:
 
 &#x1F539; **Parsing**
 
-The parsing pipeline typically involves a lexer, a parser and an AST.
+> The parsing pipeline typically involves a lexer, a parser and an AST.
 
 &#x1F539; **Recursive descent parser**
 
 &#x1F539; **Representation of functions in the code**
 
-Functions like `lower`, `upper` and `trim` take a single parameter, functions like `now` and `currentDate` take zero parameters whereas functions like `concat` take a variable number of parameters.
+> Functions like `lower`, `upper` and `trim` take a single parameter, functions like `now` and `currentDate` take zero parameters whereas functions like `concat` take a variable number of parameters.
 
 &#x1F539; **Execution of scalar functions like `lower`, `upper` and `substr`**
 
-These functions are stateless and run for each row. They may take a parameter and **return a value for each row**.
+> These functions are stateless and run for each row. They may take a parameter and **return a value for each row**.
 
 &#x1F539; **Execution of aggregation functions like `average`, `min`, `max` and `countDistinct`**
 
-These functions run over a collection of rows and **return a final value**.
+> These functions run over a collection of rows and **return a final value**.
 
-&#x1F539; **Execution of nested scalar and aggregation functions like `countDistinct(lower(name))`*
+&#x1F539; **Execution of nested scalar and aggregation functions like `countDistinct(lower(name))`**
 
-Here, the function `lower(name)` runs for each row whereas `countDistinct` runs over a collection of rows.
+> Here, the function `lower(name)` runs for each row whereas `countDistinct` runs over a collection of rows.
 
 # [Content organization](#table-of-contents)
   * [Example queries](#example-queries)
