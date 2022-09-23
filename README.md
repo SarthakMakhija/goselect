@@ -19,6 +19,7 @@ to get the file name, file path and size of all the files that are either direct
   * [Queries in detail](#queries-in-detail)
   * [FAQs](#faqs)
   * [All the supported features](#all-the-supported-features)
+  * [Unsupported ideas](#unsupported-ideas)
   * [Screenshots](#screenshots)
   * [Planned changes](#planned-changes)
 
@@ -546,6 +547,29 @@ goselect wherefns
   - [X] Console
   - [X] File
 
+# Unsupported ideas
+
+*goselect* does not support the following:
+
+1. **Single quotes and double quotes.** 
+To match a file name there is no need to use single or double quotes. One could simply write a query:
+```SQL
+select * from . where eq(name, sample)
+```
+
+2. **Groups in regular expressions.**
+Currently, there is no support for using groups in regular expressions. This means one can not write the following query:
+```SQL
+select * from . where like(name, ([0-9]?)([a-z]{1}))
+```
+
+3. **Use of parentheses inside a function call.**
+One can not use parentheses inside a function call. This means the following queries are treated invalid:  
+```SQL
+select * from . where eq(add(2, 3), (4))
+
+select * from . where lt(size, (add(2, 3)))
+```
 
 # Screenshots
 - Limit clause
