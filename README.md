@@ -129,8 +129,8 @@ select * from . where eq(name, sample)
 *Example Queries for mime type*
 
 ```SQL
-1. select name, size, hsize, mime from ~/Documents/ where eq(isImage(mime), true)  order by 2 desc limit 10
-2. select name, size, hsize, mime from ~/Documents/ where eq(isPdf(mime), true)  order by 2 desc limit 10
+1. select name, size, mime from ~/Documents/ where eq(isImage(mime), true)  order by 2 desc limit 10
+2. select name, size, mime from ~/Documents/ where eq(isPdf(mime), true)  order by 2 desc limit 10
 ```
 
 # Queries in detail
