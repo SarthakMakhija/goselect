@@ -562,6 +562,7 @@ Currently, there is no support for using groups in regular expressions. This mea
 ```SQL
 select * from . where like(name, ([0-9]?)([a-z]{1}))
 ```
+This will be part of one of the future releases. Please check [Planned changes](#planned-changes).
 
 3. **Use of parentheses inside a function call.**
 One can not use parentheses inside a function call. This means the following queries are treated invalid:  
@@ -572,6 +573,7 @@ select * from . where lt(size, (add(2, 3)))
 ```
 
 # Screenshots
+
 - Limit clause
   ![Limit clause](images/any_10.png)
 
@@ -585,8 +587,10 @@ select * from . where lt(size, (add(2, 3)))
   ![Json](images/json_as_file.png)
 
 # Planned changes
-- Support for matching file size with units. For example, `select * from . where gt(size, parsesize(15 Mb))` Or `select * from . where gt(size, parsesize(15 Mib))`
-- Support for inferring the input data type. For example, at this point `lt(-0.12, -0.11)` does not work. The expressions `-0.12` and `-0.11` are treated as strings. This features aims to infer the data types of expressions during parsing
-- Support for checking if a (text) file contains a specific term
-- Improving table formatter to handle the formatting for large number of columns
-- Caching the expression results. This is useful for cases like `select lower(name) from . where eq(lower(name), sample)`. In this example, `lower(name)` need not be evaluated twice for a row 
+
+1. Support for inferring the input data type. For example, at this point `lt(-0.12, -0.11)` does not work. The expressions `-0.12` and `-0.11` are treated as strings. This features aims to infer the data types of expressions during parsing
+2. Support for groups in regular expressions. 
+3. Support for matching file size with units. For example, `select * from . where gt(size, parsesize(15 Mb))` Or `select * from . where gt(size, parsesize(15 Mib))`
+4. Support for checking if a (text) file contains a specific term
+5. Improving table formatter to handle the formatting for large number of columns
+6. Caching the expression results. This is useful for cases like `select lower(name) from . where eq(lower(name), sample)`. In this example, `lower(name)` need not be evaluated twice for a row 
