@@ -2,7 +2,7 @@
   "versions": [
     {
       "version": "v0.0.4",
-      "isCurrent": true,
+      "isCurrent": false,
       "changes": "1. Inference of input values\n2. isImage, isText, isPdf, isAudio, isVideo functions are now a part of where clause\n3. Improved performance of like\n4. Introduction of new functions: startsWith, endsWith and ifBlank\n5. Introduction of version command"
     },
     {
