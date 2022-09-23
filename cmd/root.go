@@ -41,15 +41,17 @@ goselect is available here: https://github.com/SarthakMakhija/goselect
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	cc.Init(&cc.Config{
-		RootCmd:       rootCmd,
-		Headings:      cc.HiCyan + cc.Bold + cc.Underline,
-		Commands:      cc.HiYellow + cc.Bold,
-		Example:       cc.Italic,
-		ExecName:      cc.HiRed,
-		Flags:         cc.Bold,
-		FlagsDescr:    cc.Cyan,
-		CmdShortDescr: cc.Red,
-		Aliases:       cc.Red,
+		RootCmd:         rootCmd,
+		Headings:        cc.HiCyan + cc.Bold + cc.Underline,
+		Commands:        cc.HiYellow + cc.Bold,
+		Example:         cc.Italic,
+		ExecName:        cc.HiRed,
+		Flags:           cc.Bold,
+		FlagsDescr:      cc.Cyan,
+		CmdShortDescr:   cc.Red,
+		Aliases:         cc.Red,
+		NoExtraNewlines: true,
+		NoBottomNewline: true,
 	})
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
 	err := rootCmd.Execute()
