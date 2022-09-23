@@ -205,19 +205,19 @@ goselect ex -q='select name, startswith(name, go) from .'
 goselect ex -q='select name, endswith(name, go) from .'
 ```
 
-18. **Determine if a file name ends with a string go**
-```SQL
-goselect ex -q='select name, endswith(name, go) from .'
-```
-
-19. **Select the date from access time**
+18. **Select the date from the access time of the files**
 ```SQL
 goselect ex -q='select name, atime, extract(atime, date) from .'
 ```
 
-20. **Select current month, current year, current date, day of the week and current date**
+19. **Select current month, current year, current date, day of the week and current date**
 ```SQL
 goselect ex -q='select cmonth(), cyear(), cdate(), dayofweek(), cdate() from . limit 1'
+```
+
+20. **Select file name and determine if the user can read, write and execute a file**
+```SQL
+goselect ex -q='select name, uread, uwrite, uexecute from .'
 ```
 
 ### Order by and limit
@@ -234,12 +234,12 @@ goselect ex -q='select name, size, ext, abspath from . order by 2 desc limit 5'
 
 ### Aggregate functions
 
-1. **Select all the entries in the current directory**
+1. **Count all the entries in the current directory**
 ```SQL
 goselect ex -q='select count() from .'
 ```
 
-2. **Select distinct file extensions**
+2. **Count distinct file extensions**
 ```SQL
 goselect ex -q='select countDistinct(ext) from .'
 ```
