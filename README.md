@@ -16,6 +16,7 @@ to get the file name, file path and size of all the files that are either direct
   * [Changelog](#changelog)
     * [Version 0.0.3](#version-003)
     * [Version 0.0.2](#version-002)
+  * [Queries in detail](#queries-in-detail)
   * [FAQs](#faqs)
   * [All the supported features](#all-the-supported-features)
   * [Screenshots](#screenshots)
@@ -113,6 +114,312 @@ select * from . where eq(name, sample)
 ```SQL
 1. select name, size, hsize, mime from ~/Documents/ where eq(isImage(mime), true)  order by 2 desc limit 10
 2. select name, size, hsize, mime from ~/Documents/ where eq(isPdf(mime), true)  order by 2 desc limit 10
+```
+
+# Queries in detail
+
+### Projections
+
+1. **Use * as projection**
+```SQL
+goselect ex -q='select * from . '
+```
+
+2. **Select name, size, extension, absolute path using aliases**
+```SQL
+goselect ex -q='select name, size, ext, abspath from . '
+```
+
+3. **Select just the file name without its extension**
+```SQL
+goselect ex -q='select basename, extension from . '
+```
+
+4. **Determine if a file is a directory or not**
+```SQL
+goselect ex -q='select name, isdir, isfile from .'
+```
+
+5. **Select created time, access time and modified time of all the files**
+```SQL
+goselect ex -q='select name, ctime, atime, mtime from .'
+```
+
+6. **Select the mime type of all the files**
+```SQL
+goselect ex -q='select name, mime from .'
+```
+
+7. **Select file name in upper case and format the file size**
+```SQL
+goselect ex -q='select upper(name), size, formatsize(size) from .'
+```
+
+8. **Select the length of all the file names**
+```SQL
+goselect ex -q='select name, len(name) from .'
+```
+
+9. **Select the length of all the file extensions without including . in the length**
+```SQL
+goselect ex -q='select name, ext, len(substr(ext, 1)) from .'
+```
+
+10. **Select name and extension of all the files, but return NA if there is no extension**
+```SQL
+goselect ex -q='select name, ifblank(ext, NA) from .'
+```
+
+11. **Select trimmed file names**
+```SQL
+goselect ex -q='select trim(name), ltrim(name), rtrim(name) from .'
+```
+
+12. **Concat the basename, extension and the formatted file size**
+```SQL
+goselect ex -q='select concat(basename, ext, fmtsize(size)) from .'
+```
+
+13. **Concat the basename, extension and the formatted file size with a separator @**
+```SQL
+goselect ex -q='select concatWs(basename, ext, fmtsize(size), @) from .'
+```
+
+14. **Determine if a file name contains a string project**
+```SQL
+goselect ex -q='select name, contains(name, project) from .'
+```
+
+15. **Replace all the dots (.) in file names with a hash (#)**
+```SQL
+goselect ex -q='select name, replaceall(name, ., #) from .'
+```
+
+16. **Determine if a file name starts with a string go**
+```SQL
+goselect ex -q='select name, startswith(name, go) from .'
+```
+
+17. **Determine if a file name ends with a string go**
+```SQL
+goselect ex -q='select name, endswith(name, go) from .'
+```
+
+18. **Determine if a file name ends with a string go**
+```SQL
+goselect ex -q='select name, endswith(name, go) from .'
+```
+
+19. **Select the date from access time**
+```SQL
+goselect ex -q='select name, atime, extract(atime, date) from .'
+```
+
+20. **Select current month, current year, current date, day of the week and current date**
+```SQL
+goselect ex -q='select cmonth(), cyear(), cdate(), dayofweek(), cdate() from . limit 1'
+```
+
+### Order by and limit
+
+1. **Order the results by size in descending order**
+```SQL
+goselect ex -q='select name, size, ext, abspath from . order by 2 desc'
+```
+
+2. **Order the results by size in descending order and limit the total number of results to 5**
+```SQL
+goselect ex -q='select name, size, ext, abspath from . order by 2 desc limit 5'
+```
+
+### Aggregate functions
+
+1. **Select all the entries in the current directory**
+```SQL
+goselect ex -q='select count() from .'
+```
+
+2. **Select distinct file extensions**
+```SQL
+goselect ex -q='select countDistinct(ext) from .'
+```
+
+3. **Select the sum of size of all the files and also return the average file size**
+```SQL
+goselect ex -q='select sum(size), avg(size) from .'
+```
+
+4. **Select the sum of size of all the files and also return the average file size, but format the sizes**
+```SQL
+goselect ex -q='select fmtsize(sum(size)), fmtsize(avg(size)) from .'
+```
+
+5. **Select the minimum and the maximum file size**
+```SQL
+goselect ex -q='select min(size), max(size) from .'
+```
+
+6. **Select the minimum and the maximum length of all the file names**
+```SQL
+goselect ex -q='select min(len(name)), max(len(name)) from .'
+```
+
+### Where clause
+
+1. **Select file name and extension of all the files containing a string go in their name**
+```SQL
+goselect ex -q='select name, extension from . where contains(name, hello)'
+```
+
+2. **Select file name and extension of all the files if their names begin with READ, followed by numbers, followed by any number of characters**
+```SQL
+goselect ex -q='select name, extension from . where like(name, ^READ[0-9].*)'
+```
+
+3. **Select file name and extension of all the files if their names start with READ**
+```SQL
+goselect ex -q='select name, extension from . where startswith(name, READ)'
+```
+
+4. **Select file name and extension of all the files if their names end with go**
+```SQL
+goselect ex -q='select name, extension from . where endswith(name, go)'
+```
+
+5. **Select file name and extension of all the text files**
+```SQL
+goselect ex -q='select name, extension from . where isText(mime)'
+```
+
+6. **Select file name and extension of all the image files**
+```SQL
+goselect ex -q='select name, extension from . where isImage(mime)'
+```
+
+7. **Select file name and extension of all the audio files**
+```SQL
+goselect ex -q='select name, extension from . where isAudio(mime)'
+```
+
+8. **Select file name and extension of all the video files**
+```SQL
+goselect ex -q='select name, extension from . where isVideo(mime)'
+```
+
+9. **Select file name and extension of all the pdf files**
+```SQL
+goselect ex -q='select name, extension from . where isPdf(mime)'
+```
+
+10. **Select file name, extension and size of all the files if there size is greater than 1 Mib**
+```SQL
+goselect ex -q='select name, extension, size, fmtsize(size) from . where gt(size, mul(1, 1024, 1024))'
+
+1 Mib = 1 * 1024 * 1024 bytes
+```
+**Or**
+```SQL
+goselect ex -q='select name, extension, size, fmtsize(size) from . where gt(size, 1048576)'
+```
+
+11. **Select file name, extension and size of all the files if there size is greater than or equal to 1 Mib**
+```SQL
+goselect ex -q='select name, extension, size, fmtsize(size) from . where gte(size, mul(1, 1024, 1024))'
+```
+**Or**
+```SQL
+goselect ex -q='select name, extension, size, fmtsize(size) from . where gte(size, 1048576)'
+```
+
+12. **Select file name, extension and size of all the files if there size is less than 1 Mib**
+```SQL
+goselect ex -q='select name, extension, size, fmtsize(size) from . where le(size, mul(1, 1024, 1024))'
+```
+**Or**
+```SQL
+goselect ex -q='select name, extension, size, fmtsize(size) from . where le(size, 1048576)'
+```
+
+13. **Select file name, extension and size of all the files if there size is less than or equal to 1 Mib**
+```SQL
+goselect ex -q='select name, extension, size, fmtsize(size) from . where lte(size, mul(1, 1024, 1024))'
+```
+**Or**
+```SQL
+goselect ex -q='select name, extension, size, fmtsize(size) from . where lte(size, 1048576)'
+```
+
+14. **Select file name, extension and size of all the files if there size equal to 600 bytes**
+```SQL
+goselect ex -q='select name, extension, size, fmtsize(size) from . where eq(size, 600)'
+```
+
+15. **Select file name, extension and size of all the files if their extension is equal to .go**
+```SQL
+goselect ex -q='select name, extension, size, fmtsize(size) from . where eq(ext, .go)'
+```
+
+16. **Select file name, extension and size of all the files if their extension is not equal to .go**
+```SQL
+goselect ex -q='select name, extension, size, fmtsize(size) from . where ne(ext, .go)'
+```
+
+17. **Select file name and extension of all the text files if their names start with lowercase test**
+```SQL
+goselect ex -q='select name, extension from . where and(isText(mime), startsWith(lower(name), test))'
+```
+
+18. **Select file name of all the hidden files and directories**
+```SQL
+goselect ex -q='select name from . where or(eq(isDir, true), eq(isHidden, true))'
+```
+**Or**
+```SQL
+goselect ex -q='select name from . where or(isDir, isHidden)'
+```
+
+19. **Select count of all the hidden files**
+```SQL
+goselect ex -q='select count(), name from . where eq(isHidden, true)'
+```
+
+19. **Select count of all the pdf files**
+```SQL
+goselect ex -q='select count() from . where eq(isPdf(mime), true)'
+```
+
+20. **Select sum of size of all the hidden files**
+```SQL
+goselect ex -q='select fmtsize(sum(size)), size from . where eq(isHidden, true)'
+```
+
+21. **Select all the files that are not hidden**
+```SQL
+goselect ex -q='select name, extension from . where not(isHidden, true)'
+```
+**Or**
+```SQL
+goselect ex -q='select name, extension from . where eq(isHidden, false)'
+```
+
+22. **Select basename and extension of all the files with .log as the extension and their basename should have a date format: Year-Month-Date (for example, 2022-09-28)**
+```SQL
+goselect ex -q='select basename, ext from . where and(eq(ext, .log), like(basename, [0-9]{4}-[0-9]{2}-[0-9]{2}))'
+```
+
+23. **Select file name and extension of all the files that were accessed 2 or more days earlier**
+```SQL
+goselect ex -q='select name, ext, atime from . where gte(daysdiff(atime), 2)'
+
+Default value of second parameter in daysdiff is now()
+```
+
+24. **Select file name and extension of all the files that were modified on or after 2022-09-22**
+```SQL
+goselect ex -q='select name, ext, mtime from . where gt(mtime, parseDateTime(2022-09-22, dt))'
+
+Here, parseDateTime is given a date without timezone, that means while comparing mtime and the input value, timezone may play role. 
+'2022-09-22' will have UTC as the timezone that might not be same the timezone of mtime.   
 ```
 
 # FAQs
