@@ -1,7 +1,27 @@
 # goselect [![Actions Status](https://github.com/SarthakMakhija/goselect/workflows/GoSelectCI/badge.svg)](https://github.com/SarthakMakhija/goselect/actions)  [![codecov](https://codecov.io/gh/SarthakMakhija/goselect/branch/main/graph/badge.svg?token=CCCAQTE2A3)](https://codecov.io/gh/SarthakMakhija/goselect)
-*goselect* provides SQL like 'select' interface for file systems.
+*goselect* provides SQL like 'select' interface for file systems. This means one can execute a select query like:
+```SQL
+select name, path, size from . where or(like(name, result.*), eq(isdir, true)) order by 3 desc
+```
+to get the file name, file path and size of all the files that are either directories or their names begin with *result*. The result will be ordered by *size* in descending order.
 
-# Examples 
+# [Content organization](#table-of-contents)
+  * [Example queries](#example-queries)
+  * [Feature overview](#feature-overview)
+  * [Differences between SQL select and goselect](#differences-between-sql-select-and-goselect)
+  * [Supported platforms](#supported-platforms)
+  * [Installation](#installation)
+    * [MacOS](#macos)
+    * [Linux AMD64](#linux-amd64)
+  * [Changelog](#changelog)
+    * [Version 0.0.3](#version-003)
+    * [Version 0.0.2](#version-002)
+  * [FAQs](#faqs)
+  * [All the supported features](#all-the-supported-features)
+  * [Screenshots](#screenshots)
+  * [Planned changes](#planned-changes)
+
+# Example queries
 
 ```SQL
 - select * from .
@@ -28,7 +48,7 @@
 10. Support for performing select in nested directories
 11. Support for skipping directories like `.git` & `.github`
 
-# Differences between SQL select and goselect's select 
+# Differences between SQL select and goselect
 
 Features that are different from SQL:
 1. *goselect* does not support 'group by'. All the aggregating functions return results that repeat for each row
@@ -55,38 +75,27 @@ select * from . where eq(name, sample)
 
 - *goselect* has been tested on **macOS Big Sur 11.4** and **Ubuntu 20.0.3**
 
-# Installation on macOS
+# Installation
 
-**Download the current release**
-- `wget -o - https://github.com/SarthakMakhija/goselect/releases/download/v0.0.3/goselect_0.0.3_Darwin_all.tar.gz`
+### MacOS
 
-**Unzip the release in a directory**
-- `mkdir goselect && tar xvf goselect_0.0.3_Darwin_all.tar.gz -C goselect`
+1. **Download the current release**
+   - `wget -o - https://github.com/SarthakMakhija/goselect/releases/download/v0.0.3/goselect_0.0.3_Darwin_all.tar.gz`
 
-# Installation on Linux (amd64)
+2. **Unzip the release in a directory**
+   - `mkdir goselect && tar xvf goselect_0.0.3_Darwin_all.tar.gz -C goselect`
 
-**Download the current release**
-- `wget -o - https://github.com/SarthakMakhija/goselect/releases/download/v0.0.3/goselect_0.0.3_Linux_x86_64.tar.gz`
+### Linux AMD64
 
-**Unzip the release in a directory**
-- `mkdir goselect && tar xvf goselect_0.0.3_Linux_x86_64.tar.gz -C goselect`
+1. **Download the current release**
+   - `wget -o - https://github.com/SarthakMakhija/goselect/releases/download/v0.0.3/goselect_0.0.3_Linux_x86_64.tar.gz`
 
-# Screenshots
-- Limit clause
-  ![Limit clause](images/any_10.png)
-
-- Where clause
-  ![Where clause](images/where.png)
-
-- Export as json
-  ![Json](images/json.png)
-
-- Export as json to a file
-  ![Json](images/json_as_file.png)
+2. **Unzip the release in a directory**
+   - `mkdir goselect && tar xvf goselect_0.0.3_Linux_x86_64.tar.gz -C goselect`
 
 # Changelog
 
-#### Changes in Version 0.0.3
+#### Version 0.0.3
 
 1. Adoption of consistent file size units. File size is now reported in IEC units: (B, KiB, MiB, GiB, TiB, PiB, EiB) 
 2. No extension is reported for hidden files
@@ -94,7 +103,7 @@ select * from . where eq(name, sample)
 4. `fmtsize` is provided as a function that can be used to format the file size
 5. `hsize` (or human-readable size) is dropped from attribute list in favor of the function `fmtsize`. Use `fmtsize(size)` to get the formatted size 
 
-#### Changes in Version 0.0.2
+#### Version 0.0.2
 
 1. Support for getting the **mime type** from a file
 2. Support for various functions like `isPdf`, `isVideo`, `isText`, `isAudio` and `isImage` that work on the **mime type**
@@ -229,7 +238,21 @@ goselect wherefns
 - Support for exporting the formatted result
   - [X] Console
   - [X] File
-  
+
+
+# Screenshots
+- Limit clause
+  ![Limit clause](images/any_10.png)
+
+- Where clause
+  ![Where clause](images/where.png)
+
+- Export as json
+  ![Json](images/json.png)
+
+- Export as json to a file
+  ![Json](images/json_as_file.png)
+
 # Planned changes
 - Support for matching file size with units. For example, `select * from . where gt(size, parsesize(15 Mb))` Or `select * from . where gt(size, parsesize(15 Mib))`
 - Support for inferring the input data type. For example, at this point `lt(-0.12, -0.11)` does not work. The expressions `-0.12` and `-0.11` are treated as strings. This features aims to infer the data types of expressions during parsing
