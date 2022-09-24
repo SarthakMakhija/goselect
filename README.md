@@ -308,7 +308,7 @@ goselect ex -q='select min(len(name)), max(len(name)) from .'
 
 1. **Select file name and extension of all the files containing a string go in their name**
 ```SQL
-goselect ex -q='select name, extension from . where contains(name, hello)'
+goselect ex -q='select name, extension from . where contains(name, go)'
 ```
 
 2. **Select file name and extension of all the files if their names begin with READ, followed by numbers, followed by any number of characters**
