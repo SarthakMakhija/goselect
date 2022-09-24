@@ -30,6 +30,7 @@ The project *goselect* was created to understand the following:
     * [MacOS](#macos)
     * [Linux AMD64](#linux-amd64)
   * [Changelog](#changelog)
+    * [Version 0.0.4](#version-004)
     * [Version 0.0.3](#version-003)
     * [Version 0.0.2](#version-002)
   * [Commands](#commands)
@@ -114,6 +115,14 @@ select * from . where eq(name, sample)
    - `mkdir goselect && tar xvf goselect_0.0.3_Linux_x86_64.tar.gz -C goselect`
 
 # Changelog
+
+### Version 0.0.4
+
+1. Inference of input values as numeric, floating point, string and boolean
+2. Addition of functions: isImage, isText, isPdf, isAudio, isVideo to where clause
+3. Improvement in the performance of the function like
+4. Introduction of new functions: startsWith, endsWith and ifBlank
+5. Introduction of version command
 
 #### Version 0.0.3
 
@@ -618,9 +627,8 @@ select * from . where lt(size, (add(2, 3)))
 
 # Planned changes
 
-1. Support for inferring the input data type. For example, at this point `lt(-0.12, -0.11)` does not work. The expressions `-0.12` and `-0.11` are treated as strings. This features aims to infer the data types of expressions during parsing
-2. Support for groups in regular expressions. 
-3. Support for matching file size with units. For example, `select * from . where gt(size, parsesize(15 Mb))` Or `select * from . where gt(size, parsesize(15 Mib))`
-4. Support for checking if a (text) file contains a specific term
-5. Improving table formatter to handle the formatting for large number of columns
-6. Caching the expression results. This is useful for cases like `select lower(name) from . where eq(lower(name), sample)`. In this example, `lower(name)` need not be evaluated twice for a row 
+1. Support for groups in regular expressions. 
+2. Support for matching file size with units. For example, `select * from . where gt(size, parsesize(15 Mb))` Or `select * from . where gt(size, parsesize(15 Mib))`
+3. Support for checking if a (text) file contains a specific term
+4. Improving table formatter to handle the formatting for large number of columns
+5. Caching the expression results. This is useful for cases like `select lower(name) from . where eq(lower(name), sample)`. In this example, `lower(name)` need not be evaluated twice for a row 

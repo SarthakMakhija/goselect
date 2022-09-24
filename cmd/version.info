@@ -3,7 +3,7 @@
     {
       "version": "v0.0.4",
       "isCurrent": true,
-      "changes": "1. Inference of input values as numeric, floating point, string and boolean\n2. Addition of functions: isImage, isText, isPdf, isAudio, isVideo to where clause\n3. Improved performance of like\n4. Introduction of new functions: startsWith, endsWith and ifBlank\n5. Introduction of version command"
+      "changes": "1. Inference of input values as numeric, floating point, string and boolean\n2. Addition of functions: isImage, isText, isPdf, isAudio, isVideo to where clause\n3. Improvement in the performance of the function like\n4. Introduction of new functions: startsWith, endsWith and ifBlank\n5. Introduction of version command"
     },
     {
       "version": "v0.0.3",
