@@ -82,3 +82,47 @@ func TestLimitWithAValue(t *testing.T) {
 		t.Fatalf("Expected limit to be %v, but received %v", 10, limit.Limit)
 	}
 }
+
+func TestLimitWithAValueBeginningWithAPlusSign(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.Limit, "limit"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "+10"))
+
+	limit, _ := NewLimit(tokens.Iterator())
+	if limit.Limit != 10 {
+		t.Fatalf("Expected limit to be %v, but received %v", 10, limit.Limit)
+	}
+}
+
+func TestLimitWithAValueWithAPlusSignInBetween(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.Limit, "limit"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "1+0"))
+
+	_, err := NewLimit(tokens.Iterator())
+	if err == nil {
+		t.Fatalf("Expected an error with limit as %v", "1+0")
+	}
+}
+
+func TestLimitWithAValueBeginningWithTwoPlusSigns(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.Limit, "limit"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "++10"))
+
+	_, err := NewLimit(tokens.Iterator())
+	if err == nil {
+		t.Fatalf("Expected an error with limit as %v", "++10")
+	}
+}
+
+func TestLimitWithOnlyAPlusSign(t *testing.T) {
+	tokens := tokenizer.NewEmptyTokens()
+	tokens.Add(tokenizer.NewToken(tokenizer.Limit, "limit"))
+	tokens.Add(tokenizer.NewToken(tokenizer.RawString, "+"))
+
+	_, err := NewLimit(tokens.Iterator())
+	if err == nil {
+		t.Fatalf("Expected an error with limit as %v", "+")
+	}
+}

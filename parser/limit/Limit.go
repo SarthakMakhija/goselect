@@ -6,6 +6,7 @@ import (
 	"goselect/parser/error/messages"
 	"goselect/parser/tokenizer"
 	"strconv"
+	"strings"
 )
 
 type Limit struct {
@@ -23,9 +24,16 @@ func NewLimit(iterator *tokenizer.TokenIterator) (*Limit, error) {
 		return nil, errors.New(messages.ErrorMessageLimitValue)
 	}
 	token := iterator.Next()
-	limitValue, err := strconv.ParseUint(token.TokenValue, 10, 32)
+	tokenValue := token.TokenValue
+	if strings.HasPrefix(tokenValue, "+") {
+		tokenValue = tokenValue[1:]
+	}
+	if len(tokenValue) == 0 {
+		return nil, fmt.Errorf(messages.ErrorMessageLimitValueInt, token.TokenValue)
+	}
+	limitValue, err := strconv.ParseUint(tokenValue, 10, 32)
 	if err != nil {
-		return nil, fmt.Errorf(messages.ErrorMessageLimitValueIntWithExistingError, err)
+		return nil, fmt.Errorf(messages.ErrorMessageLimitValueInt, token.TokenValue)
 	}
 	return &Limit{Limit: uint32(limitValue)}, nil
 }
