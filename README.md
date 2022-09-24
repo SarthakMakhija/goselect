@@ -50,6 +50,7 @@ The project *goselect* was created to understand the following:
 - select name, size from . where gt(size, 1024) order by 2 
 - select name, size from . where gt(size, 1024) order by 2 limit 10
 - select name, size from . where or(like(name, result.*), eq(isdir, true)) order by 2 limit 10
+- select name, size from ~/Documents where or(like(name, result.*), eq(isdir, true)) order by 2 limit 10
 ```
 
 # Feature overview 
