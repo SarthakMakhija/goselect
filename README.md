@@ -32,6 +32,7 @@ The project *goselect* was created to understand the following:
   * [Changelog](#changelog)
     * [Version 0.0.3](#version-003)
     * [Version 0.0.2](#version-002)
+  * [Commands](#commands)
   * [Queries in detail](#queries-in-detail)
   * [FAQs](#faqs)
   * [All the supported features](#all-the-supported-features)
@@ -132,6 +133,20 @@ select * from . where eq(name, sample)
 1. select name, size, mime from ~/Documents/ where eq(isImage(mime), true)  order by 2 desc limit 10
 2. select name, size, mime from ~/Documents/ where eq(isPdf(mime), true)  order by 2 desc limit 10
 ```
+
+# Commands
+
+*goselect* supports various commands:
+
+| **Command**              	| **Description**                                                	| **Available  since** 	| **Example usage**                     	|
+|--------------------------	|----------------------------------------------------------------	|----------------------	|---------------------------------------	|
+| listAttributes           	| List all the attributes supported by goselect                  	| v0.0.1               	| goselect listAttributes               	|
+| listFunctions            	| List all the functions supported by goselect                   	| v0.0.1               	| goselect listFunctions                	|
+| listWhereClauseFunctions 	| List all the functions supported by goselect in 'where' clause 	| v0.0.1               	| goselect listWhereClauseFunctions     	|
+| listTimeFormats          	| List the date/time formats supported by goselect               	| v0.0.1               	| goselect listTimeFormats              	|
+| describe                 	| Describe an attribute or a function                            	| v0.0.1               	| goselect describe --term=lower        	|
+| execute                  	| Execute a select query                                         	| v0.0.1               	| goselect execute -q='select * from .' 	|
+| version                  	| Return the current version of goselect                         	| v0.0.4               	| goselect version                      	|
 
 # Queries in detail
 
