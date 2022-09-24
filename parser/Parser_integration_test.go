@@ -44,6 +44,15 @@ func TestParsesASelectQueryWithAnErrorInSource(t *testing.T) {
 	}
 }
 
+func TestParsesASelectQueryWithAnErrorBecauseOfTypo(t *testing.T) {
+	parser, _ := NewParser("select name from . were eq(1,1)", context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	_, err := parser.Parse()
+
+	if err == nil {
+		t.Fatalf("Expected an error while parsing a select with an error in where keyword")
+	}
+}
+
 func TestParsesASelectQueryWithAnErrorInWhere(t *testing.T) {
 	parser, _ := NewParser("select name from . where", context.NewContext(context.NewFunctions(), context.NewAttributes()))
 	_, err := parser.Parse()

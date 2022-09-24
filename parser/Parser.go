@@ -56,6 +56,9 @@ func (parser *Parser) Parse() (*SelectQuery, error) {
 	if err != nil {
 		return nil, err
 	}
+	if iterator.HasNext() && !iterator.Peek().Equals("where") && !iterator.Peek().Equals("order") && !iterator.Peek().Equals("limit") {
+		return nil, errors.New(messages.ErrorMessageInvalidKeywordAfterFrom)
+	}
 	whereClause, err := where.NewWhere(iterator, parser.context)
 	if err != nil {
 		return nil, err
