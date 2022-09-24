@@ -2,12 +2,12 @@
   "versions": [
     {
       "version": "v0.0.4",
-      "isCurrent": false,
-      "changes": "1. Inference of input values\n2. isImage, isText, isPdf, isAudio, isVideo functions are now a part of where clause\n3. Improved performance of like\n4. Introduction of new functions: startsWith, endsWith and ifBlank\n5. Introduction of version command"
+      "isCurrent": true,
+      "changes": "1. Inference of input values as numeric, floating point, string and boolean\n2. Addition of functions: isImage, isText, isPdf, isAudio, isVideo to where clause\n3. Improved performance of like\n4. Introduction of new functions: startsWith, endsWith and ifBlank\n5. Introduction of version command"
     },
     {
       "version": "v0.0.3",
-      "isCurrent": true,
+      "isCurrent": false,
       "changes": "1. Adoption of consistent file size units. File size is now reported in IEC units: (B, KiB, MiB, GiB, TiB, PiB, EiB)\n2. No extension is reported for hidden files\n3. * projection now returns name, extension, size and absolute path\n4. fmtsize is provided as a function that can be used to format the file size\n5. hsize (or human-readable size) is dropped from attribute list in favor of the function fmtsize. Use fmtsize(size) to get the formatted size"
     },
     {
