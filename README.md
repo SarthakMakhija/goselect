@@ -240,9 +240,9 @@ goselect ex -q='select name, endswith(name, go) from .'
 goselect ex -q='select name, atime, extract(atime, date) from .'
 ```
 
-19. **Select current month, current year, current date, day of the week and current date**
+19. **Select current month, current year, current date, day of the week and current day**
 ```SQL
-goselect ex -q='select cmonth(), cyear(), cdate(), dayofweek(), cdate() from . limit 1'
+goselect ex -q='select cmonth(), cyear(), cdate(), dayofweek(), cday() from . limit 1'
 ```
 
 20. **Select file name and determine if the user can read, write and execute a file**
