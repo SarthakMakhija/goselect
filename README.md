@@ -136,8 +136,6 @@ select * from . where eq(name, sample)
 
 # Commands
 
-*goselect* supports various commands:
-
 | **Command**              	| **Description**                                                	| **Available  since** 	| **Example usage**                     	|
 |--------------------------	|----------------------------------------------------------------	|----------------------	|---------------------------------------	|
 | listAttributes           	| List all the attributes supported by goselect                  	| v0.0.1               	| goselect listAttributes               	|
