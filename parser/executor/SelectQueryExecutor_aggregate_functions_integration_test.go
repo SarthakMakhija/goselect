@@ -368,3 +368,54 @@ func TestResultsWithProjectionsWithMimeTypeAndMin(t *testing.T) {
 	}
 	assertMatch(t, expected, queryResults)
 }
+
+func TestResultsWithProjectionsIncludingAggregateFunctionAndWhereClause1(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select count() from ../resources/test/TestResultsWithProjections/ where endsWith(name, log) order by 1", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	expected := [][]context.Value{
+		{context.Uint32Value(3)},
+	}
+	assertMatch(t, expected, queryResults)
+}
+
+func TestResultsWithProjectionsIncludingAggregateFunctionAndWhereClause2(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select count() from ../resources/test/TestResultsWithProjections/ where isText(mime) order by 1", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	expected := [][]context.Value{
+		{context.Uint32Value(7)},
+	}
+	assertMatch(t, expected, queryResults)
+}
+
+func TestResultsWithProjectionsIncludingAggregateFunctionAndWhereClause3(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select min(name) from ../resources/test/TestResultsWithProjections/ where endsWith(name, log) order by 1", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	expected := [][]context.Value{
+		{context.StringValue("Empty.log")},
+	}
+	assertMatch(t, expected, queryResults)
+}
