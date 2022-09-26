@@ -10,19 +10,51 @@ import (
 )
 
 func TestExecutesAQuery(t *testing.T) {
-	rootCmd.SetArgs([]string{"execute", "--query", "select name from ./resources/test/ order by 1"})
+	rootCmd.SetArgs([]string{"execute", "--query", "select name from ./resources/ order by 1"})
 	buffer := new(bytes.Buffer)
 	rootCmd.SetOut(buffer)
 
 	_ = rootCmd.Execute()
 
 	contents := buffer.String()
-	expected := []string{"TestResultsWithProjections_A.log", "TestResultsWithProjections_B.log", "TestResultsWithProjections_C.txt"}
+	expected := []string{"TestResultsWithProjections_A.log", "TestResultsWithProjections_B.log", "TestResultsWithProjections_C.txt", "test"}
 
 	for _, name := range expected {
 		if !strings.Contains(contents, name) {
 			t.Fatalf(
 				"Expected file name %v to be contained in the result but was not, received %v",
+				name,
+				contents,
+			)
+		}
+	}
+}
+
+func TestExecutesAQueryWithNestedTraversalOff(t *testing.T) {
+	rootCmd.SetArgs([]string{"execute", "--query", "select name from ./resources/ order by 1", "--nestedTraversal=false"})
+	buffer := new(bytes.Buffer)
+	rootCmd.SetOut(buffer)
+
+	_ = rootCmd.Execute()
+
+	contents := buffer.String()
+	expected := []string{"test"}
+
+	for _, name := range expected {
+		if !strings.Contains(contents, name) {
+			t.Fatalf(
+				"Expected file name %v to be contained in the result but was not, received %v",
+				name,
+				contents,
+			)
+		}
+	}
+	unexpected := []string{"TestResultsWithProjections_A.log", "TestResultsWithProjections_B.log", "TestResultsWithProjections_C.txt"}
+
+	for _, name := range unexpected {
+		if strings.Contains(contents, name) {
+			t.Fatalf(
+				"Expected file name %v to not be contained in the result but was, received %v",
 				name,
 				contents,
 			)
