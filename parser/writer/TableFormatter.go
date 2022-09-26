@@ -9,6 +9,11 @@ import (
 	"goselect/parser/projection"
 )
 
+const (
+	MinWidth = 10
+	MaxWidth = 75
+)
+
 type TableFormatter struct {
 	tableWriter table.Writer
 	options     *AttributeWidthOptions
@@ -27,7 +32,7 @@ func NewAttributeWidthOptions(minCharacters, maxCharacters int) *AttributeWidthO
 }
 
 func NewTableFormatter() *TableFormatter {
-	return NewTableFormatterWithWidthOptions(NewAttributeWidthOptions(10, 75))
+	return NewTableFormatterWithWidthOptions(NewAttributeWidthOptions(MinWidth, MaxWidth))
 }
 
 func NewTableFormatterWithWidthOptions(attributeWidthOptions *AttributeWidthOptions) *TableFormatter {
