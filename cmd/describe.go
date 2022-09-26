@@ -51,5 +51,5 @@ var describeCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(describeCmd)
-	describeCmd.PersistentFlags().String("term", "", "pass the name of an attribute or a function. Use --term=<attribute> or --term=<function>")
+	describeCmd.LocalFlags().StringP("term", "t", "", "pass the name of an attribute or a function. Use --term=<attribute> or --term=<function>")
 }
