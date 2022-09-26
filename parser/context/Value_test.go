@@ -667,3 +667,113 @@ func TestCompareUint64Uint64GreaterThan(t *testing.T) {
 		t.Fatalf("Expected comparison between uint64 and uint64 value to be greater than but was not")
 	}
 }
+
+func TestGetCommonTypeUint64IntPositive(t *testing.T) {
+	value := Uint64Value(10)
+	other := IntValue(10)
+
+	first, second, _ := getCommonType(value, other, TypePair{aType: ValueTypeUint64, bType: ValueTypeInt})
+	if first.CompareTo(second) != CompareToEqual {
+		t.Fatalf("Expected first and second values to match but they did not")
+	}
+}
+
+func TestGetCommonTypeUint64IntNegative(t *testing.T) {
+	value := Uint64Value(10)
+	other := IntValue(-10)
+
+	first, second, _ := getCommonType(value, other, TypePair{aType: ValueTypeUint64, bType: ValueTypeInt})
+	if first.CompareTo(second) == CompareToEqual {
+		t.Fatalf("Expected first and second values to not match but they did")
+	}
+}
+
+func TestGetCommonTypeIntPositiveUint64(t *testing.T) {
+	value := IntValue(10)
+	other := Uint64Value(10)
+
+	first, second, _ := getCommonType(value, other, TypePair{aType: ValueTypeInt, bType: ValueTypeUint64})
+	if first.CompareTo(second) != CompareToEqual {
+		t.Fatalf("Expected first and second values to match but they did not")
+	}
+}
+
+func TestGetCommonTypeIntNegativeUint64(t *testing.T) {
+	value := IntValue(-10)
+	other := Uint64Value(10)
+
+	first, second, _ := getCommonType(value, other, TypePair{aType: ValueTypeInt, bType: ValueTypeUint64})
+	if first.CompareTo(second) == CompareToEqual {
+		t.Fatalf("Expected first and second values to not match but they did")
+	}
+}
+
+func TestGetCommonTypeUint32Uint64(t *testing.T) {
+	value := Uint32Value(10)
+	other := Uint64Value(10)
+
+	first, second, _ := getCommonType(value, other, TypePair{aType: ValueTypeUint32, bType: ValueTypeUint64})
+	if first.CompareTo(second) != CompareToEqual {
+		t.Fatalf("Expected first and second values to not match but they did")
+	}
+}
+
+func TestGetCommonTypeUint64Uint32(t *testing.T) {
+	value := Uint64Value(10)
+	other := Uint32Value(20)
+
+	first, second, _ := getCommonType(value, other, TypePair{aType: ValueTypeUint64, bType: ValueTypeUint32})
+	if first.CompareTo(second) == CompareToEqual {
+		t.Fatalf("Expected first and second values to not match but they did")
+	}
+}
+
+func TestGetCommonTypeFloatPositiveUint64GreaterThan(t *testing.T) {
+	value := Float64Value(10.98)
+	other := Uint64Value(10)
+
+	first, second, _ := getCommonType(value, other, TypePair{aType: ValueTypeFloat64, bType: ValueTypeUint64})
+	if first.CompareTo(second) != CompareToGreaterThan {
+		t.Fatalf("Expected first value to be greater than the second but was not")
+	}
+}
+
+func TestGetCommonTypeFloatPositiveUint64EqualTo(t *testing.T) {
+	value := Float64Value(10.0)
+	other := Uint64Value(10)
+
+	first, second, _ := getCommonType(value, other, TypePair{aType: ValueTypeFloat64, bType: ValueTypeUint64})
+	if first.CompareTo(second) != CompareToEqual {
+		t.Fatalf("Expected first and second values to match but they did not")
+	}
+}
+
+func TestGetCommonTypeFloatNegativeUint64(t *testing.T) {
+	value := Float64Value(-10.0)
+	other := Uint64Value(10)
+
+	first, second, _ := getCommonType(value, other, TypePair{aType: ValueTypeFloat64, bType: ValueTypeUint64})
+	if first.CompareTo(second) == CompareToEqual {
+		t.Fatalf("Expected first and second values to not match but they did")
+	}
+}
+
+func TestGetCommonTypeStringUint64(t *testing.T) {
+	value := StringValue("10")
+	other := Uint64Value(10)
+
+	first, second, _ := getCommonType(value, other, TypePair{aType: ValueTypeString, bType: ValueTypeUint64})
+	if first.CompareTo(second) != CompareToEqual {
+		t.Fatalf("Expected first and second values to match but they did not")
+	}
+}
+
+func TestGetCommonTypeUint64String(t *testing.T) {
+	value := Uint64Value(10)
+	other := StringValue("-10")
+
+	first, second, _ := getCommonType(value, other, TypePair{aType: ValueTypeUint64, bType: ValueTypeString})
+	if first.CompareTo(second) == CompareToEqual {
+		t.Fatalf("Expected first and second values to not match but they did")
+	}
+}

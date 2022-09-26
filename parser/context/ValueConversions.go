@@ -16,6 +16,24 @@ type TypePair struct {
 type toCommonTypeValueFunction = func(aValue Value, bValue Value) (Value, Value, error)
 
 var toTargetConversions = map[TypePair]toCommonTypeValueFunction{
+	TypePair{aType: ValueTypeInt, bType: ValueTypeUint64}: func(aValue Value, bValue Value) (Value, Value, error) {
+		return Uint64Value(uint64(aValue.intValue)), bValue, nil
+	},
+	TypePair{aType: ValueTypeUint64, bType: ValueTypeInt}: func(aValue Value, bValue Value) (Value, Value, error) {
+		return aValue, Uint64Value(uint64(bValue.intValue)), nil
+	},
+	TypePair{aType: ValueTypeUint32, bType: ValueTypeUint64}: func(aValue Value, bValue Value) (Value, Value, error) {
+		return Uint64Value(uint64(aValue.uint32Value)), bValue, nil
+	},
+	TypePair{aType: ValueTypeUint64, bType: ValueTypeUint32}: func(aValue Value, bValue Value) (Value, Value, error) {
+		return aValue, Uint64Value(uint64(bValue.uint32Value)), nil
+	},
+	TypePair{aType: ValueTypeUint64, bType: ValueTypeFloat64}: func(aValue Value, bValue Value) (Value, Value, error) {
+		return Float64Value(float64(aValue.uint64Value)), bValue, nil
+	},
+	TypePair{aType: ValueTypeFloat64, bType: ValueTypeUint64}: func(aValue Value, bValue Value) (Value, Value, error) {
+		return aValue, Float64Value(float64(bValue.uint64Value)), nil
+	},
 	TypePair{aType: ValueTypeInt, bType: ValueTypeInt64}: func(aValue Value, bValue Value) (Value, Value, error) {
 		return Int64Value(int64(aValue.intValue)), bValue, nil
 	},
@@ -124,6 +142,20 @@ var toTargetConversions = map[TypePair]toCommonTypeValueFunction{
 			return aValue, bValue, err
 		}
 		return aValue, v, nil
+	},
+	TypePair{aType: ValueTypeString, bType: ValueTypeUint64}: func(aValue Value, bValue Value) (Value, Value, error) {
+		v, err := strconv.ParseUint(aValue.stringValue, 10, 64)
+		if err != nil {
+			return aValue, bValue, err
+		}
+		return Uint64Value(v), bValue, nil
+	},
+	TypePair{aType: ValueTypeUint64, bType: ValueTypeString}: func(aValue Value, bValue Value) (Value, Value, error) {
+		v, err := strconv.ParseUint(bValue.stringValue, 10, 64)
+		if err != nil {
+			return aValue, bValue, err
+		}
+		return aValue, Uint64Value(v), nil
 	},
 }
 
