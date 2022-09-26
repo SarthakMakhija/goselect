@@ -66,5 +66,5 @@ var listFunctionsCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(listFunctionsCmd)
-	listFunctionsCmd.LocalFlags().Bool("sorted", true, "display the functions in sorted order. Use --sorted=true or --sorted=false")
+	listFunctionsCmd.PersistentFlags().Bool("sorted", true, "display the functions in sorted order. Use --sorted=true or --sorted=false")
 }

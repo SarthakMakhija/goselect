@@ -61,5 +61,5 @@ var listTimeFormatsCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(listTimeFormatsCmd)
-	listTimeFormatsCmd.LocalFlags().Bool("sorted", true, "display the formats in sorted order. Use --sorted=true or --sorted=false")
+	listTimeFormatsCmd.PersistentFlags().Bool("sorted", true, "display the formats in sorted order. Use --sorted=true or --sorted=false")
 }
