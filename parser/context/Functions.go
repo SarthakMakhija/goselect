@@ -86,6 +86,7 @@ const (
 	FunctionNameIsFileTypeVideo     = "isvideo"
 	FunctionNameIsFileTypePdf       = "ispdf"
 	FunctionNameFormatSize          = "formatsize"
+	FunctionNameParseSize           = "parsesize"
 	FunctionNameCount               = "count"
 	FunctionNameCountDistinct       = "countdistinct"
 	FunctionNameSum                 = "sum"
@@ -361,6 +362,11 @@ var functionDefinitions = map[string]*FunctionDefinition{
 		aliases:     []string{"formatsize", "fmtsize"},
 		description: "Returns a human readable file size in IEC units.  \nThese include B, KiB, MiB, GiB, TiB, PiB, EiB. This function takes a single parameter.",
 		block:       FormatSizeFunctionBlock{},
+	},
+	FunctionNameParseSize: {
+		aliases:     []string{"parsesize", "psize"},
+		description: "Parses the input string into the number of bytes it represents.  \nFor example, parsesize(42 MB) returns 42000000, parsesize(42 mib) returns 44040192, parsesize(10.23 Mib) returns 10726932.  \nSize unit must be one of the following: B, KiB, MiB, GiB, TiB, PiB, EiB, kB, MB, GB, TB, PB, EB.",
+		block:       ParseSizeFunctionBlock{},
 	},
 	FunctionNameCount: {
 		aliases:        []string{"count"},

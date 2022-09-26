@@ -63,6 +63,7 @@ type IsFileTypeAudioFunctionBlock struct{}
 type IsFileTypeVideoFunctionBlock struct{}
 type IsFileTypePdfFunctionBlock struct{}
 type FormatSizeFunctionBlock struct{}
+type ParseSizeFunctionBlock struct{}
 
 func (receiver IdentityFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameIdentity, 1); err != nil {
@@ -514,6 +515,21 @@ func (f FormatSizeFunctionBlock) run(args ...Value) (Value, error) {
 		return EmptyValue, fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameFormatSize, err)
 	}
 	return StringValue(humanize.IBytes(uint64(asFloat64))), nil
+}
+
+func (f ParseSizeFunctionBlock) run(args ...Value) (Value, error) {
+	if err := ensureNParametersOrError(args, FunctionNameParseSize, 1); err != nil {
+		return EmptyValue, err
+	}
+	var argument strings.Builder
+	for _, arg := range args {
+		argument.WriteString(arg.GetAsString())
+	}
+	v, err := humanize.ParseBytes(argument.String())
+	if err != nil {
+		return EmptyValue, fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameParseSize, err)
+	}
+	return Uint64Value(v), nil
 }
 
 func mimeTypeMatches(expectedMimeType string, arg Value) bool {

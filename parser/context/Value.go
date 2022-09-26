@@ -159,6 +159,8 @@ func (value Value) GetAsString() string {
 		return "N"
 	case ValueTypeDateTime:
 		return value.timeValue.String()
+	case ValueTypeUint64:
+		return strconv.FormatUint(value.uint64Value, 10)
 	}
 	return ""
 }

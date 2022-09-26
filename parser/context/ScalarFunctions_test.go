@@ -1697,3 +1697,69 @@ func TestEndsWithMissingParameterValue(t *testing.T) {
 		t.Fatalf("Expected an error while executing endsWith with no parameter value")
 	}
 }
+
+func TestParseSize1(t *testing.T) {
+	value, _ := NewFunctions().Execute("parsesize", StringValue("10"), StringValue("Mib"))
+	expected := "10485760"
+
+	actualValue := value.GetAsString()
+	if actualValue != expected {
+		t.Fatalf("Expected parsesize to be %v, received %v", expected, actualValue)
+	}
+}
+
+func TestParseSize2(t *testing.T) {
+	value, _ := NewFunctions().Execute("parsesize", StringValue("10Mib"))
+	expected := "10485760"
+
+	actualValue := value.GetAsString()
+	if actualValue != expected {
+		t.Fatalf("Expected parsesize to be %v, received %v", expected, actualValue)
+	}
+}
+
+func TestParseSize3(t *testing.T) {
+	value, _ := NewFunctions().Execute("parsesize", StringValue("10.23Mib"))
+	expected := "10726932"
+
+	actualValue := value.GetAsString()
+	if actualValue != expected {
+		t.Fatalf("Expected parsesize to be %v, received %v", expected, actualValue)
+	}
+}
+
+func TestParseSize4(t *testing.T) {
+	value, _ := NewFunctions().Execute("parsesize", StringValue("10.23"), StringValue("  mib "))
+	expected := "10726932"
+
+	actualValue := value.GetAsString()
+	if actualValue != expected {
+		t.Fatalf("Expected parsesize to be %v, received %v", expected, actualValue)
+	}
+}
+
+func TestParseSize5(t *testing.T) {
+	value, _ := NewFunctions().Execute("parsesize", StringValue("10B"))
+	expected := "10"
+
+	actualValue := value.GetAsString()
+	if actualValue != expected {
+		t.Fatalf("Expected parsesize to be %v, received %v", expected, actualValue)
+	}
+}
+
+func TestParseSizeWithError1(t *testing.T) {
+	_, err := NewFunctions().Execute("parsesize", StringValue("10.23Mib"), StringValue("garbage"))
+
+	if err == nil {
+		t.Fatalf("Expected an error while parsing the size with an unknown unit")
+	}
+}
+
+func TestParseSizeWithMissingParameterValue(t *testing.T) {
+	_, err := NewFunctions().Execute("parsesize")
+
+	if err == nil {
+		t.Fatalf("Expected an error while executing parsesize with no parameter value")
+	}
+}
