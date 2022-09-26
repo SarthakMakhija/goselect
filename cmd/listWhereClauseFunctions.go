@@ -16,9 +16,9 @@ func newListWhereClauseFunctionsCommand() *cobra.Command {
 		Short:   "List all the functions supported by goselect in 'where' clause",
 		Long:    `List all the functions along with their aliases supported by goselect in 'where' clause`,
 		Example: `
-1. goselect listWhereClauseFunctions --sorted=true
-2. goselect wherefunctions --sorted=true
-3. goselect wherefns --sorted=true
+1. goselect listWhereClauseFunctions
+2. goselect wherefunctions
+3. goselect wherefns
 `,
 		Run: func(cmd *cobra.Command, args []string) {
 			buffer := new(bytes.Buffer)
@@ -37,11 +37,6 @@ func newListWhereClauseFunctionsCommand() *cobra.Command {
 			appendFunction := func(function string, aliases []string) {
 				tableWriter.AppendRow(table.Row{function, asString(aliases)})
 			}
-			appendFunctions := func(aliasesByFunction map[string][]string) {
-				for function, aliases := range aliasesByFunction {
-					appendFunction(function, aliases)
-				}
-			}
 			sortFunctions := func(aliasesByFunction map[string][]string) []string {
 				functions := make([]string, 0, len(aliasesByFunction))
 				for function := range aliasesByFunction {
@@ -51,27 +46,17 @@ func newListWhereClauseFunctionsCommand() *cobra.Command {
 				return functions
 			}
 
-			isSorted, _ := cmd.Flags().GetBool("sorted")
 			aliasesByFunction := context.NewFunctions().AllFunctionsWithAliasesHavingTag("where")
 			appendHeader()
-
-			if !isSorted {
-				appendFunctions(aliasesByFunction)
-				tableWriter.Render()
-				cmd.Print(buffer.String())
-			} else {
-				for _, function := range sortFunctions(aliasesByFunction) {
-					appendFunction(function, aliasesByFunction[function])
-				}
-				tableWriter.Render()
-				cmd.Print(buffer.String())
+			for _, function := range sortFunctions(aliasesByFunction) {
+				appendFunction(function, aliasesByFunction[function])
 			}
+			tableWriter.Render()
+			cmd.Print(buffer.String())
 		},
 	}
 }
 
 func init() {
-	listWhereClauseFunctionsCmd := newListWhereClauseFunctionsCommand()
-	rootCmd.AddCommand(listWhereClauseFunctionsCmd)
-	listWhereClauseFunctionsCmd.PersistentFlags().Bool("sorted", true, "display the functions supported 'where' clause in sorted order. Use --sorted=true or --sorted=false")
+	rootCmd.AddCommand(newListWhereClauseFunctionsCommand())
 }

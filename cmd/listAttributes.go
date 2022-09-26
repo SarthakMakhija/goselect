@@ -16,9 +16,9 @@ func newListAttributesCommand() *cobra.Command {
 		Short:   "List all the attributes supported by goselect",
 		Long:    `List all the attributes along with their aliases supported by goselect`,
 		Example: `
-1. goselect listAttributes --sorted=true
-2. goselect attributes --sorted=true
-3. goselect attrs --sorted=true
+1. goselect listAttributes
+2. goselect attributes
+3. goselect attrs
 `,
 		Run: func(cmd *cobra.Command, args []string) {
 			buffer := new(bytes.Buffer)
@@ -37,11 +37,6 @@ func newListAttributesCommand() *cobra.Command {
 			appendAttribute := func(attribute string, aliases []string) {
 				tableWriter.AppendRow(table.Row{attribute, asString(aliases)})
 			}
-			appendAttributes := func(aliasesByAttribute map[string][]string) {
-				for attribute, aliases := range aliasesByAttribute {
-					appendAttribute(attribute, aliases)
-				}
-			}
 			sortAttributes := func(aliasesByAttribute map[string][]string) []string {
 				attributes := make([]string, 0, len(aliasesByAttribute))
 				for attribute := range aliasesByAttribute {
@@ -51,27 +46,17 @@ func newListAttributesCommand() *cobra.Command {
 				return attributes
 			}
 
-			isSorted, _ := cmd.Flags().GetBool("sorted")
 			aliasesByAttribute := context.NewAttributes().AllAttributeWithAliases()
 			appendHeader()
-
-			if !isSorted {
-				appendAttributes(aliasesByAttribute)
-				tableWriter.Render()
-				cmd.Print(buffer.String())
-			} else {
-				for _, attribute := range sortAttributes(aliasesByAttribute) {
-					appendAttribute(attribute, aliasesByAttribute[attribute])
-				}
-				tableWriter.Render()
-				cmd.Print(buffer.String())
+			for _, attribute := range sortAttributes(aliasesByAttribute) {
+				appendAttribute(attribute, aliasesByAttribute[attribute])
 			}
+			tableWriter.Render()
+			cmd.Print(buffer.String())
 		},
 	}
 }
 
 func init() {
-	listAttributesCmd := newListAttributesCommand()
-	rootCmd.AddCommand(listAttributesCmd)
-	listAttributesCmd.PersistentFlags().Bool("sorted", true, "display the attributes in sorted order. Use --sorted=true or --sorted=false")
+	rootCmd.AddCommand(newListAttributesCommand())
 }

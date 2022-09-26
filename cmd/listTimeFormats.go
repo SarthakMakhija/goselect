@@ -14,9 +14,9 @@ func newListTimeFormatsCommand() *cobra.Command {
 		Aliases: []string{"formats", "fmts"},
 		Short:   "List the date/time formats supported by goselect",
 		Example: `
-1. goselect listTimeFormats --sorted=true
-2. goselect formats --sorted=true
-3. goselect fmts --sorted=true
+1. goselect listTimeFormats
+2. goselect formats
+3. goselect fmts
 `,
 		Run: func(cmd *cobra.Command, args []string) {
 			buffer := new(bytes.Buffer)
@@ -32,11 +32,6 @@ func newListTimeFormatsCommand() *cobra.Command {
 			appendFormat := func(format context.FormatDefinition) {
 				tableWriter.AppendRow(table.Row{format.Format, format.Id})
 			}
-			appendFormats := func(formatDefinitions map[string]context.FormatDefinition) {
-				for _, definition := range formatDefinitions {
-					appendFormat(definition)
-				}
-			}
 			sortFormats := func(formatDefinitions map[string]context.FormatDefinition) []string {
 				formats := make([]string, 0, len(formatDefinitions))
 				for format := range formatDefinitions {
@@ -47,26 +42,16 @@ func newListTimeFormatsCommand() *cobra.Command {
 			}
 
 			formatDefinitionById := context.SupportedFormats()
-			isSorted, _ := cmd.Flags().GetBool("sorted")
 			appendHeader()
-
-			if !isSorted {
-				appendFormats(formatDefinitionById)
-				tableWriter.Render()
-				cmd.Print(buffer.String())
-			} else {
-				for _, format := range sortFormats(formatDefinitionById) {
-					appendFormat(formatDefinitionById[format])
-				}
-				tableWriter.Render()
-				cmd.Print(buffer.String())
+			for _, format := range sortFormats(formatDefinitionById) {
+				appendFormat(formatDefinitionById[format])
 			}
+			tableWriter.Render()
+			cmd.Print(buffer.String())
 		},
 	}
 }
 
 func init() {
-	listTimeFormatsCmd := newListTimeFormatsCommand()
-	rootCmd.AddCommand(listTimeFormatsCmd)
-	listTimeFormatsCmd.PersistentFlags().Bool("sorted", true, "display the formats in sorted order. Use --sorted=true or --sorted=false")
+	rootCmd.AddCommand(newListTimeFormatsCommand())
 }

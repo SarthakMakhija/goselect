@@ -16,9 +16,9 @@ func newListFunctionsCommand() *cobra.Command {
 		Short:   "List all the functions supported by goselect",
 		Long:    `List all the functions along with their aliases supported by goselect`,
 		Example: `
-1. goselect listFunctions --sorted=true
-2. goselect functions --sorted=true
-3. goselect fns --sorted=true
+1. goselect listFunctions
+2. goselect functions
+3. goselect fns
 `,
 		Run: func(cmd *cobra.Command, args []string) {
 			buffer := new(bytes.Buffer)
@@ -37,11 +37,6 @@ func newListFunctionsCommand() *cobra.Command {
 			appendFunction := func(function string, aliases []string) {
 				tableWriter.AppendRow(table.Row{function, asString(aliases)})
 			}
-			appendFunctions := func(aliasesByFunction map[string][]string) {
-				for function, aliases := range aliasesByFunction {
-					appendFunction(function, aliases)
-				}
-			}
 			sortFunctions := func(aliasesByFunction map[string][]string) []string {
 				functions := make([]string, 0, len(aliasesByFunction))
 				for function := range aliasesByFunction {
@@ -51,27 +46,17 @@ func newListFunctionsCommand() *cobra.Command {
 				return functions
 			}
 
-			isSorted, _ := cmd.Flags().GetBool("sorted")
 			aliasesByFunction := context.NewFunctions().AllFunctionsWithAliases()
 			appendHeader()
-
-			if !isSorted {
-				appendFunctions(aliasesByFunction)
-				tableWriter.Render()
-				cmd.Print(buffer.String())
-			} else {
-				for _, function := range sortFunctions(aliasesByFunction) {
-					appendFunction(function, aliasesByFunction[function])
-				}
-				tableWriter.Render()
-				cmd.Print(buffer.String())
+			for _, function := range sortFunctions(aliasesByFunction) {
+				appendFunction(function, aliasesByFunction[function])
 			}
+			tableWriter.Render()
+			cmd.Print(buffer.String())
 		},
 	}
 }
 
 func init() {
-	listFunctionsCmd := newListFunctionsCommand()
-	rootCmd.AddCommand(listFunctionsCmd)
-	listFunctionsCmd.PersistentFlags().Bool("sorted", true, "display the functions in sorted order. Use --sorted=true or --sorted=false")
+	rootCmd.AddCommand(newListFunctionsCommand())
 }
