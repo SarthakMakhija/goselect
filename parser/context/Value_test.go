@@ -778,12 +778,22 @@ func TestGetCommonTypeStringUint64(t *testing.T) {
 	}
 }
 
-func TestGetCommonTypeUint64String(t *testing.T) {
+func TestGetCommonTypeStringUint64WithError(t *testing.T) {
+	value := StringValue("anything")
+	other := Uint64Value(10)
+
+	first, second, _ := getCommonType(value, other, TypePair{aType: ValueTypeString, bType: ValueTypeUint64})
+	if first.CompareTo(second) != CompareToNotPossible {
+		t.Fatalf("Expected first and second values exhibit not possible comparison but it did not")
+	}
+}
+
+func TestGetCommonTypeUint64StringWithError(t *testing.T) {
 	value := Uint64Value(10)
-	other := StringValue("-10")
+	other := StringValue("anything")
 
 	first, second, _ := getCommonType(value, other, TypePair{aType: ValueTypeUint64, bType: ValueTypeString})
-	if first.CompareTo(second) == CompareToEqual {
-		t.Fatalf("Expected first and second values to not match but they did")
+	if first.CompareTo(second) != CompareToNotPossible {
+		t.Fatalf("Expected first and second values exhibit not possible comparison but it did not")
 	}
 }
