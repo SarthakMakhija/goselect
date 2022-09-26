@@ -67,7 +67,10 @@ var executeCmd = &cobra.Command{
 			case "html":
 				return writer.NewHtmlFormatter(), strings.ToLower(exportFormat), nil
 			case "table":
-				return writer.NewTableFormatter(), strings.ToLower(exportFormat), nil
+				return writer.NewTableFormatterWithWidthOptions(writer.NewAttributeWidthOptions(
+					writer.MinWidth,
+					writer.MaxWidth,
+				)), strings.ToLower(exportFormat), nil
 			default:
 				return nil, "", fmt.Errorf(ErrorMessageInvalidExportFormat, "json, html or table")
 			}
