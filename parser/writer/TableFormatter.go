@@ -9,23 +9,37 @@ import (
 	"goselect/parser/projection"
 )
 
-const (
-	minWidth          = 10
-	maxAvailableWidth = 150
-)
-
 type TableFormatter struct {
 	tableWriter table.Writer
+	options     *AttributeWidthOptions
+}
+
+type AttributeWidthOptions struct {
+	minCharacters int
+	maxCharacters int
+}
+
+func NewAttributeWidthOptions(minCharacters, maxCharacters int) *AttributeWidthOptions {
+	return &AttributeWidthOptions{
+		minCharacters: minCharacters,
+		maxCharacters: maxCharacters,
+	}
 }
 
 func NewTableFormatter() *TableFormatter {
+	return NewTableFormatterWithWidthOptions(NewAttributeWidthOptions(10, 75))
+}
+
+func NewTableFormatterWithWidthOptions(attributeWidthOptions *AttributeWidthOptions) *TableFormatter {
 	var buffer bytes.Buffer
 	tableWriter := table.NewWriter()
 	tableWriter.SetOutputMirror(bufio.NewWriter(&buffer))
 	tableWriter.SetStyle(table.StyleColoredBlackOnCyanWhite)
 	tableWriter.Style().Options.SeparateColumns = true
+
 	return &TableFormatter{
 		tableWriter: tableWriter,
+		options:     attributeWidthOptions,
 	}
 }
 
@@ -38,18 +52,23 @@ func (tableFormatter *TableFormatter) Format(projections *projection.Projections
 }
 
 func (tableFormatter *TableFormatter) addHeader(projections *projection.Projections) {
-	maxWidth := maxAvailableWidth / projections.Count()
-
 	var attributes []interface{}
 	var columnConfigs []table.ColumnConfig
 
 	for _, headerAttribute := range projections.DisplayableAttributes() {
 		attributes = append(attributes, headerAttribute)
-		columnConfigs = append(columnConfigs, table.ColumnConfig{WidthMin: minWidth, WidthMax: maxWidth, Name: headerAttribute})
+		columnConfigs = append(
+			columnConfigs,
+			table.ColumnConfig{
+				Name:     headerAttribute,
+				WidthMin: tableFormatter.options.minCharacters,
+				WidthMax: tableFormatter.options.maxCharacters,
+			},
+		)
 	}
 	tableFormatter.setHeaderFooterDefaultCase()
-	tableFormatter.tableWriter.AppendHeader(attributes)
 	tableFormatter.tableWriter.SetColumnConfigs(columnConfigs)
+	tableFormatter.tableWriter.AppendHeader(attributes)
 }
 
 func (tableFormatter *TableFormatter) addContent(rows *executor.EvaluatingRows) {
