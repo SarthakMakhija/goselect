@@ -149,43 +149,43 @@ var executeCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(executeCmd)
-	rootCmd.PersistentFlags().StringP(
+	executeCmd.LocalFlags().StringP(
 		"query",
 		"q",
 		"",
 		"specify the query. Use --query=<query> or -q=<query>",
 	)
-	rootCmd.PersistentFlags().BoolP(
+	executeCmd.LocalFlags().BoolP(
 		"nestedTraversal",
 		"n",
 		true,
 		"specify if nested directories should be traversed. Use --nestedTraversal=<true/false> or -n=<true/false>",
 	)
-	rootCmd.PersistentFlags().StringSliceP(
+	executeCmd.LocalFlags().StringSliceP(
 		"skipDirectoryTraversal",
 		"s",
 		[]string{".git", ".github"},
 		"specify the directory names that should not be traversed. Use --skipDirectoryTraversal=<directory> or -s=<directory>. Multiple directory names can be passed by using --skipDirectoryTraversal=.git --skipDirectoryTraversal=.github",
 	)
-	rootCmd.PersistentFlags().StringP(
+	executeCmd.LocalFlags().StringP(
 		"format",
 		"f",
 		"table",
 		"specify the export format. Supported values include: json, html and table. Use --format=<format>",
 	)
-	rootCmd.PersistentFlags().StringP(
+	executeCmd.LocalFlags().StringP(
 		"path",
 		"p",
 		"",
 		"specify the directory path to export the results. Use --path=<directoryPath>",
 	)
-	rootCmd.PersistentFlags().Uint16P(
+	executeCmd.LocalFlags().Uint16P(
 		"minWidth",
 		"m",
 		0,
 		"specify the minimum character length to be used for each attribute. This flag is relevant only for the table format and will be needed only if the default formatting breaks. For the best results, use minWidth and maxWidth together. Use --minWidth=<value greater than zero>",
 	)
-	rootCmd.PersistentFlags().Uint16P(
+	executeCmd.LocalFlags().Uint16P(
 		"maxWidth",
 		"x",
 		0,

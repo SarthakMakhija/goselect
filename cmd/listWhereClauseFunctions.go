@@ -66,5 +66,5 @@ var listWhereClauseFunctionsCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(listWhereClauseFunctionsCmd)
-	listWhereClauseFunctionsCmd.PersistentFlags().Bool("sorted", true, "display the functions supported 'where' clause in sorted order. Use --sorted=true or --sorted=false")
+	listWhereClauseFunctionsCmd.LocalFlags().Bool("sorted", true, "display the functions supported 'where' clause in sorted order. Use --sorted=true or --sorted=false")
 }
