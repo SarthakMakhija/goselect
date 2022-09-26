@@ -10,8 +10,8 @@ import (
 )
 
 const (
-	MinWidth = 10
-	MaxWidth = 75
+	minWidth = 10
+	maxWidth = 150
 )
 
 type TableFormatter struct {
@@ -32,7 +32,7 @@ func NewAttributeWidthOptions(minCharacters, maxCharacters int) *AttributeWidthO
 }
 
 func NewTableFormatter() *TableFormatter {
-	return NewTableFormatterWithWidthOptions(NewAttributeWidthOptions(MinWidth, MaxWidth))
+	return NewTableFormatterWithWidthOptions(nil)
 }
 
 func NewTableFormatterWithWidthOptions(attributeWidthOptions *AttributeWidthOptions) *TableFormatter {
@@ -57,17 +57,21 @@ func (tableFormatter *TableFormatter) Format(projections *projection.Projections
 }
 
 func (tableFormatter *TableFormatter) addHeader(projections *projection.Projections) {
+	minWidth, maxWidth := minWidth, maxWidth/projections.Count()
+	if tableFormatter.options != nil {
+		minWidth, maxWidth = tableFormatter.options.minCharacters, tableFormatter.options.maxCharacters
+	}
+
 	var attributes []interface{}
 	var columnConfigs []table.ColumnConfig
-
 	for _, headerAttribute := range projections.DisplayableAttributes() {
 		attributes = append(attributes, headerAttribute)
 		columnConfigs = append(
 			columnConfigs,
 			table.ColumnConfig{
 				Name:     headerAttribute,
-				WidthMin: tableFormatter.options.minCharacters,
-				WidthMax: tableFormatter.options.maxCharacters,
+				WidthMin: minWidth,
+				WidthMax: maxWidth,
 			},
 		)
 	}
