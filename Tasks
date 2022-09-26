@@ -12,5 +12,5 @@ Version 0.0.4 Release
 Version 0.0.5 Release
 
 1. Improving table formatter to handle the formatting for large number of columns
-2. Table formatter: header and footer should not be capitalized
-3. Support for matching file size with units. For example, select * from . where gt(size, parsesize(15 Mb)) Or select * from . where gt(size, parsesize(15 Mib))
+2. Table formatter: header and footer should not be capitalized : done
+3. Support for matching file size with units. For example, select * from . where gt(size, parsesize(15 Mb)) Or select * from . where gt(size, parsesize(15 Mib)) : done
