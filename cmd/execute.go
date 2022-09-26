@@ -88,7 +88,7 @@ func newExecuteCommand() *cobra.Command {
 						writer.NewAttributeWidthOptions(int(minWidth), int(maxWidth)),
 					), strings.ToLower(exportFormat), nil
 				default:
-					return nil, "", fmt.Errorf(ErrorMessageInvalidExportFormat, "json, html or table")
+					return nil, "", fmt.Errorf(ErrorMessageInvalidExportFormat, supportedFormats())
 				}
 			}
 			writeToConsole := func(formattedResult string) {
@@ -152,6 +152,10 @@ func newExecuteCommand() *cobra.Command {
 			run()
 		},
 	}
+}
+
+func supportedFormats() []string {
+	return []string{"json", "html", "table"}
 }
 
 func init() {

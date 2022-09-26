@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"bytes"
+	"fmt"
 	"goselect/parser/error/messages"
 	"strings"
 	"testing"
@@ -144,5 +145,24 @@ func TestExecutesWithMinMaxWidthQuery(t *testing.T) {
 				contents,
 			)
 		}
+	}
+}
+
+func TestExecutesWithInvalidExportFormat(t *testing.T) {
+	rootCmd.SetArgs([]string{"execute", "--query", "select name from ./resources/test/ order by 1", "-f", "unknown"})
+	buffer := new(bytes.Buffer)
+	rootCmd.SetOut(buffer)
+
+	_ = rootCmd.Execute()
+
+	contents := buffer.String()
+	expected := fmt.Sprintf(ErrorMessageInvalidExportFormat, supportedFormats())
+
+	if !strings.Contains(contents, expected) {
+		t.Fatalf(
+			"Expected an error %v while trying to export the result in an unknown export format but received %v",
+			expected,
+			contents,
+		)
 	}
 }
