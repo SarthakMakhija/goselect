@@ -14,7 +14,7 @@ import (
 
 func TestResultsWithAWhereClause1(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name) from ../resources/test/TestResultsWithProjections/multi where eq(ext, .log) order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(name) from ./resources/TestResultsWithProjections/multi where eq(ext, .log) order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -32,7 +32,7 @@ func TestResultsWithAWhereClause1(t *testing.T) {
 
 func TestResultsWithAWhereClause2(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name) from ../resources/test/TestResultsWithProjections/multi where eq(add(2,3), 5) order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(name) from ./resources/TestResultsWithProjections/multi where eq(add(2,3), 5) order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -52,7 +52,7 @@ func TestResultsWithAWhereClause2(t *testing.T) {
 
 func TestResultsWithAWhereClause3(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name) from ../resources/test/TestResultsWithProjections/multi where ne(add(2,3), 6) order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(name) from ./resources/TestResultsWithProjections/multi where ne(add(2,3), 6) order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -72,7 +72,7 @@ func TestResultsWithAWhereClause3(t *testing.T) {
 
 func TestResultsWithAWhereClause4(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name) from ../resources/test/TestResultsWithProjections/multi where ne(add(2,3), 5) order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(name) from ./resources/TestResultsWithProjections/multi where ne(add(2,3), 5) order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -87,7 +87,7 @@ func TestResultsWithAWhereClause4(t *testing.T) {
 
 func TestResultsWithAWhereClause5(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name) from ../resources/test/TestResultsWithProjections/multi where contains(lower(name), a.log) order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(name) from ./resources/TestResultsWithProjections/multi where contains(lower(name), a.log) order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -104,7 +104,7 @@ func TestResultsWithAWhereClause5(t *testing.T) {
 
 func TestResultsWithAWhereClause6(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name) from ../resources/test/TestResultsWithProjections/multi where eq(lower(substr(name, 0, 3)), test) order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(name) from ./resources/TestResultsWithProjections/multi where eq(lower(substr(name, 0, 3)), test) order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -124,7 +124,7 @@ func TestResultsWithAWhereClause6(t *testing.T) {
 
 func TestResultsWithAWhereClause7(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name) from ../resources/test/TestResultsWithProjections/multi where lt(lower(substr(ext, 1)), txt) order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(name) from ./resources/TestResultsWithProjections/multi where lt(lower(substr(ext, 1)), txt) order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -142,7 +142,7 @@ func TestResultsWithAWhereClause7(t *testing.T) {
 
 func TestResultsWithAWhereClause8(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name) from ../resources/test/TestResultsWithProjections/multi where lt(add(2,1), 4) order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(name) from ./resources/TestResultsWithProjections/multi where lt(add(2,1), 4) order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -162,7 +162,7 @@ func TestResultsWithAWhereClause8(t *testing.T) {
 
 func TestResultsWithAWhereClause9(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name) from ../resources/test/TestResultsWithProjections/multi where gt(lower(substr(ext, 1)), log) order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(name) from ./resources/TestResultsWithProjections/multi where gt(lower(substr(ext, 1)), log) order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -180,7 +180,7 @@ func TestResultsWithAWhereClause9(t *testing.T) {
 
 func TestResultsWithAWhereClause10(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name) from ../resources/test/TestResultsWithProjections/multi where le(lower(substr(ext, 1)), txt) order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(name) from ./resources/TestResultsWithProjections/multi where le(lower(substr(ext, 1)), txt) order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -200,7 +200,7 @@ func TestResultsWithAWhereClause10(t *testing.T) {
 
 func TestResultsWithAWhereClause11(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name) from ../resources/test/TestResultsWithProjections/multi where ge(lower(substr(ext, 1)), log) order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(name) from ./resources/TestResultsWithProjections/multi where ge(lower(substr(ext, 1)), log) order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -220,7 +220,7 @@ func TestResultsWithAWhereClause11(t *testing.T) {
 
 func TestResultsWithAWhereClause12(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name) from ../resources/test/TestResultsWithProjections/multi where or(eq(lower(substr(ext, 0, 3)), .log), eq(add(2,3), 6)) order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(name) from ./resources/TestResultsWithProjections/multi where or(eq(lower(substr(ext, 0, 3)), .log), eq(add(2,3), 6)) order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -238,7 +238,7 @@ func TestResultsWithAWhereClause12(t *testing.T) {
 
 func TestResultsWithAWhereClause13(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name) from ../resources/test/TestResultsWithProjections/multi where and(eq(lower(substr(ext, 0, 3)), .log), eq(lower(substr(name, 0, 3)), test)) order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(name) from ./resources/TestResultsWithProjections/multi where and(eq(lower(substr(ext, 0, 3)), .log), eq(lower(substr(name, 0, 3)), test)) order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -256,7 +256,7 @@ func TestResultsWithAWhereClause13(t *testing.T) {
 
 func TestResultsWithAWhereClause14(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name) from ../resources/test/TestResultsWithProjections/multi where not(eq(lower(ext), .log)) order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(name) from ./resources/TestResultsWithProjections/multi where not(eq(lower(ext), .log)) order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -274,7 +274,7 @@ func TestResultsWithAWhereClause14(t *testing.T) {
 
 func TestResultsWithAWhereClause15(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name) from ../resources/test/TestResultsWithProjections/multi where like(name, .*.log) order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(name) from ./resources/TestResultsWithProjections/multi where like(name, .*.log) order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -292,7 +292,7 @@ func TestResultsWithAWhereClause15(t *testing.T) {
 
 func TestResultsWithAWhereClause16(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name) from ../resources/test/TestResultsWithProjections/multi where or(like(name, .*.log), eq(add(2,3), 5)) order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(name) from ./resources/TestResultsWithProjections/multi where or(like(name, .*.log), eq(add(2,3), 5)) order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -334,7 +334,7 @@ func TestResultsWithAWhereClause17(t *testing.T) {
 
 func TestResultsWithAWhereClause18(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name) from ../resources/test/images/ where eq(isimg(mimetype), true) order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(name) from ./resources/images/ where eq(isimg(mimetype), true) order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -351,7 +351,7 @@ func TestResultsWithAWhereClause18(t *testing.T) {
 
 func TestResultsWithAWhereClause19(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name) from ../resources/test/images/ where eq(isimg(mimetype), Y) order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(name) from ./resources/images/ where eq(isimg(mimetype), Y) order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -368,7 +368,7 @@ func TestResultsWithAWhereClause19(t *testing.T) {
 
 func TestResultsWithAWhereClause20(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name) from ../resources/test/images/ where eq(istext(mimetype), true) order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(name) from ./resources/images/ where eq(istext(mimetype), true) order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -383,7 +383,7 @@ func TestResultsWithAWhereClause20(t *testing.T) {
 
 func TestResultsWithAWhereClause21(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name) from ../resources/test/TestResultsWithProjections/multi where eq(istext(mimetype), true) order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(name) from ./resources/TestResultsWithProjections/multi where eq(istext(mimetype), true) order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -403,7 +403,7 @@ func TestResultsWithAWhereClause21(t *testing.T) {
 
 func TestResultsWithAWhereClause22(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name) from ../resources/test/TestResultsWithProjections/multi where istext(mimetype) order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(name) from ./resources/TestResultsWithProjections/multi where istext(mimetype) order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -423,7 +423,7 @@ func TestResultsWithAWhereClause22(t *testing.T) {
 
 func TestResultsWithAWhereClause23(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name) from ../resources/test/TestResultsWithProjections/multi where lt(-0.12, +0.15) order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(name) from ./resources/TestResultsWithProjections/multi where lt(-0.12, +0.15) order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -443,7 +443,7 @@ func TestResultsWithAWhereClause23(t *testing.T) {
 
 func TestResultsWithAWhereClause24(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select name from ../resources/test/TestResultsWithProjections/ where startsWith(name, Test) order by 1", newContext)
+	aParser, err := parser.NewParser("select name from ./resources/TestResultsWithProjections/ where startsWith(name, Test) order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -464,7 +464,7 @@ func TestResultsWithAWhereClause24(t *testing.T) {
 
 func TestResultsWithAWhereClause25(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select name from ../resources/test/TestResultsWithProjections/ where endsWith(name, log) order by 1", newContext)
+	aParser, err := parser.NewParser("select name from ./resources/TestResultsWithProjections/ where endsWith(name, log) order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -483,7 +483,7 @@ func TestResultsWithAWhereClause25(t *testing.T) {
 
 func TestResultsWithAWhereClause26(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select name from ../resources/test/ where gt(size, parsesize(90 Kib))", newContext)
+	aParser, err := parser.NewParser("select name from ./resources/ where gt(size, parsesize(90 Kib))", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -500,7 +500,7 @@ func TestResultsWithAWhereClause26(t *testing.T) {
 
 func TestResultsWithAWhereClause27(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select name from ../resources/test/ where gt(size, parsesize(100 Mb))", newContext)
+	aParser, err := parser.NewParser("select name from ./resources/ where gt(size, parsesize(100 Mb))", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -515,7 +515,7 @@ func TestResultsWithAWhereClause27(t *testing.T) {
 
 func TestResultsWithAWhereClause28(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select name from ../resources/test/ where eq(size, parsesize(0 Mb)) order by 1", newContext)
+	aParser, err := parser.NewParser("select name from ./resources/ where eq(size, parsesize(0 Mb)) order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}

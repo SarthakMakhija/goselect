@@ -19,7 +19,7 @@ func TestMimeTypeAsText(t *testing.T) {
 
 func TestMimeTypeAsImage(t *testing.T) {
 	block := MimeTypeAttributeEvaluationBlock{}
-	value := block.evaluate("../resources/test/images/where.png")
+	value := block.evaluate("../test/resources/images/where.png")
 	expected := "image/png"
 
 	if value.GetAsString() != expected {

@@ -2,151 +2,151 @@
   "queries": [
     {
       "name": "select name, size",
-      "query": "select name, size from ../resources/test/images",
+      "query": "select name, size from ./resources/images",
       "isErrorExpected": false,
       "resultCount": 1
     },
     {
       "name": "select name, size where isImage is true",
-      "query": "select name, size from ../resources/test/images where eq(isImage(mime), true)",
+      "query": "select name, size from ./resources/images where eq(isImage(mime), true)",
       "isErrorExpected": false,
       "resultCount": 1
     },
     {
       "name": "select name, size where isImage is true using isImage without eq",
-      "query": "select name, size from ../resources/test/images where isImage(mime)",
+      "query": "select name, size from ./resources/images where isImage(mime)",
       "isErrorExpected": false,
       "resultCount": 1
     },
     {
       "name": "select name, size where isText is true",
-      "query": "select name, size from ../resources/test/ where isText(mime)",
+      "query": "select name, size from ./resources/ where isText(mime)",
       "isErrorExpected": false,
       "resultCount": 7
     },
     {
       "name": "select name, size where isImage is true in upper case",
-      "query": "SELECT NAME, SIZE FROM ../resources/test/images WHERE EQ(ISIMAGE(MIME), TRUE)",
+      "query": "SELECT NAME, SIZE FROM ./resources/images WHERE EQ(ISIMAGE(MIME), TRUE)",
       "isErrorExpected": false,
       "resultCount": 1
     },
     {
       "name": "select name, size for empty file",
-      "query": "SELECT NAME, SIZE FROM ../resources/test/ WHERE EQ(isEmpty, TRUE)",
+      "query": "SELECT NAME, SIZE FROM ./resources/ WHERE EQ(isEmpty, TRUE)",
       "isErrorExpected": false,
       "resultCount": 2
     },
     {
       "name": "invalid projection, no supported attribute",
-      "query": "SELECT ok, 1 FROM ../resources/test/",
+      "query": "SELECT ok, 1 FROM ./resources/",
       "isErrorExpected": true,
       "resultCount": 0
     },
     {
       "name": "invalid projection, with unsupported arithmetic and relational operators (1)",
-      "query": "SELECT 1+2, 1*2, 1>2, 5>6 FROM ../resources/test/",
+      "query": "SELECT 1+2, 1*2, 1>2, 5>6 FROM ./resources/",
       "isErrorExpected": true,
       "resultCount": 0
     },
     {
       "name": "invalid projection, with unsupported arithmetic and relational operators(2)",
-      "query": "SELECT 1 + 2, 1 * 2, 1 > 2, 5 > 6 FROM ../resources/test/",
+      "query": "SELECT 1 + 2, 1 * 2, 1 > 2, 5 > 6 FROM ./resources/",
       "isErrorExpected": true,
       "resultCount": 0
     },
     {
       "name": "invalid where clause, no where supported function is used",
-      "query": "SELECT NAME, SIZE FROM ../resources/test/ WHERE 2=3",
+      "query": "SELECT NAME, SIZE FROM ./resources/ WHERE 2=3",
       "isErrorExpected": true,
       "resultCount": 0
     },
     {
       "name": "invalid where clause, no where clause after where keyword",
-      "query": "SELECT NAME, SIZE FROM ../resources/test/ WHERE ",
+      "query": "SELECT NAME, SIZE FROM ./resources/ WHERE ",
       "isErrorExpected": true,
       "resultCount": 0
     },
     {
       "name": "invalid where clause, an aggregate function is used",
-      "query": "SELECT NAME, SIZE FROM ../resources/test/ WHERE gt(avg(size), 10)",
+      "query": "SELECT NAME, SIZE FROM ./resources/ WHERE gt(avg(size), 10)",
       "isErrorExpected": true,
       "resultCount": 0
     },
     {
       "name": "invalid where clause, insufficient parameter values in where clause function",
-      "query": "SELECT NAME, SIZE FROM ../resources/test/ WHERE gt(size)",
+      "query": "SELECT NAME, SIZE FROM ./resources/ WHERE gt(size)",
       "isErrorExpected": true,
       "resultCount": 0
     },
     {
       "name": "invalid where clause, using operator < in a function",
-      "query": "SELECT NAME, SIZE FROM ../resources/test/ WHERE lt(1<2)",
+      "query": "SELECT NAME, SIZE FROM ./resources/ WHERE lt(1<2)",
       "isErrorExpected": true,
       "resultCount": 0
     },
     {
       "name": "select lower(name), sum(size), fmtsize(sum(size)) from resources",
-      "query": "SELECT lower(NAME), sum(SIZE), fmtsize(sum(size)) FROM ../resources/test/",
+      "query": "SELECT lower(NAME), sum(SIZE), fmtsize(sum(size)) FROM ./resources/",
       "isErrorExpected": false,
       "resultCount": 14
     },
     {
       "name": "select lower(name) from resources where extension is log",
-      "query": "SELECT lower(NAME) FROM ../resources/test/ where eq(ext, .log)",
+      "query": "SELECT lower(NAME) FROM ./resources/ where eq(ext, .log)",
       "isErrorExpected": false,
       "resultCount": 3
     },
     {
       "name": "select lower(name) from resources where extension is log and file size is 0",
-      "query": "SELECT lower(NAME) FROM ../resources/test/ where and(eq(ext, .log), isEmpty)",
+      "query": "SELECT lower(NAME) FROM ./resources/ where and(eq(ext, .log), isEmpty)",
       "isErrorExpected": false,
       "resultCount": 1
     },
     {
       "name": "invalid order by, illegal order by position",
-      "query": "SELECT lower(NAME) FROM ../resources/test/ where and(eq(ext, .log), eq(isempty, true)) order by 2",
+      "query": "SELECT lower(NAME) FROM ./resources/ where and(eq(ext, .log), eq(isempty, true)) order by 2",
       "isErrorExpected": true,
       "resultCount": 0
     },
     {
       "name": "invalid order by, no position provided",
-      "query": "SELECT lower(NAME) FROM ../resources/test/ where and(eq(ext, .log), eq(isempty, true)) order by ",
+      "query": "SELECT lower(NAME) FROM ./resources/ where and(eq(ext, .log), eq(isempty, true)) order by ",
       "isErrorExpected": true,
       "resultCount": 0
     },
     {
       "name": "invalid order by, illegal order by position value",
-      "query": "SELECT lower(NAME) FROM ../resources/test/ where and(eq(ext, .log), eq(isempty, true)) order by -1",
+      "query": "SELECT lower(NAME) FROM ./resources/ where and(eq(ext, .log), eq(isempty, true)) order by -1",
       "isErrorExpected": true,
       "resultCount": 0
     },
     {
       "name": "invalid order by, no limit value",
-      "query": "SELECT lower(NAME) FROM ../resources/test/ where and(eq(ext, .log), eq(isempty, true)) order by 1 limit",
+      "query": "SELECT lower(NAME) FROM ./resources/ where and(eq(ext, .log), eq(isempty, true)) order by 1 limit",
       "isErrorExpected": true,
       "resultCount": 0
     },
     {
       "name": "invalid order by, illegal limit value",
-      "query": "SELECT lower(NAME) FROM ../resources/test/ where and(eq(ext, .log), eq(isempty, true)) order by 1 limit -9",
+      "query": "SELECT lower(NAME) FROM ./resources/ where and(eq(ext, .log), eq(isempty, true)) order by 1 limit -9",
       "isErrorExpected": true,
       "resultCount": 0
     },
     {
       "name": "select name, size ordered by size in descending order and pick top 3",
-      "query": "SELECT lower(NAME), size FROM ../resources/test/ order by 2 desc limit 3",
+      "query": "SELECT lower(NAME), size FROM ./resources/ order by 2 desc limit 3",
       "isErrorExpected": false,
       "resultCount": 3
     },
     {
       "name": "select name, path from resources where name contains an underscore",
-      "query": "SELECT lower(NAME), path FROM ../resources/test/ where contains(name, _)",
+      "query": "SELECT lower(NAME), path FROM ./resources/ where contains(name, _)",
       "isErrorExpected": false,
       "resultCount": 5
     },
     {
       "name": "select name, path from resources where resources is a file and its name starts with test",
-      "query": "SELECT lower(NAME), path FROM ../resources/test/ where and(eq(isfile, true), like(lower(name), test.*))",
+      "query": "SELECT lower(NAME), path FROM ./resources/ where and(eq(isfile, true), like(lower(name), test.*))",
       "isErrorExpected": false,
       "resultCount": 5
     },
@@ -164,13 +164,13 @@
     },
     {
       "name": "select name, path from resources where the name starts with . using startsWith function",
-      "query": "SELECT lower(NAME), path FROM ../resources/test/ where startsWith(name , .) limit 4",
+      "query": "SELECT lower(NAME), path FROM ./resources/ where startsWith(name , .) limit 4",
       "isErrorExpected": false,
       "resultCount": 1
     },
     {
       "name": "select name, path from resources where the name ends with .log using endsWith function",
-      "query": "SELECT lower(NAME), path FROM ../resources/test/ where endsWith(name , .log) limit 4",
+      "query": "SELECT lower(NAME), path FROM ./resources/ where endsWith(name , .log) limit 4",
       "isErrorExpected": false,
       "resultCount": 3
     }

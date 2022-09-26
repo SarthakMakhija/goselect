@@ -12,7 +12,7 @@ import (
 
 func TestResultsWithProjectionsIncludingCountFunction1(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name), count(lower(name)), count() from ../resources/test/TestResultsWithProjections/multi order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(name), count(lower(name)), count() from ./resources/TestResultsWithProjections/multi order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -32,7 +32,7 @@ func TestResultsWithProjectionsIncludingCountFunction1(t *testing.T) {
 
 func TestResultsWithProjectionsIncludingAverageFunctionWithLimitReturningTheAverageForAllTheValues(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select avg(len(name)) from ../resources/test/TestResultsWithProjections/multi limit 3", newContext)
+	aParser, err := parser.NewParser("select avg(len(name)) from ./resources/TestResultsWithProjections/multi limit 3", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -49,7 +49,7 @@ func TestResultsWithProjectionsIncludingAverageFunctionWithLimitReturningTheAver
 
 func TestResultsWithProjectionsIncludingAverage(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select fmtsize(avg(size)) from ../resources/test/TestResultsWithProjections/multi", newContext)
+	aParser, err := parser.NewParser("select fmtsize(avg(size)) from ./resources/TestResultsWithProjections/multi", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -66,7 +66,7 @@ func TestResultsWithProjectionsIncludingAverage(t *testing.T) {
 
 func TestResultsWithProjectionsIncludingAggregateFunctionInsideAScalar(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(count()) from ../resources/test/TestResultsWithProjections/multi order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(count()) from ./resources/TestResultsWithProjections/multi order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -83,7 +83,7 @@ func TestResultsWithProjectionsIncludingAggregateFunctionInsideAScalar(t *testin
 
 func TestResultsWithProjectionsIncludingNestedCountFunction1(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select count(count()) from ../resources/test/TestResultsWithProjections/multi order by 1", newContext)
+	aParser, err := parser.NewParser("select count(count()) from ./resources/TestResultsWithProjections/multi order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -100,7 +100,7 @@ func TestResultsWithProjectionsIncludingNestedCountFunction1(t *testing.T) {
 
 func TestResultsWithProjectionsIncludingNestedCountFunction2(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select count(count(lower(name))) from ../resources/test/TestResultsWithProjections/multi order by 1", newContext)
+	aParser, err := parser.NewParser("select count(count(lower(name))) from ./resources/TestResultsWithProjections/multi order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -117,7 +117,7 @@ func TestResultsWithProjectionsIncludingNestedCountFunction2(t *testing.T) {
 
 func TestResultsWithProjectionsIncludingNestedCountFunction3(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(count(count())) from ../resources/test/TestResultsWithProjections/multi order by 1", newContext)
+	aParser, err := parser.NewParser("select lower(count(count())) from ./resources/TestResultsWithProjections/multi order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -134,7 +134,7 @@ func TestResultsWithProjectionsIncludingNestedCountFunction3(t *testing.T) {
 
 func TestResultsWithProjectionsIncludingNestedAverageFunction1(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select avg(avg(avg(len(name)))) from ../resources/test/TestResultsWithProjections/multi order by 1", newContext)
+	aParser, err := parser.NewParser("select avg(avg(avg(len(name)))) from ./resources/TestResultsWithProjections/multi order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -151,7 +151,7 @@ func TestResultsWithProjectionsIncludingNestedAverageFunction1(t *testing.T) {
 
 func TestResultsWithProjectionsIncludingNestedAverageFunction2(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select count(avg(avg(len(name)))) from ../resources/test/TestResultsWithProjections/multi order by 1", newContext)
+	aParser, err := parser.NewParser("select count(avg(avg(len(name)))) from ./resources/TestResultsWithProjections/multi order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -168,7 +168,7 @@ func TestResultsWithProjectionsIncludingNestedAverageFunction2(t *testing.T) {
 
 func TestResultsWithProjectionsIncludingNestedAverageFunction3(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select add(count(), 7) from ../resources/test/TestResultsWithProjections/multi order by 1", newContext)
+	aParser, err := parser.NewParser("select add(count(), 7) from ./resources/TestResultsWithProjections/multi order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -185,7 +185,7 @@ func TestResultsWithProjectionsIncludingNestedAverageFunction3(t *testing.T) {
 
 func TestResultsWithProjectionsIncludingNestedAverageFunctionWithoutAnyOrderBy(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select add(count(), 7) from ../resources/test/TestResultsWithProjections/multi", newContext)
+	aParser, err := parser.NewParser("select add(count(), 7) from ./resources/TestResultsWithProjections/multi", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -202,7 +202,7 @@ func TestResultsWithProjectionsIncludingNestedAverageFunctionWithoutAnyOrderBy(t
 
 func TestResultsWithProjectionsIncludingCountDistinct1(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select countd(lower(ext)) from ../resources/test/TestResultsWithProjections/multi order by 1", newContext)
+	aParser, err := parser.NewParser("select countd(lower(ext)) from ./resources/TestResultsWithProjections/multi order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -219,7 +219,7 @@ func TestResultsWithProjectionsIncludingCountDistinct1(t *testing.T) {
 
 func TestResultsWithProjectionsIncludingCountDistinct2(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select count(countd(lower(ext))) from ../resources/test/TestResultsWithProjections/multi order by 1", newContext)
+	aParser, err := parser.NewParser("select count(countd(lower(ext))) from ./resources/TestResultsWithProjections/multi order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -236,7 +236,7 @@ func TestResultsWithProjectionsIncludingCountDistinct2(t *testing.T) {
 
 func TestResultsWithProjectionsIncludingSum1(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select sum(len(ext)) from ../resources/test/TestResultsWithProjections/multi order by 1", newContext)
+	aParser, err := parser.NewParser("select sum(len(ext)) from ./resources/TestResultsWithProjections/multi order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -253,7 +253,7 @@ func TestResultsWithProjectionsIncludingSum1(t *testing.T) {
 
 func TestResultsWithProjectionsIncludingSum2(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select sum(countd(lower(ext))) from ../resources/test/TestResultsWithProjections/multi order by 1", newContext)
+	aParser, err := parser.NewParser("select sum(countd(lower(ext))) from ./resources/TestResultsWithProjections/multi order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -270,7 +270,7 @@ func TestResultsWithProjectionsIncludingSum2(t *testing.T) {
 
 func TestResultsWithProjectionsIncludingMin1(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select min(name) from ../resources/test/TestResultsWithProjections/multi order by 1", newContext)
+	aParser, err := parser.NewParser("select min(name) from ./resources/TestResultsWithProjections/multi order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -287,7 +287,7 @@ func TestResultsWithProjectionsIncludingMin1(t *testing.T) {
 
 func TestResultsWithProjectionsIncludingMin2(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select min(min(len(name))) from ../resources/test/TestResultsWithProjections/multi order by 1", newContext)
+	aParser, err := parser.NewParser("select min(min(len(name))) from ./resources/TestResultsWithProjections/multi order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -304,7 +304,7 @@ func TestResultsWithProjectionsIncludingMin2(t *testing.T) {
 
 func TestResultsWithProjectionsIncludingMax1(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select max(name) from ../resources/test/TestResultsWithProjections/multi order by 1", newContext)
+	aParser, err := parser.NewParser("select max(name) from ./resources/TestResultsWithProjections/multi order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -321,7 +321,7 @@ func TestResultsWithProjectionsIncludingMax1(t *testing.T) {
 
 func TestResultsWithProjectionsIncludingMax2(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select max(max(len(name))) from ../resources/test/TestResultsWithProjections/multi order by 1", newContext)
+	aParser, err := parser.NewParser("select max(max(len(name))) from ./resources/TestResultsWithProjections/multi order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -338,7 +338,7 @@ func TestResultsWithProjectionsIncludingMax2(t *testing.T) {
 
 func TestResultsWithProjectionsWithMimeTypeAndCountDistinct(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select countd(mime) from ../resources/test/TestResultsWithProjections/", newContext)
+	aParser, err := parser.NewParser("select countd(mime) from ./resources/TestResultsWithProjections/", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -355,7 +355,7 @@ func TestResultsWithProjectionsWithMimeTypeAndCountDistinct(t *testing.T) {
 
 func TestResultsWithProjectionsWithMimeTypeAndMin(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select min(mime) from ../resources/test/TestResultsWithProjections/", newContext)
+	aParser, err := parser.NewParser("select min(mime) from ./resources/TestResultsWithProjections/", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -372,7 +372,7 @@ func TestResultsWithProjectionsWithMimeTypeAndMin(t *testing.T) {
 
 func TestResultsWithProjectionsIncludingAggregateFunctionAndWhereClause1(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select count() from ../resources/test/TestResultsWithProjections/ where endsWith(name, log) order by 1", newContext)
+	aParser, err := parser.NewParser("select count() from ./resources/TestResultsWithProjections/ where endsWith(name, log) order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -389,7 +389,7 @@ func TestResultsWithProjectionsIncludingAggregateFunctionAndWhereClause1(t *test
 
 func TestResultsWithProjectionsIncludingAggregateFunctionAndWhereClause2(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select count() from ../resources/test/TestResultsWithProjections/ where isText(mime) order by 1", newContext)
+	aParser, err := parser.NewParser("select count() from ./resources/TestResultsWithProjections/ where isText(mime) order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -406,7 +406,7 @@ func TestResultsWithProjectionsIncludingAggregateFunctionAndWhereClause2(t *test
 
 func TestResultsWithProjectionsIncludingAggregateFunctionAndWhereClause3(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select min(name) from ../resources/test/TestResultsWithProjections/ where endsWith(name, log) order by 1", newContext)
+	aParser, err := parser.NewParser("select min(name) from ./resources/TestResultsWithProjections/ where endsWith(name, log) order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
