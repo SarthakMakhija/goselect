@@ -47,6 +47,7 @@ func (tableFormatter *TableFormatter) addHeader(projections *projection.Projecti
 		attributes = append(attributes, headerAttribute)
 		columnConfigs = append(columnConfigs, table.ColumnConfig{WidthMin: minWidth, WidthMax: maxWidth, Name: headerAttribute})
 	}
+	tableFormatter.setHeaderFooterDefaultCase()
 	tableFormatter.tableWriter.AppendHeader(attributes)
 	tableFormatter.tableWriter.SetColumnConfigs(columnConfigs)
 }
@@ -64,4 +65,9 @@ func (tableFormatter *TableFormatter) addContent(rows *executor.EvaluatingRows) 
 
 func (tableFormatter *TableFormatter) addFooter(rows *executor.EvaluatingRows) {
 	tableFormatter.tableWriter.AppendFooter(table.Row{fmt.Sprintf("Total Rows: %v", rows.Count())})
+}
+
+func (tableFormatter *TableFormatter) setHeaderFooterDefaultCase() {
+	tableFormatter.tableWriter.Style().Format.Header = 0
+	tableFormatter.tableWriter.Style().Format.Footer = 0
 }
