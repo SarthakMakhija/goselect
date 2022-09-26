@@ -17,7 +17,7 @@ func newOrdering(order *order.Order) *Ordering {
 func (ordering *Ordering) doOrder(rows *EvaluatingRows) {
 	if ordering.order != nil {
 		sort.SliceStable(rows.rows, func(i, j int) bool {
-			return ordering.isOrdered(rows.atIndex(i).AllAttributes(), rows.atIndex(j).AllAttributes())
+			return ordering.isOrdered(rows.AtIndex(i).AllAttributes(), rows.AtIndex(j).AllAttributes())
 		})
 	}
 }

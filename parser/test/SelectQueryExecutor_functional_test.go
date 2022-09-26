@@ -1,13 +1,14 @@
 //go:build functional
 // +build functional
 
-package executor
+package test
 
 import (
 	"encoding/json"
 	"fmt"
 	"goselect/parser"
 	"goselect/parser/context"
+	"goselect/parser/executor"
 	"os"
 	"testing"
 )
@@ -34,7 +35,7 @@ func TestSelectQueries(t *testing.T) {
 				t.Logf("Received an error: %v for the query named: %v", err, query.Name)
 				return
 			}
-			queryResults, err := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+			queryResults, err := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 			if err != nil && !query.IsErrorExpected {
 				t.Fatalf("Did not expect an error for the query named: %v, but received: %v", query.Name, err)
 			}

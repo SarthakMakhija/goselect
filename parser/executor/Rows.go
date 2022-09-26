@@ -53,7 +53,7 @@ func (rows *EvaluatingRows) RowIterator() *RowsIterator {
 	return &RowsIterator{currentIndex: 0, limit: rows.limit, rows: rows.rows}
 }
 
-func (rows EvaluatingRows) atIndex(index int) *EvaluatingRow {
+func (rows EvaluatingRows) AtIndex(index int) *EvaluatingRow {
 	if index < len(rows.rows) {
 		return rows.rows[index]
 	}

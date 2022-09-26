@@ -32,7 +32,7 @@ func TestAscendingOrderWithASingleColumn(t *testing.T) {
 	ordering := newOrdering(anOrder)
 	ordering.doOrder(rows)
 
-	assertMatch(t, expected, rows)
+	AssertMatch(t, expected, rows)
 }
 
 func TestAscendingOrderWith2Columns(t *testing.T) {
@@ -60,7 +60,7 @@ func TestAscendingOrderWith2Columns(t *testing.T) {
 	ordering := newOrdering(anOrder)
 	ordering.doOrder(rows)
 
-	assertMatch(t, expected, rows)
+	AssertMatch(t, expected, rows)
 }
 
 func TestDescendingOrderWithASingleColumn(t *testing.T) {
@@ -85,7 +85,7 @@ func TestDescendingOrderWithASingleColumn(t *testing.T) {
 	ordering := newOrdering(anOrder)
 	ordering.doOrder(rows)
 
-	assertMatch(t, expected, rows)
+	AssertMatch(t, expected, rows)
 }
 
 func TestDescendingOrderWith2Columns(t *testing.T) {
@@ -115,7 +115,7 @@ func TestDescendingOrderWith2Columns(t *testing.T) {
 	ordering := newOrdering(anOrder)
 	ordering.doOrder(rows)
 
-	assertMatch(t, expected, rows)
+	AssertMatch(t, expected, rows)
 }
 
 func TestMixOrderWith2Columns(t *testing.T) {
@@ -145,5 +145,5 @@ func TestMixOrderWith2Columns(t *testing.T) {
 	ordering := newOrdering(anOrder)
 	ordering.doOrder(rows)
 
-	assertMatch(t, expected, rows)
+	AssertMatch(t, expected, rows)
 }

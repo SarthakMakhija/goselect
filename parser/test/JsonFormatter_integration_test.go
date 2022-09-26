@@ -1,12 +1,13 @@
 //go:build integration
 // +build integration
 
-package writer
+package test
 
 import (
 	"goselect/parser"
 	"goselect/parser/context"
 	"goselect/parser/executor"
+	"goselect/parser/writer"
 	"testing"
 )
 
@@ -22,7 +23,7 @@ func TestJsonFormatter(t *testing.T) {
 	}
 	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 
-	json := NewJsonFormatter().Format(selectQuery.Projections, queryResults)
+	json := writer.NewJsonFormatter().Format(selectQuery.Projections, queryResults)
 	expected := "[{\"lower(name)\" : \"testresultswithprojections_a.log\", \"contains(lower(name),log)\" : \"Y\"}, {\"lower(name)\" : \"testresultswithprojections_b.log\", \"contains(lower(name),log)\" : \"Y\"}, {\"lower(name)\" : \"testresultswithprojections_c.txt\", \"contains(lower(name),log)\" : \"N\"}, {\"lower(name)\" : \"testresultswithprojections_d.txt\", \"contains(lower(name),log)\" : \"N\"}]"
 
 	if expected != json {

@@ -1,12 +1,13 @@
 //go:build integration
 // +build integration
 
-package executor
+package test
 
 import (
 	"fmt"
 	"goselect/parser"
 	"goselect/parser/context"
+	"goselect/parser/executor"
 	"math"
 	"os"
 	"testing"
@@ -22,7 +23,7 @@ func TestWithAnErrorWhileRunningAProjection(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	_, err = NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	_, err = executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	if err == nil {
 		t.Fatalf("Expected an error while executing a query with lower function without any parameter values but did not receive any error")
 	}
@@ -38,7 +39,7 @@ func TestWithAnErrorWhileRunningWhere(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	_, err = NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	_, err = executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	if err == nil {
 		t.Fatalf("Expected an error while executing a query with lower function without any parameter values but did not receive any error")
 	}
@@ -54,11 +55,11 @@ func TestResultsWithProjections1(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("TestResultsWithProjections_A.txt"), context.EmptyValue},
 	}
-	assertMatch(t, expected, queryResults, 1)
+	executor.AssertMatch(t, expected, queryResults, 1)
 }
 
 func TestResultsWithProjections2(t *testing.T) {
@@ -71,11 +72,11 @@ func TestResultsWithProjections2(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("testresultswithprojections_a.txt"), context.StringValue("VGVzdFJlc3VsdHNXaXRoUHJvamVjdGlvbnNfQS50eHQ=")},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjections4(t *testing.T) {
@@ -88,7 +89,7 @@ func TestResultsWithProjections4(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{
 			context.StringValue("testresultswithprojections_a.txt"),
@@ -96,7 +97,7 @@ func TestResultsWithProjections4(t *testing.T) {
 			context.StringValue("TestResultsWuthProjectuons_A.txt"),
 		},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsInNestedDirectories(t *testing.T) {
@@ -109,7 +110,7 @@ func TestResultsWithProjectionsInNestedDirectories(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.BooleanValue(true), context.StringValue("empty"), context.StringValue("../resources/test/TestResultsWithProjections/empty")},
 		{context.BooleanValue(true), context.StringValue("hidden"), context.StringValue("../resources/test/TestResultsWithProjections/hidden")},
@@ -123,7 +124,7 @@ func TestResultsWithProjectionsInNestedDirectories(t *testing.T) {
 		{context.BooleanValue(false), context.StringValue("testresultswithprojections_c.txt"), context.StringValue("../resources/test/TestResultsWithProjections/multi/TestResultsWithProjections_C.txt")},
 		{context.BooleanValue(false), context.StringValue("testresultswithprojections_d.txt"), context.StringValue("../resources/test/TestResultsWithProjections/multi/TestResultsWithProjections_D.txt")},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsInNestedDirectoriesWithOptionToTraverseNestedDirectoriesAsFalse(t *testing.T) {
@@ -136,14 +137,14 @@ func TestResultsWithProjectionsInNestedDirectoriesWithOptionToTraverseNestedDire
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions().DisableNestedTraversal()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions().DisableNestedTraversal()).Execute()
 	expected := [][]context.Value{
 		{context.BooleanValue(true), context.StringValue("empty"), context.StringValue("../resources/test/TestResultsWithProjections/empty")},
 		{context.BooleanValue(true), context.StringValue("hidden"), context.StringValue("../resources/test/TestResultsWithProjections/hidden")},
 		{context.BooleanValue(true), context.StringValue("multi"), context.StringValue("../resources/test/TestResultsWithProjections/multi")},
 		{context.BooleanValue(true), context.StringValue("single"), context.StringValue("../resources/test/TestResultsWithProjections/single")},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsInNestedDirectoriesWithOptionToIgnoreTraversalOfDirectories(t *testing.T) {
@@ -157,7 +158,7 @@ func TestResultsWithProjectionsInNestedDirectoriesWithOptionToIgnoreTraversalOfD
 		t.Fatalf("error is %v", err)
 	}
 
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions().EnableNestedTraversal().DirectoriesToIgnoreTraversal([]string{"multi", "empty"})).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions().EnableNestedTraversal().DirectoriesToIgnoreTraversal([]string{"multi", "empty"})).Execute()
 	expected := [][]context.Value{
 		{context.BooleanValue(true), context.StringValue("empty"), context.StringValue("../resources/test/TestResultsWithProjections/empty")},
 		{context.BooleanValue(true), context.StringValue("hidden"), context.StringValue("../resources/test/TestResultsWithProjections/hidden")},
@@ -166,7 +167,7 @@ func TestResultsWithProjectionsInNestedDirectoriesWithOptionToIgnoreTraversalOfD
 		{context.BooleanValue(false), context.StringValue(".make"), context.StringValue("../resources/test/TestResultsWithProjections/hidden/.Make")},
 		{context.BooleanValue(false), context.StringValue("testresultswithprojections_a.txt"), context.StringValue("../resources/test/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsInCaseInsensitiveManner(t *testing.T) {
@@ -179,11 +180,11 @@ func TestResultsWithProjectionsInCaseInsensitiveManner(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("testresultswithprojections_a.txt"), context.StringValue("VGVzdFJlc3VsdHNXaXRoUHJvamVjdGlvbnNfQS50eHQ=")},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjections3(t *testing.T) {
@@ -196,11 +197,11 @@ func TestResultsWithProjections3(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("testresultswithprojections_a.txt"), context.StringValue(".txt")},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsWithConcatWsFunction(t *testing.T) {
@@ -213,13 +214,13 @@ func TestResultsWithProjectionsWithConcatWsFunction(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	uid, gid := os.Getuid(), os.Getgid()
 
 	expected := [][]context.Value{
 		{context.StringValue("testresultswithprojections_a.txt"), context.StringValue(fmt.Sprintf("testresultswithprojections_a.txt#%v#%v", uid, gid))},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsWithSubstringFunction(t *testing.T) {
@@ -232,12 +233,12 @@ func TestResultsWithProjectionsWithSubstringFunction(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 
 	expected := [][]context.Value{
 		{context.StringValue("testresultswithprojections_a.txt"), context.StringValue("projections_a.txt")},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsWithDayDifference(t *testing.T) {
@@ -250,9 +251,9 @@ func TestResultsWithProjectionsWithDayDifference(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 
-	result := queryResults.atIndex(0).AllAttributes()[0]
+	result := queryResults.AtIndex(0).AllAttributes()[0]
 	asFloat64, _ := result.GetNumericAsFloat64()
 
 	if math.Round(asFloat64) != float64(0) {
@@ -270,9 +271,9 @@ func TestResultsWithProjectionsWithHourDifference(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 
-	result := queryResults.atIndex(0).AllAttributes()[0]
+	result := queryResults.AtIndex(0).AllAttributes()[0]
 	asFloat64, _ := result.GetNumericAsFloat64()
 
 	if math.Round(asFloat64) != float64(0) {
@@ -290,7 +291,7 @@ func TestResultsWithProjectionsAndLimit1(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	if queryResults.Count() != 3 {
 		t.Fatalf("Expected result Count to be %v, received %v", 3, queryResults.Count())
 	}
@@ -306,7 +307,7 @@ func TestResultsWithProjectionsAndLimit2(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	if queryResults.Count() != 0 {
 		t.Fatalf("Expected result Count to be %v, received %v", 3, queryResults.Count())
 	}
@@ -322,12 +323,12 @@ func TestResultsWithProjectionsAndLimit3(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("testresultswithprojections_a.log")},
 		{context.StringValue("testresultswithprojections_b.log")},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsOrderBy1(t *testing.T) {
@@ -340,14 +341,14 @@ func TestResultsWithProjectionsOrderBy1(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("TESTRESULTSWITHPROJECTIONS_D.TXT"), context.StringValue(".txt")},
 		{context.StringValue("TESTRESULTSWITHPROJECTIONS_C.TXT"), context.StringValue(".txt")},
 		{context.StringValue("TESTRESULTSWITHPROJECTIONS_B.LOG"), context.StringValue(".log")},
 		{context.StringValue("TESTRESULTSWITHPROJECTIONS_A.LOG"), context.StringValue(".log")},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsOrderBy2(t *testing.T) {
@@ -360,14 +361,14 @@ func TestResultsWithProjectionsOrderBy2(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("testresultswithprojections_a.log"), context.StringValue(".log")},
 		{context.StringValue("testresultswithprojections_b.log"), context.StringValue(".log")},
 		{context.StringValue("testresultswithprojections_c.txt"), context.StringValue(".txt")},
 		{context.StringValue("testresultswithprojections_d.txt"), context.StringValue(".txt")},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsIncludingConcatFunction(t *testing.T) {
@@ -380,14 +381,14 @@ func TestResultsWithProjectionsIncludingConcatFunction(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("testresultswithprojections_a.log"), context.StringValue("testresultswithprojections_a.log-FILE")},
 		{context.StringValue("testresultswithprojections_b.log"), context.StringValue("testresultswithprojections_b.log-FILE")},
 		{context.StringValue("testresultswithprojections_c.txt"), context.StringValue("testresultswithprojections_c.txt-FILE")},
 		{context.StringValue("testresultswithprojections_d.txt"), context.StringValue("testresultswithprojections_d.txt-FILE")},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsIncludingConcatWsFunction(t *testing.T) {
@@ -400,14 +401,14 @@ func TestResultsWithProjectionsIncludingConcatWsFunction(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("testresultswithprojections_a.log"), context.StringValue("testresultswithprojections_a.log@FILE")},
 		{context.StringValue("testresultswithprojections_b.log"), context.StringValue("testresultswithprojections_b.log@FILE")},
 		{context.StringValue("testresultswithprojections_c.txt"), context.StringValue("testresultswithprojections_c.txt@FILE")},
 		{context.StringValue("testresultswithprojections_d.txt"), context.StringValue("testresultswithprojections_d.txt@FILE")},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsIncludingContainsFunction(t *testing.T) {
@@ -420,14 +421,14 @@ func TestResultsWithProjectionsIncludingContainsFunction(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("testresultswithprojections_a.log"), context.BooleanValue(true)},
 		{context.StringValue("testresultswithprojections_b.log"), context.BooleanValue(true)},
 		{context.StringValue("testresultswithprojections_c.txt"), context.BooleanValue(false)},
 		{context.StringValue("testresultswithprojections_d.txt"), context.BooleanValue(false)},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsIncludingAddFunction(t *testing.T) {
@@ -440,14 +441,14 @@ func TestResultsWithProjectionsIncludingAddFunction(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("testresultswithprojections_a.log"), context.Float64Value(36)},
 		{context.StringValue("testresultswithprojections_b.log"), context.Float64Value(36)},
 		{context.StringValue("testresultswithprojections_c.txt"), context.Float64Value(36)},
 		{context.StringValue("testresultswithprojections_d.txt"), context.Float64Value(36)},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsIncludingSubtractFunction(t *testing.T) {
@@ -460,14 +461,14 @@ func TestResultsWithProjectionsIncludingSubtractFunction(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("testresultswithprojections_a.log"), context.Float64Value(30)},
 		{context.StringValue("testresultswithprojections_b.log"), context.Float64Value(30)},
 		{context.StringValue("testresultswithprojections_c.txt"), context.Float64Value(30)},
 		{context.StringValue("testresultswithprojections_d.txt"), context.Float64Value(30)},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsIncludingMultiplyFunction(t *testing.T) {
@@ -480,14 +481,14 @@ func TestResultsWithProjectionsIncludingMultiplyFunction(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("testresultswithprojections_a.log"), context.Float64Value(64)},
 		{context.StringValue("testresultswithprojections_b.log"), context.Float64Value(64)},
 		{context.StringValue("testresultswithprojections_c.txt"), context.Float64Value(64)},
 		{context.StringValue("testresultswithprojections_d.txt"), context.Float64Value(64)},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsIncludingDivideFunction(t *testing.T) {
@@ -500,14 +501,14 @@ func TestResultsWithProjectionsIncludingDivideFunction(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("testresultswithprojections_a.log"), context.Float64Value(16)},
 		{context.StringValue("testresultswithprojections_b.log"), context.Float64Value(16)},
 		{context.StringValue("testresultswithprojections_c.txt"), context.Float64Value(16)},
 		{context.StringValue("testresultswithprojections_d.txt"), context.Float64Value(16)},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsIncludingNegativeValueInAddSubMulDivFunction(t *testing.T) {
@@ -520,14 +521,14 @@ func TestResultsWithProjectionsIncludingNegativeValueInAddSubMulDivFunction(t *t
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.Float64Value(30), context.Float64Value(34), context.Float64Value(-64), context.Float64Value(-16)},
 		{context.Float64Value(30), context.Float64Value(34), context.Float64Value(-64), context.Float64Value(-16)},
 		{context.Float64Value(30), context.Float64Value(34), context.Float64Value(-64), context.Float64Value(-16)},
 		{context.Float64Value(30), context.Float64Value(34), context.Float64Value(-64), context.Float64Value(-16)},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsWithIdentity(t *testing.T) {
@@ -540,14 +541,14 @@ func TestResultsWithProjectionsWithIdentity(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("testresultswithprojections_a.log"), context.Float64Value(3.0)},
 		{context.StringValue("testresultswithprojections_b.log"), context.Float64Value(3.0)},
 		{context.StringValue("testresultswithprojections_c.txt"), context.Float64Value(3.0)},
 		{context.StringValue("testresultswithprojections_d.txt"), context.Float64Value(3.0)},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsWithBaseName(t *testing.T) {
@@ -560,14 +561,14 @@ func TestResultsWithProjectionsWithBaseName(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("testresultswithprojections_a.log"), context.StringValue("testresultswithprojections_a")},
 		{context.StringValue("testresultswithprojections_b.log"), context.StringValue("testresultswithprojections_b")},
 		{context.StringValue("testresultswithprojections_c.txt"), context.StringValue("testresultswithprojections_c")},
 		{context.StringValue("testresultswithprojections_d.txt"), context.StringValue("testresultswithprojections_d")},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsWithFormatSize(t *testing.T) {
@@ -580,14 +581,14 @@ func TestResultsWithProjectionsWithFormatSize(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("testresultswithprojections_a.log"), context.StringValue("71 B")},
 		{context.StringValue("testresultswithprojections_b.log"), context.StringValue("58 B")},
 		{context.StringValue("testresultswithprojections_c.txt"), context.StringValue("58 B")},
 		{context.StringValue("testresultswithprojections_d.txt"), context.StringValue("58 B")},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsWithMimeType1(t *testing.T) {
@@ -600,11 +601,11 @@ func TestResultsWithProjectionsWithMimeType1(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("testresultswithprojections_a.txt"), context.StringValue("text/plain; charset=utf-8")},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsWithMimeType2(t *testing.T) {
@@ -617,11 +618,11 @@ func TestResultsWithProjectionsWithMimeType2(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("where.png"), context.StringValue("image/png")},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsWithMimeType3(t *testing.T) {
@@ -634,7 +635,7 @@ func TestResultsWithProjectionsWithMimeType3(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.BooleanValue(true), context.StringValue("empty"), context.StringValue("NA")},
 		{context.BooleanValue(true), context.StringValue("hidden"), context.StringValue("NA")},
@@ -648,7 +649,7 @@ func TestResultsWithProjectionsWithMimeType3(t *testing.T) {
 		{context.BooleanValue(false), context.StringValue("testresultswithprojections_c.txt"), context.StringValue("text/plain; charset=utf-8")},
 		{context.BooleanValue(false), context.StringValue("testresultswithprojections_d.txt"), context.StringValue("text/plain; charset=utf-8")},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsWithMimeType4(t *testing.T) {
@@ -661,7 +662,7 @@ func TestResultsWithProjectionsWithMimeType4(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.BooleanValue(false), context.StringValue(".make"), context.StringValue("text/plain")},
 		{context.BooleanValue(false), context.StringValue("empty.log"), context.StringValue("text/plain")},
@@ -671,7 +672,7 @@ func TestResultsWithProjectionsWithMimeType4(t *testing.T) {
 		{context.BooleanValue(false), context.StringValue("testresultswithprojections_c.txt"), context.StringValue("text/plain; charset=utf-8")},
 		{context.BooleanValue(false), context.StringValue("testresultswithprojections_d.txt"), context.StringValue("text/plain; charset=utf-8")},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsUsingIfBlank1(t *testing.T) {
@@ -684,11 +685,11 @@ func TestResultsWithProjectionsUsingIfBlank1(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue(".make"), context.StringValue("NA")},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsUsingIfBlank2(t *testing.T) {
@@ -701,11 +702,11 @@ func TestResultsWithProjectionsUsingIfBlank2(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue(".make"), context.StringValue("NA")},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsUsingStartsWith(t *testing.T) {
@@ -718,14 +719,14 @@ func TestResultsWithProjectionsUsingStartsWith(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("testresultswithprojections_a.log"), context.BooleanValue(true)},
 		{context.StringValue("testresultswithprojections_b.log"), context.BooleanValue(true)},
 		{context.StringValue("testresultswithprojections_c.txt"), context.BooleanValue(true)},
 		{context.StringValue("testresultswithprojections_d.txt"), context.BooleanValue(true)},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsUsingEndsWith(t *testing.T) {
@@ -738,14 +739,14 @@ func TestResultsWithProjectionsUsingEndsWith(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("testresultswithprojections_a.log"), context.BooleanValue(false)},
 		{context.StringValue("testresultswithprojections_b.log"), context.BooleanValue(false)},
 		{context.StringValue("testresultswithprojections_c.txt"), context.BooleanValue(true)},
 		{context.StringValue("testresultswithprojections_d.txt"), context.BooleanValue(true)},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsWithoutProperParametersToAFunction(t *testing.T) {
@@ -758,7 +759,7 @@ func TestResultsWithProjectionsWithoutProperParametersToAFunction(t *testing.T) 
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	_, err = NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	_, err = executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	if err == nil {
 		t.Fatalf("Expected an error on running a query with lower() without any parameter")
 	}

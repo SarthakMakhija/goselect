@@ -1,11 +1,12 @@
 //go:build integration
 // +build integration
 
-package executor
+package test
 
 import (
 	"goselect/parser"
 	"goselect/parser/context"
+	"goselect/parser/executor"
 	"testing"
 )
 
@@ -19,14 +20,14 @@ func TestResultsWithProjectionsIncludingCountFunction1(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("testresultswithprojections_a.log"), context.Uint32Value(4), context.Uint32Value(4)},
 		{context.StringValue("testresultswithprojections_b.log"), context.Uint32Value(4), context.Uint32Value(4)},
 		{context.StringValue("testresultswithprojections_c.txt"), context.Uint32Value(4), context.Uint32Value(4)},
 		{context.StringValue("testresultswithprojections_d.txt"), context.Uint32Value(4), context.Uint32Value(4)},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsIncludingAverageFunctionWithLimitReturningTheAverageForAllTheValues(t *testing.T) {
@@ -39,11 +40,11 @@ func TestResultsWithProjectionsIncludingAverageFunctionWithLimitReturningTheAver
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.Float64Value(32)},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsIncludingAverage(t *testing.T) {
@@ -56,11 +57,11 @@ func TestResultsWithProjectionsIncludingAverage(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("61 B")},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsIncludingAggregateFunctionInsideAScalar(t *testing.T) {
@@ -73,11 +74,11 @@ func TestResultsWithProjectionsIncludingAggregateFunctionInsideAScalar(t *testin
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("4")},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsIncludingNestedCountFunction1(t *testing.T) {
@@ -90,11 +91,11 @@ func TestResultsWithProjectionsIncludingNestedCountFunction1(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.Uint32Value(1)},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsIncludingNestedCountFunction2(t *testing.T) {
@@ -107,11 +108,11 @@ func TestResultsWithProjectionsIncludingNestedCountFunction2(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.Uint32Value(1)},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsIncludingNestedCountFunction3(t *testing.T) {
@@ -124,11 +125,11 @@ func TestResultsWithProjectionsIncludingNestedCountFunction3(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("1")},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsIncludingNestedAverageFunction1(t *testing.T) {
@@ -141,11 +142,11 @@ func TestResultsWithProjectionsIncludingNestedAverageFunction1(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.Float64Value(32)},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsIncludingNestedAverageFunction2(t *testing.T) {
@@ -158,11 +159,11 @@ func TestResultsWithProjectionsIncludingNestedAverageFunction2(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.Uint32Value(1)},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsIncludingNestedAverageFunction3(t *testing.T) {
@@ -175,11 +176,11 @@ func TestResultsWithProjectionsIncludingNestedAverageFunction3(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.Float64Value(11)},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsIncludingNestedAverageFunctionWithoutAnyOrderBy(t *testing.T) {
@@ -192,11 +193,11 @@ func TestResultsWithProjectionsIncludingNestedAverageFunctionWithoutAnyOrderBy(t
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.Float64Value(11)},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsIncludingCountDistinct1(t *testing.T) {
@@ -209,11 +210,11 @@ func TestResultsWithProjectionsIncludingCountDistinct1(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.Uint32Value(2)},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsIncludingCountDistinct2(t *testing.T) {
@@ -226,11 +227,11 @@ func TestResultsWithProjectionsIncludingCountDistinct2(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.Uint32Value(1)},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsIncludingSum1(t *testing.T) {
@@ -243,11 +244,11 @@ func TestResultsWithProjectionsIncludingSum1(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.Float64Value(16)},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsIncludingSum2(t *testing.T) {
@@ -260,11 +261,11 @@ func TestResultsWithProjectionsIncludingSum2(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.Float64Value(2)},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsIncludingMin1(t *testing.T) {
@@ -277,11 +278,11 @@ func TestResultsWithProjectionsIncludingMin1(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("TestResultsWithProjections_A.log")},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsIncludingMin2(t *testing.T) {
@@ -294,11 +295,11 @@ func TestResultsWithProjectionsIncludingMin2(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.IntValue(32)},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsIncludingMax1(t *testing.T) {
@@ -311,11 +312,11 @@ func TestResultsWithProjectionsIncludingMax1(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("TestResultsWithProjections_D.txt")},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsIncludingMax2(t *testing.T) {
@@ -328,11 +329,11 @@ func TestResultsWithProjectionsIncludingMax2(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.IntValue(32)},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsWithMimeTypeAndCountDistinct(t *testing.T) {
@@ -345,11 +346,11 @@ func TestResultsWithProjectionsWithMimeTypeAndCountDistinct(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.Uint32Value(3)},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsWithMimeTypeAndMin(t *testing.T) {
@@ -362,11 +363,11 @@ func TestResultsWithProjectionsWithMimeTypeAndMin(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("NA")},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsIncludingAggregateFunctionAndWhereClause1(t *testing.T) {
@@ -379,11 +380,11 @@ func TestResultsWithProjectionsIncludingAggregateFunctionAndWhereClause1(t *test
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.Uint32Value(3)},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsIncludingAggregateFunctionAndWhereClause2(t *testing.T) {
@@ -396,11 +397,11 @@ func TestResultsWithProjectionsIncludingAggregateFunctionAndWhereClause2(t *test
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.Uint32Value(7)},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }
 
 func TestResultsWithProjectionsIncludingAggregateFunctionAndWhereClause3(t *testing.T) {
@@ -413,9 +414,9 @@ func TestResultsWithProjectionsIncludingAggregateFunctionAndWhereClause3(t *test
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
-	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("Empty.log")},
 	}
-	assertMatch(t, expected, queryResults)
+	executor.AssertMatch(t, expected, queryResults)
 }

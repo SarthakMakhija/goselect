@@ -1,9 +1,10 @@
 //go:build integration
 // +build integration
 
-package parser
+package test
 
 import (
+	"goselect/parser"
 	"goselect/parser/context"
 	"goselect/parser/order"
 	"reflect"
@@ -11,14 +12,14 @@ import (
 )
 
 func TestParsesAnEmptyQueryWithAnError(t *testing.T) {
-	_, err := NewParser("", context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	_, err := parser.NewParser("", context.NewContext(context.NewFunctions(), context.NewAttributes()))
 	if err == nil {
 		t.Fatalf("Expected an error while parsing an empty query")
 	}
 }
 
 func TestParsesANonSelectQueryWithAnError(t *testing.T) {
-	parser, _ := NewParser("delete from ~", context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	parser, _ := parser.NewParser("delete from ~", context.NewContext(context.NewFunctions(), context.NewAttributes()))
 	_, err := parser.Parse()
 
 	if err == nil {
@@ -27,7 +28,7 @@ func TestParsesANonSelectQueryWithAnError(t *testing.T) {
 }
 
 func TestParsesASelectQueryWithAnErrorInProjection(t *testing.T) {
-	parser, _ := NewParser("select from .", context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	parser, _ := parser.NewParser("select from .", context.NewContext(context.NewFunctions(), context.NewAttributes()))
 	_, err := parser.Parse()
 
 	if err == nil {
@@ -36,7 +37,7 @@ func TestParsesASelectQueryWithAnErrorInProjection(t *testing.T) {
 }
 
 func TestParsesASelectQueryWithAnErrorInSource(t *testing.T) {
-	parser, _ := NewParser("select name from ", context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	parser, _ := parser.NewParser("select name from ", context.NewContext(context.NewFunctions(), context.NewAttributes()))
 	_, err := parser.Parse()
 
 	if err == nil {
@@ -45,7 +46,7 @@ func TestParsesASelectQueryWithAnErrorInSource(t *testing.T) {
 }
 
 func TestParsesASelectQueryWithAnErrorBecauseOfTypo(t *testing.T) {
-	parser, _ := NewParser("select name from . were eq(1,1)", context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	parser, _ := parser.NewParser("select name from . were eq(1,1)", context.NewContext(context.NewFunctions(), context.NewAttributes()))
 	_, err := parser.Parse()
 
 	if err == nil {
@@ -54,7 +55,7 @@ func TestParsesASelectQueryWithAnErrorBecauseOfTypo(t *testing.T) {
 }
 
 func TestParsesASelectQueryWithAnErrorInWhere(t *testing.T) {
-	parser, _ := NewParser("select name from . where", context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	parser, _ := parser.NewParser("select name from . where", context.NewContext(context.NewFunctions(), context.NewAttributes()))
 	_, err := parser.Parse()
 
 	if err == nil {
@@ -63,7 +64,7 @@ func TestParsesASelectQueryWithAnErrorInWhere(t *testing.T) {
 }
 
 func TestParsesASelectQueryWithAnErrorInOrderBy(t *testing.T) {
-	parser, _ := NewParser("select name from . where eq(1,1) order", context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	parser, _ := parser.NewParser("select name from . where eq(1,1) order", context.NewContext(context.NewFunctions(), context.NewAttributes()))
 	_, err := parser.Parse()
 
 	if err == nil {
@@ -72,7 +73,7 @@ func TestParsesASelectQueryWithAnErrorInOrderBy(t *testing.T) {
 }
 
 func TestParsesASelectQueryWithAnErrorInLimit(t *testing.T) {
-	parser, _ := NewParser("select name from . where eq(1,1) order by 1 limit", context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	parser, _ := parser.NewParser("select name from . where eq(1,1) order by 1 limit", context.NewContext(context.NewFunctions(), context.NewAttributes()))
 	_, err := parser.Parse()
 
 	if err == nil {
@@ -81,7 +82,7 @@ func TestParsesASelectQueryWithAnErrorInLimit(t *testing.T) {
 }
 
 func TestParsesAQueryIntoAnASTWithASingleProjection(t *testing.T) {
-	parser, _ := NewParser("SELECT name from ~", context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	parser, _ := parser.NewParser("SELECT name from ~", context.NewContext(context.NewFunctions(), context.NewAttributes()))
 	selectStatement, _ := parser.Parse()
 
 	totalProjections := selectStatement.Projections.Count()
@@ -99,7 +100,7 @@ func TestParsesAQueryIntoAnASTWithASingleProjection(t *testing.T) {
 }
 
 func TestParsesAQueryIntoAnASTWithMultipleProjections(t *testing.T) {
-	parser, _ := NewParser("SELECT name, lower(name) from ~", context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	parser, _ := parser.NewParser("SELECT name, lower(name) from ~", context.NewContext(context.NewFunctions(), context.NewAttributes()))
 	selectStatement, _ := parser.Parse()
 
 	totalProjections := selectStatement.Projections.Count()
@@ -117,7 +118,7 @@ func TestParsesAQueryIntoAnASTWithMultipleProjections(t *testing.T) {
 }
 
 func TestParsesAQueryIntoAnASTWithoutAWhereClause(t *testing.T) {
-	parser, _ := NewParser("SELECT name, lower(name) from ~", context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	parser, _ := parser.NewParser("SELECT name, lower(name) from ~", context.NewContext(context.NewFunctions(), context.NewAttributes()))
 	selectStatement, _ := parser.Parse()
 
 	where := selectStatement.Where
@@ -127,7 +128,7 @@ func TestParsesAQueryIntoAnASTWithoutAWhereClause(t *testing.T) {
 }
 
 func TestParsesAQueryIntoAnASTWithWhereClause(t *testing.T) {
-	parser, _ := NewParser("SELECT name, lower(name) from ~ where contains(lower(name), log)", context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	parser, _ := parser.NewParser("SELECT name, lower(name) from ~ where contains(lower(name), log)", context.NewContext(context.NewFunctions(), context.NewAttributes()))
 	selectStatement, _ := parser.Parse()
 
 	totalProjections := selectStatement.Projections.Count()
@@ -150,7 +151,7 @@ func TestParsesAQueryIntoAnASTWithWhereClause(t *testing.T) {
 }
 
 func TestParsesAQueryIntoAnASTWithAnOrderBy(t *testing.T) {
-	parser, _ := NewParser("SELECT name, upper(lower(name)) from ~ Order by 1", context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	parser, _ := parser.NewParser("SELECT name, upper(lower(name)) from ~ Order by 1", context.NewContext(context.NewFunctions(), context.NewAttributes()))
 	selectStatement, _ := parser.Parse()
 
 	totalProjections := selectStatement.Projections.Count()
@@ -177,7 +178,7 @@ func TestParsesAQueryIntoAnASTWithAnOrderBy(t *testing.T) {
 }
 
 func TestParsesAQueryIntoAnASTWithLimit(t *testing.T) {
-	parser, _ := NewParser("SELECT name, lower(name) from ~ Order by 2 Limit 10", context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	parser, _ := parser.NewParser("SELECT name, lower(name) from ~ Order by 2 Limit 10", context.NewContext(context.NewFunctions(), context.NewAttributes()))
 	selectStatement, _ := parser.Parse()
 
 	totalProjections := selectStatement.Projections.Count()
@@ -211,7 +212,7 @@ func TestParsesAQueryIntoAnASTWithLimit(t *testing.T) {
 }
 
 func TestParsesAQueryIntoAnASTWithLimitWithoutAnyOrdering(t *testing.T) {
-	parser, _ := NewParser("SELECT name, lower(name) from ~ Limit 10", context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	parser, _ := parser.NewParser("SELECT name, lower(name) from ~ Limit 10", context.NewContext(context.NewFunctions(), context.NewAttributes()))
 	selectStatement, _ := parser.Parse()
 
 	totalProjections := selectStatement.Projections.Count()
@@ -236,7 +237,7 @@ func TestParsesAQueryIntoAnASTWithLimitWithoutAnyOrdering(t *testing.T) {
 }
 
 func TestParsesAQueryIntoAnASTWithMultipleProjectionsInCaseInsensitiveManner(t *testing.T) {
-	parser, _ := NewParser("SELECT NAME, LOWER(NAME) FROM ./resources", context.NewContext(context.NewFunctions(), context.NewAttributes()))
+	parser, _ := parser.NewParser("SELECT NAME, LOWER(NAME) FROM ../resources", context.NewContext(context.NewFunctions(), context.NewAttributes()))
 	selectStatement, _ := parser.Parse()
 
 	totalProjections := selectStatement.Projections.Count()

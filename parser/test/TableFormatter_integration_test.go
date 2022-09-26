@@ -1,12 +1,13 @@
 //go:build integration
 // +build integration
 
-package writer
+package test
 
 import (
 	"goselect/parser"
 	"goselect/parser/context"
 	"goselect/parser/executor"
+	"goselect/parser/writer"
 	"strings"
 	"testing"
 )
@@ -23,7 +24,7 @@ func TestTableFormatterWithoutWidthOptions(t *testing.T) {
 	}
 	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 
-	str := NewTableFormatter().Format(selectQuery.Projections, queryResults)
+	str := writer.NewTableFormatter().Format(selectQuery.Projections, queryResults)
 	lower := strings.ToLower(str)
 	if !strings.Contains(lower, "lower(name)") {
 		t.Fatalf("Expected lower(name) to be contained in the string but was not, received string is %v", str)
@@ -51,7 +52,7 @@ func TestTableFormatterWithWidthOptions(t *testing.T) {
 	}
 	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 
-	str := NewTableFormatterWithWidthOptions(NewAttributeWidthOptions(6, 15)).Format(selectQuery.Projections, queryResults)
+	str := writer.NewTableFormatterWithWidthOptions(writer.NewAttributeWidthOptions(6, 15)).Format(selectQuery.Projections, queryResults)
 	lower := strings.ToLower(str)
 	if !strings.Contains(lower, "lower(name)") {
 		t.Fatalf("Expected lower(name) to be contained in the string but was not, received string is %v", str)

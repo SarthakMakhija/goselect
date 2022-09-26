@@ -16,7 +16,7 @@ func TestEvaluatingRowAllAttributesThatAreFullyEvaluated(t *testing.T) {
 	rows := emptyRows(context.NewFunctions(), 1)
 	rows.addRow([]context.Value{context.StringValue("someValue")}, []bool{true}, []*expression.Expression{})
 
-	attributes := rows.atIndex(0).AllAttributes()
+	attributes := rows.AtIndex(0).AllAttributes()
 	expected := []context.Value{context.StringValue("someValue")}
 
 	if !reflect.DeepEqual(expected, attributes) {
@@ -29,7 +29,7 @@ func TestEvaluatingRowAtAnIndexGreaterThanTotalNumberOfRows(t *testing.T) {
 	rows := emptyRows(context.NewFunctions(), 1)
 	rows.addRow([]context.Value{context.StringValue("someValue")}, []bool{true}, []*expression.Expression{})
 
-	row := rows.atIndex(1)
+	row := rows.AtIndex(1)
 	if len(row.attributeValues) != 0 {
 		t.Fatalf("Expected no attributes given row is accessed at an index beyond the total number of rows")
 	}
