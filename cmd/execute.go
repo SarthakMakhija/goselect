@@ -67,7 +67,26 @@ var executeCmd = &cobra.Command{
 			case "html":
 				return writer.NewHtmlFormatter(), strings.ToLower(exportFormat), nil
 			case "table":
-				return writer.NewTableFormatter(), strings.ToLower(exportFormat), nil
+				minWidth, _ := cmd.Flags().GetUint16("minWidth")
+				maxWidth, _ := cmd.Flags().GetUint16("maxWidth")
+				if minWidth == 0 && maxWidth == 0 {
+					return writer.NewTableFormatter(), strings.ToLower(exportFormat), nil
+				}
+				if minWidth == 0 && maxWidth != 0 {
+					return writer.NewTableFormatterWithWidthOptions(writer.NewAttributeWidthOptions(
+						writer.UnspecifiedMinWidth,
+						int(maxWidth),
+					)), strings.ToLower(exportFormat), nil
+				}
+				if minWidth != 0 && maxWidth == 0 {
+					return writer.NewTableFormatterWithWidthOptions(writer.NewAttributeWidthOptions(
+						int(minWidth),
+						writer.UnspecifiedMaxWidth,
+					)), strings.ToLower(exportFormat), nil
+				}
+				return writer.NewTableFormatterWithWidthOptions(
+					writer.NewAttributeWidthOptions(int(minWidth), int(maxWidth)),
+				), strings.ToLower(exportFormat), nil
 			default:
 				return nil, "", fmt.Errorf(ErrorMessageInvalidExportFormat, "json, html or table")
 			}
@@ -159,5 +178,17 @@ func init() {
 		"p",
 		"",
 		"specify the directory path to export the results. Use --path=<directoryPath>",
+	)
+	rootCmd.PersistentFlags().Uint16P(
+		"minWidth",
+		"m",
+		0,
+		"specify the minimum character length to be used for each attribute. This flag is relevant only for the table format and will be needed only if the default formatting breaks. For the best results, use minWidth and maxWidth together. Use --minWidth=<value greater than zero>",
+	)
+	rootCmd.PersistentFlags().Uint16P(
+		"maxWidth",
+		"x",
+		0,
+		"specify the maximum character length to be used for each attribute. This flag is relevant only for the table format and will be needed only if the default formatting breaks. For the best results, use minWidth and maxWidth together. Use --maxWidth=<value greater than zero>",
 	)
 }

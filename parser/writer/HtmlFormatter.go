@@ -63,7 +63,7 @@ func (htmlFormatter HtmlFormatter) beginTableContent(html *strings.Builder, rows
 func (htmlFormatter HtmlFormatter) beginFooterRow(html *strings.Builder, projections *projection.Projections, rows *executor.EvaluatingRows) {
 	htmlFormatter.beginRow(html)
 	html.WriteString(fmt.Sprintf("<td colspan=\"%v\" style=\"border: 1px solid black\">", projections.Count()))
-	html.WriteString(fmt.Sprintf("Total Rows: %v", rows.Count()))
+	html.WriteString(fmt.Sprintf("Rows: %v", rows.Count()))
 	html.WriteString("</td>")
 	htmlFormatter.closeRow(html)
 }

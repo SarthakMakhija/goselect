@@ -10,8 +10,10 @@ import (
 )
 
 const (
-	minWidth = 10
-	maxWidth = 150
+	minWidth            = 10
+	maxWidth            = 150
+	UnspecifiedMinWidth = 6
+	UnspecifiedMaxWidth = 30
 )
 
 type TableFormatter struct {
@@ -92,7 +94,7 @@ func (tableFormatter *TableFormatter) addContent(rows *executor.EvaluatingRows) 
 }
 
 func (tableFormatter *TableFormatter) addFooter(rows *executor.EvaluatingRows) {
-	tableFormatter.tableWriter.AppendFooter(table.Row{fmt.Sprintf("Total Rows: %v", rows.Count())})
+	tableFormatter.tableWriter.AppendFooter(table.Row{fmt.Sprintf("Rows: %v", rows.Count())})
 }
 
 func (tableFormatter *TableFormatter) setHeaderFooterDefaultCase() {

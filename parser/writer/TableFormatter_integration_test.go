@@ -34,7 +34,7 @@ func TestTableFormatterWithoutWidthOptions(t *testing.T) {
 	if !strings.Contains(lower, "testresultswithprojections_b.log") {
 		t.Fatalf("Expected testresultswithprojections_b.log to be contained in the string but was not, received string is %v", str)
 	}
-	if !strings.Contains(lower, "total rows: 2") {
+	if !strings.Contains(lower, "rows: 2") {
 		t.Fatalf("Expected Total Rows: 2 to be contained in the string but was not, received string is %v", str)
 	}
 }
@@ -68,7 +68,7 @@ func TestTableFormatterWithWidthOptions(t *testing.T) {
 	if !strings.Contains(lower, "projections_b.l") {
 		t.Fatalf("Expected projections_b.l to be contained in the string but was not, received string is %v", str)
 	}
-	if !strings.Contains(lower, "total rows: 2") {
+	if !strings.Contains(lower, "rows: 2") {
 		t.Fatalf("Expected Total Rows: 2 to be contained in the string but was not, received string is %v", str)
 	}
 }
