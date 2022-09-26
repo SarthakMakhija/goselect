@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"goselect/parser/error/messages"
+	"os"
 	"strings"
 	"testing"
 )
@@ -206,5 +207,97 @@ func TestExecutesWithHtmlExport(t *testing.T) {
 				contents,
 			)
 		}
+	}
+}
+
+func TestAttemptsToExecuteWithTableFormatExportToAFile(t *testing.T) {
+	rootCmd.SetArgs([]string{"execute", "--query", "select name from ./resources/test/ order by 1", "-f", "table", "-p", "."})
+	buffer := new(bytes.Buffer)
+	rootCmd.SetOut(buffer)
+
+	_ = rootCmd.Execute()
+
+	contents := buffer.String()
+	expected := ErrorMessageAttemptedToExportTableToFile
+
+	if !strings.Contains(contents, expected) {
+		t.Fatalf(
+			"Expected an error %v while trying to export the result in table format to file %v",
+			expected,
+			contents,
+		)
+	}
+}
+
+func TestAttemptsToExecuteWithExportInANonExistingDirectory(t *testing.T) {
+	rootCmd.SetArgs([]string{"execute", "--query", "select name from ./resources/test/ order by 1", "-f", "json", "-p", "/123"})
+	buffer := new(bytes.Buffer)
+	rootCmd.SetOut(buffer)
+
+	_ = rootCmd.Execute()
+
+	contents := buffer.String()
+	expected := "stat /123: no such file or directory"
+
+	if !strings.Contains(contents, expected) {
+		t.Fatalf(
+			"Expected an error %v while trying to export the result in a non-existing directory %v",
+			expected,
+			contents,
+		)
+	}
+}
+
+func TestAttemptsToExecuteWithExportInAFileInsteadOfADirectory(t *testing.T) {
+	rootCmd.SetArgs([]string{"execute", "--query", "select name from ./resources/test/ order by 1", "-f", "json", "-p", "./resources/test/TestResultsWithProjections_A.log"})
+	buffer := new(bytes.Buffer)
+	rootCmd.SetOut(buffer)
+
+	_ = rootCmd.Execute()
+
+	contents := buffer.String()
+	expected := ErrorMessageExpectedFilePathToBeADirectory
+
+	if !strings.Contains(contents, expected) {
+		t.Fatalf(
+			"Expected an error %v while trying to export the result in a file instead of a directory %v",
+			expected,
+			contents,
+		)
+	}
+}
+
+func TestExecuteWithExportToAFileInADirectory(t *testing.T) {
+	directoryName, _ := os.MkdirTemp(".", "export-result")
+	defer os.RemoveAll(directoryName)
+
+	rootCmd.SetArgs([]string{"execute", "--query", "select name from ./resources/test/ order by 1", "-f", "json", "-p", directoryName})
+	buffer := new(bytes.Buffer)
+	rootCmd.SetOut(buffer)
+
+	_ = rootCmd.Execute()
+
+	fileName := fmt.Sprintf("%v/results.json", directoryName)
+	_, err := os.Open(fileName)
+	if err != nil {
+		t.Fatalf("Expected file %v to exist but received an err %v", fileName, err)
+	}
+}
+
+func TestExecuteWithExportToAFileInADirectoryWithPathSeparator(t *testing.T) {
+	directoryName, _ := os.MkdirTemp(".", "export-result")
+	defer os.RemoveAll(directoryName)
+
+	withSeparator := directoryName + string(os.PathSeparator)
+	rootCmd.SetArgs([]string{"execute", "--query", "select name from ./resources/test/ order by 1", "-f", "json", "-p", withSeparator})
+	buffer := new(bytes.Buffer)
+	rootCmd.SetOut(buffer)
+
+	_ = rootCmd.Execute()
+
+	fileName := fmt.Sprintf("%v/results.json", directoryName)
+	_, err := os.Open(fileName)
+	if err != nil {
+		t.Fatalf("Expected file %v to exist but received an err %v", fileName, err)
 	}
 }
