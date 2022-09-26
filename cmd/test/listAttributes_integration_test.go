@@ -1,21 +1,22 @@
 //go:build integration
 // +build integration
 
-package cmd
+package test
 
 import (
 	"bytes"
+	"goselect/cmd"
 	"goselect/parser/context"
 	"strings"
 	"testing"
 )
 
 func TestAttributes(t *testing.T) {
-	rootCmd.SetArgs([]string{"listAttributes"})
+	cmd.GetRootCommand().SetArgs([]string{"listAttributes"})
 	buffer := new(bytes.Buffer)
-	rootCmd.SetOut(buffer)
+	cmd.GetRootCommand().SetOut(buffer)
 
-	_ = rootCmd.Execute()
+	_ = cmd.GetRootCommand().Execute()
 	contents := buffer.String()
 
 	aliasesByAttribute := context.NewAttributes().AllAttributeWithAliases()

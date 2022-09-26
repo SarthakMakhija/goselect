@@ -59,3 +59,7 @@ func Execute() {
 		os.Exit(1)
 	}
 }
+
+func GetRootCommand() *cobra.Command {
+	return rootCmd
+}

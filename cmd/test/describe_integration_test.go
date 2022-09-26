@@ -1,21 +1,22 @@
 //go:build integration
 // +build integration
 
-package cmd
+package test
 
 import (
 	"bytes"
+	"goselect/cmd"
 	"goselect/parser/context"
 	"strings"
 	"testing"
 )
 
 func TestDescribeAFunction(t *testing.T) {
-	rootCmd.SetArgs([]string{"describe", "--term", "lower"})
+	cmd.GetRootCommand().SetArgs([]string{"describe", "--term", "lower"})
 	buffer := new(bytes.Buffer)
-	rootCmd.SetOut(buffer)
+	cmd.GetRootCommand().SetOut(buffer)
 
-	_ = rootCmd.Execute()
+	_ = cmd.GetRootCommand().Execute()
 	contents := buffer.String()
 	expectedDescription := context.NewFunctions().DescriptionOf("lower")
 
@@ -25,11 +26,11 @@ func TestDescribeAFunction(t *testing.T) {
 }
 
 func TestDescribeAnAttribute(t *testing.T) {
-	rootCmd.SetArgs([]string{"describe", "--term", "userId"})
+	cmd.GetRootCommand().SetArgs([]string{"describe", "--term", "userId"})
 	buffer := new(bytes.Buffer)
-	rootCmd.SetOut(buffer)
+	cmd.GetRootCommand().SetOut(buffer)
 
-	_ = rootCmd.Execute()
+	_ = cmd.GetRootCommand().Execute()
 	contents := buffer.String()
 	expectedDescription := context.NewAttributes().DescriptionOf("userId")
 
@@ -39,29 +40,29 @@ func TestDescribeAnAttribute(t *testing.T) {
 }
 
 func TestInvalidTerm(t *testing.T) {
-	rootCmd.SetArgs([]string{"describe", "--term", "unknown"})
+	cmd.GetRootCommand().SetArgs([]string{"describe", "--term", "unknown"})
 	buffer := new(bytes.Buffer)
-	rootCmd.SetOut(buffer)
+	cmd.GetRootCommand().SetOut(buffer)
 
-	_ = rootCmd.Execute()
+	_ = cmd.GetRootCommand().Execute()
 	contents := buffer.String()
-	expected := ErrorMessageInvalidTerm
+	expected := cmd.ErrorMessageInvalidTerm
 
 	if !strings.Contains(contents, expected) {
-		t.Fatalf("Expected an error %v while trying to get the description of %v, received %v", ErrorMessageInvalidTerm, "unknown", contents)
+		t.Fatalf("Expected an error %v while trying to get the description of %v, received %v", cmd.ErrorMessageInvalidTerm, "unknown", contents)
 	}
 }
 
 func TestBlankTerm(t *testing.T) {
-	rootCmd.SetArgs([]string{"describe", "--term", ""})
+	cmd.GetRootCommand().SetArgs([]string{"describe", "--term", ""})
 	buffer := new(bytes.Buffer)
-	rootCmd.SetOut(buffer)
+	cmd.GetRootCommand().SetOut(buffer)
 
-	_ = rootCmd.Execute()
+	_ = cmd.GetRootCommand().Execute()
 	contents := buffer.String()
-	expected := ErrorMessageEmptyTerm
+	expected := cmd.ErrorMessageEmptyTerm
 
 	if !strings.Contains(contents, expected) {
-		t.Fatalf("Expected an error %v while trying to get the description without a term value, received %v", ErrorMessageEmptyTerm, contents)
+		t.Fatalf("Expected an error %v while trying to get the description without a term value, received %v", cmd.ErrorMessageEmptyTerm, contents)
 	}
 }

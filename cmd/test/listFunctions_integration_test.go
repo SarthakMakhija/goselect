@@ -1,21 +1,22 @@
 //go:build integration
 // +build integration
 
-package cmd
+package test
 
 import (
 	"bytes"
+	"goselect/cmd"
 	"goselect/parser/context"
 	"strings"
 	"testing"
 )
 
 func TestFunctions(t *testing.T) {
-	rootCmd.SetArgs([]string{"listFunctions"})
+	cmd.GetRootCommand().SetArgs([]string{"listFunctions"})
 	buffer := new(bytes.Buffer)
-	rootCmd.SetOut(buffer)
+	cmd.GetRootCommand().SetOut(buffer)
 
-	_ = rootCmd.Execute()
+	_ = cmd.GetRootCommand().Execute()
 	contents := buffer.String()
 
 	aliasesByFunction := context.NewFunctions().AllFunctionsWithAliases()

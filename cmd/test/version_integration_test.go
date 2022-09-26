@@ -1,20 +1,21 @@
 //go:build integration
 // +build integration
 
-package cmd
+package test
 
 import (
 	"bytes"
+	"goselect/cmd"
 	"strings"
 	"testing"
 )
 
 func TestVersion(t *testing.T) {
-	rootCmd.SetArgs([]string{"version"})
+	cmd.GetRootCommand().SetArgs([]string{"version"})
 	buffer := new(bytes.Buffer)
-	rootCmd.SetOut(buffer)
+	cmd.GetRootCommand().SetOut(buffer)
 
-	_ = rootCmd.Execute()
+	_ = cmd.GetRootCommand().Execute()
 
 	contents := buffer.String()
 	expectedVersion := "v0.0.4"

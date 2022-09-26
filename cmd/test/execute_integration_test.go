@@ -1,11 +1,12 @@
 //go:build integration
 // +build integration
 
-package cmd
+package test
 
 import (
 	"bytes"
 	"fmt"
+	"goselect/cmd"
 	"goselect/parser/error/messages"
 	"os"
 	"strings"
@@ -13,14 +14,14 @@ import (
 )
 
 func TestExecutesAQuery(t *testing.T) {
-	rootCmd.SetArgs([]string{"execute", "--query", "select name from ./resources/ order by 1"})
+	cmd.GetRootCommand().SetArgs([]string{"execute", "--query", "select name from ./resources/ order by 1"})
 	buffer := new(bytes.Buffer)
-	rootCmd.SetOut(buffer)
+	cmd.GetRootCommand().SetOut(buffer)
 
-	_ = rootCmd.Execute()
+	_ = cmd.GetRootCommand().Execute()
 
 	contents := buffer.String()
-	expected := []string{"TestResultsWithProjections_A.log", "TestResultsWithProjections_B.log", "TestResultsWithProjections_C.txt", "test"}
+	expected := []string{"TestResultsWithProjections_A.log", "TestResultsWithProjections_B.log", "TestResultsWithProjections_C.txt", "log"}
 
 	for _, name := range expected {
 		if !strings.Contains(contents, name) {
@@ -34,14 +35,14 @@ func TestExecutesAQuery(t *testing.T) {
 }
 
 func TestExecutesAQueryWithNestedTraversalOff(t *testing.T) {
-	rootCmd.SetArgs([]string{"execute", "--query", "select name from ./resources/ order by 1", "--nestedTraversal=false"})
+	cmd.GetRootCommand().SetArgs([]string{"execute", "--query", "select name from ./resources/ order by 1", "--nestedTraversal=false"})
 	buffer := new(bytes.Buffer)
-	rootCmd.SetOut(buffer)
+	cmd.GetRootCommand().SetOut(buffer)
 
-	_ = rootCmd.Execute()
+	_ = cmd.GetRootCommand().Execute()
 
 	contents := buffer.String()
-	expected := []string{"test"}
+	expected := []string{"log"}
 
 	for _, name := range expected {
 		if !strings.Contains(contents, name) {
@@ -66,11 +67,11 @@ func TestExecutesAQueryWithNestedTraversalOff(t *testing.T) {
 }
 
 func TestAttemptToExecuteAnEmptyQuery(t *testing.T) {
-	rootCmd.SetArgs([]string{"execute", "--query", ""})
+	cmd.GetRootCommand().SetArgs([]string{"execute", "--query", ""})
 	buffer := new(bytes.Buffer)
-	rootCmd.SetOut(buffer)
+	cmd.GetRootCommand().SetOut(buffer)
 
-	_ = rootCmd.Execute()
+	_ = cmd.GetRootCommand().Execute()
 
 	contents := buffer.String()
 	expected := messages.ErrorMessageEmptyQuery
@@ -85,11 +86,11 @@ func TestAttemptToExecuteAnEmptyQuery(t *testing.T) {
 }
 
 func TestAttemptToExecuteAnInvalidQuery1(t *testing.T) {
-	rootCmd.SetArgs([]string{"execute", "--query", "select from ."})
+	cmd.GetRootCommand().SetArgs([]string{"execute", "--query", "select from ."})
 	buffer := new(bytes.Buffer)
-	rootCmd.SetOut(buffer)
+	cmd.GetRootCommand().SetOut(buffer)
 
-	_ = rootCmd.Execute()
+	_ = cmd.GetRootCommand().Execute()
 
 	contents := buffer.String()
 	expected := messages.ErrorMessageExpectedExpressionInProjection
@@ -104,11 +105,11 @@ func TestAttemptToExecuteAnInvalidQuery1(t *testing.T) {
 }
 
 func TestAttemptToExecuteAnInvalidQuery2(t *testing.T) {
-	rootCmd.SetArgs([]string{"execute", "--query", "select lower() from ."})
+	cmd.GetRootCommand().SetArgs([]string{"execute", "--query", "select lower() from ."})
 	buffer := new(bytes.Buffer)
-	rootCmd.SetOut(buffer)
+	cmd.GetRootCommand().SetOut(buffer)
 
-	_ = rootCmd.Execute()
+	_ = cmd.GetRootCommand().Execute()
 
 	contents := buffer.String()
 
@@ -122,11 +123,11 @@ func TestAttemptToExecuteAnInvalidQuery2(t *testing.T) {
 }
 
 func TestExecutesWithMinWidthQuery(t *testing.T) {
-	rootCmd.SetArgs([]string{"execute", "--query", "select name from ./resources/test/ order by 1", "--minWidth", "10"})
+	cmd.GetRootCommand().SetArgs([]string{"execute", "--query", "select name from ./resources/log/ order by 1", "--minWidth", "10"})
 	buffer := new(bytes.Buffer)
-	rootCmd.SetOut(buffer)
+	cmd.GetRootCommand().SetOut(buffer)
 
-	_ = rootCmd.Execute()
+	_ = cmd.GetRootCommand().Execute()
 
 	contents := buffer.String()
 	expected := []string{"TestResultsWithProjections_A.l", "og", "TestResultsWithProjections_B.l", "TestResultsWithProjections_C.t", "xt"}
@@ -143,11 +144,11 @@ func TestExecutesWithMinWidthQuery(t *testing.T) {
 }
 
 func TestExecutesWithMaxWidthQuery(t *testing.T) {
-	rootCmd.SetArgs([]string{"execute", "--query", "select name from ./resources/test/ order by 1", "--maxWidth", "100", "--minWidth", "0"})
+	cmd.GetRootCommand().SetArgs([]string{"execute", "--query", "select name from ./resources/log/ order by 1", "--maxWidth", "100", "--minWidth", "0"})
 	buffer := new(bytes.Buffer)
-	rootCmd.SetOut(buffer)
+	cmd.GetRootCommand().SetOut(buffer)
 
-	_ = rootCmd.Execute()
+	_ = cmd.GetRootCommand().Execute()
 
 	contents := buffer.String()
 	expected := []string{"TestResultsWithProjections_A.log", "TestResultsWithProjections_B.log", "TestResultsWithProjections_C.txt"}
@@ -164,11 +165,11 @@ func TestExecutesWithMaxWidthQuery(t *testing.T) {
 }
 
 func TestExecutesWithMinMaxWidthQuery(t *testing.T) {
-	rootCmd.SetArgs([]string{"execute", "--query", "select name from ./resources/test/ order by 1", "--minWidth", "6", "--maxWidth", "10"})
+	cmd.GetRootCommand().SetArgs([]string{"execute", "--query", "select name from ./resources/log/ order by 1", "--minWidth", "6", "--maxWidth", "10"})
 	buffer := new(bytes.Buffer)
-	rootCmd.SetOut(buffer)
+	cmd.GetRootCommand().SetOut(buffer)
 
-	_ = rootCmd.Execute()
+	_ = cmd.GetRootCommand().Execute()
 
 	contents := buffer.String()
 	expected := []string{"TestResult", "sWithProje", "ctions_A.l", "og", "ctions_B.l", "ctions_C.t", "xt"}
@@ -185,14 +186,14 @@ func TestExecutesWithMinMaxWidthQuery(t *testing.T) {
 }
 
 func TestExecutesWithInvalidExportFormat(t *testing.T) {
-	rootCmd.SetArgs([]string{"execute", "--query", "select name from ./resources/test/ order by 1", "-f", "unknown"})
+	cmd.GetRootCommand().SetArgs([]string{"execute", "--query", "select name from ./resources/log/ order by 1", "-f", "unknown"})
 	buffer := new(bytes.Buffer)
-	rootCmd.SetOut(buffer)
+	cmd.GetRootCommand().SetOut(buffer)
 
-	_ = rootCmd.Execute()
+	_ = cmd.GetRootCommand().Execute()
 
 	contents := buffer.String()
-	expected := fmt.Sprintf(ErrorMessageInvalidExportFormat, supportedFormats())
+	expected := fmt.Sprintf(cmd.ErrorMessageInvalidExportFormat, cmd.SupportedExportFormats())
 
 	if !strings.Contains(contents, expected) {
 		t.Fatalf(
@@ -204,11 +205,11 @@ func TestExecutesWithInvalidExportFormat(t *testing.T) {
 }
 
 func TestExecutesWithJsonExport(t *testing.T) {
-	rootCmd.SetArgs([]string{"execute", "--query", "select name from ./resources/test/ order by 1", "-f", "json"})
+	cmd.GetRootCommand().SetArgs([]string{"execute", "--query", "select name from ./resources/log/ order by 1", "-f", "json"})
 	buffer := new(bytes.Buffer)
-	rootCmd.SetOut(buffer)
+	cmd.GetRootCommand().SetOut(buffer)
 
-	_ = rootCmd.Execute()
+	_ = cmd.GetRootCommand().Execute()
 
 	contents := buffer.String()
 	expected := []string{"TestResultsWithProjections_A.log", "TestResultsWithProjections_B.log", "TestResultsWithProjections_C.txt"}
@@ -225,11 +226,11 @@ func TestExecutesWithJsonExport(t *testing.T) {
 }
 
 func TestExecutesWithHtmlExport(t *testing.T) {
-	rootCmd.SetArgs([]string{"execute", "--query", "select name from ./resources/test/ order by 1", "-f", "html"})
+	cmd.GetRootCommand().SetArgs([]string{"execute", "--query", "select name from ./resources/log/ order by 1", "-f", "html"})
 	buffer := new(bytes.Buffer)
-	rootCmd.SetOut(buffer)
+	cmd.GetRootCommand().SetOut(buffer)
 
-	_ = rootCmd.Execute()
+	_ = cmd.GetRootCommand().Execute()
 
 	contents := buffer.String()
 	expected := []string{"TestResultsWithProjections_A.log", "TestResultsWithProjections_B.log", "TestResultsWithProjections_C.txt"}
@@ -246,14 +247,14 @@ func TestExecutesWithHtmlExport(t *testing.T) {
 }
 
 func TestAttemptsToExecuteWithTableFormatExportToAFile(t *testing.T) {
-	rootCmd.SetArgs([]string{"execute", "--query", "select name from ./resources/test/ order by 1", "-f", "table", "-p", "."})
+	cmd.GetRootCommand().SetArgs([]string{"execute", "--query", "select name from ./resources/log/ order by 1", "-f", "table", "-p", "."})
 	buffer := new(bytes.Buffer)
-	rootCmd.SetOut(buffer)
+	cmd.GetRootCommand().SetOut(buffer)
 
-	_ = rootCmd.Execute()
+	_ = cmd.GetRootCommand().Execute()
 
 	contents := buffer.String()
-	expected := ErrorMessageAttemptedToExportTableToFile
+	expected := cmd.ErrorMessageAttemptedToExportTableToFile
 
 	if !strings.Contains(contents, expected) {
 		t.Fatalf(
@@ -265,11 +266,11 @@ func TestAttemptsToExecuteWithTableFormatExportToAFile(t *testing.T) {
 }
 
 func TestAttemptsToExecuteWithExportInANonExistingDirectory(t *testing.T) {
-	rootCmd.SetArgs([]string{"execute", "--query", "select name from ./resources/test/ order by 1", "-f", "json", "-p", "/123"})
+	cmd.GetRootCommand().SetArgs([]string{"execute", "--query", "select name from ./resources/log/ order by 1", "-f", "json", "-p", "/123"})
 	buffer := new(bytes.Buffer)
-	rootCmd.SetOut(buffer)
+	cmd.GetRootCommand().SetOut(buffer)
 
-	_ = rootCmd.Execute()
+	_ = cmd.GetRootCommand().Execute()
 
 	contents := buffer.String()
 	expected := "stat /123: no such file or directory"
@@ -284,14 +285,14 @@ func TestAttemptsToExecuteWithExportInANonExistingDirectory(t *testing.T) {
 }
 
 func TestAttemptsToExecuteWithExportInAFileInsteadOfADirectory(t *testing.T) {
-	rootCmd.SetArgs([]string{"execute", "--query", "select name from ./resources/test/ order by 1", "-f", "json", "-p", "./resources/test/TestResultsWithProjections_A.log"})
+	cmd.GetRootCommand().SetArgs([]string{"execute", "--query", "select name from ./resources/log/ order by 1", "-f", "json", "-p", "./resources/log/TestResultsWithProjections_A.log"})
 	buffer := new(bytes.Buffer)
-	rootCmd.SetOut(buffer)
+	cmd.GetRootCommand().SetOut(buffer)
 
-	_ = rootCmd.Execute()
+	_ = cmd.GetRootCommand().Execute()
 
 	contents := buffer.String()
-	expected := ErrorMessageExpectedFilePathToBeADirectory
+	expected := cmd.ErrorMessageExpectedFilePathToBeADirectory
 
 	if !strings.Contains(contents, expected) {
 		t.Fatalf(
@@ -306,11 +307,11 @@ func TestExecuteWithExportToAFileInADirectory(t *testing.T) {
 	directoryName, _ := os.MkdirTemp(".", "export-result")
 	defer os.RemoveAll(directoryName)
 
-	rootCmd.SetArgs([]string{"execute", "--query", "select name from ./resources/test/ order by 1", "-f", "json", "-p", directoryName})
+	cmd.GetRootCommand().SetArgs([]string{"execute", "--query", "select name from ./resources/log/ order by 1", "-f", "json", "-p", directoryName})
 	buffer := new(bytes.Buffer)
-	rootCmd.SetOut(buffer)
+	cmd.GetRootCommand().SetOut(buffer)
 
-	_ = rootCmd.Execute()
+	_ = cmd.GetRootCommand().Execute()
 
 	fileName := fmt.Sprintf("%v/results.json", directoryName)
 	_, err := os.Open(fileName)
@@ -324,11 +325,11 @@ func TestExecuteWithExportToAFileInADirectoryWithPathSeparator(t *testing.T) {
 	defer os.RemoveAll(directoryName)
 
 	withSeparator := directoryName + string(os.PathSeparator)
-	rootCmd.SetArgs([]string{"execute", "--query", "select name from ./resources/test/ order by 1", "-f", "json", "-p", withSeparator})
+	cmd.GetRootCommand().SetArgs([]string{"execute", "--query", "select name from ./resources/log/ order by 1", "-f", "json", "-p", withSeparator})
 	buffer := new(bytes.Buffer)
-	rootCmd.SetOut(buffer)
+	cmd.GetRootCommand().SetOut(buffer)
 
-	_ = rootCmd.Execute()
+	_ = cmd.GetRootCommand().Execute()
 
 	fileName := fmt.Sprintf("%v/results.json", directoryName)
 	_, err := os.Open(fileName)

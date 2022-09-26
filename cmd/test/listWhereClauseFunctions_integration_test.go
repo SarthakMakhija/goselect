@@ -1,21 +1,22 @@
 //go:build integration
 // +build integration
 
-package cmd
+package test
 
 import (
 	"bytes"
+	"goselect/cmd"
 	"goselect/parser/context"
 	"strings"
 	"testing"
 )
 
 func TestWhereClauseFunctions(t *testing.T) {
-	rootCmd.SetArgs([]string{"listWhereClauseFunctions"})
+	cmd.GetRootCommand().SetArgs([]string{"listWhereClauseFunctions"})
 	buffer := new(bytes.Buffer)
-	rootCmd.SetOut(buffer)
+	cmd.GetRootCommand().SetOut(buffer)
 
-	_ = rootCmd.Execute()
+	_ = cmd.GetRootCommand().Execute()
 	contents := buffer.String()
 
 	aliasesByFunction := context.NewFunctions().AllFunctionsWithAliasesHavingTag("where")
