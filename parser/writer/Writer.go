@@ -24,12 +24,6 @@ func NewWriter(backingWriter io.Writer) *ConsoleWriter {
 	}
 }
 
-func NewConsoleWriter() *ConsoleWriter {
-	return &ConsoleWriter{
-		backingWriter: os.Stdout,
-	}
-}
-
 func NewFileWriter(filePath string) (*FileWriter, error) {
 	file, err := os.OpenFile(filePath, os.O_CREATE|os.O_RDWR, 0644)
 	if err != nil {
