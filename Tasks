@@ -11,7 +11,9 @@ Version 0.0.4 Release
 
 Version 0.0.5 Release
 
-1. Improving table formatter to handle the formatting for large number of columns
+1. Improving table formatter to handle the formatting for large number of columns: done
 2. Table formatter: header and footer should not be capitalized : done
-4. Adds -t as a flag alias for describe command
-3. Support for matching file size with units. For example, select * from . where gt(size, parsesize(15 Mb)) Or select * from . where gt(size, parsesize(15 Mib)) : done
+3. Adds -t as a flag alias for describe command: done
+4. Support for matching file size with units. For example, select * from . where gt(size, parsesize(15 Mb)) Or select * from . where gt(size, parsesize(15 Mib)) : done
+5. Remove --sorted: true
+6. Think about min width and max width shortcuts:
