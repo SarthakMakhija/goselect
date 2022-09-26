@@ -26,15 +26,15 @@ func newListTimeFormatsCommand() *cobra.Command {
 			tableWriter.SetStyle(table.StyleColoredBlackOnCyanWhite)
 			tableWriter.Style().Options.SeparateColumns = true
 
-			printHeader := func() {
+			appendHeader := func() {
 				tableWriter.AppendHeader(table.Row{"Format", "Id"})
 			}
-			printFormat := func(format context.FormatDefinition) {
+			appendFormat := func(format context.FormatDefinition) {
 				tableWriter.AppendRow(table.Row{format.Format, format.Id})
 			}
-			printFormats := func(formatDefinitions map[string]context.FormatDefinition) {
+			appendFormats := func(formatDefinitions map[string]context.FormatDefinition) {
 				for _, definition := range formatDefinitions {
-					printFormat(definition)
+					appendFormat(definition)
 				}
 			}
 			sortFormats := func(formatDefinitions map[string]context.FormatDefinition) []string {
@@ -48,15 +48,15 @@ func newListTimeFormatsCommand() *cobra.Command {
 
 			formatDefinitionById := context.SupportedFormats()
 			isSorted, _ := cmd.Flags().GetBool("sorted")
-			printHeader()
+			appendHeader()
 
 			if !isSorted {
-				printFormats(formatDefinitionById)
+				appendFormats(formatDefinitionById)
 				tableWriter.Render()
 				cmd.Print(buffer.String())
 			} else {
 				for _, format := range sortFormats(formatDefinitionById) {
-					printFormat(formatDefinitionById[format])
+					appendFormat(formatDefinitionById[format])
 				}
 				tableWriter.Render()
 				cmd.Print(buffer.String())
