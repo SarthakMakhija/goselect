@@ -68,6 +68,7 @@ func newExecuteCommand() *cobra.Command {
 				case "table":
 					minWidth, _ := cmd.Flags().GetUint16("minWidth")
 					maxWidth, _ := cmd.Flags().GetUint16("maxWidth")
+
 					if minWidth == 0 && maxWidth == 0 {
 						return writer.NewTableFormatter(), strings.ToLower(exportFormat), nil
 					}

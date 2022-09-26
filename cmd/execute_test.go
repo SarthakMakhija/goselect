@@ -15,7 +15,7 @@ func TestExecutesAQuery(t *testing.T) {
 	_ = rootCmd.Execute()
 
 	contents := buffer.String()
-	expected := []string{" TestResultsWithProjections_A.log", " TestResultsWithProjections_B.log", "TestResultsWithProjections_C.txt"}
+	expected := []string{"TestResultsWithProjections_A.log", "TestResultsWithProjections_B.log", "TestResultsWithProjections_C.txt"}
 
 	for _, name := range expected {
 		if !strings.Contains(contents, name) {
@@ -81,5 +81,68 @@ func TestAttemptToExecuteAnInvalidQuery2(t *testing.T) {
 			"error must contain the term lower",
 			contents,
 		)
+	}
+}
+
+func TestExecutesWithMinWidthQuery(t *testing.T) {
+	rootCmd.SetArgs([]string{"execute", "--query", "select name from ./resources/test/ order by 1", "--minWidth", "10"})
+	buffer := new(bytes.Buffer)
+	rootCmd.SetOut(buffer)
+
+	_ = rootCmd.Execute()
+
+	contents := buffer.String()
+	expected := []string{"TestResultsWithProjections_A.l", "og", "TestResultsWithProjections_B.l", "TestResultsWithProjections_C.t", "xt"}
+
+	for _, name := range expected {
+		if !strings.Contains(contents, name) {
+			t.Fatalf(
+				"Expected file name %v to be contained in the result but was not, received %v",
+				name,
+				contents,
+			)
+		}
+	}
+}
+
+func TestExecutesWithMaxWidthQuery(t *testing.T) {
+	rootCmd.SetArgs([]string{"execute", "--query", "select name from ./resources/test/ order by 1", "--maxWidth", "100"})
+	buffer := new(bytes.Buffer)
+	rootCmd.SetOut(buffer)
+
+	_ = rootCmd.Execute()
+
+	contents := buffer.String()
+	expected := []string{"TestResultsWithProjections_A.log", "TestResultsWithProjections_B.log", "TestResultsWithProjections_C.txt"}
+
+	for _, name := range expected {
+		if !strings.Contains(contents, name) {
+			t.Fatalf(
+				"Expected file name %v to be contained in the result but was not, received %v",
+				name,
+				contents,
+			)
+		}
+	}
+}
+
+func TestExecutesWithMinMaxWidthQuery(t *testing.T) {
+	rootCmd.SetArgs([]string{"execute", "--query", "select name from ./resources/test/ order by 1", "--minWidth", "6", "--maxWidth", "10"})
+	buffer := new(bytes.Buffer)
+	rootCmd.SetOut(buffer)
+
+	_ = rootCmd.Execute()
+
+	contents := buffer.String()
+	expected := []string{"TestResult", "sWithProje", "ctions_A.l", "og", "ctions_B.l", "ctions_C.t", "xt"}
+
+	for _, name := range expected {
+		if !strings.Contains(contents, name) {
+			t.Fatalf(
+				"Expected file name %v to be contained in the result but was not, received %v",
+				name,
+				contents,
+			)
+		}
 	}
 }
