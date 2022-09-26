@@ -28,6 +28,12 @@ var toTargetConversions = map[TypePair]toCommonTypeValueFunction{
 	TypePair{aType: ValueTypeUint64, bType: ValueTypeUint32}: func(aValue Value, bValue Value) (Value, Value, error) {
 		return aValue, Uint64Value(uint64(bValue.uint32Value)), nil
 	},
+	TypePair{aType: ValueTypeInt64, bType: ValueTypeUint64}: func(aValue Value, bValue Value) (Value, Value, error) {
+		return Float64Value(float64(aValue.int64Value)), Float64Value(float64(bValue.uint64Value)), nil
+	},
+	TypePair{aType: ValueTypeUint64, bType: ValueTypeInt64}: func(aValue Value, bValue Value) (Value, Value, error) {
+		return Float64Value(float64(aValue.uint64Value)), Float64Value(float64(bValue.int64Value)), nil
+	},
 	TypePair{aType: ValueTypeUint64, bType: ValueTypeFloat64}: func(aValue Value, bValue Value) (Value, Value, error) {
 		return Float64Value(float64(aValue.uint64Value)), bValue, nil
 	},
