@@ -758,6 +758,16 @@ func TestGetCommonTypeFloatNegativeUint64(t *testing.T) {
 	}
 }
 
+func TestGetCommonTypeUint64Float64(t *testing.T) {
+	value := Uint64Value(10)
+	other := Float64Value(10.0)
+
+	first, second, _ := getCommonType(value, other, TypePair{aType: ValueTypeUint64, bType: ValueTypeFloat64})
+	if first.CompareTo(second) != CompareToEqual {
+		t.Fatalf("Expected first and second values to match but they did not")
+	}
+}
+
 func TestGetCommonTypeStringUint64(t *testing.T) {
 	value := StringValue("10")
 	other := Uint64Value(10)
