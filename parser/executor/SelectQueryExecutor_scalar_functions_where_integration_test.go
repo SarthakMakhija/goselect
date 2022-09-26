@@ -479,3 +479,53 @@ func TestResultsWithAWhereClause25(t *testing.T) {
 	}
 	assertMatch(t, expected, queryResults)
 }
+
+func TestResultsWithAWhereClause26(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select name from ../resources/test/ where gt(size, parsesize(90 Kib))", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	expected := [][]context.Value{
+		{context.StringValue("where.png")},
+	}
+	assertMatch(t, expected, queryResults)
+}
+
+func TestResultsWithAWhereClause27(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select name from ../resources/test/ where gt(size, parsesize(100 Mb))", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	expected := [][]context.Value{}
+	assertMatch(t, expected, queryResults)
+}
+
+func TestResultsWithAWhereClause28(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select name from ../resources/test/ where eq(size, parsesize(0 Mb)) order by 1", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := NewSelectQueryExecutor(selectQuery, newContext, NewDefaultOptions()).Execute()
+	expected := [][]context.Value{
+		{context.StringValue(".Make")},
+		{context.StringValue("Empty.log")},
+	}
+	assertMatch(t, expected, queryResults)
+}
