@@ -106,7 +106,7 @@ func TestExecutesWithMinWidthQuery(t *testing.T) {
 }
 
 func TestExecutesWithMaxWidthQuery(t *testing.T) {
-	rootCmd.SetArgs([]string{"execute", "--query", "select name from ./resources/test/ order by 1", "--maxWidth", "100"})
+	rootCmd.SetArgs([]string{"execute", "--query", "select name from ./resources/test/ order by 1", "--maxWidth", "100", "--minWidth", "0"})
 	buffer := new(bytes.Buffer)
 	rootCmd.SetOut(buffer)
 
