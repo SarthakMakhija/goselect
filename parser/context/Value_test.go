@@ -640,3 +640,30 @@ func TestTokenToString2(t *testing.T) {
 		t.Fatalf("Expected token %v to be converted to a value %v, but received %v", "string", StringValue("string"), value)
 	}
 }
+
+func TestCompareUint64Uint64Equal(t *testing.T) {
+	value := Uint64Value(10)
+	other := Uint64Value(10)
+
+	if value.CompareTo(other) != CompareToEqual {
+		t.Fatalf("Expected comparison between uint64 and uint64 value to equal but was not")
+	}
+}
+
+func TestCompareUint64Uint64LessThan(t *testing.T) {
+	value := Uint64Value(10)
+	other := Uint64Value(20)
+
+	if value.CompareTo(other) != CompareToLessThan {
+		t.Fatalf("Expected comparison between uint64 and uint64 value to be less than but was not")
+	}
+}
+
+func TestCompareUint64Uint64GreaterThan(t *testing.T) {
+	value := Uint64Value(20)
+	other := Uint64Value(10)
+
+	if value.CompareTo(other) != CompareToGreaterThan {
+		t.Fatalf("Expected comparison between uint64 and uint64 value to be greater than but was not")
+	}
+}

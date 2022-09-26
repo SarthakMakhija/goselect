@@ -25,6 +25,7 @@ const (
 	ValueTypeUint32    = 6
 	ValueTypeFloat64   = 7
 	ValueTypeUndefined = 8
+	ValueTypeUint64    = 9
 )
 
 var (
@@ -44,6 +45,7 @@ type Value struct {
 	uint32Value  uint32
 	float64Value float64
 	timeValue    time.Time
+	uint64Value  uint64
 }
 
 func StringValue(value string) Value {
@@ -92,6 +94,13 @@ func DateTimeValue(time time.Time) Value {
 	return Value{
 		timeValue: time,
 		valueType: ValueTypeDateTime,
+	}
+}
+
+func Uint64Value(value uint64) Value {
+	return Value{
+		uint64Value: value,
+		valueType:   ValueTypeUint64,
 	}
 }
 
@@ -224,6 +233,15 @@ func (value Value) CompareTo(other Value) int {
 			return CompareToEqual
 		}
 		if first.Before(second) {
+			return CompareToLessThan
+		}
+		return CompareToGreaterThan
+	case ValueTypeUint64:
+		first, second := receiver.uint64Value, arg.uint64Value
+		if first == second {
+			return CompareToEqual
+		}
+		if first < second {
 			return CompareToLessThan
 		}
 		return CompareToGreaterThan
