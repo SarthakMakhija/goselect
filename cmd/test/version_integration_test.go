@@ -18,7 +18,7 @@ func TestVersion(t *testing.T) {
 	_ = cmd.GetRootCommand().Execute()
 
 	contents := buffer.String()
-	expectedVersion := "v0.0.4"
+	expectedVersion := "v0.0.5"
 
 	if !strings.Contains(contents, expectedVersion) {
 		t.Fatalf("Expected version to be %v, received %v", expectedVersion, contents)
