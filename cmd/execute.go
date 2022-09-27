@@ -195,12 +195,12 @@ func init() {
 		"minWidth",
 		"m",
 		0,
-		"specify the minimum character length to be used for each attribute. This flag is relevant only for the table format and will be needed only if the default formatting breaks. For the best results, use minWidth and maxWidth together. Use --minWidth=<value greater than zero>",
+		"specify the minimum character length to be used for each attribute/column. This flag is relevant only for the table format and will be needed only if the default formatting breaks. For the best results, use minWidth and maxWidth together. Use --minWidth=<value greater than zero>",
 	)
 	executeCmd.PersistentFlags().Uint16P(
 		"maxWidth",
 		"x",
 		0,
-		"specify the maximum character length to be used for each attribute. This flag is relevant only for the table format and will be needed only if the default formatting breaks. For the best results, use minWidth and maxWidth together. Use --maxWidth=<value greater than zero>",
+		"specify the maximum character length to be used for each attribute/column. This flag is relevant only for the table format and will be needed only if the default formatting breaks. For the best results, use minWidth and maxWidth together. Use --maxWidth=<value greater than zero>",
 	)
 }
