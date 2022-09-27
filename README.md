@@ -30,6 +30,7 @@ The project *goselect* was created to understand the following:
     * [MacOS](#macos)
     * [Linux AMD64](#linux-amd64)
   * [Changelog](#changelog)
+    * [Version 0.0.5](#version-005)
     * [Version 0.0.4](#version-004)
     * [Version 0.0.3](#version-003)
     * [Version 0.0.2](#version-002)
@@ -115,6 +116,14 @@ select * from . where eq(name, sample)
    - `mkdir goselect && tar xvf goselect_0.0.4_Linux_x86_64.tar.gz -C goselect`
 
 # Changelog
+
+### Version 0.0.5
+
+1. Addition of a new function parseSize makes the comparison based on file size easier. Use, `select * from . where gt(size, parseSize(15 Mb))`
+2. Addition of 't' as a shorthand for the flag 'term' in describe command
+3. Addition of new flags 'minWidth' and 'maxWidth' for controlling the width of the attributes while exporting as table. Usage: `goselect ex -q='select name, ext, size, fmtsize(size), isdir from .' --minWidth=10 --maxWidth=50`, will put a minimum of 10 characters and maximum of 50 characters in each row. 
+4. Table export does not capitalize the headers
+5. Removal of 'sorted' flag from listAttributes, listFunctions, listWhereClauseFunctions and listTimeFormats commands
 
 ### Version 0.0.4
 
@@ -225,7 +234,7 @@ goselect ex -q='select concat(basename, ext, fmtsize(size)) from .'
 goselect ex -q='select concatWs(basename, ext, fmtsize(size), @) from .'
 ```
 
-14. **Determine if a file name contains a string project**
+14. **Determine if a file name contains the string project**
 ```SQL
 goselect ex -q='select name, contains(name, project) from .'
 ```
@@ -306,7 +315,7 @@ goselect ex -q='select min(len(name)), max(len(name)) from .'
 
 ### Where clause
 
-1. **Select file name and extension of all the files containing a string go in their name**
+1. **Select file name and extension of all the files containing the string go in their name**
 ```SQL
 goselect ex -q='select name, extension from . where contains(name, go)'
 ```
@@ -351,7 +360,7 @@ goselect ex -q='select name, extension from . where isVideo(mime)'
 goselect ex -q='select name, extension from . where isPdf(mime)'
 ```
 
-10. **Select file name, extension and size of all the files if there size is greater than 1 Mib**
+10. **Select file name, extension and size of all the files if their size is greater than 1 Mib**
 ```SQL
 goselect ex -q='select name, extension, size, fmtsize(size) from . where gt(size, mul(1, 1024, 1024))'
 
@@ -361,8 +370,12 @@ goselect ex -q='select name, extension, size, fmtsize(size) from . where gt(size
 ```SQL
 goselect ex -q='select name, extension, size, fmtsize(size) from . where gt(size, 1048576)'
 ```
+**Or (Version 0.0.5)**
+```SQL
+goselect ex -q='select name, extension, size, fmtsize(size) from . where gt(size, parseSize(1 Mib))'
+```
 
-11. **Select file name, extension and size of all the files if there size is greater than or equal to 1 Mib**
+11. **Select file name, extension and size of all the files if their size is greater than or equal to 1 Mib**
 ```SQL
 goselect ex -q='select name, extension, size, fmtsize(size) from . where gte(size, mul(1, 1024, 1024))'
 ```
@@ -370,17 +383,25 @@ goselect ex -q='select name, extension, size, fmtsize(size) from . where gte(siz
 ```SQL
 goselect ex -q='select name, extension, size, fmtsize(size) from . where gte(size, 1048576)'
 ```
-
-12. **Select file name, extension and size of all the files if there size is less than 1 Mib**
+**Or (Version 0.0.5)**
 ```SQL
-goselect ex -q='select name, extension, size, fmtsize(size) from . where le(size, mul(1, 1024, 1024))'
+goselect ex -q='select name, extension, size, fmtsize(size) from . where gte(size, parseSize(1 Mib))'
+```
+
+12. **Select file name, extension and size of all the files if their size is less than 1 Mib**
+```SQL
+goselect ex -q='select name, extension, size, fmtsize(size) from . where lt(size, mul(1, 1024, 1024))'
 ```
 **Or**
 ```SQL
-goselect ex -q='select name, extension, size, fmtsize(size) from . where le(size, 1048576)'
+goselect ex -q='select name, extension, size, fmtsize(size) from . where lt(size, 1048576)'
+```
+**Or (Version 0.0.5)**
+```SQL
+goselect ex -q='select name, extension, size, fmtsize(size) from . where lt(size, parseSize(1 Mib))'
 ```
 
-13. **Select file name, extension and size of all the files if there size is less than or equal to 1 Mib**
+13. **Select file name, extension and size of all the files if their size is less than or equal to 1 Mib**
 ```SQL
 goselect ex -q='select name, extension, size, fmtsize(size) from . where lte(size, mul(1, 1024, 1024))'
 ```
@@ -388,10 +409,18 @@ goselect ex -q='select name, extension, size, fmtsize(size) from . where lte(siz
 ```SQL
 goselect ex -q='select name, extension, size, fmtsize(size) from . where lte(size, 1048576)'
 ```
+**Or (Version 0.0.5)**
+```SQL
+goselect ex -q='select name, extension, size, fmtsize(size) from . where lte(size, parseSize(1 Mib))'
+```
 
-14. **Select file name, extension and size of all the files if there size equal to 600 bytes**
+14. **Select file name, extension and size of all the files if their size equal to 600 bytes**
 ```SQL
 goselect ex -q='select name, extension, size, fmtsize(size) from . where eq(size, 600)'
+```
+**Or (Version 0.0.5)**
+```SQL
+goselect ex -q='select name, extension, size, fmtsize(size) from . where eq(size, parseSize(600 B))'
 ```
 
 15. **Select file name, extension and size of all the files if their extension is equal to .go**
@@ -628,9 +657,7 @@ select * from . where lt(size, (add(2, 3)))
 # Planned changes
 
 1. Support for groups in regular expressions. 
-2. Support for matching file size with units. For example, `select * from . where gt(size, parsesize(15 Mb))` Or `select * from . where gt(size, parsesize(15 Mib))`
-3. Support for checking if a (text) file contains a specific term
-4. Improving table formatter to handle the formatting for large number of columns
-5. Caching the expression results. This is useful for cases like `select lower(name) from . where eq(lower(name), sample)`. In this example, `lower(name)` need not be evaluated twice for a row 
-6. Support for concurrent execution and streaming the results as soon as available. Will not work for `order by` and `aggregate` functions. It is applicable for queries that involve scalar functions without order by. It makes sense to use this feature where the number of files is too many, say more than 0.1 million
-7. Support installation using `brew`, `apt`, `yum`
+2. Support for checking if a (text) file contains a specific term
+3. Caching the expression results. This is useful for cases like `select lower(name) from . where eq(lower(name), sample)`. In this example, `lower(name)` need not be evaluated twice for a row 
+4. Support for concurrent execution and streaming the results as soon as available. Will not work for `order by` and `aggregate` functions. It is applicable for queries that involve scalar functions without order by. It might make sense to use this feature where the number of files is too many, say more than 0.1 million
+5. Support installation using `brew`, `apt`, `yum`
