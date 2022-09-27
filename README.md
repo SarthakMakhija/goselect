@@ -632,3 +632,5 @@ select * from . where lt(size, (add(2, 3)))
 3. Support for checking if a (text) file contains a specific term
 4. Improving table formatter to handle the formatting for large number of columns
 5. Caching the expression results. This is useful for cases like `select lower(name) from . where eq(lower(name), sample)`. In this example, `lower(name)` need not be evaluated twice for a row 
+6. Support for concurrent execution and streaming the results as soon as available. Will not work for `order by` and `aggregate` functions. It is applicable for queries that involve scalar functions without order by. It makes sense to use this feature where the number of files are too many say, more than 0.1 million.
+7. Support installation using `brew`, `apt`, `yum`
