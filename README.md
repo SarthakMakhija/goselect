@@ -95,25 +95,25 @@ select * from . where eq(name, sample)
 
 # Supported platforms
 
-- *goselect* has been tested on **macOS Big Sur 11.4** and **Ubuntu 20.0.3**
+- *goselect* has been tested on **macOS Big Sur 11.4**, **macOS Monterey 12.6** and **Ubuntu 20.0.3**
 
 # Installation
 
 ### MacOS
 
 1. **Download the current release**
-   - `wget -o - https://github.com/SarthakMakhija/goselect/releases/download/v0.0.4/goselect_0.0.4_Darwin_all.tar.gz`
+   - `wget -o - https://github.com/SarthakMakhija/goselect/releases/download/v0.0.5/goselect_0.0.5_Darwin_all.tar.gz`
 
 2. **Unzip the release in a directory**
-   - `mkdir goselect && tar xvf goselect_0.0.4_Darwin_all.tar.gz -C goselect`
+   - `mkdir goselect && tar xvf goselect_0.0.5_Darwin_all.tar.gz -C goselect`
 
 ### Linux AMD64
 
 1. **Download the current release**
-   - `wget -o - https://github.com/SarthakMakhija/goselect/releases/download/v0.0.4/goselect_0.0.4_Linux_x86_64.tar.gz`
+   - `wget -o - https://github.com/SarthakMakhija/goselect/releases/download/v0.0.5/goselect_0.0.5_Linux_x86_64.tar.gz`
 
 2. **Unzip the release in a directory**
-   - `mkdir goselect && tar xvf goselect_0.0.4_Linux_x86_64.tar.gz -C goselect`
+   - `mkdir goselect && tar xvf goselect_0.0.5_Linux_x86_64.tar.gz -C goselect`
 
 # Changelog
 
