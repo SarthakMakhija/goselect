@@ -17,3 +17,13 @@ Version 0.0.5 Release
 4. Support for matching file size with units. For example, select * from . where gt(size, parsesize(15 Mb)) Or select * from . where gt(size, parsesize(15 Mib)) : done
 5. Remove --sorted: true
 6. Think about min width and max width shortcuts:
+
+Version 0.0.6 Release
+
+1. (Not user facing), create a release.yml in.github/workflows to allow releases to happen in github repo anytime a tag is pushed
+2. [Ease of installation] Allow goselect installation using brew. This will use point (1), meaning changes will happen in release.yml
+3. [New feature] Introduce a scalar function "between"
+4. [New feature] Introduce an attribute "contents"
+
+Version 0.0.7 Release
+1. [Performance] Allow concurrent directory (nested directory) scan, if there are no aggregate functions
