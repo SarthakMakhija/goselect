@@ -171,7 +171,7 @@ var attributeDefinitions = map[string]*AttributeDefinition{
 	},
 	AttributeContents: {
 		aliases:             []string{"contents"},
-		description:         "Returns the contents of a text file if it is less than 20mb in size",
+		description:         "Returns the contents of a text file if it is less than 20mb in size or else empty string",
 		lazyEvaluationBlock: ContentsAttributeEvaluationBlock{MaxFileSizeInBytesSupported: twentyMb},
 	},
 }
