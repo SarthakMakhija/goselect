@@ -664,3 +664,4 @@ select * from . where lt(size, (add(2, 3)))
 6. Support for `between` scalar function
 7. Support for `isArchive` scalar function
 8. Support for single quotes and double quotes
+9. Windows support

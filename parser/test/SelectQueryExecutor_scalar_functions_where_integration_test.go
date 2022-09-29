@@ -617,3 +617,35 @@ func TestResultsWithAWhereClauseWithDoubleQuotedLiteral2(t *testing.T) {
 	}
 	executor.AssertMatch(t, expected, queryResults)
 }
+
+func TestResultsWithAWhereClause29(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select lower(name) from ./resources/images where isArchive(mimetype) order by 1", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
+	var expected [][]context.Value
+	executor.AssertMatch(t, expected, queryResults)
+}
+
+func TestResultsWithAWhereClause30(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select name from ./resources where isArchive(mimetype) order by 1", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
+	expected := [][]context.Value{
+		{context.StringValue("README.md.zip")},
+	}
+	executor.AssertMatch(t, expected, queryResults)
+}

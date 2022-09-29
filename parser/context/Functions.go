@@ -85,6 +85,7 @@ const (
 	FunctionNameIsFileTypeAudio     = "isaudio"
 	FunctionNameIsFileTypeVideo     = "isvideo"
 	FunctionNameIsFileTypePdf       = "ispdf"
+	FunctionNameIsFileTypeArchive   = "isarchive"
 	FunctionNameFormatSize          = "formatsize"
 	FunctionNameParseSize           = "parsesize"
 	FunctionNameCount               = "count"
@@ -357,6 +358,37 @@ var functionDefinitions = map[string]*FunctionDefinition{
 		description: "Returns true if the mime type of a file is pdf, false otherwise.  \nFor example, the common use of this function is with mime attribute, ispdf(mime).",
 		block:       IsFileTypePdfFunctionBlock{},
 		tags:        map[string]bool{"where": true},
+	},
+	FunctionNameIsFileTypeArchive: {
+		aliases:     []string{"isarchive"},
+		description: "Returns true if the mime type of a file is an archive, false otherwise.  \nFor example, the common use of this function is with mime attribute, isarchive(mime).",
+		block: IsFileTypeArchiveFunctionBlock{
+			matchingMimeTypes: map[string]bool{
+				"application/x-7z-compressed":   true,
+				"application/zip":               true,
+				"application/x-zip":             true,
+				"application/x-zip-compressed":  true,
+				"application/epub+zip":          true,
+				"application/jar":               true,
+				"application/x-archive":         true,
+				"application/x-unix-archive":    true,
+				"application/x-tar":             true,
+				"application/x-xar":             true,
+				"application/x-bzip2":           true,
+				"application/gzip":              true,
+				"application/x-gzip":            true,
+				"application/x-gunzip":          true,
+				"application/gzipped":           true,
+				"application/gzip-compressed":   true,
+				"application/x-gzip-compressed": true,
+				"gzip/document":                 true,
+				"application/x-rar-compressed":  true,
+				"application/x-rar":             true,
+				"application/lzip":              true,
+				"application/x-lzip":            true,
+			},
+		},
+		tags: map[string]bool{"where": true},
 	},
 	FunctionNameFormatSize: {
 		aliases:     []string{"formatsize", "fmtsize"},
