@@ -9,6 +9,8 @@ import (
 	"strings"
 )
 
+const pathSeparator = string(os.PathSeparator)
+
 type SelectQueryExecutor struct {
 	options *Options
 	query   *parser.SelectQuery
@@ -43,60 +45,70 @@ func (selectQueryExecutor *SelectQueryExecutor) Execute() (*EvaluatingRows, erro
 }
 
 func (selectQueryExecutor SelectQueryExecutor) executeFrom(directory string, maxLimit uint32) (*EvaluatingRows, error) {
-	var pathSeparator = string(os.PathSeparator)
-	var execute func(directory string) error
-
-	shouldTraverseDirectory := func(file fs.FileInfo) bool {
-		return file.IsDir() &&
-			selectQueryExecutor.options.traverseNestedDirectories &&
-			!selectQueryExecutor.options.IsDirectoryTraversalIgnored(file.Name())
-	}
-
 	rows := emptyRows(selectQueryExecutor.context.AllFunctions(), maxLimit)
-	execute = func(directory string) error {
-		entries, err := os.ReadDir(directory)
-		if err != nil {
-			return err
-		}
-		for _, entry := range entries {
-			file, err := entry.Info()
-			if err != nil {
-				return err
-			}
-			if shouldTraverseDirectory(file) {
-				newPath := directory + pathSeparator + entry.Name()
-				if strings.HasSuffix(directory, pathSeparator) {
-					newPath = directory + entry.Name()
-				}
-				if err := execute(newPath); err != nil {
-					return err
-				}
-			}
-			if rows.Count() >= maxLimit && !selectQueryExecutor.query.IsOrderDefined() && selectQueryExecutor.query.Projections.AggregationCount() == 0 {
-				return nil
-			}
-			fileAttributes := context.ToFileAttributes(directory, file, selectQueryExecutor.context)
-			shouldChoose, err := selectQueryExecutor.shouldChoose(fileAttributes)
-			if err != nil {
-				return err
-			}
-			if shouldChoose {
-				values, fullyEvaluated, expressions, err := selectQueryExecutor.query.Projections.EvaluateWith(
-					fileAttributes,
-					selectQueryExecutor.context.AllFunctions(),
-				)
-				if err != nil {
-					return err
-				}
-				rows.addRow(values, fullyEvaluated, expressions)
-			}
-		}
-		return nil
-	}
-	if err := execute(directory); err != nil {
+	if err := selectQueryExecutor.execute(directory, maxLimit, rows); err != nil {
 		return nil, err
 	}
 	return rows, nil
+}
+
+func (selectQueryExecutor SelectQueryExecutor) execute(directory string, maxLimit uint32, rows *EvaluatingRows) error {
+	entries, err := os.ReadDir(directory)
+	if err != nil {
+		return err
+	}
+	for _, entry := range entries {
+		file, err := entry.Info()
+		if err != nil {
+			return err
+		}
+		if selectQueryExecutor.shouldTraverseDirectory(file) {
+			newPath := selectQueryExecutor.childDirectoryName(directory, entry)
+			if err := selectQueryExecutor.execute(newPath, maxLimit, rows); err != nil {
+				return err
+			}
+		}
+		if selectQueryExecutor.haveCollectedEnough(rows, maxLimit) {
+			return nil
+		}
+		fileAttributes := context.ToFileAttributes(directory, file, selectQueryExecutor.context)
+		shouldChoose, err := selectQueryExecutor.shouldChoose(fileAttributes)
+		if err != nil {
+			return err
+		}
+		if shouldChoose {
+			values, fullyEvaluated, expressions, err := selectQueryExecutor.query.Projections.EvaluateWith(
+				fileAttributes,
+				selectQueryExecutor.context.AllFunctions(),
+			)
+			if err != nil {
+				return err
+			}
+			rows.addRow(values, fullyEvaluated, expressions)
+		}
+	}
+	return nil
+}
+
+func (selectQueryExecutor SelectQueryExecutor) shouldTraverseDirectory(file fs.FileInfo) bool {
+	return file.IsDir() &&
+		selectQueryExecutor.options.traverseNestedDirectories &&
+		!selectQueryExecutor.options.IsDirectoryTraversalIgnored(file.Name())
+
+}
+
+func (selectQueryExecutor SelectQueryExecutor) childDirectoryName(directory string, entry os.DirEntry) string {
+	newPath := directory + pathSeparator + entry.Name()
+	if strings.HasSuffix(directory, pathSeparator) {
+		newPath = directory + entry.Name()
+	}
+	return newPath
+}
+
+func (selectQueryExecutor SelectQueryExecutor) haveCollectedEnough(rows *EvaluatingRows, maxLimit uint32) bool {
+	return rows.Count() >= maxLimit &&
+		!selectQueryExecutor.query.IsOrderDefined() &&
+		selectQueryExecutor.query.Projections.AggregationCount() == 0
 }
 
 func (selectQueryExecutor SelectQueryExecutor) shouldChoose(fileAttributes *context.FileAttributes) (bool, error) {
