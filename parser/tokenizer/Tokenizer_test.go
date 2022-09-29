@@ -191,7 +191,7 @@ func TestTokenizerWithAllTokens11(t *testing.T) {
 	tokens := tokenizer.Tokenize()
 
 	iterator := tokens.Iterator()
-	expectedTokens := []string{"select", "size", "from", "/home/apps", "where", "name=", "\"*.txt\"", "order", "by", "1", "desc"}
+	expectedTokens := []string{"select", "size", "from", "/home/apps", "where", "name=", "*.txt", "order", "by", "1", "desc"}
 
 	for count := 1; count <= len(expectedTokens); count++ {
 		actualToken := iterator.Next()
@@ -320,7 +320,7 @@ func TestTokenizerWithAllTokens17(t *testing.T) {
 	tokens := tokenizer.Tokenize()
 
 	iterator := tokens.Iterator()
-	expectedTokens := []string{"select", "fName", "from", "/HOME/APPS", "where", "eq", "(", "name", ",", "\"file_(1).txt\""}
+	expectedTokens := []string{"select", "fName", "from", "/HOME/APPS", "where", "eq", "(", "name", ",", "file_(1).txt"}
 
 	for count := 1; count <= len(expectedTokens); count++ {
 		actualToken := iterator.Next()
@@ -337,7 +337,92 @@ func TestTokenizerWithAllTokens18(t *testing.T) {
 	tokens := tokenizer.Tokenize()
 
 	iterator := tokens.Iterator()
-	expectedTokens := []string{"select", "fName", "from", "/HOME/APPS", "where", "eq", "(", "name", ",", "\"file_(1).txt)\""}
+	expectedTokens := []string{"select", "fName", "from", "/HOME/APPS", "where", "eq", "(", "name", ",", "file_(1).txt)"}
+
+	for count := 1; count <= len(expectedTokens); count++ {
+		actualToken := iterator.Next()
+		expectedToken := expectedTokens[count-1]
+
+		if expectedToken != actualToken.TokenValue {
+			t.Fatalf("Expected token to be %v, received %v", expectedToken, actualToken)
+		}
+	}
+}
+
+func TestTokenizerWithAllTokens19(t *testing.T) {
+	tokenizer := NewTokenizer("select fName from /HOME/APPS where eq(name, 'file (1).txt')")
+	tokens := tokenizer.Tokenize()
+
+	iterator := tokens.Iterator()
+	expectedTokens := []string{"select", "fName", "from", "/HOME/APPS", "where", "eq", "(", "name", ",", "file (1).txt"}
+
+	for count := 1; count <= len(expectedTokens); count++ {
+		actualToken := iterator.Next()
+		expectedToken := expectedTokens[count-1]
+
+		if expectedToken != actualToken.TokenValue {
+			t.Fatalf("Expected token to be %v, received %v", expectedToken, actualToken)
+		}
+	}
+}
+
+func TestTokenizerWithAllTokens20(t *testing.T) {
+	tokenizer := NewTokenizer("select fName from /HOME/APPS where eq(name, \\\"file (1).txt\\\")")
+	tokens := tokenizer.Tokenize()
+
+	iterator := tokens.Iterator()
+	expectedTokens := []string{"select", "fName", "from", "/HOME/APPS", "where", "eq", "(", "name", ",", "\"file (1).txt\""}
+
+	for count := 1; count <= len(expectedTokens); count++ {
+		actualToken := iterator.Next()
+		expectedToken := expectedTokens[count-1]
+
+		if expectedToken != actualToken.TokenValue {
+			t.Fatalf("Expected token to be %v, received %v", expectedToken, actualToken)
+		}
+	}
+}
+
+func TestTokenizerWithAllTokens21(t *testing.T) {
+	tokenizer := NewTokenizer("select fName from /HOME/APPS where eq(name, \\ \"file (1).txt\\\")")
+	tokens := tokenizer.Tokenize()
+
+	iterator := tokens.Iterator()
+	expectedTokens := []string{"select", "fName", "from", "/HOME/APPS", "where", "eq", "(", "name", ",", "\\", "file (1).txt"}
+
+	for count := 1; count <= len(expectedTokens); count++ {
+		actualToken := iterator.Next()
+		expectedToken := expectedTokens[count-1]
+
+		if expectedToken != actualToken.TokenValue {
+			t.Fatalf("Expected token to be %v, received %v", expectedToken, actualToken)
+		}
+	}
+}
+
+func TestTokenizerWithAllTokens22(t *testing.T) {
+	tokenizer := NewTokenizer("select fName from /HOME/APPS where eq(name, \\ \"file (1).txt\\ \")")
+	tokens := tokenizer.Tokenize()
+
+	iterator := tokens.Iterator()
+	expectedTokens := []string{"select", "fName", "from", "/HOME/APPS", "where", "eq", "(", "name", ",", "\\", "file (1).txt "}
+
+	for count := 1; count <= len(expectedTokens); count++ {
+		actualToken := iterator.Next()
+		expectedToken := expectedTokens[count-1]
+
+		if expectedToken != actualToken.TokenValue {
+			t.Fatalf("Expected token to be %v, received %v", expectedToken, actualToken)
+		}
+	}
+}
+
+func TestTokenizerWithAllTokens23(t *testing.T) {
+	tokenizer := NewTokenizer("select fName from /HOME/APPS where eq(name, \\'file (1).txt\\')")
+	tokens := tokenizer.Tokenize()
+
+	iterator := tokens.Iterator()
+	expectedTokens := []string{"select", "fName", "from", "/HOME/APPS", "where", "eq", "(", "name", ",", "'file (1).txt'"}
 
 	for count := 1; count <= len(expectedTokens); count++ {
 		actualToken := iterator.Next()

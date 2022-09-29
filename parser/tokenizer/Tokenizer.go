@@ -14,12 +14,24 @@ func NewTokenizer(query string) *Tokenizer {
 
 func (tokenizer *Tokenizer) Tokenize() *Tokens {
 	tokens := NewEmptyTokens()
+	queryLength := len(tokenizer.query)
+
 	var token strings.Builder
-	for index := 0; index < len(tokenizer.query); index++ {
+	for index := 0; index < queryLength; index++ {
 		ch := rune(tokenizer.query[index])
 		switch {
 		case isCharATokenSeparator(ch):
 			tokens.Add(tokenFrom(token.String()))
+			token.Reset()
+		case ch == '\\' && (index+1) < queryLength && tokenizer.query[index+1] == '\'':
+			literal, newIndex := tokenizer.readEmphasizedSingleQuotedLiteralFrom(index + 2)
+			index = newIndex
+			tokens.Add(literal)
+			token.Reset()
+		case ch == '\\' && (index+1) < queryLength && tokenizer.query[index+1] == '"':
+			literal, newIndex := tokenizer.readEmphasizedDoubleQuotedLiteralFrom(index + 2)
+			index = newIndex
+			tokens.Add(literal)
 			token.Reset()
 		case ch == '\'':
 			tokens.Add(tokenFrom(token.String()))
@@ -55,16 +67,30 @@ func (tokenizer *Tokenizer) Tokenize() *Tokens {
 
 func (tokenizer *Tokenizer) readSingleQuotedLiteralFrom(index int) (Token, int) {
 	token, nextIndex := tokenizer.readQuotedLiteral(index, func(ch rune) bool {
-		return isCharATokenSeparator(ch) || ch == '\''
+		return ch == '\''
 	})
-	return tokenFrom(token.String()), nextIndex
+	return tokenFrom(eatBackSlash(token)), nextIndex
+}
+
+func (tokenizer *Tokenizer) readEmphasizedSingleQuotedLiteralFrom(index int) (Token, int) {
+	token, nextIndex := tokenizer.readQuotedLiteral(index, func(ch rune) bool {
+		return ch == '\''
+	})
+	return tokenFrom("'" + eatBackSlash(token) + "'"), nextIndex
 }
 
 func (tokenizer *Tokenizer) readDoubleQuotedLiteralFrom(index int) (Token, int) {
 	token, nextIndex := tokenizer.readQuotedLiteral(index, func(ch rune) bool {
-		return isCharATokenSeparator(ch) || ch == '"'
+		return ch == '"'
 	})
-	return tokenFrom("\"" + token.String() + "\""), nextIndex
+	return tokenFrom(eatBackSlash(token)), nextIndex
+}
+
+func (tokenizer *Tokenizer) readEmphasizedDoubleQuotedLiteralFrom(index int) (Token, int) {
+	token, nextIndex := tokenizer.readQuotedLiteral(index, func(ch rune) bool {
+		return ch == '"'
+	})
+	return tokenFrom("\"" + eatBackSlash(token) + "\""), nextIndex
 }
 
 func (tokenizer *Tokenizer) readQuotedLiteral(index int, breakOn func(ch rune) bool) (strings.Builder, int) {
@@ -80,4 +106,8 @@ func (tokenizer *Tokenizer) readQuotedLiteral(index int, breakOn func(ch rune) b
 		}
 	}
 	return token, runningIndex
+}
+
+func eatBackSlash(token strings.Builder) string {
+	return strings.ReplaceAll(token.String(), "\\", "")
 }
