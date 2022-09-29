@@ -22,7 +22,7 @@
       "name": "select name, size where isText is true",
       "query": "select name, size from ./resources/ where isText(mime)",
       "isErrorExpected": false,
-      "resultCount": 10
+      "resultCount": 12
     },
     {
       "name": "select name, size where isImage is true in upper case",
@@ -88,7 +88,7 @@
       "name": "select lower(name), sum(size), fmtsize(sum(size)) from resources",
       "query": "SELECT lower(NAME), sum(SIZE), fmtsize(sum(size)) FROM ./resources/",
       "isErrorExpected": false,
-      "resultCount": 18
+      "resultCount": 22
     },
     {
       "name": "select lower(name) from resources where extension is log",
@@ -166,7 +166,7 @@
       "name": "select name, path from resources where the name starts with . using startsWith function",
       "query": "SELECT lower(NAME), path FROM ./resources/ where startsWith(name , .) limit 4",
       "isErrorExpected": false,
-      "resultCount": 1
+      "resultCount": 2
     },
     {
       "name": "select name, path from resources where the name ends with .log using endsWith function",
