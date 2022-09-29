@@ -23,7 +23,7 @@ Version 0.0.6 Release
 1. (Not user facing), create a release.yml in.github/workflows to allow releases to happen in github repo anytime a tag is pushed: done
 2. [Ease of installation] Allow goselect installation using brew. This will use point (1), meaning changes will happen in release.yml
 3. [New feature] Introduce a scalar function "between"
-4. [New feature] Introduce a scalar function "isArchive"
+4. [New feature] Introduce a scalar function "isArchive": done
 5. [New feature] Introduce support for single and double quotes: done
 6. [New feature] Support for groups in regular expressions: done
 
