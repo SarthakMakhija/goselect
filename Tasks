@@ -20,7 +20,7 @@ Version 0.0.5 Release
 
 Version 0.0.6 Release
 
-1. (Not user facing), create a release.yml in.github/workflows to allow releases to happen in github repo anytime a tag is pushed
+1. (Not user facing), create a release.yml in.github/workflows to allow releases to happen in github repo anytime a tag is pushed: done
 2. [Ease of installation] Allow goselect installation using brew. This will use point (1), meaning changes will happen in release.yml
 3. [New feature] Introduce a scalar function "between"
 4. [New feature] Introduce a scalar function "isArchive"
