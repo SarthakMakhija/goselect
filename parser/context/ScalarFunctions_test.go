@@ -1377,11 +1377,10 @@ func TestIsText3(t *testing.T) {
 }
 
 func TestIsText4(t *testing.T) {
-	value, _ := NewFunctions().Execute("istext")
+	_, err := NewFunctions().Execute("istext")
 
-	actualValue, _ := value.GetBoolean()
-	if actualValue != false {
-		t.Fatalf("Expected istext to be %v, received %v", false, actualValue)
+	if err == nil {
+		t.Fatalf("Expected an error while invoking isText without any parameter values")
 	}
 }
 
@@ -1413,11 +1412,10 @@ func TestIsImage3(t *testing.T) {
 }
 
 func TestIsImage4(t *testing.T) {
-	value, _ := NewFunctions().Execute("isimage")
+	_, err := NewFunctions().Execute("isimage")
 
-	actualValue, _ := value.GetBoolean()
-	if actualValue != false {
-		t.Fatalf("Expected isimage to be %v, received %v", false, actualValue)
+	if err == nil {
+		t.Fatalf("Expected an error while invoking isImage without any parameter values")
 	}
 }
 
@@ -1449,11 +1447,10 @@ func TestIsAudio3(t *testing.T) {
 }
 
 func TestIsAudio4(t *testing.T) {
-	value, _ := NewFunctions().Execute("isaudio")
+	_, err := NewFunctions().Execute("isaudio")
 
-	actualValue, _ := value.GetBoolean()
-	if actualValue != false {
-		t.Fatalf("Expected isaudio to be %v, received %v", false, actualValue)
+	if err == nil {
+		t.Fatalf("Expected an error while invoking isaudio without any parameter values")
 	}
 }
 
@@ -1485,11 +1482,10 @@ func TestIsVideo3(t *testing.T) {
 }
 
 func TestIsVideo4(t *testing.T) {
-	value, _ := NewFunctions().Execute("isvideo")
+	_, err := NewFunctions().Execute("isvideo")
 
-	actualValue, _ := value.GetBoolean()
-	if actualValue != false {
-		t.Fatalf("Expected isvideo to be %v, received %v", false, actualValue)
+	if err == nil {
+		t.Fatalf("Expected an error while invoking isvideo without any parameter values")
 	}
 }
 
@@ -1521,11 +1517,10 @@ func TestIsPdf3(t *testing.T) {
 }
 
 func TestIsPdf4(t *testing.T) {
-	value, _ := NewFunctions().Execute("ispdf")
+	_, err := NewFunctions().Execute("isPdf")
 
-	actualValue, _ := value.GetBoolean()
-	if actualValue != false {
-		t.Fatalf("Expected ispdf to be %v, received %v", false, actualValue)
+	if err == nil {
+		t.Fatalf("Expected an error while invoking isPdf without any parameter values")
 	}
 }
 
@@ -1761,5 +1756,36 @@ func TestParseSizeWithMissingParameterValue(t *testing.T) {
 
 	if err == nil {
 		t.Fatalf("Expected an error while executing parsesize with no parameter value")
+	}
+}
+
+func TestIsArchive1(t *testing.T) {
+	functions := NewFunctions()
+	isArchiveFunctionBlock := IsFileTypeArchiveFunctionBlock{}
+	for mimeType, _ := range isArchiveFunctionBlock.matchingMimeTypes {
+		value, _ := functions.Execute("isArchive", StringValue(mimeType))
+		actualValue, _ := value.GetBoolean()
+
+		if actualValue != true {
+			t.Fatalf("Expected isArchive to be %v, received %v for mime type %v", true, actualValue, mimeType)
+		}
+	}
+}
+
+func TestIsArchive2(t *testing.T) {
+	functions := NewFunctions()
+	value, _ := functions.Execute("isArchive", StringValue("text/plain"))
+	actualValue, _ := value.GetBoolean()
+
+	if actualValue != false {
+		t.Fatalf("Expected isArchive to be %v, received %v for mime type %v", false, actualValue, "text/plain")
+	}
+}
+
+func TestIsArchive3(t *testing.T) {
+	_, err := NewFunctions().Execute("isArchive")
+
+	if err == nil {
+		t.Fatalf("Expected an error while invoking isArchive without any parameter values")
 	}
 }

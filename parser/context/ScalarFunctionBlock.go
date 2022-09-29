@@ -62,6 +62,9 @@ type IsFileTypeImageFunctionBlock struct{}
 type IsFileTypeAudioFunctionBlock struct{}
 type IsFileTypeVideoFunctionBlock struct{}
 type IsFileTypePdfFunctionBlock struct{}
+type IsFileTypeArchiveFunctionBlock struct {
+	matchingMimeTypes map[string]bool
+}
 type FormatSizeFunctionBlock struct{}
 type ParseSizeFunctionBlock struct{}
 
@@ -504,6 +507,15 @@ func (i IsFileTypePdfFunctionBlock) run(args ...Value) (Value, error) {
 	return booleanValueUsing(
 		mimeTypeMatches("application/pdf", args[0]) || mimeTypeMatches("application/x-pdf", args[0]),
 	), nil
+}
+
+func (i IsFileTypeArchiveFunctionBlock) run(args ...Value) (Value, error) {
+	if err := ensureNParametersOrError(args, FunctionNameIsFileTypeArchive, 1); err != nil {
+		return EmptyValue, err
+	}
+	mimeType := args[0].GetAsString()
+	_, ok := i.matchingMimeTypes[mimeType]
+	return booleanValueUsing(ok), nil
 }
 
 func (f FormatSizeFunctionBlock) run(args ...Value) (Value, error) {
