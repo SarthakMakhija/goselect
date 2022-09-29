@@ -24,11 +24,11 @@ func (m MimeTypeAttributeEvaluationBlock) evaluate(filePath string) Value {
 	return StringValue(mime.String())
 }
 
-type ContentsAttributeEvaluationBlock struct {
-	MaxFileSizeInBytesSupported int64
+type ContentsAttributeLazyEvaluationBlock struct {
+	maxFileSizeInBytesSupported int64
 }
 
-func (m ContentsAttributeEvaluationBlock) evaluate(filePath string) Value {
+func (c ContentsAttributeLazyEvaluationBlock) evaluate(filePath string) Value {
 	mime, err := mimetype.DetectFile(filePath)
 	if err != nil {
 		return StringValue("")
@@ -36,7 +36,7 @@ func (m ContentsAttributeEvaluationBlock) evaluate(filePath string) Value {
 
 	if mime.Is("text/plain") {
 		lstat, _ := os.Lstat(filePath)
-		if err == nil && lstat.Size() <= m.MaxFileSizeInBytesSupported {
+		if err == nil && lstat.Size() <= c.maxFileSizeInBytesSupported {
 			file, err := os.Open(filePath)
 			if err != nil {
 				return StringValue("")

@@ -38,7 +38,7 @@ func TestMimeTypeForANonExistingFile(t *testing.T) {
 }
 
 func TestContentsForATextFileHavingLessThanTwentyMbSize(t *testing.T) {
-	block := ContentsAttributeEvaluationBlock{MaxFileSizeInBytesSupported: twentyMb}
+	block := ContentsAttributeLazyEvaluationBlock{maxFileSizeInBytesSupported: twentyMb}
 	value := block.evaluate("../test/resources/textfiles/sample.txt")
 
 	if reflect.DeepEqual(value, StringValue("")) {
@@ -47,7 +47,7 @@ func TestContentsForATextFileHavingLessThanTwentyMbSize(t *testing.T) {
 }
 
 func TestContentsForAHiddenTextFileHavingLessThanTwentyMbSize(t *testing.T) {
-	block := ContentsAttributeEvaluationBlock{MaxFileSizeInBytesSupported: twentyMb}
+	block := ContentsAttributeLazyEvaluationBlock{maxFileSizeInBytesSupported: twentyMb}
 	value := block.evaluate("../test/resources/textfiles/.sample.txt")
 
 	if reflect.DeepEqual(value, StringValue("")) {
@@ -56,7 +56,7 @@ func TestContentsForAHiddenTextFileHavingLessThanTwentyMbSize(t *testing.T) {
 }
 
 func TestContentsForAImageFile(t *testing.T) {
-	block := ContentsAttributeEvaluationBlock{MaxFileSizeInBytesSupported: twentyMb}
+	block := ContentsAttributeLazyEvaluationBlock{maxFileSizeInBytesSupported: twentyMb}
 	value := block.evaluate("../test/resources/images/where.png")
 
 	if !reflect.DeepEqual(value, StringValue("")) {
@@ -65,7 +65,7 @@ func TestContentsForAImageFile(t *testing.T) {
 }
 
 func TestContentsForANonExistingFile(t *testing.T) {
-	block := ContentsAttributeEvaluationBlock{MaxFileSizeInBytesSupported: twentyMb}
+	block := ContentsAttributeLazyEvaluationBlock{maxFileSizeInBytesSupported: twentyMb}
 	value := block.evaluate("no-existing")
 
 	if !reflect.DeepEqual(value, StringValue("")) {
@@ -74,7 +74,7 @@ func TestContentsForANonExistingFile(t *testing.T) {
 }
 
 func TestContentsForADirectory(t *testing.T) {
-	block := ContentsAttributeEvaluationBlock{MaxFileSizeInBytesSupported: twentyMb}
+	block := ContentsAttributeLazyEvaluationBlock{maxFileSizeInBytesSupported: twentyMb}
 	value := block.evaluate("../test/resources/textfiles")
 
 	if !reflect.DeepEqual(value, StringValue("")) {
@@ -83,7 +83,7 @@ func TestContentsForADirectory(t *testing.T) {
 }
 
 func TestContentsForATextFileHavingSizeMoreThanTwentyMB(t *testing.T) {
-	block := ContentsAttributeEvaluationBlock{MaxFileSizeInBytesSupported: 1}
+	block := ContentsAttributeLazyEvaluationBlock{maxFileSizeInBytesSupported: 1}
 	value := block.evaluate("../test/resources/textfiles/sample.txt")
 
 	if !reflect.DeepEqual(value, StringValue("")) {
