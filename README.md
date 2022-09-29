@@ -662,3 +662,5 @@ select * from . where lt(size, (add(2, 3)))
 4. Support for concurrent execution and streaming the results as soon as available. Will not work for `order by` and `aggregate` functions. It is applicable for queries that involve scalar functions without order by. It might make sense to use this feature where the number of files is too many, say more than 0.1 million
 5. Support installation using `brew`, `apt`, `yum`
 6. Support for `between` scalar function
+7. Support for `isArchive` scalar function
+8. Support for single quotes and double quotes
