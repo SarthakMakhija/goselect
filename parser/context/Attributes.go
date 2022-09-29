@@ -1,6 +1,9 @@
 package context
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 type AttributeDefinition struct {
 	aliases             []string
@@ -171,7 +174,7 @@ var attributeDefinitions = map[string]*AttributeDefinition{
 	},
 	AttributeContents: {
 		aliases:             []string{"contents"},
-		description:         "Returns the contents of a text file if it is less than 20mb in size or else empty string",
+		description:         fmt.Sprintf("Returns the contents of a text file if it is less than %d bytes in size or else empty string", twentyMb),
 		lazyEvaluationBlock: ContentsAttributeLazyEvaluationBlock{maxFileSizeInBytesSupported: twentyMb},
 	},
 }

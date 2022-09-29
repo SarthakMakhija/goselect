@@ -32,7 +32,7 @@ type ContentsAttributeLazyEvaluationBlock struct {
 func (c ContentsAttributeLazyEvaluationBlock) evaluate(filePath string) Value {
 	mime, err := mimetype.DetectFile(filePath)
 	if err != nil {
-		return StringValue("")
+		return blankStringValue
 	}
 
 	if strings.HasPrefix(mime.String(), "text/") {
@@ -40,15 +40,15 @@ func (c ContentsAttributeLazyEvaluationBlock) evaluate(filePath string) Value {
 		if err == nil && lstat.Size() <= c.maxFileSizeInBytesSupported {
 			file, err := os.Open(filePath)
 			if err != nil {
-				return StringValue("")
+				return blankStringValue
 			}
 			defer file.Close()
 			bytes, err := io.ReadAll(file)
 			if err != nil {
-				return StringValue("")
+				return blankStringValue
 			}
 			return StringValue(string(bytes))
 		}
 	}
-	return StringValue("")
+	return blankStringValue
 }

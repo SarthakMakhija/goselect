@@ -423,6 +423,7 @@ func readFileContent(filepath string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	defer file.Close()
 	bytes, err := io.ReadAll(file)
 	if err != nil {
 		return "", err
