@@ -530,3 +530,56 @@ func TestResultsWithAWhereClause28(t *testing.T) {
 	}
 	executor.AssertMatch(t, expected, queryResults)
 }
+
+func TestResultsWithAWhereClauseWithSingleQuotedLiteral1(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select name from ./resources/TestResultsWithProjections/ where endsWith(name, 'log') order by 1", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
+	expected := [][]context.Value{
+		{context.StringValue("Empty.log")},
+		{context.StringValue("TestResultsWithProjections_A.log")},
+		{context.StringValue("TestResultsWithProjections_B.log")},
+	}
+	executor.AssertMatch(t, expected, queryResults)
+}
+
+func TestResultsWithAWhereClauseWithSingleQuotedLiteral2(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select name from ./resources/ where eq(name, 'File_(1).log') order by 1", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
+	expected := [][]context.Value{
+		{context.StringValue("File_(1).log")},
+	}
+	executor.AssertMatch(t, expected, queryResults)
+}
+
+func TestResultsWithAWhereClauseWithDoubleQuotedLiteral1(t *testing.T) {
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select name from ./resources/ where eq(basename, \"File_(1)\") order by 1", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
+	expected := [][]context.Value{
+		{context.StringValue("\"File_(1)\".log")},
+	}
+	executor.AssertMatch(t, expected, queryResults)
+}
