@@ -5,6 +5,7 @@ package context
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"reflect"
 	"testing"
@@ -400,4 +401,31 @@ func TestMimeType2(t *testing.T) {
 	if mimeType != expected {
 		t.Fatalf("Expected mime type to be %v, received %v", expected, mimeType)
 	}
+}
+
+func TestContents(t *testing.T) {
+	file, err := os.Stat("../test/resources/textfiles/sample.txt")
+	if err != nil {
+		panic(err)
+	}
+	context := NewContext(nil, NewAttributes())
+	fileAttributes := ToFileAttributes("../test/resources/textfiles/", file, context)
+	actualFileContent := fileAttributes.Get(AttributeContents).GetAsString()
+	expectedFileContent, _ := readFileContent("../test/resources/textfiles/sample.txt")
+
+	if actualFileContent != expectedFileContent {
+		t.Fatalf("Expected file content to be %v but got %v", expectedFileContent, actualFileContent)
+	}
+}
+
+func readFileContent(filepath string) (string, error) {
+	file, err := os.Open(filepath)
+	if err != nil {
+		return "", err
+	}
+	bytes, err := io.ReadAll(file)
+	if err != nil {
+		return "", err
+	}
+	return string(bytes), nil
 }
