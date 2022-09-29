@@ -401,3 +401,33 @@ func TestMimeType2(t *testing.T) {
 		t.Fatalf("Expected mime type to be %v, received %v", expected, mimeType)
 	}
 }
+
+func TestContents(t *testing.T) {
+	file, err := os.Stat("../test/resources/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")
+	if err != nil {
+		panic(err)
+	}
+	context := NewContext(nil, NewAttributes())
+	fileAttributes := ToFileAttributes("../test/resources/TestResultsWithProjections/single", file, context)
+	contents := fileAttributes.Get(AttributeContents).GetAsString()
+	expected := "Sample content for a test named TestResultsWithProjections"
+
+	if contents != expected {
+		t.Fatalf("Expected contents to be %v, received %v", expected, contents)
+	}
+}
+
+func TestContentsWithImage(t *testing.T) {
+	file, err := os.Stat("../test/resources/images/where.png")
+	if err != nil {
+		panic(err)
+	}
+	context := NewContext(nil, NewAttributes())
+	fileAttributes := ToFileAttributes("../test/resources/images", file, context)
+	contents := fileAttributes.Get(AttributeContents).GetAsString()
+	expected := ""
+
+	if contents != expected {
+		t.Fatalf("Expected contents to be %v, received %v", expected, contents)
+	}
+}

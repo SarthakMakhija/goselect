@@ -40,6 +40,7 @@ const (
 	AttributeGroupId            = "groupid"
 	AttributeGroupName          = "groupname"
 	AttributeMimeType           = "mimetype"
+	AttributeContents           = "contents"
 )
 
 var attributeDefinitions = map[string]*AttributeDefinition{
@@ -167,6 +168,11 @@ var attributeDefinitions = map[string]*AttributeDefinition{
 		aliases:             []string{"mimetype", "mime"},
 		description:         "Returns the mime type of a file.",
 		lazyEvaluationBlock: MimeTypeAttributeEvaluationBlock{},
+	},
+	AttributeContents: {
+		aliases:     []string{"contents"},
+		description: "Returns the contents of a file.",
+		lazyEvaluationBlock: ContentsAttributeEvaluationBlock{},
 	},
 }
 

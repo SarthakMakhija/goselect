@@ -35,3 +35,31 @@ func TestMimeTypeForANonExistingFile(t *testing.T) {
 		t.Fatalf("Expected %v while determining the mime type of a non-existent file, received %v", "NA", value.GetAsString())
 	}
 }
+
+func TestContentsForATextFile(t *testing.T) {
+	block := ContentsAttributeEvaluationBlock{}
+	value := block.evaluate("../test/resources/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")
+	expected := "Sample content for a test named TestResultsWithProjections"
+
+	if value.GetAsString() != expected {
+		t.Fatalf("Expected contents to be %v, received %v", expected, value.GetAsString())
+	}
+}
+
+func TestContentsForAImage(t *testing.T) {
+	block := ContentsAttributeEvaluationBlock{}
+	value := block.evaluate("../test/resources/images/where.png")
+
+	if value.GetAsString() != "" {
+		t.Fatalf("Expected contents to be %v, received %v", "", value.GetAsString())
+	}
+}
+
+func TestContentsForANonExistentFile(t *testing.T) {
+	block := ContentsAttributeEvaluationBlock{}
+	value := block.evaluate("../non-existent")
+
+	if value.GetAsString() != "" {
+		t.Fatalf("Expected contents to be %v, received %v", "", value.GetAsString())
+	}
+}

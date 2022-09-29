@@ -37,6 +37,7 @@ func ToFileAttributes(directory string, file fs.FileInfo, ctx *ParsingApplicatio
 	fileAttributes.setBlock(file, ctx.allAttributes)
 	fileAttributes.setUserGroup(file, ctx.allAttributes)
 	fileAttributes.setMimeType(directory, file, ctx.allAttributes)
+	fileAttributes.setContents(directory, file, ctx.allAttributes)
 
 	return fileAttributes
 }
@@ -184,6 +185,10 @@ func (fileAttributes *FileAttributes) setGroupName(groupName string, attributes 
 
 func (fileAttributes *FileAttributes) setMimeType(directory string, file fs.FileInfo, attributes *AllAttributes) {
 	fileAttributes.setAllAliasesForUnevaluatedAttribute(AttributeMimeType, fileAttributes.filePath(directory, file), attributes)
+}
+
+func (fileAttributes *FileAttributes) setContents(directory string, file fs.FileInfo, attributes *AllAttributes) {
+	fileAttributes.setAllAliasesForUnevaluatedAttribute(AttributeContents, fileAttributes.filePath(directory, file), attributes)
 }
 
 func (fileAttributes *FileAttributes) setAllAliasesForEvaluatedAttribute(value Value, aliases []string) {
