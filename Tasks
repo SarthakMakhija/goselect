@@ -24,8 +24,8 @@ Version 0.0.6 Release
 2. [Ease of installation] Allow goselect installation using brew. This will use point (1), meaning changes will happen in release.yml
 3. [New feature] Introduce a scalar function "between"
 4. [New feature] Introduce a scalar function "isArchive"
-5. [New feature] Introduce support for single and double quotes
-6. [New feature] Support for groups in regular expressions
+5. [New feature] Introduce support for single and double quotes: done
+6. [New feature] Support for groups in regular expressions: done
 
 
 Version 0.0.7 Release
