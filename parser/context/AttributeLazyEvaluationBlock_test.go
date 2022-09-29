@@ -39,10 +39,16 @@ func TestMimeTypeForANonExistingFile(t *testing.T) {
 
 func TestContentsForATextFileHavingLessThanTwentyMbSize(t *testing.T) {
 	block := ContentsAttributeLazyEvaluationBlock{maxFileSizeInBytesSupported: twentyMb}
-	value := block.evaluate("../test/resources/textfiles/sample.txt")
+	files := []string{
+		"../test/resources/textfiles/sample.txt",
+		"../test/resources/textfiles/sample.html",
+	}
+	for _, filepath := range files {
+		value := block.evaluate(filepath)
 
-	if reflect.DeepEqual(value, StringValue("")) {
-		t.Fatalf("Expected to get contents for a plain text file having size less than 20mb but got no content")
+		if reflect.DeepEqual(value, StringValue("")) {
+			t.Fatalf("Expected to get contents for a plain text file having size less than 20mb but got no content")
+		}
 	}
 }
 

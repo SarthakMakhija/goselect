@@ -4,6 +4,7 @@ import (
 	"github.com/gabriel-vasile/mimetype"
 	"io"
 	"os"
+	"strings"
 )
 
 const (
@@ -34,8 +35,8 @@ func (c ContentsAttributeLazyEvaluationBlock) evaluate(filePath string) Value {
 		return StringValue("")
 	}
 
-	if mime.Is("text/plain") {
-		lstat, _ := os.Lstat(filePath)
+	if strings.HasPrefix(mime.String(), "text/") {
+		lstat, err := os.Lstat(filePath)
 		if err == nil && lstat.Size() <= c.maxFileSizeInBytesSupported {
 			file, err := os.Open(filePath)
 			if err != nil {
