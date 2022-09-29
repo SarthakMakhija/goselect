@@ -25,6 +25,8 @@ Version 0.0.6 Release
 3. [New feature] Introduce a scalar function "between"
 4. [New feature] Introduce a scalar function "isArchive"
 5. [New feature] Introduce support for single and double quotes
+6. [New feature] Support for groups in regular expressions
+
 
 Version 0.0.7 Release
 1. [Performance] Allow concurrent directory (nested directory) scan, if there are no aggregate functions
