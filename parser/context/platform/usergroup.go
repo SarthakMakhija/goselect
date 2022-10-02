@@ -27,5 +27,5 @@ func UserGroup(file fs.FileInfo) (UserId, UserName, GroupId, GroupName) {
 	if err != nil {
 		return "", "", "", ""
 	}
-	return lookedUpUser.Uid, lookedUpUser.Username, lookedUpUser.Gid, group.Name
+	return lookedUpUser.Uid, lookedUpUser.Username, group.Gid, group.Name
 }
