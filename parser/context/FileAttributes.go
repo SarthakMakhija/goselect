@@ -127,14 +127,9 @@ func (fileAttributes *FileAttributes) setPermission(file fs.FileInfo, attributes
 }
 
 func (fileAttributes *FileAttributes) setBlock(file fs.FileInfo, attributes *AllAttributes) {
-	stat := file.Sys().(*syscall.Stat_t)
-	if stat != nil {
-		fileAttributes.setAllAliasesForEvaluatedAttribute(Int64Value(int64(stat.Blksize)), attributes.aliasesFor(AttributeBlockSize))
-		fileAttributes.setAllAliasesForEvaluatedAttribute(Int64Value(stat.Blocks), attributes.aliasesFor(AttributeBlocks))
-	} else {
-		fileAttributes.setAllAliasesForEvaluatedAttribute(StringValue("NA"), attributes.aliasesFor(AttributeBlockSize))
-		fileAttributes.setAllAliasesForEvaluatedAttribute(StringValue("NA"), attributes.aliasesFor(AttributeBlocks))
-	}
+	blockSize, blocks := platform.FileBlocks(file)
+	fileAttributes.setAllAliasesForEvaluatedAttribute(Int64Value(blockSize), attributes.aliasesFor(AttributeBlockSize))
+	fileAttributes.setAllAliasesForEvaluatedAttribute(Int64Value(blocks), attributes.aliasesFor(AttributeBlocks))
 }
 
 func (fileAttributes *FileAttributes) setUserGroup(file fs.FileInfo, attributes *AllAttributes) {
