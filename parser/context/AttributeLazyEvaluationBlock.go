@@ -23,9 +23,9 @@ func (m MimeTypeAttributeEvaluationBlock) evaluate(filePath string) Value {
 	return StringValue(mime.String())
 }
 
-type ContentsAttributeEvaluationBlock struct{}
+type ContentsAttributeLazyEvaluationBlock struct{}
 
-func (m ContentsAttributeEvaluationBlock) evaluate(filePath string) Value {
+func (c ContentsAttributeLazyEvaluationBlock) evaluate(filePath string) Value {
 	if !shouldEvaluateContents(filePath) {
 		return StringValue("")
 	}

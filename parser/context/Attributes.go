@@ -170,9 +170,9 @@ var attributeDefinitions = map[string]*AttributeDefinition{
 		lazyEvaluationBlock: MimeTypeAttributeEvaluationBlock{},
 	},
 	AttributeContents: {
-		aliases:     []string{"contents"},
-		description: "Returns the contents of a file.",
-		lazyEvaluationBlock: ContentsAttributeEvaluationBlock{},
+		aliases:             []string{"contents"},
+		description:         "Returns the contents of a file.",
+		lazyEvaluationBlock: ContentsAttributeLazyEvaluationBlock{},
 	},
 }
 

@@ -39,7 +39,7 @@ func TestMimeTypeForANonExistingFile(t *testing.T) {
 }
 
 func TestContentsForATextFile(t *testing.T) {
-	block := ContentsAttributeEvaluationBlock{}
+	block := ContentsAttributeLazyEvaluationBlock{}
 	value := block.evaluate("../test/resources/TestResultsWithProjections/single/TestResultsWithProjections_A.txt")
 	expected := "Sample content for a test named TestResultsWithProjections"
 
@@ -49,7 +49,7 @@ func TestContentsForATextFile(t *testing.T) {
 }
 
 func TestContentsForAImage(t *testing.T) {
-	block := ContentsAttributeEvaluationBlock{}
+	block := ContentsAttributeLazyEvaluationBlock{}
 	value := block.evaluate("../test/resources/images/where.png")
 
 	if value.GetAsString() != "" {
@@ -58,7 +58,7 @@ func TestContentsForAImage(t *testing.T) {
 }
 
 func TestContentsForANonExistentFile(t *testing.T) {
-	block := ContentsAttributeEvaluationBlock{}
+	block := ContentsAttributeLazyEvaluationBlock{}
 	value := block.evaluate("../non-existent")
 
 	if value.GetAsString() != "" {
@@ -68,7 +68,7 @@ func TestContentsForANonExistentFile(t *testing.T) {
 
 func TestContentsForAFileExceedingSizeLimits(t *testing.T) {
 	file := createFileOfSize(contentsEvaluationSize)
-	block := ContentsAttributeEvaluationBlock{}
+	block := ContentsAttributeLazyEvaluationBlock{}
 	value := block.evaluate(file.Name())
 
 	if value.GetAsString() != "" {
