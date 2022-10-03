@@ -6,6 +6,7 @@ package context
 import (
 	"fmt"
 	"os"
+	"os/user"
 	"reflect"
 	"testing"
 	"time"
@@ -243,6 +244,42 @@ func TestFilePermission(t *testing.T) {
 
 	if permission != expected {
 		t.Fatalf("Expected permission to be %v, received %v", expected, permission)
+	}
+}
+
+func TestUserGroup(t *testing.T) {
+	file, err := os.Stat("../test/resources/TestResultsWithProjections/empty/Empty.log")
+	if err != nil {
+		panic(err)
+	}
+	context := NewContext(nil, NewAttributes())
+	fileAttributes := ToFileAttributes("../test/resources/TestResultsWithProjections/empty/", file, context)
+
+	currentUser, _ := user.Current()
+
+	userId := fileAttributes.Get(AttributeUserId)
+	userName := fileAttributes.Get(AttributeUserName)
+	groupId := fileAttributes.Get(AttributeGroupId)
+	groupName := fileAttributes.Get(AttributeGroupName)
+
+	expectedUserId := currentUser.Uid
+	expectedUserName := currentUser.Username
+
+	expectedGroupId := currentUser.Gid
+	expectedGroup, _ := user.LookupGroupId(expectedGroupId)
+	expectedGroupName := expectedGroup.Name
+
+	if userId.GetAsString() != expectedUserId {
+		t.Fatalf("Expected userId to be %v, received %v", expectedUserId, userId.GetAsString())
+	}
+	if userName.GetAsString() != expectedUserName {
+		t.Fatalf("Expected userName to be %v, received %v", expectedUserName, userName.GetAsString())
+	}
+	if groupId.GetAsString() != expectedGroupId {
+		t.Fatalf("Expected groupId to be %v, received %v", expectedGroupId, groupId.GetAsString())
+	}
+	if groupName.GetAsString() != expectedGroupName {
+		t.Fatalf("Expected groupName to be %v, received %v", expectedGroupName, groupName.GetAsString())
 	}
 }
 

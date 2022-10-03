@@ -1,4 +1,4 @@
-name: GoSelectCI
+name: GoSelectCI-ubuntu-latest
 
 on:
   push:
@@ -8,13 +8,21 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        go-version: [1.17]
+
     steps:
       - uses: actions/checkout@v3
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
-          go-version: 1.17
+          go-version: ${{ matrix.go-version }}
+
+      - name: Build
+        run: go build -v ./...
 
       - name: Run unit and integration test coverage
         run: go test -coverprofile=coverage.out -coverpkg=./... -covermode=atomic --tags=unit,integration -v ./...
@@ -27,5 +35,3 @@ jobs:
       - name: Run functional tests
         run: go test --tags=functional -v ./...
 
-      - name: Build
-        run: go build -v ./...

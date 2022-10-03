@@ -584,6 +584,28 @@ func TestResultsWithAWhereClauseWithSingleQuotedLiteral3(t *testing.T) {
 	executor.AssertMatch(t, expected, queryResults)
 }
 
+func TestResultsWithAWhereClauseWithSingleQuotedLiteral4(t *testing.T) {
+	directoryName, _ := os.MkdirTemp(".", "quoted")
+	_, _ = os.CreateTemp(directoryName, "'File (60)'.txt")
+
+	defer os.RemoveAll(directoryName)
+
+	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
+	aParser, err := parser.NewParser("select basename from . where eq(basename, \"'File (60)'\".txt) order by 1", newContext)
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	selectQuery, err := aParser.Parse()
+	if err != nil {
+		t.Fatalf("error is %v", err)
+	}
+	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
+	expected := [][]context.Value{
+		{context.StringValue("'File (60)'")},
+	}
+	executor.AssertMatch(t, expected, queryResults)
+}
+
 func TestResultsWithAWhereClauseWithDoubleQuotedLiteral1(t *testing.T) {
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
 	aParser, err := parser.NewParser("select name from ./resources/ where eq(name, \"File_(1).log\") order by 1", newContext)
@@ -602,8 +624,13 @@ func TestResultsWithAWhereClauseWithDoubleQuotedLiteral1(t *testing.T) {
 }
 
 func TestResultsWithAWhereClauseWithDoubleQuotedLiteral2(t *testing.T) {
+	directoryName, _ := os.MkdirTemp(".", "quoted")
+	_, _ = os.CreateTemp(directoryName, "\"File_(45)\".log")
+
+	defer os.RemoveAll(directoryName)
+
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select name from ./resources/ where eq(basename, \\\"File_(1)\\\") order by 1", newContext)
+	aParser, err := parser.NewParser("select basename from . where eq(basename, \\\"File_(45)\\\") order by 1", newContext)
 	if err != nil {
 		t.Fatalf("error is %v", err)
 	}
@@ -613,7 +640,7 @@ func TestResultsWithAWhereClauseWithDoubleQuotedLiteral2(t *testing.T) {
 	}
 	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
-		{context.StringValue("\"File_(1)\".log")},
+		{context.StringValue("\"File_(45)\"")},
 	}
 	executor.AssertMatch(t, expected, queryResults)
 }

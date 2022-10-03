@@ -4,11 +4,8 @@ import (
 	"goselect/parser/context/platform"
 	"io/fs"
 	"os"
-	"os/user"
 	"path/filepath"
-	"strconv"
 	"strings"
-	"syscall"
 )
 
 type EvaluatingValue struct {
@@ -128,43 +125,17 @@ func (fileAttributes *FileAttributes) setPermission(file fs.FileInfo, attributes
 }
 
 func (fileAttributes *FileAttributes) setBlock(file fs.FileInfo, attributes *AllAttributes) {
-	stat := file.Sys().(*syscall.Stat_t)
-	if stat != nil {
-		fileAttributes.setAllAliasesForEvaluatedAttribute(Int64Value(int64(stat.Blksize)), attributes.aliasesFor(AttributeBlockSize))
-		fileAttributes.setAllAliasesForEvaluatedAttribute(Int64Value(stat.Blocks), attributes.aliasesFor(AttributeBlocks))
-	} else {
-		fileAttributes.setAllAliasesForEvaluatedAttribute(StringValue("NA"), attributes.aliasesFor(AttributeBlockSize))
-		fileAttributes.setAllAliasesForEvaluatedAttribute(StringValue("NA"), attributes.aliasesFor(AttributeBlocks))
-	}
+	blockSize, blocks := platform.FileBlocks(file)
+	fileAttributes.setAllAliasesForEvaluatedAttribute(Int64Value(blockSize), attributes.aliasesFor(AttributeBlockSize))
+	fileAttributes.setAllAliasesForEvaluatedAttribute(Int64Value(blocks), attributes.aliasesFor(AttributeBlocks))
 }
 
 func (fileAttributes *FileAttributes) setUserGroup(file fs.FileInfo, attributes *AllAttributes) {
-	stat := file.Sys().(*syscall.Stat_t)
-	if stat != nil {
-		userId := strconv.FormatUint(uint64(stat.Uid), 10)
-
-		lookedUpUser, err := user.LookupId(userId)
-		if err != nil {
-			fileAttributes.setBlankUserGroup(attributes)
-			return
-		}
-		group, err := user.LookupGroupId(lookedUpUser.Gid)
-		if err != nil {
-			fileAttributes.setBlankUserGroup(attributes)
-			return
-		}
-		fileAttributes.setUserId(lookedUpUser.Uid, attributes)
-		fileAttributes.setUserName(lookedUpUser.Username, attributes)
-		fileAttributes.setGroupId(lookedUpUser.Gid, attributes)
-		fileAttributes.setGroupName(group.Name, attributes)
-	}
-}
-
-func (fileAttributes *FileAttributes) setBlankUserGroup(attributes *AllAttributes) {
-	fileAttributes.setUserId("", attributes)
-	fileAttributes.setUserName("", attributes)
-	fileAttributes.setGroupId("", attributes)
-	fileAttributes.setGroupName("", attributes)
+	userId, userName, groupId, groupName := platform.UserGroup(file)
+	fileAttributes.setUserId(userId, attributes)
+	fileAttributes.setUserName(userName, attributes)
+	fileAttributes.setGroupId(groupId, attributes)
+	fileAttributes.setGroupName(groupName, attributes)
 }
 
 func (fileAttributes *FileAttributes) setUserId(userId string, attributes *AllAttributes) {

@@ -1,4 +1,11 @@
-# goselect [![Actions Status](https://github.com/SarthakMakhija/goselect/workflows/GoSelectCI/badge.svg)](https://github.com/SarthakMakhija/goselect/actions)  [![codecov](https://codecov.io/gh/SarthakMakhija/goselect/branch/main/graph/badge.svg?token=CCCAQTE2A3)](https://codecov.io/gh/SarthakMakhija/goselect)
+# goselect [![codecov](https://codecov.io/gh/SarthakMakhija/goselect/branch/main/graph/badge.svg?token=CCCAQTE2A3)](https://codecov.io/gh/SarthakMakhija/goselect)
+
+| Platform      | Build Status                                                                                                                |
+|---------------|:----------------------------------------------------------------------------------------------------------------------------|
+| Ubuntu latest | ![GoSelectCI-ubuntu-latest](https://github.com/SarthakMakhija/goselect/actions/workflows/build-ubuntu-latest.yml/badge.svg) |
+| macOS 11      | ![GoSelectCI-macos-12](https://github.com/SarthakMakhija/goselect/actions/workflows/build-macos-12.yml/badge.svg)           |
+| macOS 12      | ![GoSelectCI-macos-11](https://github.com/SarthakMakhija/goselect/actions/workflows/build-macos-11.yml/badge.svg)           |
+
 *goselect* provides SQL like 'select' interface for files. This means one can execute a select query like:
 ```SQL
 select name, path, size from . where or(like(name, result.*), eq(isdir, true)) order by 3 desc
@@ -664,3 +671,4 @@ select * from . where lt(size, (add(2, 3)))
 6. Support for `between` scalar function
 7. Support for `isArchive` scalar function
 8. Support for single quotes and double quotes
+9. Windows support

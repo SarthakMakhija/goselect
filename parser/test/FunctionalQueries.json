@@ -22,7 +22,7 @@
       "name": "select name, size where isText is true",
       "query": "select name, size from ./resources/ where isText(mime)",
       "isErrorExpected": false,
-      "resultCount": 10
+      "resultCount": 9
     },
     {
       "name": "select name, size where isImage is true in upper case",
@@ -88,13 +88,13 @@
       "name": "select lower(name), sum(size), fmtsize(sum(size)) from resources",
       "query": "SELECT lower(NAME), sum(SIZE), fmtsize(sum(size)) FROM ./resources/",
       "isErrorExpected": false,
-      "resultCount": 20
+      "resultCount": 19
     },
     {
       "name": "select lower(name) from resources where extension is log",
       "query": "SELECT lower(NAME) FROM ./resources/ where eq(ext, .log)",
       "isErrorExpected": false,
-      "resultCount": 5
+      "resultCount": 4
     },
     {
       "name": "select lower(name) from resources where extension is log and file size is 0",
@@ -142,7 +142,7 @@
       "name": "select name, path from resources where name contains an underscore",
       "query": "SELECT lower(NAME), path FROM ./resources/ where contains(name, _)",
       "isErrorExpected": false,
-      "resultCount": 7
+      "resultCount": 6
     },
     {
       "name": "select name, path from resources where resources is a file and its name starts with test",
@@ -182,7 +182,7 @@
     },
     {
       "name": "select name, path from resources where file name contains double quotes",
-      "query": "SELECT lower(NAME), path FROM ./resources/ where eq(basename , \\\"File_(1)\\\") limit 4",
+      "query": "SELECT lower(NAME), path FROM ./resources/ where eq(basename , 'File (1)') limit 4",
       "isErrorExpected": true,
       "resultCount": 1
     }
