@@ -45,6 +45,3 @@ jobs:
 
       - name: Run functional tests
         run: go test --tags=functional -v ./...
-
-      - name: Build
-        run: go build -v ./...
