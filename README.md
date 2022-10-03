@@ -1,4 +1,4 @@
-# goselect [![Actions Status](https://github.com/SarthakMakhija/goselect/workflows/GoSelectCI/badge.svg)](https://github.com/SarthakMakhija/goselect/actions)  [![codecov](https://codecov.io/gh/SarthakMakhija/goselect/branch/main/graph/badge.svg?token=CCCAQTE2A3)](https://codecov.io/gh/SarthakMakhija/goselect)
+# goselect [![Actions Status](https://github.com/SarthakMakhija/goselect/workflows/GoSelectCI-ubuntu-latest/badge.svg)](https://github.com/SarthakMakhija/goselect/actions)  [![codecov](https://codecov.io/gh/SarthakMakhija/goselect/branch/main/graph/badge.svg?token=CCCAQTE2A3)](https://codecov.io/gh/SarthakMakhija/goselect)
 *goselect* provides SQL like 'select' interface for files. This means one can execute a select query like:
 ```SQL
 select name, path, size from . where or(like(name, result.*), eq(isdir, true)) order by 3 desc
