@@ -4,6 +4,8 @@
 package context
 
 import (
+	"github.com/dustin/go-humanize"
+	"os"
 	"testing"
 )
 
@@ -62,4 +64,28 @@ func TestContentsForANonExistentFile(t *testing.T) {
 	if value.GetAsString() != "" {
 		t.Fatalf("Expected contents to be %v, received %v", "", value.GetAsString())
 	}
+}
+
+func TestContentsForAFileExceedingSizeLimits(t *testing.T) {
+	file := createFileOfSize(contentsEvaluationSize)
+	block := ContentsAttributeEvaluationBlock{}
+	value := block.evaluate(file.Name())
+
+	if value.GetAsString() != "" {
+		t.Fatalf("Expected contents to be %v, received %v", "", value.GetAsString())
+	}
+}
+
+func createFileOfSize(size string) *os.File {
+	directoryName, _ := os.MkdirTemp(".", "temp")
+	file, _ := os.CreateTemp(directoryName, "temp-file")
+	defer os.RemoveAll(directoryName)
+
+	sizeInBytes, _ := humanize.ParseBytes(size)
+	content := make([]byte, sizeInBytes)
+	for index := 0; index < int(sizeInBytes); index++ {
+		content[index] = byte(100)
+	}
+	_, _ = file.Write(content)
+	return file
 }
