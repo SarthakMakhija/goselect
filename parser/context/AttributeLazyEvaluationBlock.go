@@ -27,11 +27,11 @@ type ContentsAttributeLazyEvaluationBlock struct{}
 
 func (c ContentsAttributeLazyEvaluationBlock) evaluate(filePath string) Value {
 	if !shouldEvaluateContents(filePath) {
-		return StringValue("")
+		return blankStringValue
 	}
 	contents, err := os.ReadFile(filePath)
 	if err != nil {
-		return StringValue("")
+		return blankStringValue
 	}
 
 	return StringValue(string(contents))

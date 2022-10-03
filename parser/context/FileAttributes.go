@@ -103,7 +103,7 @@ func (fileAttributes *FileAttributes) setPath(directory string, file fs.FileInfo
 
 func (fileAttributes *FileAttributes) setExtension(file fs.FileInfo, hiddenFile bool, attributes *AllAttributes) {
 	if hiddenFile {
-		fileAttributes.setAllAliasesForEvaluatedAttribute(StringValue(""), attributes.aliasesFor(AttributeExtension))
+		fileAttributes.setAllAliasesForEvaluatedAttribute(blankStringValue, attributes.aliasesFor(AttributeExtension))
 	} else {
 		fileAttributes.setAllAliasesForEvaluatedAttribute(StringValue(filepath.Ext(file.Name())), attributes.aliasesFor(AttributeExtension))
 	}
