@@ -1,10 +1,12 @@
-# goselect [![codecov](https://codecov.io/gh/SarthakMakhija/goselect/branch/main/graph/badge.svg?token=CCCAQTE2A3)](https://codecov.io/gh/SarthakMakhija/goselect)
+![goselect](images/logo.png)
 
 | Platform      | Build Status                                                                                                                |
 |---------------|:----------------------------------------------------------------------------------------------------------------------------|
 | Ubuntu latest | ![GoSelectCI-ubuntu-latest](https://github.com/SarthakMakhija/goselect/actions/workflows/build-ubuntu-latest.yml/badge.svg) |
 | macOS 11      | ![GoSelectCI-macos-12](https://github.com/SarthakMakhija/goselect/actions/workflows/build-macos-12.yml/badge.svg)           |
 | macOS 12      | ![GoSelectCI-macos-11](https://github.com/SarthakMakhija/goselect/actions/workflows/build-macos-11.yml/badge.svg)           |
+
+[![codecov](https://codecov.io/gh/SarthakMakhija/goselect/branch/main/graph/badge.svg?token=CCCAQTE2A3)](https://codecov.io/gh/SarthakMakhija/goselect)
 
 *goselect* provides SQL like 'select' interface for files. This means one can execute a select query like:
 ```SQL
