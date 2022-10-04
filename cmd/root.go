@@ -31,7 +31,6 @@ Features that are different from SQL:
 3. goselect does not support expressions like name=sample.log in 'where' clause. Instead, various functions are given to represent such expressions. These functions include: 'eq', 'ne', 'lt' etc
 4. goselect has a weak grammar. For example, a query like: select 1+2, name from /home/projects will ignore 1+2 and return file names
 5. goselect's 'order by' clause supports only attribute positions. For example, a query like: select name, size from /home/projects order by 1 will order the results by first attribute
-6. goselect does not support single quote ['] and double quotes["]. For example, to match a file name, one could simply write a query: select * from . where eq(name, sample) 
 
 goselect is available here: https://github.com/SarthakMakhija/goselect
 `,
