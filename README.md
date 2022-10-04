@@ -369,7 +369,12 @@ goselect ex -q='select name, extension from . where isVideo(mime)'
 goselect ex -q='select name, extension from . where isPdf(mime)'
 ```
 
-10. **Select file name, extension and size of all the files if their size is greater than 1 Mib**
+10. **Select file name and extension of all the archive files (Version 0.0.6)**
+```SQL
+goselect ex -q='select name, extension from . where isArchive(mime)'
+```
+
+11. **Select file name, extension and size of all the files if their size is greater than 1 Mib**
 ```SQL
 goselect ex -q='select name, extension, size, fmtsize(size) from . where gt(size, mul(1, 1024, 1024))'
 
@@ -384,7 +389,7 @@ goselect ex -q='select name, extension, size, fmtsize(size) from . where gt(size
 goselect ex -q='select name, extension, size, fmtsize(size) from . where gt(size, parseSize(1 Mib))'
 ```
 
-11. **Select file name, extension and size of all the files if their size is greater than or equal to 1 Mib**
+12. **Select file name, extension and size of all the files if their size is greater than or equal to 1 Mib**
 ```SQL
 goselect ex -q='select name, extension, size, fmtsize(size) from . where gte(size, mul(1, 1024, 1024))'
 ```
@@ -397,7 +402,7 @@ goselect ex -q='select name, extension, size, fmtsize(size) from . where gte(siz
 goselect ex -q='select name, extension, size, fmtsize(size) from . where gte(size, parseSize(1 Mib))'
 ```
 
-12. **Select file name, extension and size of all the files if their size is less than 1 Mib**
+13. **Select file name, extension and size of all the files if their size is less than 1 Mib**
 ```SQL
 goselect ex -q='select name, extension, size, fmtsize(size) from . where lt(size, mul(1, 1024, 1024))'
 ```
@@ -410,7 +415,7 @@ goselect ex -q='select name, extension, size, fmtsize(size) from . where lt(size
 goselect ex -q='select name, extension, size, fmtsize(size) from . where lt(size, parseSize(1 Mib))'
 ```
 
-13. **Select file name, extension and size of all the files if their size is less than or equal to 1 Mib**
+14. **Select file name, extension and size of all the files if their size is less than or equal to 1 Mib**
 ```SQL
 goselect ex -q='select name, extension, size, fmtsize(size) from . where lte(size, mul(1, 1024, 1024))'
 ```
@@ -423,7 +428,7 @@ goselect ex -q='select name, extension, size, fmtsize(size) from . where lte(siz
 goselect ex -q='select name, extension, size, fmtsize(size) from . where lte(size, parseSize(1 Mib))'
 ```
 
-14. **Select file name, extension and size of all the files if their size equal to 600 bytes**
+15. **Select file name, extension and size of all the files if their size equal to 600 bytes**
 ```SQL
 goselect ex -q='select name, extension, size, fmtsize(size) from . where eq(size, 600)'
 ```
@@ -432,22 +437,22 @@ goselect ex -q='select name, extension, size, fmtsize(size) from . where eq(size
 goselect ex -q='select name, extension, size, fmtsize(size) from . where eq(size, parseSize(600 B))'
 ```
 
-15. **Select file name, extension and size of all the files if their extension is equal to .go**
+16. **Select file name, extension and size of all the files if their extension is equal to .go**
 ```SQL
 goselect ex -q='select name, extension, size, fmtsize(size) from . where eq(ext, .go)'
 ```
 
-16. **Select file name, extension and size of all the files if their extension is not equal to .go**
+17. **Select file name, extension and size of all the files if their extension is not equal to .go**
 ```SQL
 goselect ex -q='select name, extension, size, fmtsize(size) from . where ne(ext, .go)'
 ```
 
-17. **Select file name and extension of all the text files if their names start with lowercase test**
+18. **Select file name and extension of all the text files if their names start with lowercase test**
 ```SQL
 goselect ex -q='select name, extension from . where and(isText(mime), startsWith(lower(name), test))'
 ```
 
-18. **Select file name of all the hidden files and directories**
+19. **Select file name of all the hidden files and directories**
 ```SQL
 goselect ex -q='select name from . where or(eq(isDir, true), eq(isHidden, true))'
 ```
@@ -456,22 +461,22 @@ goselect ex -q='select name from . where or(eq(isDir, true), eq(isHidden, true))
 goselect ex -q='select name from . where or(isDir, isHidden)'
 ```
 
-19. **Select count of all the hidden files**
+20. **Select count of all the hidden files**
 ```SQL
 goselect ex -q='select count(), name from . where eq(isHidden, true)'
 ```
 
-19. **Select count of all the pdf files**
+21. **Select count of all the pdf files**
 ```SQL
 goselect ex -q='select count() from . where eq(isPdf(mime), true)'
 ```
 
-20. **Select sum of size of all the hidden files**
+21. **Select sum of size of all the hidden files**
 ```SQL
 goselect ex -q='select fmtsize(sum(size)), size from . where eq(isHidden, true)'
 ```
 
-21. **Select all the files that are not hidden**
+22. **Select all the files that are not hidden**
 ```SQL
 goselect ex -q='select name, extension from . where not(isHidden, true)'
 ```
@@ -480,24 +485,46 @@ goselect ex -q='select name, extension from . where not(isHidden, true)'
 goselect ex -q='select name, extension from . where eq(isHidden, false)'
 ```
 
-22. **Select basename and extension of all the files with .log as the extension and their basename should have a date format: Year-Month-Date (for example, 2022-09-28)**
+23. **Select basename and extension of all the files with .log as the extension and their basename should have a date format: Year-Month-Date (for example, 2022-09-28)**
 ```SQL
 goselect ex -q='select basename, ext from . where and(eq(ext, .log), like(basename, [0-9]{4}-[0-9]{2}-[0-9]{2}))'
 ```
 
-23. **Select file name and extension of all the files that were accessed 2 or more days earlier**
+24. **Select file name and extension of all the files that were accessed 2 or more days earlier**
 ```SQL
 goselect ex -q='select name, ext, atime from . where gte(daysdiff(atime), 2)'
 
 Default value of second parameter in daysdiff is now()
 ```
 
-24. **Select file name and extension of all the files that were modified on or after 2022-09-22**
+25. **Select file name and extension of all the files that were modified on or after 2022-09-22**
 ```SQL
 goselect ex -q='select name, ext, mtime from . where gt(mtime, parseDateTime(2022-09-22, dt))'
 
 Here, parseDateTime is given a date without timezone, that means while comparing mtime and the input value, timezone may play role. 
 '2022-09-22' will have UTC as the timezone that might not be same the timezone of mtime.   
+```
+
+### Using quotes in queries (Version 0.0.6)
+
+1. **Select size and the formatted size of the file that has hello world.txt as the name** 
+```SQL
+goselect ex -q='select size, formatSize(size) from . where eq(name, "hello world.txt")'
+```
+
+2. **Select size and the formatted size of the file that has hello world.txt as the name (query begins with double quotes)**
+```SQL
+goselect ex -q="select size, formatSize(size) from . where eq(name, 'hello world.txt')"
+```
+
+3. **Select size and the formatted size of the file that has "hello world.txt" as the name (file name contains double quotes)**
+```SQL
+goselect ex -q='select size, formatSize(size) from . where eq(name, \"hello world.txt\")'
+```
+
+4. **Select size and the formatted size of the file that has "hello world.txt" as the name (query begins with double quotes and file name contains double quotes)**
+```SQL
+goselect ex -q="select size, formatSize(size) from . where eq(name, \\\"hello world.txt\\\")"
 ```
 
 # FAQs
