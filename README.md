@@ -96,11 +96,6 @@ select name, size from /home/projects order by 1
 ```
 will order the results by the first attribute `name`
 
-6. *goselect* does not support single quote ['] and double quotes["]. For example, to match a file name, one could simply write a query: 
-```SQL
-select * from . where eq(name, sample)
-```
-
 # Supported platforms
 
 - *goselect* has been tested on **macOS Big Sur 11.4**, **macOS Monterey 12.6** and **Ubuntu 20.0.3**
@@ -633,25 +628,25 @@ goselect wherefns
 
 *goselect* does not support the following:
 
-1. **Single quotes and double quotes.** 
-To match a file name there is no need to use single or double quotes. One could simply write a query:
-```SQL
-select * from . where eq(name, sample)
-```
-
-2. **Groups in regular expressions.**
-Currently, there is no support for using groups in regular expressions. This means one can not write the following query:
-```SQL
-select * from . where like(name, ([0-9]?)([a-z]{1}))
-```
-This will be part of one of the future releases. Please check [Planned changes](#planned-changes).
-
-3. **Use of parentheses inside a function call.**
+1. **Use of parentheses inside a function call.**
 One can not use parentheses inside a function call. This means the following queries are treated invalid:  
 ```SQL
 select * from . where eq(add(2, 3), (4))
 
 select * from . where lt(size, (add(2, 3)))
+```
+
+If a file name contains parentheses, then one could use single or double quotes in the query to match such a file name. 
+```SQL
+select * from . where eq(name, "hello (1).txt")
+```
+
+2. **Use of expressions in order by.**
+*goselect* supports attribute positions in order by. This means the following queries are treated invalid:
+```SQL
+select name, extension from . order by name
+
+select name, extension from . order by lower(name)
 ```
 
 # Screenshots
