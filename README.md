@@ -522,7 +522,7 @@ goselect ex -q="select size, formatSize(size) from . where eq(name, 'hello world
 goselect ex -q='select size, formatSize(size) from . where eq(name, \"hello world.txt\")'
 ```
 
-4. **Select size and the formatted size of the file that has "hello world.txt" as the name (query begins with double quotes and file name contains double quotes)**
+4. **Select size and the formatted size of the file that has "hello world.txt" as the name (query begins with double quotes and the file name contains double quotes)**
 ```SQL
 goselect ex -q="select size, formatSize(size) from . where eq(name, \\\"hello world.txt\\\")"
 ```
