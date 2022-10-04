@@ -29,6 +29,7 @@ The project *goselect* was created to understand the following:
 &#x1F539; **Execution of nested scalar and aggregation functions like `countDistinct(lower(name))`**. Here, the function `lower(name)` runs for each row whereas `countDistinct` runs over a collection of rows.
 
 # [Content organization](#table-of-contents)
+  * [Overview](#overview)
   * [Example queries](#example-queries)
   * [Feature overview](#feature-overview)
   * [Differences between SQL select and goselect](#differences-between-sql-select-and-goselect)
@@ -49,6 +50,10 @@ The project *goselect* was created to understand the following:
   * [Unsupported ideas](#unsupported-ideas)
   * [Screenshots](#screenshots)
   * [Planned changes](#planned-changes)
+
+# Overview
+
+[![asciicast](https://asciinema.org/a/525506.svg)](https://asciinema.org/a/525506)
 
 # Example queries
 
