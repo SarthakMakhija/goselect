@@ -37,6 +37,7 @@ The project *goselect* was created to understand the following:
     * [MacOS](#macos)
     * [Linux AMD64](#linux-amd64)
   * [Changelog](#changelog)
+    * [Version 0.0.6](#version-006)
     * [Version 0.0.5](#version-005)
     * [Version 0.0.4](#version-004)
     * [Version 0.0.3](#version-003)
@@ -124,13 +125,19 @@ select * from . where eq(name, sample)
 
 # Changelog
 
+### Version 0.0.6
+
+1. Support for single and double quotes. For example, `goselect ex -q='select name, extension from . where eq(name, "hello world.txt")'`
+2. Support for groups in regular expressions. For example, `goselect ex -q='select name, extension from . where like(name, "^([0-9]{4})-[0-9]{2}-[0-9]{2}-.*\.txt$")'`
+3. Addition of a new function `isArchive`
+
 ### Version 0.0.5
 
-1. Addition of a new function parseSize makes the comparison based on file size easier. Use, `select * from . where gt(size, parseSize(15 Mb))`
+1. Addition of a new function `parseSize` makes the comparison based on file size easier. Use, `select * from . where gt(size, parseSize(15 Mb))`
 2. Addition of 't' as a shorthand for the flag 'term' in describe command
 3. Addition of new flags 'minWidth' and 'maxWidth' for controlling the width of the attributes while exporting as table. Usage: `goselect ex -q='select name, ext, size, fmtsize(size), isdir from .' --minWidth=10 --maxWidth=50`, will put a minimum of 10 characters and maximum of 50 characters in each row. 
 4. Table export does not capitalize the headers
-5. Removal of 'sorted' flag from listAttributes, listFunctions, listWhereClauseFunctions and listTimeFormats commands
+5. Removal of 'sorted' flag from `listAttributes`, `listFunctions`, `listWhereClauseFunctions` and `listTimeFormats` commands
 
 ### Version 0.0.4
 
@@ -663,12 +670,9 @@ select * from . where lt(size, (add(2, 3)))
 
 # Planned changes
 
-1. Support for groups in regular expressions
-2. Support for checking if a (text) file contains a specific term
-3. Caching the expression results. This is useful for cases like `select lower(name) from . where eq(lower(name), sample)`. In this example, `lower(name)` need not be evaluated twice for a row 
-4. Support for concurrent execution and streaming the results as soon as available. Will not work for `order by` and `aggregate` functions. It is applicable for queries that involve scalar functions without order by. It might make sense to use this feature where the number of files is too many, say more than 0.1 million
-5. Support installation using `brew`, `apt`, `yum`
-6. Support for `between` scalar function
-7. Support for `isArchive` scalar function
-8. Support for single quotes and double quotes
-9. Windows support
+1. Support for checking if a (text) file contains a specific term
+2. Caching the expression results. This is useful for cases like `select lower(name) from . where eq(lower(name), sample)`. In this example, `lower(name)` need not be evaluated twice for a row 
+3. Support for concurrent execution and streaming the results as soon as available. Will not work for `order by` and `aggregate` functions. It is applicable for queries that involve scalar functions without order by. It might make sense to use this feature where the number of files is too many, say more than 0.1 million
+4. Support installation using `brew`, `apt`, `yum`
+5. Support for `between` scalar function
+6. Windows support
