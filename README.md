@@ -105,18 +105,18 @@ will order the results by the first attribute `name`
 ### MacOS
 
 1. **Download the current release**
-   - `wget -o - https://github.com/SarthakMakhija/goselect/releases/download/v0.0.5/goselect_0.0.5_Darwin_all.tar.gz`
+   - `wget -o - https://github.com/SarthakMakhija/goselect/releases/download/v0.0.6/goselect_0.0.6_Darwin_all.tar.gz`
 
 2. **Unzip the release in a directory**
-   - `mkdir goselect && tar xvf goselect_0.0.5_Darwin_all.tar.gz -C goselect`
+   - `mkdir goselect && tar xvf goselect_0.0.6_Darwin_all.tar.gz -C goselect`
 
 ### Linux AMD64
 
 1. **Download the current release**
-   - `wget -o - https://github.com/SarthakMakhija/goselect/releases/download/v0.0.5/goselect_0.0.5_Linux_x86_64.tar.gz`
+   - `wget -o - https://github.com/SarthakMakhija/goselect/releases/download/v0.0.6/goselect_0.0.6_Linux_x86_64.tar.gz`
 
 2. **Unzip the release in a directory**
-   - `mkdir goselect && tar xvf goselect_0.0.5_Linux_x86_64.tar.gz -C goselect`
+   - `mkdir goselect && tar xvf goselect_0.0.6_Linux_x86_64.tar.gz -C goselect`
 
 # Changelog
 
