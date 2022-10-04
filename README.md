@@ -1,10 +1,5 @@
 ![goselect](images/logo.png)
 
-
-![goselect](images/logo_1.png)
-
-![goselect](images/logo_2.png)
-
 | Platform      | Build Status                                                                                                                |
 |---------------|:----------------------------------------------------------------------------------------------------------------------------|
 | Ubuntu latest | ![GoSelectCI-ubuntu-latest](https://github.com/SarthakMakhija/goselect/actions/workflows/build-ubuntu-latest.yml/badge.svg) |
