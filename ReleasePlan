@@ -1,4 +1,4 @@
-Version 0.0.4 Release
+Version 0.0.4 Release: done
 
 1. Infer input values
 2. Make isImage, isText, isPdf, isAudio, isVideo functions a part of where clause
@@ -9,21 +9,20 @@ Version 0.0.4 Release
     - ifBlank
 5. Introduce version flag
 
-Version 0.0.5 Release
+Version 0.0.5 Release: done
 
-1. Improving table formatter to handle the formatting for large number of columns: done
-2. Table formatter: header and footer should not be capitalized : done
-3. Adds -t as a flag alias for describe command: done
-4. Support for matching file size with units. For example, select * from . where gt(size, parsesize(15 Mb)) Or select * from . where gt(size, parsesize(15 Mib)) : done
-5. Remove --sorted: true
-6. Think about min width and max width shortcuts:
+1. Improving table formatter to handle the formatting for large number of columns
+2. Table formatter: header and footer should not be capitalized
+3. Adds -t as a flag alias for describe command
+4. Support for matching file size with units. For example, select * from . where gt(size, parsesize(15 Mb)) Or select * from . where gt(size, parsesize(15 Mib))
+5. Remove --sorted
 
-Version 0.0.6 Release
+Version 0.0.6 Release: done
 
-1. (Not user facing), create a release.yml in.github/workflows to allow releases to happen in github repo anytime a tag is pushed: done
-3. [New feature] Introduce a scalar function "isArchive": done
-4. [New feature] Introduce support for single and double quotes: done
-5. [New feature] Support for groups in regular expressions: done
+1. (Not user facing), create a release.yml in.github/workflows to allow releases to happen in github repo anytime a tag is pushed
+3. [New feature] Introduce a scalar function "isArchive"
+4. [New feature] Introduce support for single and double quotes
+5. [New feature] Support for groups in regular expressions
 
 
 Version 0.0.7 Release
