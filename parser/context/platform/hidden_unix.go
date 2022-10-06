@@ -3,6 +3,6 @@
 
 package platform
 
-func IsHiddenFile(filename string) (bool, error) {
+func IsHiddenFile(path, filename string) (bool, error) {
 	return filename[0:1] == ".", nil
 }

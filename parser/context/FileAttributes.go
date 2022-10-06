@@ -22,14 +22,14 @@ type FileAttributes struct {
 
 func ToFileAttributes(directory string, file fs.FileInfo, ctx *ParsingApplicationContext) *FileAttributes {
 	fileAttributes := newFileAttributes()
-	hiddenFile, _ := platform.IsHiddenFile(file.Name())
+	fileAttributes.setPath(directory, file, ctx.allAttributes)
 
+	hiddenFile, _ := platform.IsHiddenFile(fileAttributes.Get(AttributePath).GetAsString(), file.Name())
 	fileAttributes.setName(file, hiddenFile, ctx.allAttributes)
 	fileAttributes.setExtension(file, hiddenFile, ctx.allAttributes)
 	fileAttributes.setSize(file, ctx.allAttributes)
-	fileAttributes.setFileType(directory, file, ctx.allAttributes)
+	fileAttributes.setFileType(directory, file, hiddenFile, ctx.allAttributes)
 	fileAttributes.setTimes(file, ctx.allAttributes)
-	fileAttributes.setPath(directory, file, ctx.allAttributes)
 	fileAttributes.setPermission(file, ctx.allAttributes)
 	fileAttributes.setBlock(file, ctx.allAttributes)
 	fileAttributes.setUserGroup(file, ctx.allAttributes)
@@ -69,7 +69,7 @@ func (fileAttributes *FileAttributes) setSize(file fs.FileInfo, attributes *AllA
 	fileAttributes.setAllAliasesForEvaluatedAttribute(Int64Value(file.Size()), attributes.aliasesFor(AttributeSize))
 }
 
-func (fileAttributes *FileAttributes) setFileType(directory string, file fs.FileInfo, attributes *AllAttributes) {
+func (fileAttributes *FileAttributes) setFileType(directory string, file fs.FileInfo, hiddenFile bool, attributes *AllAttributes) {
 	fileAttributes.setAllAliasesForEvaluatedAttribute(booleanValueUsing(file.IsDir()), attributes.aliasesFor(AttributeNameIsDir))
 	fileAttributes.setAllAliasesForEvaluatedAttribute(booleanValueUsing(file.Mode().IsRegular()), attributes.aliasesFor(AttributeNameIsFile))
 	fileAttributes.setAllAliasesForEvaluatedAttribute(booleanValueUsing(file.Mode()&os.ModeSymlink == os.ModeSymlink), attributes.aliasesFor(AttributeNameIsSymbolicLink))
@@ -80,7 +80,6 @@ func (fileAttributes *FileAttributes) setFileType(directory string, file fs.File
 	} else {
 		fileAttributes.setAllAliasesForEvaluatedAttribute(booleanValueUsing(file.Size() == 0), attributes.aliasesFor(AttributeNameIsEmpty))
 	}
-	hiddenFile, _ := platform.IsHiddenFile(file.Name())
 	fileAttributes.setAllAliasesForEvaluatedAttribute(booleanValueUsing(hiddenFile), attributes.aliasesFor(AttributeNameIsHidden))
 }
 
