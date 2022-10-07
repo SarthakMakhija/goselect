@@ -14,8 +14,11 @@ import (
 
 func TestResultsWithProjectionsUsingIfBlank1(t *testing.T) {
 	directory, err := os.MkdirTemp(".", "blank")
-	_, _ = os.Create(directory + string(os.PathSeparator) + "hello")
-	defer os.RemoveAll(directory)
+	file, _ := os.Create(directory + string(os.PathSeparator) + "hello")
+	defer func() {
+		file.Close()
+		os.RemoveAll(directory)
+	}()
 
 	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
 	aParser, err := parser.NewParser(fmt.Sprintf("select ifBlank(lower(name), NA), ifBlank(ext, NA) from %v", directory), newContext)

@@ -313,6 +313,10 @@ func TestResultsWithAWhereClause16(t *testing.T) {
 func TestResultsWithAWhereClause17(t *testing.T) {
 	directoryName, _ := os.MkdirTemp(".", "ctime-test-dir")
 	file, _ := os.CreateTemp(directoryName, "ctime-test-file")
+	defer func() {
+		file.Close()
+		os.RemoveAll(directoryName)
+	}()
 
 	defer os.RemoveAll(directoryName)
 
@@ -568,7 +572,11 @@ func TestResultsWithAWhereClauseWithSingleQuotedLiteral3(t *testing.T) {
 
 func TestResultsWithAWhereClauseWithSingleQuotedLiteral4(t *testing.T) {
 	directoryName, _ := os.MkdirTemp(".", "quoted")
-	_, _ = os.CreateTemp(directoryName, "'File (60)'.txt")
+	file, _ := os.CreateTemp(directoryName, "'File (60)'.txt")
+	defer func() {
+		file.Close()
+		os.RemoveAll(directoryName)
+	}()
 
 	defer os.RemoveAll(directoryName)
 
