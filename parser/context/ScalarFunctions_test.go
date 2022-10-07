@@ -97,7 +97,7 @@ func TestMultiplyWithMissingParameterValue(t *testing.T) {
 }
 
 func TestMultiplyWithNonNumericParameterValue(t *testing.T) {
-	_, err := NewFunctions().Execute("mul", StringValue(""), StringValue("a"))
+	_, err := NewFunctions().Execute("mul", blankStringValue, StringValue("a"))
 
 	if err == nil {
 		t.Fatalf("Expected an error while executing mul with non-numeric parameter value")

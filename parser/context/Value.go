@@ -34,6 +34,7 @@ var (
 	oneUint32Value    = Uint32Value(1)
 	trueBooleanValue  = BooleanValue(true)
 	falseBooleanValue = BooleanValue(false)
+	blankStringValue  = StringValue("")
 )
 
 type Value struct {
