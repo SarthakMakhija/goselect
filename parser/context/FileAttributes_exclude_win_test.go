@@ -4,8 +4,8 @@
 package context
 
 import (
-	"fmt"
 	"os"
+	"os/user"
 	"reflect"
 	"testing"
 )
