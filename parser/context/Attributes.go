@@ -101,7 +101,7 @@ var attributeDefinitions = map[string]*AttributeDefinition{
 	},
 	AttributePermission: {
 		aliases:     []string{"permission", "perm"},
-		description: "Returns the file permission.",
+		description: "Returns the file permission (read/write/execute).",
 	},
 	AttributeUserRead: {
 		aliases:     []string{"userread", "uread"},
@@ -141,27 +141,27 @@ var attributeDefinitions = map[string]*AttributeDefinition{
 	},
 	AttributeBlockSize: {
 		aliases:     []string{"blocksize", "bsize", "blksize"},
-		description: "Returns the block size, usually 4096 bytes.",
+		description: "Returns the block size, usually 4096 bytes. Returns -1 for windows.",
 	},
 	AttributeBlocks: {
 		aliases:     []string{"blocks", "blks"},
-		description: "Returns the total number of blocks allocated to the file.",
+		description: "Returns the total number of blocks allocated to the file. Returns -1 for windows.",
 	},
 	AttributeUserId: {
 		aliases:     []string{"userid", "uid"},
-		description: "Returns the user id.",
+		description: "Returns the user id. Returns blank for windows.",
 	},
 	AttributeUserName: {
 		aliases:     []string{"username", "uname"},
-		description: "Returns the user name.",
+		description: "Returns the user name. Returns blank for windows.",
 	},
 	AttributeGroupId: {
 		aliases:     []string{"groupid", "gid"},
-		description: "Returns the group id.",
+		description: "Returns the group id. Returns blank for windows.",
 	},
 	AttributeGroupName: {
 		aliases:     []string{"groupname", "gname"},
-		description: "Returns the group name.",
+		description: "Returns the group name. Returns blank for windows.",
 	},
 	AttributeMimeType: {
 		aliases:             []string{"mimetype", "mime"},
