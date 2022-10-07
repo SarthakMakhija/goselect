@@ -273,12 +273,14 @@ func TestAttemptsToExecuteWithExportInANonExistingDirectory(t *testing.T) {
 	_ = cmd.GetRootCommand().Execute()
 
 	contents := buffer.String()
-	expected := "stat /123: no such file or directory"
+	expected1 := "stat /123: no such file or directory"
+	expected2 := "CreateFile /123: The system cannot find the file specified"
 
-	if !strings.Contains(contents, expected) {
+	if !strings.Contains(contents, expected1) && !strings.Contains(contents, expected2) {
 		t.Fatalf(
-			"Expected an error %v while trying to export the result in a non-existing directory %v",
-			expected,
+			"Expected an error %v or %v while trying to export the result in a non-existing directory %v",
+			expected1,
+			expected2,
 			contents,
 		)
 	}
