@@ -38,10 +38,5 @@ jobs:
       - name: Run unit and integration test coverage
         run: go test -coverprofile=coverage.out -coverpkg=./... -covermode=atomic --tags=unit,integration -v ./...
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-
       - name: Run functional tests
         run: go test --tags=functional -v ./...
