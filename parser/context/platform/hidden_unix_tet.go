@@ -5,7 +5,6 @@ package platform
 
 import (
 	"os"
-	"syscall"
 	"testing"
 )
 
