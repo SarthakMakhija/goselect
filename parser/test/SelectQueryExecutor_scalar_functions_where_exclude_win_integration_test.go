@@ -4,7 +4,6 @@
 package test
 
 import (
-	"fmt"
 	"goselect/parser"
 	"goselect/parser/context"
 	"goselect/parser/executor"
@@ -48,26 +47,6 @@ func TestResultsWithAWhereClauseWithDoubleQuotedLiteral2(t *testing.T) {
 	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
 	expected := [][]context.Value{
 		{context.StringValue("\"File_(45)\"")},
-	}
-	executor.AssertMatch(t, expected, queryResults)
-}
-
-func TestResultsWithProjectionsWithFormatSize(t *testing.T) {
-	newContext := context.NewContext(context.NewFunctions(), context.NewAttributes())
-	aParser, err := parser.NewParser("select lower(name), fmtsize(size) from ./resources/TestResultsWithProjections/multi order by 1", newContext)
-	if err != nil {
-		t.Fatalf("error is %v", err)
-	}
-	selectQuery, err := aParser.Parse()
-	if err != nil {
-		t.Fatalf("error is %v", err)
-	}
-	queryResults, _ := executor.NewSelectQueryExecutor(selectQuery, newContext, executor.NewDefaultOptions()).Execute()
-	expected := [][]context.Value{
-		{context.StringValue("testresultswithprojections_a.log"), context.StringValue("71 B")},
-		{context.StringValue("testresultswithprojections_b.log"), context.StringValue("58 B")},
-		{context.StringValue("testresultswithprojections_c.txt"), context.StringValue("58 B")},
-		{context.StringValue("testresultswithprojections_d.txt"), context.StringValue("58 B")},
 	}
 	executor.AssertMatch(t, expected, queryResults)
 }
