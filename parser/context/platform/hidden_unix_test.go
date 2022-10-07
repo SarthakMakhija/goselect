@@ -69,7 +69,7 @@ func TestBaseNameForHiddenFile(t *testing.T) {
 	}()
 
 	fileInfo, _ := os.Stat(file.Name())
-	baseName := BaseName(false, fileInfo)
+	baseName := BaseName(true, fileInfo)
 
 	if baseName != ".Make" {
 		t.Fatalf("Expected basename to be %v received %v", ".Make", baseName)
@@ -105,7 +105,7 @@ func TestExtensionForHiddenFile(t *testing.T) {
 	}()
 
 	fileInfo, _ := os.Stat(file.Name())
-	extension := Extension(false, fileInfo)
+	extension := Extension(true, fileInfo)
 
 	if extension != "" {
 		t.Fatalf("Expected extension to be %v received %v", "", extension)
