@@ -13,7 +13,10 @@ import (
 func TestFileExtensionForHiddenFile(t *testing.T) {
 	directory, _ := os.MkdirTemp(".", "hidden")
 	hiddenFile, _ := os.Create(directory + string(os.PathSeparator) + "hidden.txt")
-	defer os.RemoveAll(directory)
+	defer func() {
+		hiddenFile.Close()
+		os.RemoveAll(directory)
+	}()
 
 	_ = setHidden(hiddenFile.Name())
 
@@ -33,7 +36,10 @@ func TestFileExtensionForHiddenFile(t *testing.T) {
 func TestFileBaseNameForHiddenFile(t *testing.T) {
 	directory, _ := os.MkdirTemp(".", "hidden")
 	hiddenFile, _ := os.Create(directory + string(os.PathSeparator) + "hidden.txt")
-	defer os.RemoveAll(directory)
+	defer func() {
+		hiddenFile.Close()
+		os.RemoveAll(directory)
+	}()
 
 	file, err := os.Stat(hiddenFile.Name())
 	if err != nil {
@@ -62,18 +68,6 @@ func TestFilePath(t *testing.T) {
 	if path != expected {
 		t.Fatalf("Expected file path to be %v, received %v", expected, path)
 	}
-}
-
-func setHidden(path string) error {
-	filenameW, err := syscall.UTF16PtrFromString(path)
-	if err != nil {
-		return err
-	}
-	err = syscall.SetFileAttributes(filenameW, syscall.FILE_ATTRIBUTE_HIDDEN)
-	if err != nil {
-		return err
-	}
-	return nil
 }
 
 func TestFilePermission(t *testing.T) {
@@ -129,4 +123,16 @@ func TestFilePermissionForOthers(t *testing.T) {
 	if !reflect.DeepEqual(expected, received) {
 		t.Fatalf("Expected permissions for others to be %v, received %v", expected, received)
 	}
+}
+
+func setHidden(path string) error {
+	filenameW, err := syscall.UTF16PtrFromString(path)
+	if err != nil {
+		return err
+	}
+	err = syscall.SetFileAttributes(filenameW, syscall.FILE_ATTRIBUTE_HIDDEN)
+	if err != nil {
+		return err
+	}
+	return nil
 }

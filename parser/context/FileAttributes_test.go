@@ -153,7 +153,11 @@ func TestFileType4(t *testing.T) {
 
 func TestFileType5(t *testing.T) {
 	directoryName, _ := os.MkdirTemp(".", "file-type-dir")
-	_, _ = os.CreateTemp(directoryName, "file-type-file")
+	tempFile, _ := os.CreateTemp(directoryName, "file-type-file")
+	defer func() {
+		tempFile.Close()
+		os.RemoveAll(directoryName)
+	}()
 
 	defer os.RemoveAll(directoryName)
 
@@ -210,6 +214,10 @@ func TestFilePermissionForUsers(t *testing.T) {
 func TestAccessTime(t *testing.T) {
 	directoryName, _ := os.MkdirTemp(".", "access-time-dir")
 	newFile, _ := os.CreateTemp(directoryName, "access-time-file")
+	defer func() {
+		newFile.Close()
+		os.RemoveAll(directoryName)
+	}()
 
 	defer os.RemoveAll(directoryName)
 
@@ -232,6 +240,10 @@ func TestAccessTime(t *testing.T) {
 func TestModifiedTime(t *testing.T) {
 	directoryName, _ := os.MkdirTemp(".", "modified-time-dir")
 	newFile, _ := os.CreateTemp(directoryName, "modified-time-file")
+	defer func() {
+		newFile.Close()
+		os.RemoveAll(directoryName)
+	}()
 
 	defer os.RemoveAll(directoryName)
 
@@ -254,6 +266,10 @@ func TestModifiedTime(t *testing.T) {
 func TestCreatedTime(t *testing.T) {
 	directoryName, _ := os.MkdirTemp(".", "created-time-dir")
 	newFile, _ := os.CreateTemp(directoryName, "created-time-file")
+	defer func() {
+		newFile.Close()
+		os.RemoveAll(directoryName)
+	}()
 
 	defer os.RemoveAll(directoryName)
 
