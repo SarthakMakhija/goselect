@@ -3,8 +3,8 @@
 | Platform       | Build Status                                                                                                                  |
 |----------------|:------------------------------------------------------------------------------------------------------------------------------|
 | Ubuntu latest  | ![GoSelectCI-ubuntu-latest](https://github.com/SarthakMakhija/goselect/actions/workflows/build-ubuntu-latest.yml/badge.svg)   |
-| macOS 11       | ![GoSelectCI-macos-12](https://github.com/SarthakMakhija/goselect/actions/workflows/build-macos-12.yml/badge.svg)             |
-| macOS 12       | ![GoSelectCI-macos-11](https://github.com/SarthakMakhija/goselect/actions/workflows/build-macos-11.yml/badge.svg)             |
+| macOS 11       | ![GoSelectCI-macos-11](https://github.com/SarthakMakhija/goselect/actions/workflows/build-macos-11.yml/badge.svg)             |
+| macOS 12       | ![GoSelectCI-macos-12](https://github.com/SarthakMakhija/goselect/actions/workflows/build-macos-12.yml/badge.svg)             |
 | Windows latest | ![GoSelectCI-windows-latest](https://github.com/SarthakMakhija/goselect/actions/workflows/build-windows-latest.yml/badge.svg) |
 
 [![codecov](https://codecov.io/gh/SarthakMakhija/goselect/branch/main/graph/badge.svg?token=CCCAQTE2A3)](https://codecov.io/gh/SarthakMakhija/goselect)
