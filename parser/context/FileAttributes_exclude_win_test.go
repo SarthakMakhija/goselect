@@ -3,6 +3,13 @@
 
 package context
 
+import (
+	"fmt"
+	"os"
+	"reflect"
+	"testing"
+)
+
 func TestFileExtensionForHiddenFile(t *testing.T) {
 	file, err := os.Stat("../test/resources/TestResultsWithProjections/hidden/.Make")
 	if err != nil {
