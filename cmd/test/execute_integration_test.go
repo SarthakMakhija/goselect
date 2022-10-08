@@ -7,8 +7,10 @@ import (
 	"bytes"
 	"fmt"
 	"goselect/cmd"
+	"goselect/parser/alias"
 	"goselect/parser/error/messages"
 	"os"
+	"reflect"
 	"strings"
 	"testing"
 )
@@ -337,5 +339,50 @@ func TestExecuteWithExportToAFileInADirectoryWithPathSeparator(t *testing.T) {
 	_, err := os.Open(fileName)
 	if err != nil {
 		t.Fatalf("Expected file %v to exist but received an err %v", fileName, err)
+	}
+}
+
+func TestExecutesAQueryAndSaveWithAnAlias(t *testing.T) {
+	directoryName, _ := os.MkdirTemp(".", "export-result")
+	defer os.RemoveAll(directoryName)
+	withSeparator := directoryName + string(os.PathSeparator)
+
+	cmd.GetRootCommand().SetArgs([]string{"execute", "--query", "select name from ./resources/ order by 1", "--alias", "nameFromResources", "-f", "json", "-p", withSeparator})
+	buffer := new(bytes.Buffer)
+	cmd.GetRootCommand().SetOut(buffer)
+
+	_ = cmd.GetRootCommand().Execute()
+
+	queryAlias := alias.NewQueryAlias()
+	defer os.Remove(queryAlias.FilePath)
+
+	aliases, _ := queryAlias.All()
+	expected := map[string]string{
+		"nameFromResources": "select name from ./resources/ order by 1",
+	}
+
+	if !reflect.DeepEqual(expected, aliases) {
+		t.Fatalf("Expected aliases to be %v, received %v", expected, aliases)
+	}
+}
+
+func TestExecutesAQueryAndSaveWithAnAliasWithAnExistingCorruptedFile(t *testing.T) {
+	queryAlias := alias.NewQueryAlias()
+	_ = os.WriteFile(queryAlias.FilePath, []byte("hello"), 0644)
+	defer os.Remove(queryAlias.FilePath)
+
+	directoryName, _ := os.MkdirTemp(".", "export-result")
+	defer os.RemoveAll(directoryName)
+	withSeparator := directoryName + string(os.PathSeparator)
+
+	cmd.GetRootCommand().SetArgs([]string{"execute", "--query", "select name from ./resources/ order by 1", "--alias", "ordered", "-f", "json", "-p", withSeparator})
+	buffer := new(bytes.Buffer)
+	cmd.GetRootCommand().SetOut(buffer)
+
+	_ = cmd.GetRootCommand().Execute()
+
+	contents := buffer.String()
+	if !strings.Contains(contents, "invalid character") {
+		t.Fatalf("Expected an error message %v, received none in %v", "invalid character", contents)
 	}
 }

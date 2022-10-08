@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"goselect/parser"
+	"goselect/parser/alias"
 	"goselect/parser/context"
 	"goselect/parser/executor"
 	"goselect/parser/source"
@@ -148,6 +149,15 @@ func newExecuteCommand() *cobra.Command {
 					cmd.Println(errorColor, err)
 					return
 				}
+				queryAlias, _ := cmd.Flags().GetString("alias")
+				if len(strings.TrimSpace(queryAlias)) != 0 {
+					query, _ := cmd.Flags().GetString("query")
+					queryAliasReference := alias.NewQueryAlias()
+					if err := queryAliasReference.Add(alias.Alias{Query: query, Alias: strings.TrimSpace(queryAlias)}); err != nil {
+						cmd.Println(errorColor, err)
+						return
+					}
+				}
 			}
 			run()
 		},
@@ -202,5 +212,11 @@ func init() {
 		"x",
 		0,
 		"specify the maximum character length to be used for each attribute/column. This flag is relevant only for the table format and will be needed only if the default formatting breaks. For the best results, use minWidth and maxWidth together. Use --maxWidth=<value greater than zero>",
+	)
+	executeCmd.Flags().StringP(
+		"alias",
+		"a",
+		"",
+		"specify the query alias to save the query with an alternate name. Use --alias=<some alias>",
 	)
 }
