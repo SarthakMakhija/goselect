@@ -26,11 +26,7 @@ func NewQueryAlias() *QueryAliasReference {
 }
 
 func (queryAlias *QueryAliasReference) Add(alias Alias) error {
-	contents, err := queryAlias.readAll()
-	if err != nil {
-		return err
-	}
-	aliases, err := queryAlias.unMarshal(contents)
+	aliases, err := queryAlias.readAndUnmarshal()
 	if err != nil {
 		return err
 	}
@@ -46,11 +42,7 @@ func (queryAlias *QueryAliasReference) Add(alias Alias) error {
 }
 
 func (queryAlias *QueryAliasReference) GetQueryBy(alias string) (string, bool, error) {
-	contents, err := queryAlias.readAll()
-	if err != nil {
-		return "", false, err
-	}
-	aliases, err := queryAlias.unMarshal(contents)
+	aliases, err := queryAlias.readAndUnmarshal()
 	if err != nil {
 		return "", false, err
 	}
@@ -59,11 +51,7 @@ func (queryAlias *QueryAliasReference) GetQueryBy(alias string) (string, bool, e
 }
 
 func (queryAlias QueryAliasReference) All() (Aliases, error) {
-	contents, err := queryAlias.readAll()
-	if err != nil {
-		return nil, err
-	}
-	return queryAlias.unMarshal(contents)
+	return queryAlias.readAndUnmarshal()
 }
 
 func (queryAlias QueryAliasReference) isAliasPresent(aliases Aliases, alias Alias) bool {
@@ -71,6 +59,18 @@ func (queryAlias QueryAliasReference) isAliasPresent(aliases Aliases, alias Alia
 		return true
 	}
 	return false
+}
+
+func (queryAlias QueryAliasReference) readAndUnmarshal() (Aliases, error) {
+	contents, err := queryAlias.readAll()
+	if err != nil {
+		return nil, err
+	}
+	aliases, err := queryAlias.unMarshal(contents)
+	if err != nil {
+		return nil, err
+	}
+	return aliases, nil
 }
 
 func (queryAlias QueryAliasReference) readAll() ([]byte, error) {
