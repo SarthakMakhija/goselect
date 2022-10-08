@@ -47,3 +47,20 @@ func TestQueryAliasesInNonExistingEmptyFile(t *testing.T) {
 		t.Fatalf("Expected a message %v, received %v", cmd.NoAliases, contents)
 	}
 }
+
+func TestQueryAliasesForACorruptFile(t *testing.T) {
+	queryAlias := alias.NewQueryAlias()
+	_ = os.WriteFile(queryAlias.FilePath, []byte("Hello"), 0644)
+	defer os.Remove(queryAlias.FilePath)
+
+	cmd.GetRootCommand().SetArgs([]string{"listQueryAliases"})
+	buffer := new(bytes.Buffer)
+	cmd.GetRootCommand().SetOut(buffer)
+
+	_ = cmd.GetRootCommand().Execute()
+	contents := buffer.String()
+
+	if !strings.Contains(contents, "invalid character") {
+		t.Fatalf("Expected a message %v, received %v", "invalid character", contents)
+	}
+}
