@@ -10,7 +10,7 @@ import (
 const fileName = "goselect.alias"
 
 type QueryAliasReference struct {
-	filePath string
+	FilePath string
 }
 
 type Aliases = map[string]string
@@ -22,7 +22,7 @@ type Alias struct {
 
 func NewQueryAlias() *QueryAliasReference {
 	filePath := "." + string(os.PathSeparator) + fileName
-	return &QueryAliasReference{filePath: filePath}
+	return &QueryAliasReference{FilePath: filePath}
 }
 
 func (queryAlias *QueryAliasReference) Add(alias Alias) error {
@@ -31,7 +31,7 @@ func (queryAlias *QueryAliasReference) Add(alias Alias) error {
 		return err
 	}
 	if queryAlias.isAliasPresent(aliases, alias) {
-		return fmt.Errorf(messages.ErrorMessageQueryAliasAlreadyExists, alias, queryAlias.filePath)
+		return fmt.Errorf(messages.ErrorMessageQueryAliasAlreadyExists, alias, queryAlias.FilePath)
 	}
 	aliases[alias.Alias] = alias.Query
 	bytes, err := queryAlias.marshal(aliases)
@@ -74,14 +74,14 @@ func (queryAlias QueryAliasReference) readAndUnmarshal() (Aliases, error) {
 }
 
 func (queryAlias QueryAliasReference) readAll() ([]byte, error) {
-	_, err := os.Stat(queryAlias.filePath)
+	_, err := os.Stat(queryAlias.FilePath)
 	if err != nil {
 		if os.IsNotExist(err) {
 			return []byte{}, nil
 		}
 		return nil, err
 	}
-	return os.ReadFile(queryAlias.filePath)
+	return os.ReadFile(queryAlias.FilePath)
 }
 
 func (queryAlias *QueryAliasReference) marshal(aliases Aliases) ([]byte, error) {
@@ -101,5 +101,5 @@ func (queryAlias *QueryAliasReference) unMarshal(contents []byte) (Aliases, erro
 }
 
 func (queryAlias *QueryAliasReference) write(bytes []byte) error {
-	return os.WriteFile(queryAlias.filePath, bytes, 0644)
+	return os.WriteFile(queryAlias.FilePath, bytes, 0644)
 }

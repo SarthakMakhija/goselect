@@ -11,7 +11,7 @@ import (
 
 func TestAddsAQueryAlias(t *testing.T) {
 	queryAliasReference := NewQueryAlias()
-	defer os.Remove(queryAliasReference.filePath)
+	defer os.Remove(queryAliasReference.FilePath)
 
 	_ = queryAliasReference.Add(Alias{Query: "select * from .", Alias: "lsCurrent"})
 	query, _, _ := queryAliasReference.GetQueryBy("lsCurrent")
@@ -24,7 +24,7 @@ func TestAddsAQueryAlias(t *testing.T) {
 
 func TestGetsANonExistingAlias(t *testing.T) {
 	queryAliasReference := NewQueryAlias()
-	defer os.Remove(queryAliasReference.filePath)
+	defer os.Remove(queryAliasReference.FilePath)
 
 	_ = queryAliasReference.Add(Alias{Query: "select * from .", Alias: "lsCurrent"})
 	query, _, _ := queryAliasReference.GetQueryBy("unknown")
@@ -37,7 +37,7 @@ func TestGetsANonExistingAlias(t *testing.T) {
 
 func TestGetsANonExistingAliasInNonExistingAliasFile(t *testing.T) {
 	queryAliasReference := NewQueryAlias()
-	defer os.Remove(queryAliasReference.filePath)
+	defer os.Remove(queryAliasReference.FilePath)
 
 	query, _, _ := queryAliasReference.GetQueryBy("unknown")
 	expected := ""
@@ -49,7 +49,7 @@ func TestGetsANonExistingAliasInNonExistingAliasFile(t *testing.T) {
 
 func TestGetsANonExistingAliasInNonExistingAliasFileEnsuringThereIsNoError(t *testing.T) {
 	queryAliasReference := NewQueryAlias()
-	defer os.Remove(queryAliasReference.filePath)
+	defer os.Remove(queryAliasReference.FilePath)
 
 	_, _, err := queryAliasReference.GetQueryBy("unknown")
 	if err != nil {
@@ -59,7 +59,7 @@ func TestGetsANonExistingAliasInNonExistingAliasFileEnsuringThereIsNoError(t *te
 
 func TestAddsAQueryAliasToAnExistingFile(t *testing.T) {
 	queryAliasReference := NewQueryAlias()
-	defer os.Remove(queryAliasReference.filePath)
+	defer os.Remove(queryAliasReference.FilePath)
 
 	_ = queryAliasReference.Add(Alias{Query: "select * from .", Alias: "lsCurrent"})
 	_ = queryAliasReference.Add(Alias{Query: "select * from ~/Downloads", Alias: "lsDownloads"})
@@ -74,7 +74,7 @@ func TestAddsAQueryAliasToAnExistingFile(t *testing.T) {
 
 func TestAttemptsToAddTheSameAlias(t *testing.T) {
 	queryAliasReference := NewQueryAlias()
-	defer os.Remove(queryAliasReference.filePath)
+	defer os.Remove(queryAliasReference.FilePath)
 
 	_ = queryAliasReference.Add(Alias{Query: "select * from .", Alias: "lsCurrent"})
 	err := queryAliasReference.Add(Alias{Query: "select * from ~/Downloads", Alias: "lsCurrent"})
@@ -86,9 +86,9 @@ func TestAttemptsToAddTheSameAlias(t *testing.T) {
 
 func TestAttemptsToReadACorruptFile(t *testing.T) {
 	queryAliasReference := NewQueryAlias()
-	defer os.Remove(queryAliasReference.filePath)
+	defer os.Remove(queryAliasReference.FilePath)
 
-	_ = os.WriteFile(queryAliasReference.filePath, []byte("Hello"), 0644)
+	_ = os.WriteFile(queryAliasReference.FilePath, []byte("Hello"), 0644)
 	err := queryAliasReference.Add(Alias{Query: "select * from .", Alias: "lsCurrent"})
 	if err == nil {
 		t.Fatalf("Expected an error while dealing with a corrupt alias file, received none")
@@ -97,7 +97,7 @@ func TestAttemptsToReadACorruptFile(t *testing.T) {
 
 func TestGetsAllTheAliases(t *testing.T) {
 	queryAliasReference := NewQueryAlias()
-	defer os.Remove(queryAliasReference.filePath)
+	defer os.Remove(queryAliasReference.FilePath)
 
 	_ = queryAliasReference.Add(Alias{Query: "select * from .", Alias: "lsCurrent"})
 	_ = queryAliasReference.Add(Alias{Query: "select * from ~/Downloads", Alias: "lsDownloads"})
