@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-const fileName = "goselect.alias"
+const fileName = "goselect.query.alias"
 
 type QueryAliasReference struct {
 	FilePath string
