@@ -447,3 +447,32 @@ func TestExecutesAQueryWithASavedAlias(t *testing.T) {
 		}
 	}
 }
+
+func TestExecutesAQueryWithAnUnSavedAlias(t *testing.T) {
+	cmd.GetRootCommand().SetArgs([]string{
+		"execute",
+		"--useAlias",
+		"unknown",
+		"-f",
+		"table",
+		"-p",
+		"",
+		"--createAlias",
+		"",
+		"-n=true",
+		"--maxWidth",
+		"100",
+		"--minWidth",
+		"0",
+	})
+	buffer := new(bytes.Buffer)
+	cmd.GetRootCommand().SetOut(buffer)
+
+	_ = cmd.GetRootCommand().Execute()
+	contents := buffer.String()
+	expected := fmt.Sprintf(cmd.ErrorMessageExpectedAQueryForAnAlias, "unknown")
+
+	if !strings.Contains(contents, expected) {
+		t.Fatalf("Expected %v to be contained in the output but was not, received %v", expected, contents)
+	}
+}
