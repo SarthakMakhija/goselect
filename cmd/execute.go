@@ -149,7 +149,7 @@ func newExecuteCommand() *cobra.Command {
 					cmd.Println(errorColor, err)
 					return
 				}
-				queryAlias, _ := cmd.Flags().GetString("alias")
+				queryAlias, _ := cmd.Flags().GetString("createAlias")
 				if len(strings.TrimSpace(queryAlias)) != 0 {
 					query, _ := cmd.Flags().GetString("query")
 					queryAliasReference := alias.NewQueryAlias()
@@ -214,9 +214,9 @@ func init() {
 		"specify the maximum character length to be used for each attribute/column. This flag is relevant only for the table format and will be needed only if the default formatting breaks. For the best results, use minWidth and maxWidth together. Use --maxWidth=<value greater than zero>",
 	)
 	executeCmd.Flags().StringP(
-		"alias",
-		"a",
+		"createAlias",
+		"c",
 		"",
-		"specify the query alias to save the query with an alternate name. Use --alias=<some alias>",
+		"specify the query alias to save the query with an alternate name. Use --createAlias=<some alias>",
 	)
 }

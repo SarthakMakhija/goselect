@@ -347,7 +347,7 @@ func TestExecutesAQueryAndSaveWithAnAlias(t *testing.T) {
 	defer os.RemoveAll(directoryName)
 	withSeparator := directoryName + string(os.PathSeparator)
 
-	cmd.GetRootCommand().SetArgs([]string{"execute", "--query", "select name from ./resources/ order by 1", "--alias", "nameFromResources", "-f", "json", "-p", withSeparator})
+	cmd.GetRootCommand().SetArgs([]string{"execute", "--query", "select name from ./resources/ order by 1", "--createAlias", "nameFromResources", "-f", "json", "-p", withSeparator})
 	buffer := new(bytes.Buffer)
 	cmd.GetRootCommand().SetOut(buffer)
 
@@ -375,7 +375,7 @@ func TestExecutesAQueryAndSaveWithAnAliasWithAnExistingCorruptedFile(t *testing.
 	defer os.RemoveAll(directoryName)
 	withSeparator := directoryName + string(os.PathSeparator)
 
-	cmd.GetRootCommand().SetArgs([]string{"execute", "--query", "select name from ./resources/ order by 1", "--alias", "ordered", "-f", "json", "-p", withSeparator})
+	cmd.GetRootCommand().SetArgs([]string{"execute", "--query", "select name from ./resources/ order by 1", "--createAlias", "ordered", "-f", "json", "-p", withSeparator})
 	buffer := new(bytes.Buffer)
 	cmd.GetRootCommand().SetOut(buffer)
 
