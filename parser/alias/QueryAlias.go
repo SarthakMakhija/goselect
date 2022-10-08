@@ -28,7 +28,7 @@ func NewQueryAlias() *QueryAliasReference {
 func (queryAlias *QueryAliasReference) Add(alias Alias) error {
 	aliases, err := queryAlias.readAndUnmarshal()
 	if err != nil {
-		return err
+		return fmt.Errorf(messages.ErrorMessageQueryAliasAddPrefixWithExistingError, err)
 	}
 	if queryAlias.isAliasPresent(aliases, alias) {
 		return fmt.Errorf(messages.ErrorMessageQueryAliasAlreadyExists, alias, queryAlias.FilePath)
@@ -36,7 +36,7 @@ func (queryAlias *QueryAliasReference) Add(alias Alias) error {
 	aliases[alias.Alias] = alias.Query
 	bytes, err := queryAlias.marshal(aliases)
 	if err != nil {
-		return err
+		return fmt.Errorf(messages.ErrorMessageQueryAliasAddPrefixWithExistingError, err)
 	}
 	return queryAlias.write(bytes)
 }
@@ -44,14 +44,18 @@ func (queryAlias *QueryAliasReference) Add(alias Alias) error {
 func (queryAlias *QueryAliasReference) GetQueryBy(alias string) (string, bool, error) {
 	aliases, err := queryAlias.readAndUnmarshal()
 	if err != nil {
-		return "", false, err
+		return "", false, fmt.Errorf(messages.ErrorMessageQueryAliasGetPrefixWithExistingError, err)
 	}
 	query, ok := aliases[alias]
 	return query, ok, nil
 }
 
 func (queryAlias QueryAliasReference) All() (Aliases, error) {
-	return queryAlias.readAndUnmarshal()
+	aliases, err := queryAlias.readAndUnmarshal()
+	if err != nil {
+		return nil, fmt.Errorf(messages.ErrorMessageQueryAliasGetAllPrefixWithExistingError, err)
+	}
+	return aliases, nil
 }
 
 func (queryAlias QueryAliasReference) isAliasPresent(aliases Aliases, alias Alias) bool {

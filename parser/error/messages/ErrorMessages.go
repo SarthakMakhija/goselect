@@ -35,4 +35,7 @@ const (
 	ErrorMessageCannotConvertToBoolean                    = "expected conversion of %v to boolean, but failed"
 	ErrorMessageUndefinedConversionFunction               = "expected conversion of %v to %v, but such a conversion is not supported"
 	ErrorMessageQueryAliasAlreadyExists                   = "expected a non-existing query alias. Query alias %v is already present in the file %v"
+	ErrorMessageQueryAliasAddPrefixWithExistingError      = "[Add query alias], %s"
+	ErrorMessageQueryAliasGetPrefixWithExistingError      = "[Get query alias], %s"
+	ErrorMessageQueryAliasGetAllPrefixWithExistingError   = "[Get all query aliases], %s"
 )
