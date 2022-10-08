@@ -10,7 +10,6 @@ import (
 	"goselect/parser/alias"
 	"goselect/parser/error/messages"
 	"os"
-	"reflect"
 	"strings"
 	"testing"
 )
@@ -357,12 +356,17 @@ func TestExecutesAQueryAndSaveWithAnAlias(t *testing.T) {
 	defer os.Remove(queryAlias.FilePath)
 
 	aliases, _ := queryAlias.All()
-	expected := map[string]string{
-		"nameFromResources": "select name from ./resources/ order by 1",
-	}
+	expectedAlias := "nameFromResources"
+	expectedQuery := "select name from ./resources/ order by 1"
 
-	if !reflect.DeepEqual(expected, aliases) {
-		t.Fatalf("Expected aliases to be %v, received %v", expected, aliases)
+	found := false
+	for savedAlias, query := range aliases {
+		if savedAlias == expectedAlias && query == expectedQuery {
+			found = true
+		}
+	}
+	if !found {
+		t.Fatalf("Expected alias %v and query %v, received aliases %v", expectedAlias, expectedQuery, aliases)
 	}
 }
 

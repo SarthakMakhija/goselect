@@ -84,6 +84,17 @@ func TestAttemptsToAddTheSameAlias(t *testing.T) {
 	}
 }
 
+func TestAttemptsToAddTheSamePreExistingAlias(t *testing.T) {
+	queryAliasReference := NewQueryAlias()
+	defer os.Remove(queryAliasReference.FilePath)
+
+	err := queryAliasReference.Add(Alias{Query: "select * from ~/Downloads", Alias: "lsCurrent"})
+
+	if err == nil {
+		t.Fatalf("Expected an error while adding the same alias but received none")
+	}
+}
+
 func TestAttemptsToReadACorruptFile(t *testing.T) {
 	queryAliasReference := NewQueryAlias()
 	defer os.Remove(queryAliasReference.FilePath)
@@ -102,10 +113,11 @@ func TestGetsAllTheAliases(t *testing.T) {
 	_ = queryAliasReference.Add(Alias{Query: "select * from .", Alias: "lsCurrent"})
 	_ = queryAliasReference.Add(Alias{Query: "select * from ~/Downloads", Alias: "lsDownloads"})
 
-	expected := map[string]string{
+	added := map[string]string{
 		"lsCurrent":   "select * from .",
 		"lsDownloads": "select * from ~/Downloads",
 	}
+	expected := queryAliasReference.merge(added, preDefinedAliases)
 	aliases, _ := queryAliasReference.All()
 	if !reflect.DeepEqual(expected, aliases) {
 		t.Fatalf("Expected all the aliases to be %v, received %v", expected, aliases)

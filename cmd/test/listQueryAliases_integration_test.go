@@ -36,6 +36,7 @@ func TestQueryAliases(t *testing.T) {
 }
 
 func TestQueryAliasesInNonExistingEmptyFile(t *testing.T) {
+	queryAlias := alias.NewQueryAlias()
 	cmd.GetRootCommand().SetArgs([]string{"listQueryAliases"})
 	buffer := new(bytes.Buffer)
 	cmd.GetRootCommand().SetOut(buffer)
@@ -43,8 +44,14 @@ func TestQueryAliasesInNonExistingEmptyFile(t *testing.T) {
 	_ = cmd.GetRootCommand().Execute()
 	contents := buffer.String()
 
-	if !strings.Contains(contents, cmd.NoAliases) {
-		t.Fatalf("Expected a message %v, received %v", cmd.NoAliases, contents)
+	aliases := queryAlias.PredefinedAliases()
+	for alias, query := range aliases {
+		if !strings.Contains(contents, alias) {
+			t.Fatalf("Expected alias %v to be contained in the query alises but was not, received %v", alias, contents)
+		}
+		if !strings.Contains(contents, query) {
+			t.Fatalf("Expected query %v to be contained in the query alises but was not, received %v", alias, contents)
+		}
 	}
 }
 

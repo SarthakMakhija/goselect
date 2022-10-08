@@ -15,6 +15,22 @@ type QueryAliasReference struct {
 
 type Aliases = map[string]string
 
+var preDefinedAliases = Aliases{
+	"lsCurrent":                  "select * from .",
+	"lsCurrentOrderedBySizeDesc": "select name, ext, size, abspath from . order by 3 desc",
+	"lsCurrentFormattedSize":     "select name, ext, size, fmtSize(size), abspath from . order by 3 desc",
+	"fileWithMaxSizeInCurrent":   "select name, size, fmtSize(size) from . order by 2 desc limit 1",
+	"fileWithMinSizeInCurrent":   "select name, size, fmtSize(size) from . order by 2 limit 1",
+	"totalSizeInCurrent":         "select fmtSize(sum(size)) from .",
+	"minMaxSizeInCurrent":        "select fmtSize(min(size)), fmtSize(max(size)) from .",
+	"textsInCurrent":             "select name, size, fmtSize(size) from . where isText(mime) order by 2 desc",
+	"imagesInCurrent":            "select name, size, fmtSize(size) from . where isImage(mime) order by 2 desc",
+	"pdfsInCurrent":              "select name, size, fmtSize(size) from . where isPdf(mime) order by 2 desc",
+	"audiosInCurrent":            "select name, size, fmtSize(size) from . where isAudio(mime) order by 2 desc",
+	"videosInCurrent":            "select name, size, fmtSize(size) from . where isVideo(mime) order by 2 desc",
+	"archivesInCurrent":          "select name, size, fmtSize(size) from . where isArchive(mime) order by 2 desc",
+}
+
 type Alias struct {
 	Query string `json:"query"`
 	Alias string `json:"alias"`
@@ -58,6 +74,10 @@ func (queryAlias QueryAliasReference) All() (Aliases, error) {
 	return aliases, nil
 }
 
+func (queryAlias QueryAliasReference) PredefinedAliases() Aliases {
+	return preDefinedAliases
+}
+
 func (queryAlias QueryAliasReference) isAliasPresent(aliases Aliases, alias Alias) bool {
 	if _, ok := aliases[alias.Alias]; ok {
 		return true
@@ -99,11 +119,22 @@ func (queryAlias *QueryAliasReference) unMarshal(contents []byte) (Aliases, erro
 		if err != nil {
 			return Aliases{}, err
 		}
-		return aliases, nil
+		return queryAlias.merge(aliases, preDefinedAliases), nil
 	}
-	return Aliases{}, nil
+	return preDefinedAliases, nil
 }
 
 func (queryAlias *QueryAliasReference) write(bytes []byte) error {
 	return os.WriteFile(queryAlias.FilePath, bytes, 0644)
+}
+
+func (queryAlias *QueryAliasReference) merge(aliases, preDefinedAliases Aliases) Aliases {
+	merged := make(Aliases)
+	for alias, query := range aliases {
+		merged[alias] = query
+	}
+	for alias, query := range preDefinedAliases {
+		merged[alias] = query
+	}
+	return merged
 }

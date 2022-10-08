@@ -8,8 +8,6 @@ import (
 	"sort"
 )
 
-const NoAliases = "No aliases saved"
-
 var listQueryAliasesCmd = &cobra.Command{
 	Use:     "listQueryAliases",
 	Aliases: []string{"qAliases"},
@@ -47,10 +45,6 @@ var listQueryAliasesCmd = &cobra.Command{
 		aliases, err := queryAlias.All()
 		if err != nil {
 			cmd.Println(errorColor, err)
-			return
-		}
-		if len(aliases) == 0 {
-			cmd.Println(errorColor, NoAliases)
 			return
 		}
 		appendHeader()
