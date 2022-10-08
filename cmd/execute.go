@@ -134,6 +134,20 @@ func newExecuteCommand() *cobra.Command {
 				return writeToFile(format, formattedResult)
 			}
 			run := func() {
+				queryAliasReference := alias.NewQueryAlias()
+				useAlias, _ := cmd.Flags().GetString("useAlias")
+				if len(strings.TrimSpace(useAlias)) != 0 {
+					query, exists, err := queryAliasReference.GetQueryBy(useAlias)
+					if err != nil {
+						cmd.Println(errorColor, err)
+						return
+					}
+					if !exists {
+						cmd.Println(errorColor, fmt.Sprintf(ErrorMessageExpectedAQueryForAnAlias, useAlias))
+						return
+					}
+					_ = cmd.Flags().Set("query", query)
+				}
 				rows, query, err := executeQuery(cmd)
 				if err != nil {
 					cmd.Println(errorColor, err)
@@ -152,7 +166,6 @@ func newExecuteCommand() *cobra.Command {
 				queryAlias, _ := cmd.Flags().GetString("createAlias")
 				if len(strings.TrimSpace(queryAlias)) != 0 {
 					query, _ := cmd.Flags().GetString("query")
-					queryAliasReference := alias.NewQueryAlias()
 					if err := queryAliasReference.Add(alias.Alias{Query: query, Alias: strings.TrimSpace(queryAlias)}); err != nil {
 						cmd.Println(errorColor, err)
 						return
@@ -218,5 +231,11 @@ func init() {
 		"c",
 		"",
 		"specify the query alias to save the query with an alternate name. Use --createAlias=<some alias>",
+	)
+	executeCmd.Flags().StringP(
+		"useAlias",
+		"u",
+		"",
+		"specify the query alias to use, query corresponding to that alias will be executed. Use --useAlias=<some alias>",
 	)
 }

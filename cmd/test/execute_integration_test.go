@@ -386,3 +386,64 @@ func TestExecutesAQueryAndSaveWithAnAliasWithAnExistingCorruptedFile(t *testing.
 		t.Fatalf("Expected an error message %v, received none in %v", "invalid character", contents)
 	}
 }
+
+func TestExecutesAQueryWithASavedAlias(t *testing.T) {
+	queryAlias := alias.NewQueryAlias()
+	defer os.Remove(queryAlias.FilePath)
+
+	cmd.GetRootCommand().SetArgs([]string{
+		"execute",
+		"--query",
+		"select name from ./resources order by 1",
+		"--createAlias",
+		"orderedFromResources",
+		"-f",
+		"table",
+		"-p",
+		"",
+		"--useAlias",
+		"",
+		"-n=true",
+		"--maxWidth",
+		"100",
+		"--minWidth",
+		"0",
+	})
+	buffer := new(bytes.Buffer)
+	cmd.GetRootCommand().SetOut(buffer)
+
+	_ = cmd.GetRootCommand().Execute()
+
+	cmd.GetRootCommand().SetArgs([]string{
+		"execute",
+		"--useAlias",
+		"orderedFromResources",
+		"-f",
+		"table",
+		"-p",
+		"",
+		"--createAlias",
+		"",
+		"-n=true",
+		"--maxWidth",
+		"100",
+		"--minWidth",
+		"0",
+	})
+	buffer = new(bytes.Buffer)
+	cmd.GetRootCommand().SetOut(buffer)
+
+	_ = cmd.GetRootCommand().Execute()
+	contents := buffer.String()
+	expected := []string{"TestResultsWithProjections_A.log", "TestResultsWithProjections_B.log", "TestResultsWithProjections_C.txt", "log"}
+
+	for _, name := range expected {
+		if !strings.Contains(contents, name) {
+			t.Fatalf(
+				"Expected file name %v to be contained in the result but was not, received %v",
+				name,
+				contents,
+			)
+		}
+	}
+}
