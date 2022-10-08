@@ -34,5 +34,5 @@ const (
 	ErrorMessageUnsupportedDateTimeFormat                 = "expected a supported date/time format id. Use CLI to check the supported date/time format ids"
 	ErrorMessageCannotConvertToBoolean                    = "expected conversion of %v to boolean, but failed"
 	ErrorMessageUndefinedConversionFunction               = "expected conversion of %v to %v, but such a conversion is not supported"
-	ErrorMessageQueryAliasAlreadyExists                   = "query alias %v is already present in the file %v"
+	ErrorMessageQueryAliasAlreadyExists                   = "expected a non-existing query alias. Query alias %v is already present in the file %v"
 )
