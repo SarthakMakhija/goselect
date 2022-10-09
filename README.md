@@ -107,7 +107,7 @@ will order the results by the first attribute `name`
 
 # Supported platforms
 
-- *goselect* has been tested on **macOS Big Sur 11.4**, **macOS Monterey 12.6** and **Ubuntu 20.0.3**
+- *goselect* has been tested on **macOS Big Sur 11.4**, **macOS Monterey 12.6**, **Ubuntu 20.0.3** and **Windows 10**
 
 # Installation
 
@@ -713,4 +713,3 @@ select name, extension from . order by lower(name)
 3. Support for concurrent execution and streaming the results as soon as available. Will not work for `order by` and `aggregate` functions. It is applicable for queries that involve scalar functions without order by. It might make sense to use this feature where the number of files is too many, say more than 0.1 million
 4. Support installation using `brew`, `apt`, `yum`
 5. Support for `between` scalar function
-6. Windows support
