@@ -638,6 +638,45 @@ goselect wherefns
 - The first query returns the count of all the entries in the source directory along with the minimum file length 
 - The second query returns all the distinct file extensions in the source directory
 
+10. **What is a query alias (Version 0.0.7)?**
+
+Query alias allows saving and executing your favorite queries with an alternate name. For example, `select name, extension, size from . where and(isPdf(mime), gt(size, parseSize(1 Mib)))` query returns all the pdfs with size greater than 1Mib. Using query alias, you can save the query with an alternate name and execute it later using the saved name. 
+
+**Usage**
+```shell
+goselect ex -q='select name, extension, size from . where and(isPdf(mime), gt(size, parseSize(1 Mib)))' --createAlias=allPdfsGt1Mib
+goselect ex --useAlias=allPdfsGt1Mib 
+```
+
+11. **Are the execution options like -n=false also saved with query alias?**
+
+No, query alias only saves the query and its alias
+
+13. **Where is the query alias saved?**
+
+Query alias is saved in a human-readable file in the current directory.  
+
+13. **How do I get a list of all the saved query aliases?**
+
+Use `listQueryAliases` command with *goselect*
+
+**Usage**
+```shell
+goselect listQueryAliases
+```
+
+14. **Are there any predefined query aliases?**
+
+Yes, *goselect* provides a set of predefined query aliases. Some examples include:
+
+| Alias                      | Query                                                                                                                       |
+|----------------------------|:----------------------------------------------------------------------------------------------------------------------------|
+| lsCurrent                  | select * from . |
+| lsCurrentOrderedBySizeDesc | select name, ext, size, abspath from . order by 3 desc |
+| lsCurrentFormattedSize     | select name, ext, size, fmtSize(size), abspath from . order by 3 desc|
+| fileWithMaxSizeInCurrent   | select name, size, fmtSize(size) from . order by 2 desc limit 1|
+
+
 # All the supported features
 
 - Support for `where` clause
