@@ -25,16 +25,21 @@ Version 0.0.6 Release: done
 5. [New feature] Support for groups in regular expressions
 
 
-Version 0.0.7 Release
+Version 0.0.7 Release: done
 
 1. Windows support
-2. [Ease of installation] Allow goselect installation using:
+2. Support for query alias
+
+Version 0.0.8
+
+1. [Ease of installation] Allow goselect installation using:
     - brew
     - apt-get
     - yum
+2. [New feature] Make current directory as the default in select query
+3. [New feature] Introduce an attribute "contents"
 
-Version 0.0.8 Release
+Version 0.0.9 Release
 
 1. [Performance] Allow concurrent directory (nested directory) scan, if there are no aggregate functions
-2. [New feature] Introduce an attribute "contents"
-3. [New feature] Introduce a scalar function "between"
+2. [New feature] Introduce a scalar function "between"
