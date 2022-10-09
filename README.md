@@ -86,8 +86,8 @@ The project *goselect* was created to understand the following:
 9. Support for exporting the results in **table**, **json** and **html** format
 10. Support for performing select in nested directories
 11. Support for skipping directories like `.git` & `.github`
-12. Support for saving query with aliases. For example, `goselect ex -q='select name from .' --createAlias=ls -n=false` will save the query along with its alias in a text file in the current directory. In order to execute the query using an alias, run `goselect ex --useAlias=ls -n=false`
-13. Support for predefined query aliases
+12. Support for **executing queries with aliases**. For example, `goselect ex -q='select name from .' --createAlias=ls -n=false` will save the query along with its alias in a text file in the current directory. In order to execute the query using an alias, run `goselect ex --useAlias=ls -n=false`
+13. Support for **predefined query aliases**
 
 # Differences between SQL select and goselect
 
