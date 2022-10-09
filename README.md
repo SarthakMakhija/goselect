@@ -749,6 +749,9 @@ select name, extension from . order by lower(name)
 - Export as json to a file
   ![Json](images/json_as_file.png)
 
+- Query alias
+  ![Query alias](images/query_alias.png)  
+
 # Planned changes
 
 1. Support for checking if a (text) file contains a specific term
