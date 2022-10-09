@@ -1,8 +1,13 @@
 {
   "versions": [
     {
-      "version": "v0.0.6",
+      "version": "v0.0.7",
       "isCurrent": true,
+      "changes": "1. Support for Windows operating system\n2. Introduction of saving query with aliases. For example, goselect ex -q='select name from .' --createAlias=ls -n=false will save the query along with its alias in a text file in the current directory. In order to execute the query using an alias, run: goselect ex --useAlias=ls -n=false\n3. Introduction of listQueryAliases command. For example, goselect listQueryAliases will return a list of all the saved query aliases\n4. Support for predefined query aliases. Run: goselect listQueryAliases to get a list of all the query aliases"
+    },
+    {
+      "version": "v0.0.6",
+      "isCurrent": false,
       "changes": "1. Support for single and double quotes. For example, goselect ex -q='select name, extension from . where eq(name, \"hello world.txt\")'\n2. Support for groups in regular expressions. For example, goselect ex -q='select name, extension from . where like(name, \"^([0-9]{4})-[0-9]{2}-[0-9]{2}-.*\\.txt$\")'\n3. Addition of a new function isArchive"
     },
     {

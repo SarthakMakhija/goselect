@@ -41,6 +41,7 @@ The project *goselect* was created to understand the following:
     * [MacOS](#macos)
     * [Linux AMD64](#linux-amd64)
   * [Changelog](#changelog)
+    * [Version 0.0.7](#version-007)
     * [Version 0.0.6](#version-006)
     * [Version 0.0.5](#version-005)
     * [Version 0.0.4](#version-004)
@@ -127,6 +128,13 @@ will order the results by the first attribute `name`
    - `mkdir goselect && tar xvf goselect_0.0.6_Linux_x86_64.tar.gz -C goselect`
 
 # Changelog
+
+### Version 0.0.7
+
+1. Support for Windows operating system
+2. Introduction of saving query with aliases. For example, `goselect ex -q='select name from .' --createAlias=ls -n=false` will save the query along with its alias in a text file in the current directory. In order to execute the query using an alias, run `goselect ex --useAlias=ls -n=false`
+3. Introduction of listQueryAliases command. For example, `goselect listQueryAliases` will return a list of all the saved query aliases 
+4. Support for predefined query aliases. Run `goselect listQueryAliases` to get a list of all the query aliases
 
 ### Version 0.0.6
 
