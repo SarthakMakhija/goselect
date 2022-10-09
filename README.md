@@ -633,7 +633,7 @@ goselect wherefns
 - The first query returns all the files where name is like `result.*` and the file is a hidden file. 
 - The second query returns all the files where name is like `result.*` and the file is not a directory. 
 
-8. **Can I get some example queries that involve date/time functions?**
+9. **Can I get some example queries that involve date/time functions?**
 
 **Usage**
 ```shell
@@ -643,7 +643,7 @@ goselect wherefns
 - The first query extracts the `date` from the `access time` of a file
 - The second query returns all the files where difference (in days) between today and the access time of a file is greater than 2
 
-9. **Can I get some example queries that aggregate functions?**
+10. **Can I get some example queries that aggregate functions?**
 
 **Usage**
 ```shell
@@ -653,7 +653,7 @@ goselect wherefns
 - The first query returns the count of all the entries in the source directory along with the minimum file length 
 - The second query returns all the distinct file extensions in the source directory
 
-10. **What is a query alias (Version 0.0.7)?**
+11. **What is a query alias (Version 0.0.7)?**
 
 Query alias allows saving and executing your favorite queries with an alternate name. For example, `select name, extension, size from . where and(isPdf(mime), gt(size, parseSize(1 Mib)))` query returns all the pdfs with size greater than 1Mib. Using query alias, you can save the query with an alternate name and execute it later using the saved name. 
 
@@ -663,7 +663,7 @@ goselect ex -q='select name, extension, size from . where and(isPdf(mime), gt(si
 goselect ex --useAlias=allPdfsGt1Mib 
 ```
 
-11. **Are the execution options like -n=false also saved with query alias?**
+12. **Are the execution options like -n=false also saved with query alias?**
 
 No, query alias only saves the query and its alias
 
@@ -671,7 +671,7 @@ No, query alias only saves the query and its alias
 
 Query alias is saved in a human-readable file in the current directory.  
 
-13. **How do I get a list of all the saved query aliases?**
+14. **How do I get a list of all the saved query aliases?**
 
 Use `listQueryAliases` command with *goselect*
 
@@ -680,7 +680,7 @@ Use `listQueryAliases` command with *goselect*
 goselect listQueryAliases
 ```
 
-14. **Are there any predefined query aliases?**
+15. **Are there any predefined query aliases?**
 
 Yes, *goselect* provides a set of predefined query aliases. Some examples include:
 
