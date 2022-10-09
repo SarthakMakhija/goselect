@@ -236,6 +236,6 @@ func init() {
 		"useAlias",
 		"u",
 		"",
-		"specify the query alias to use, query corresponding to that alias will be executed. Use --useAlias=<some alias>",
+		"specify the query alias to use, query corresponding to that alias will be executed. --useAlias takes precedence over --query. Use --useAlias=<some alias>",
 	)
 }
