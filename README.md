@@ -40,6 +40,7 @@ The project *goselect* was created to understand the following:
   * [Installation](#installation)
     * [MacOS](#macos)
     * [Linux AMD64](#linux-amd64)
+    * [Windows AMD64](#windows-amd64)
   * [Changelog](#changelog)
     * [Version 0.0.7](#version-007)
     * [Version 0.0.6](#version-006)
@@ -128,6 +129,20 @@ will order the results by the first attribute `name`
 
 2. **Unzip the release in a directory**
    - `mkdir goselect && tar xvf goselect_0.0.7_Linux_x86_64.tar.gz -C goselect`
+
+### Windows AMD64
+
+1. **Create a directory**
+    - `mkdir goselect`
+
+2. **Switch to the newly created directory**
+    - `cd goselect`
+    
+3. **Download the current release**
+    - `curl https://github.com/SarthakMakhija/goselect/releases/download/v0.0.7/goselect_0.0.7_windows_x86_64.tar.gz -o goselect.tar.gz`
+
+4. **Unzip the release in the current directory**
+    - `tar -xvzf .\goselect.tar.gz`
 
 # Changelog
 
