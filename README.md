@@ -86,6 +86,8 @@ The project *goselect* was created to understand the following:
 9. Support for exporting the results in **table**, **json** and **html** format
 10. Support for performing select in nested directories
 11. Support for skipping directories like `.git` & `.github`
+12. Support for saving query with aliases. For example, `goselect ex -q='select name from .' --createAlias=ls -n=false` will save the query along with its alias in a text file in the current directory. In order to execute the query using an alias, run `goselect ex --useAlias=ls -n=false`
+13. Support for predefined query aliases
 
 # Differences between SQL select and goselect
 
@@ -180,15 +182,16 @@ will order the results by the first attribute `name`
 
 # Commands
 
-| **Command**              	| **Description**                                                	| **Available  since** 	| **Example usage**                     	|
-|--------------------------	|----------------------------------------------------------------	|----------------------	|---------------------------------------	|
-| listAttributes           	| List all the attributes supported by goselect                  	| v0.0.1               	| goselect listAttributes               	|
-| listFunctions            	| List all the functions supported by goselect                   	| v0.0.1               	| goselect listFunctions                	|
-| listWhereClauseFunctions 	| List all the functions supported by goselect in 'where' clause 	| v0.0.1               	| goselect listWhereClauseFunctions     	|
-| listTimeFormats          	| List the date/time formats supported by goselect               	| v0.0.1               	| goselect listTimeFormats              	|
-| describe                 	| Describe an attribute or a function                            	| v0.0.1               	| goselect describe --term=lower        	|
-| execute                  	| Execute a select query                                         	| v0.0.1               	| goselect execute -q='select * from .' 	|
-| version                  	| Return the current version of goselect                         	| v0.0.4               	| goselect version                      	|
+| **Command**              	| **Description**                                                	 | **Available  since** 	 | **Example usage**                     	|
+|--------------------------	|------------------------------------------------------------------|------------------------|---------------------------------------	|
+| listAttributes           	| List all the attributes supported by goselect                  	 | v0.0.1               	 | goselect listAttributes               	|
+| listFunctions            	| List all the functions supported by goselect                   	 | v0.0.1               	 | goselect listFunctions                	|
+| listWhereClauseFunctions 	| List all the functions supported by goselect in 'where' clause 	 | v0.0.1               	 | goselect listWhereClauseFunctions     	|
+| listTimeFormats          	| List the date/time formats supported by goselect               	 | v0.0.1               	 | goselect listTimeFormats              	|
+| describe                 	| Describe an attribute or a function                            	 | v0.0.1               	 | goselect describe --term=lower        	|
+| execute                  	| Execute a select query                                         	 | v0.0.1               	 | goselect execute -q='select * from .' 	|
+| version                  	| Return the current version of goselect                         	 | v0.0.4               	 | goselect version                      	|
+| listQueryAliases             | List all the saved query aliases                       	         | v0.0.7               	 | goselect listQueryAliases                      	|
 
 # Queries in detail
 
@@ -663,6 +666,7 @@ goselect wherefns
   - [X] Json formatter
   - [X] Html formatter
   - [X] Table formatter
+- Support for saving and executing queries using query alias 
 - Support for exporting the formatted result
   - [X] Console
   - [X] File
