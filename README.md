@@ -1,4 +1,6 @@
-![goselect](images/logo.png)
+<p align="center">
+<img alt="goselect" src="https://user-images.githubusercontent.com/21108320/194919739-f38923d4-bf99-4271-a3b8-99d321412033.png" />
+</p>
 
 | Platform       | Build Status                                                                                                                  |
 |----------------|:------------------------------------------------------------------------------------------------------------------------------|
