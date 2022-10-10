@@ -58,7 +58,7 @@ The project *goselect* was created to understand the following:
 
 # Overview
 
-[![asciicast](https://asciinema.org/a/525506.svg)](https://asciinema.org/a/525506)
+<a href="https://asciinema.org/a/527023" target="_blank"><img width="650" height="320"  src="https://asciinema.org/a/527023.svg" /></a>
 
 # Example queries
 
