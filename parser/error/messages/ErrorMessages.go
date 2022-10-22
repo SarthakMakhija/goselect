@@ -34,4 +34,6 @@ const (
 	ErrorMessageUnsupportedDateTimeFormat                 = "expected a supported date/time format id. Use CLI to check the supported date/time format ids"
 	ErrorMessageCannotConvertToBoolean                    = "expected conversion of %v to boolean, but failed"
 	ErrorMessageUndefinedConversionFunction               = "expected conversion of %v to %v, but such a conversion is not supported"
+	ErrorMessageNonComparableValues                       = "given parameter values not comparable: %v, %v, %v"
+	ErrorMessageExpectedSecondValueToBeGreaterThanFirst   = "expected second value to be greater than first"
 )

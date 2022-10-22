@@ -4,6 +4,8 @@
 package context
 
 import (
+	"fmt"
+	"goselect/parser/error/messages"
 	"math"
 	"os"
 	"testing"
@@ -1840,5 +1842,23 @@ func TestIsBetween5(t *testing.T) {
 
 	if actualValue != false {
 		t.Fatalf("Expected between to be %v, received %v", false, actualValue)
+	}
+}
+
+func TestIsBetween6(t *testing.T) {
+	_, err := NewFunctions().Execute("between", IntValue(108), IntValue(100), StringValue("abc"))
+	expectedError := fmt.Errorf(messages.ErrorMessageNonComparableValues, "int", "int", "string")
+
+	if err.Error() != expectedError.Error() {
+		t.Fatalf("Expected error to be %v, received %v", expectedError, err)
+	}
+}
+
+func TestIsBetween7(t *testing.T) {
+	_, err := NewFunctions().Execute("between", IntValue(108), IntValue(100), IntValue(50))
+	expectedError := fmt.Errorf(messages.ErrorMessageExpectedSecondValueToBeGreaterThanFirst)
+
+	if err.Error() != expectedError.Error() {
+		t.Fatalf("Expected error to be %v, received %v", expectedError, err)
 	}
 }

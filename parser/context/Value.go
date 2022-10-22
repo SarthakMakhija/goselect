@@ -28,6 +28,18 @@ const (
 	ValueTypeUint64    = 9
 )
 
+var ValueTypeToDataType = map[int]string{
+	ValueTypeString:    "string",
+	ValueTypeInt:       "int",
+	ValueTypeInt64:     "int64",
+	ValueTypeDateTime:  "time",
+	ValueTypeBoolean:   "boolean",
+	ValueTypeUint32:    "uint32",
+	ValueTypeFloat64:   "float64",
+	ValueTypeUndefined: "undefined",
+	ValueTypeUint64:    "uint64",
+}
+
 var (
 	EmptyValue        = emptyValue()
 	zeroUint32Value   = Uint32Value(0)

@@ -636,10 +636,35 @@ func (p BetweenFunctionBlock) run(args ...Value) (Value, error) {
 	valueToBeCompared := args[0]
 	firstValue := args[1]
 	secondValue := args[2]
-	if valueToBeCompared.CompareTo(firstValue) == 1 && valueToBeCompared.CompareTo(secondValue) == -1 {
+
+	if areValuesComparable(valueToBeCompared, firstValue, secondValue) {
+		return BooleanValue(false), fmt.Errorf(
+			messages.ErrorMessageNonComparableValues,
+			ValueTypeToDataType[int(valueToBeCompared.valueType)],
+			ValueTypeToDataType[int(firstValue.valueType)],
+			ValueTypeToDataType[int(secondValue.valueType)],
+		)
+	}
+	if isLessThan(secondValue, firstValue) {
+		return BooleanValue(false), fmt.Errorf(messages.ErrorMessageExpectedSecondValueToBeGreaterThanFirst)
+	}
+	if isBetween(valueToBeCompared, firstValue, secondValue) {
 		return BooleanValue(true), nil
 	}
+
 	return BooleanValue(false), nil
+}
+
+func isLessThan(secondValue Value, firstValue Value) bool {
+	return secondValue.CompareTo(firstValue) == CompareToLessThan
+}
+
+func isBetween(valueToBeCompared Value, firstValue Value, secondValue Value) bool {
+	return valueToBeCompared.CompareTo(firstValue) == CompareToGreaterThan && valueToBeCompared.CompareTo(secondValue) == CompareToLessThan
+}
+
+func areValuesComparable(valueToBeCompared Value, firstValue Value, secondValue Value) bool {
+	return valueToBeCompared.CompareTo(firstValue) == CompareToNotPossible || valueToBeCompared.CompareTo(secondValue) == CompareToNotPossible
 }
 
 func formatDate(time time.Time) Value {
