@@ -1789,3 +1789,56 @@ func TestIsArchive3(t *testing.T) {
 		t.Fatalf("Expected an error while invoking isArchive without any parameter values")
 	}
 }
+
+func TestIsBetween1(t *testing.T) {
+	value, _ := NewFunctions().Execute("between", IntValue(108), IntValue(100), IntValue(200))
+	actualValue, _ := value.GetBoolean()
+
+	if actualValue != true {
+		t.Fatalf("Expected between to be %v, received %v", true, actualValue)
+	}
+}
+
+func TestIsBetween2(t *testing.T) {
+	value, _ := NewFunctions().Execute("between", Float64Value(108.83), IntValue(100), IntValue(200))
+	actualValue, _ := value.GetBoolean()
+
+	if actualValue != true {
+		t.Fatalf("Expected between to be %v, received %v", true, actualValue)
+	}
+}
+
+func TestIsBetween3(t *testing.T) {
+	value, _ := NewFunctions().Execute("between", Float64Value(99), IntValue(100), IntValue(200))
+	actualValue, _ := value.GetBoolean()
+
+	if actualValue != false {
+		t.Fatalf("Expected between to be %v, received %v", false, actualValue)
+	}
+}
+
+func TestIsBetween4(t *testing.T) {
+	present := time.Now()
+	past := present.AddDate(-1, 0, 0)
+	future := present.AddDate(1, 0, 0)
+
+	value, _ := NewFunctions().Execute("between", DateTimeValue(present), DateTimeValue(past), DateTimeValue(future))
+	actualValue, _ := value.GetBoolean()
+
+	if actualValue != true {
+		t.Fatalf("Expected between to be %v, received %v", true, actualValue)
+	}
+}
+
+func TestIsBetween5(t *testing.T) {
+	present := time.Now()
+	past := present.AddDate(1, 0, 0)
+	future := present.AddDate(2, 0, 0)
+
+	value, _ := NewFunctions().Execute("between", DateTimeValue(present), DateTimeValue(past), DateTimeValue(future))
+	actualValue, _ := value.GetBoolean()
+
+	if actualValue != false {
+		t.Fatalf("Expected between to be %v, received %v", false, actualValue)
+	}
+}

@@ -94,6 +94,7 @@ const (
 	FunctionNameAverage             = "average"
 	FunctionNameMin                 = "min"
 	FunctionNameMax                 = "max"
+	FunctionNameBetween             = "between"
 )
 
 var executionCache = NewFunctionExecutionCache()
@@ -435,6 +436,12 @@ var functionDefinitions = map[string]*FunctionDefinition{
 		description:    "max is an aggregate function that returns the maximum of all the values corresponding to the provided parameter. \nFor example, max(size) will return the maximum file size in the source directory.",
 		isAggregate:    true,
 		aggregateBlock: &MaxFunctionBlock{},
+	},
+	FunctionNameBetween: {
+		aliases:     []string{"between", "bet"},
+		description: "between compares and determines whether the attribute value falls in between specified two arguments",
+		block:       &BetweenFunctionBlock{},
+		tags:        map[string]bool{"where": true},
 	},
 }
 

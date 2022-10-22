@@ -67,6 +67,7 @@ type IsFileTypeArchiveFunctionBlock struct {
 }
 type FormatSizeFunctionBlock struct{}
 type ParseSizeFunctionBlock struct{}
+type BetweenFunctionBlock struct{}
 
 func (receiver IdentityFunctionBlock) run(args ...Value) (Value, error) {
 	if err := ensureNParametersOrError(args, FunctionNameIdentity, 1); err != nil {
@@ -625,6 +626,20 @@ func (p ParseDateTimeFunctionBlock) run(args ...Value) (Value, error) {
 		return EmptyValue, fmt.Errorf(messages.ErrorMessageFunctionNamePrefixWithExistingError, FunctionNameDateTimeParse, err)
 	}
 	return DateTimeValue(parsed), nil
+}
+
+func (p BetweenFunctionBlock) run(args ...Value) (Value, error) {
+	if err := ensureNParametersOrError(args, FunctionNameBetween, 3); err != nil {
+		return EmptyValue, err
+	}
+
+	valueToBeCompared := args[0]
+	firstValue := args[1]
+	secondValue := args[2]
+	if valueToBeCompared.CompareTo(firstValue) == 1 && valueToBeCompared.CompareTo(secondValue) == -1 {
+		return BooleanValue(true), nil
+	}
+	return BooleanValue(false), nil
 }
 
 func formatDate(time time.Time) Value {
